@@ -5,8 +5,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Entity
-@Table(name = "role")
-
+@Table(name = "chat")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Setter
 @Getter
@@ -14,16 +13,8 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @NoArgsConstructor
 
-public class RoleEntity {
-
-         @Id
-         @GeneratedValue(strategy = GenerationType.IDENTITY)
-         Long roleId;
-
-         @Column
-         String roleName;
-
-         @Column
-         String roleDesc;
-
+public class ChatEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Long chatId;
 }
