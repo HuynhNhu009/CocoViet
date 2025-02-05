@@ -16,14 +16,14 @@ import lombok.experimental.FieldDefaults;
 
 public class RoleEntity {
 
-         @Id
-         @GeneratedValue(strategy = GenerationType.IDENTITY)
-         Long roleId;
+        @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        Long roleId;
 
-         @Column
-         String roleName;
+        @Column
+        String roleName;
 
-         @Column
-         String roleDesc;
+        @Column
+        String roleDesc;
 
 }
