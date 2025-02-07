@@ -8,40 +8,40 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-@Table(name = "retailer")
+@Table(name = "customer")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Setter
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class RetailerEntity {
+public class CustomerEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long retailerId;
+    Long customerId;
 
     @Column
-    String retailerName ;
+    String customerName ;
 
     @Column
-    String retailerPassword;
+    String customerPassword;
 
     @Column
-    String retailerEmail;
+    String customerEmail;
 
     @Column
     String phoneNumbers;
 
     @Column
-    String retailerAvatar;
+    String customerAvatar;
 
     @Column
-    String retailerAddress;
+    String customerAddress;
 
     @Column
     Date createdAt;
 
-    @OneToMany(mappedBy = "retailer")
-    List<ProductEntity> products;
+    @OneToMany(mappedBy = "customer")
+    List<OrderEntity> orders;
 
 }
