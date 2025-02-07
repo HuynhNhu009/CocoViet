@@ -20,8 +20,4 @@ public class RetailerEntity {
     @Column
     String retailName;
 
-    @Column
-
-
-
 }
