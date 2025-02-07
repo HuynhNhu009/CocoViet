@@ -6,6 +6,7 @@ import lombok.experimental.FieldDefaults;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Set;
 
 @Entity
 @Table(name = "order")
@@ -28,6 +29,10 @@ public class OrderEntity {
     Date orderDate;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    UserEntity user ;
+    @JoinColumn(name = "customer_id")
+    CustomerEntity customer ;
+
+    @ManyToMany(mappedBy = "orders")
+    Set<ProductEntity> products ;
+
 }

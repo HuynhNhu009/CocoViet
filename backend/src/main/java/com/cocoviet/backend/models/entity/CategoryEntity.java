@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.List;
+
 @Entity
 @Table(name = "category")
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -21,6 +23,8 @@ public class CategoryEntity {
     @Column
     String categoryName;
 
-    @Column
-    String categoryDesc;
+    @OneToMany(mappedBy = "category")
+    List<ProductEntity> products;
+
+
 }

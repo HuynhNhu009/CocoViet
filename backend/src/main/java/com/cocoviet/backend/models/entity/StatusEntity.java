@@ -5,7 +5,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Entity
-@Table(name = "chat")
+@Table(name = "status")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Setter
 @Getter
@@ -13,8 +13,11 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @NoArgsConstructor
 
-public class ChatEntity {
+public class StatusEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long chatId;
+    Long statusId;
+
+    @Column
+    String statusName;
 }

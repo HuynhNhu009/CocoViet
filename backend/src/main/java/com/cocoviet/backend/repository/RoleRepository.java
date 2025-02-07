@@ -1,6 +1,5 @@
 package com.cocoviet.backend.repository;
 
-import com.cocoviet.backend.models.entity.RoleEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
