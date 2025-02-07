@@ -21,7 +21,4 @@ public class RetailerEntity {
     String retailName;
 
 
-
-
-
 }
