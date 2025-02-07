@@ -24,5 +24,5 @@ public class PaymentEntity {
     String paymentMethod;
 
     @OneToMany(mappedBy = "payment")
-    List<OrderEntity> orders;
+    List<ProductOrderEntity> productOrders;
 }

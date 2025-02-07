@@ -24,5 +24,5 @@ public class StatusEntity {
     String statusName;
 
     @OneToMany(mappedBy = "status")
-    List<OrderEntity> orders;
+    List<ProductOrderEntity> productOrders;
 }

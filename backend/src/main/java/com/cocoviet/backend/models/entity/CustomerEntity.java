@@ -42,6 +42,6 @@ public class CustomerEntity {
     Date createdAt;
 
     @OneToMany(mappedBy = "customer")
-    List<OrderEntity> orders;
+    List<ProductOrderEntity> productOrders;
 
 }

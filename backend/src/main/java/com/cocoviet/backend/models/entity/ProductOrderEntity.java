@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.Set;
 
 @Entity
-@Table(name = "order")
+@Table(name = "product_order")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Setter
 @Getter
@@ -17,22 +17,19 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 
-public class OrderEntity {
+public class ProductOrderEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long orderId;
+    Long productOrderId;
 
     @Column
-    BigDecimal statusReceipt;
-
-    @Column
-    Date orderDate;
+    Date productOrderDate;
 
     @ManyToOne
     @JoinColumn(name = "customer_id")
     CustomerEntity customer ;
 
-    @ManyToMany(mappedBy = "orders")
+    @ManyToMany(mappedBy = "productOrders")
     Set<ProductEntity> products ;
 
     @ManyToOne
