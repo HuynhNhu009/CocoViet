@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.List;
+
 @Entity
 @Table(name = "status")
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -20,4 +22,7 @@ public class StatusEntity {
 
     @Column
     String statusName;
+
+    @OneToMany(mappedBy = "status")
+    List<ProductOrderEntity> productOrders;
 }

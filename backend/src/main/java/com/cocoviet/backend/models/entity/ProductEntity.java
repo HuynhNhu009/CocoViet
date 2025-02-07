@@ -60,8 +60,8 @@ public class ProductEntity {
     @JoinTable(
             name = "receipt_detail",
             joinColumns = @JoinColumn(name = "productId"),
-            inverseJoinColumns = @JoinColumn(name = "orderId")
+            inverseJoinColumns = @JoinColumn(name = "productOrderId")
     )
-    Set<OrderEntity> orders;
+    Set<ProductOrderEntity> productOrders;
 
 }

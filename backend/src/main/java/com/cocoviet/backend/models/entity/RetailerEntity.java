@@ -44,4 +44,9 @@ public class RetailerEntity {
     @OneToMany(mappedBy = "retailer")
     List<ProductEntity> products;
 
+
+    @OneToMany(mappedBy = "retailer")
+    List<PostEntity> posts;
+
+
 }

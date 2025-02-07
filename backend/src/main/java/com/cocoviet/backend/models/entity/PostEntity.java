@@ -24,8 +24,15 @@ public class PostEntity {
     String postTitle;
 
     @Column
-    String postDesc;
+    String postContent;
 
     @Column
-    Date postDay;
+    Date publishedDate;
+
+    @Column
+    String postImageUrl;
+
+    @ManyToOne
+    @JoinColumn(name = "retailer_id")
+    RetailerEntity retailer;
 }
