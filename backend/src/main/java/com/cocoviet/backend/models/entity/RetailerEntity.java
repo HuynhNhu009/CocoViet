@@ -5,22 +5,23 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Entity
-@Table(name = "retail")
+@Table(name = "retailer")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Setter
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-
-public class RetailEntity {
+public class RetailerEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long retailId;
+    Long retailerId;
 
     @Column
     String retailName;
 
-//    @Column
-//    String retailType;ProductEntity
+    @Column
+
+
+
 }
