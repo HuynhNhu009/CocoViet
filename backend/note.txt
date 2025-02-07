@@ -1,0 +1,33 @@
+//windows
+docker run -d --rm --name cocoviet `
+  -e MYSQL_ROOT_PASSWORD=123456 `
+  -e MYSQL_DATABASE=cocoviet `
+  -e MYSQL_USER=user `
+  -e MYSQL_PASSWORD=123456 `
+  -p 3306:3306 `
+  mysql:latest
+//===========================
+
+//mac/linux
+docker run -d --rm --name cocoviet \
+  -e MYSQL_ROOT_PASSWORD=123456 \
+  -e MYSQL_DATABASE=cocoviet \
+  -e MYSQL_USER=user \
+  -e MYSQL_PASSWORD=123456 \
+  -p 3306:3306 \
+  mysql:latest
+
+
+mysql -h localhost -P 3306 --protocol=tcp -u user -p
+
+
+lỗi port
+
+netstat -ano | findstr :3306
+
+
+
+
+taskkill /PID <PID> /F
+
+
