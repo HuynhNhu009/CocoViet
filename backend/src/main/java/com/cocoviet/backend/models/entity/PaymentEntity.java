@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.List;
+
 @Entity
 @Table(name = "payment")
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -20,4 +22,7 @@ public class PaymentEntity {
 
     @Column
     String paymentMethod;
+
+    @OneToMany(mappedBy = "payment")
+    List<OrderEntity> orders;
 }

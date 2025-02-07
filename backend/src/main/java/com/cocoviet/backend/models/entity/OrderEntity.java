@@ -35,4 +35,13 @@ public class OrderEntity {
     @ManyToMany(mappedBy = "orders")
     Set<ProductEntity> products ;
 
+    @ManyToOne
+    @JoinColumn(name = "status_id")
+    StatusEntity status ;
+
+    @ManyToOne
+    @JoinColumn(name = "payment_id")
+    PaymentEntity payment ;
+
+
 }
