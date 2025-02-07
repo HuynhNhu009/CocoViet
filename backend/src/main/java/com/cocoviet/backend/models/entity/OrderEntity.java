@@ -4,8 +4,11 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.math.BigDecimal;
+import java.util.Date;
+
 @Entity
-@Table(name = "receipt")
+@Table(name = "order")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Setter
 @Getter
@@ -13,14 +16,18 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @NoArgsConstructor
 
-public class ReceiptEntity {
+public class OrderEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long receiptId;
+    Long orderId;
 
     @Column
-    String statusReceipt;
+    BigDecimal statusReceipt;
 
     @Column
-    String vat;
+    Date orderDate;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    UserEntity user ;
 }

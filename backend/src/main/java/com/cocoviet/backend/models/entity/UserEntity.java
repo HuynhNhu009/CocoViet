@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.List;
+
 @Entity
 @Table(name = "user")
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -32,5 +34,7 @@ public class UserEntity {
     @Column
     String address;
 
+    @OneToMany(mappedBy = "user")
+    List<OrderEntity> orders;
 
 }

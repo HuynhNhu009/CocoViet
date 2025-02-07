@@ -21,7 +21,7 @@ public class ProductEntity {
     @Column
     String productName;
 
-    @Column
+    @Column(columnDefinition = "TEXT")
     String productDesc;
 
     @Column
