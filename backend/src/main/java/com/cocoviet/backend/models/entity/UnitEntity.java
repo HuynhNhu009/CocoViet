@@ -4,37 +4,26 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.util.List;
+import java.util.Set;
 
 @Entity
-@Table(name = "user")
+@Table(name = "unit")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Setter
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserEntity {
+
+public class UnitEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long userId;
+    Long unitId;
 
     @Column
-    String userName ;
+    String unitName;
 
-    @Column
-    String userPassword;
-
-    @Column
-    String email;
-
-    @Column
-    String phoneNumbers;
-
-    @Column
-    String address;
-
-    @OneToMany(mappedBy = "user")
-    List<OrderEntity> orders;
+    @ManyToMany(mappedBy = "units")
+    Set<ProductEntity> products ;
 
 }
