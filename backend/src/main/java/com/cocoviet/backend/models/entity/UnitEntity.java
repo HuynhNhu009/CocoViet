@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.io.Serializable;
 import java.util.Set;
 
 @Entity
@@ -15,7 +16,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 
-public class UnitEntity {
+public class UnitEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long unitId;
@@ -23,7 +24,7 @@ public class UnitEntity {
     @Column
     String unitName;
 
-    @ManyToMany(mappedBy = "units")
-    Set<ProductEntity> products ;
+    @OneToMany(mappedBy = "unit")
+    Set<ProductVariantsEntity> variants;
 
 }

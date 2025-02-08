@@ -4,8 +4,10 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -17,7 +19,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 
-public class ProductOrderEntity {
+public class ProductOrderEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long productOrderId;
@@ -29,8 +31,8 @@ public class ProductOrderEntity {
     @JoinColumn(name = "customer_id")
     CustomerEntity customer ;
 
-    @ManyToMany(mappedBy = "productOrders")
-    Set<ProductEntity> products ;
+    @OneToMany(mappedBy = "productOrder")
+    List<ReceiptDetailEntity> receiptDetails;
 
     @ManyToOne
     @JoinColumn(name = "status_id")
