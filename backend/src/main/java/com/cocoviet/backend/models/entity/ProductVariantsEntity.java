@@ -6,9 +6,10 @@ import lombok.experimental.FieldDefaults;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Set;
 
 @Entity
-@Table(name = "post")
+@Table(name = "product_variants")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Setter
 @Getter
@@ -16,24 +17,23 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 
-public class PostEntity implements Serializable {
+public class ProductVariantsEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long postId;
-
-    @Column
-    String postTitle;
-
-    @Column
-    String postContent;
-
-    @Column
-    Date publishedDate;
-
-    @Column
-    String postImageUrl;
+    Long productVariantsId;
 
     @ManyToOne
-    @JoinColumn(name = "retailer_id")
-    RetailerEntity retailer;
+    @JoinColumn(name = "product_id", nullable = false)
+    ProductEntity product;
+
+    @ManyToOne
+    @JoinColumn(name = "unit_id", nullable = false)
+    UnitEntity unit;
+
+    @Column
+    double size;
+
+    @Column
+    double price;
+
 }
