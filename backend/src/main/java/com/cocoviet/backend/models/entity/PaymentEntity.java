@@ -23,7 +23,4 @@ public class PaymentEntity implements Serializable {
 
     @Column
     String paymentMethod;
-
-    @OneToMany(mappedBy = "payment")
-    List<OrderEntity> productOrders;
 }

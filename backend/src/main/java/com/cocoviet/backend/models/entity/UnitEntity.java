@@ -3,8 +3,11 @@ package com.cocoviet.backend.models.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.aspectj.weaver.Lint;
+import org.w3c.dom.stylesheets.LinkStyle;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -24,7 +27,6 @@ public class UnitEntity implements Serializable {
     @Column
     String unitName;
 
-    @OneToMany(mappedBy = "unit")
-    Set<CoconutProductVariantsEntity> variants;
-
+    @OneToMany(mappedBy = "unit", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    List<CoconutProductVariantEntity> variants;
 }

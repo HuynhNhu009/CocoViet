@@ -5,30 +5,32 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 @Entity
-@Table(name = "receipt_detail")
+@Table(name = "receipt")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Setter
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-
-public class ReceiptEntity implements Serializable {
+public class ReceiptEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long receiptDetailId;
 
     @ManyToOne
-    @JoinColumn(name = "product_id", nullable = false)
-    CoconutProductEntity product;
+    @JoinColumn(name = "order_id", nullable = false) // Đổi từ productOrder_id → order_id
+    OrderEntity order;
 
     @ManyToOne
-    @JoinColumn(name = "productOrder_id", nullable = false)
-    OrderEntity productOrder;
+    @JoinColumn(name = "variant_id", nullable = false)
+    CoconutProductVariantEntity variant;
 
-    @Column
-    int quantity;
+    @Column(nullable = false)
+    Long quantity;
 
+    @Column(nullable = false)
+    BigDecimal price;
 }

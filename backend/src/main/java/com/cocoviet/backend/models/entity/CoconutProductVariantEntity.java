@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.math.BigDecimal;
+
 @Entity
 @Table(name = "product_variants")
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -13,10 +15,19 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @NoArgsConstructor
 
-public class CoconutProductVariantsEntity {
+public class CoconutProductVariantEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long productVariantsId;
+    Long variantsId;
+
+    @Column
+    double value; // 100
+
+    @Column
+    BigDecimal price; // BigDecimal
+
+    @Column
+    int stock;
 
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
@@ -25,13 +36,4 @@ public class CoconutProductVariantsEntity {
     @ManyToOne
     @JoinColumn(name = "unit_id", nullable = false)
     UnitEntity unit;
-
-    @Column
-    double value; // 100
-
-    @Column
-    double price; // BigDecimal
-
-    @Column
-    int stock;
 }
