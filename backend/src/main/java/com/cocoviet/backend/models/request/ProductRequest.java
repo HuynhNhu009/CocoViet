@@ -44,8 +44,6 @@ public class ProductRequest {
     String productOrigin;
 
     Date createdAt;
-
-
 }
 
 
