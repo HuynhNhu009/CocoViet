@@ -43,6 +43,6 @@ public class CustomerEntity implements Serializable {
     Date createdAt;
 
     @OneToMany(mappedBy = "customer")
-    List<ProductOrderEntity> productOrders;
+    List<OrderEntity> productOrders;
 
 }

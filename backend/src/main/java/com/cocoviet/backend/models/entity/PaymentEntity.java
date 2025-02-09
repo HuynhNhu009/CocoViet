@@ -25,5 +25,5 @@ public class PaymentEntity implements Serializable {
     String paymentMethod;
 
     @OneToMany(mappedBy = "payment")
-    List<ProductOrderEntity> productOrders;
+    List<OrderEntity> productOrders;
 }

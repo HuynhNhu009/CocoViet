@@ -17,8 +17,14 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class PostResponse {
+
     String postTitle;
+
     String postContent;
-    Date publishedDate;
+
     String postImageUrl;
+
+    String authorPost; // retailer
+
+    Date publishedDate;
 }

@@ -55,7 +55,7 @@ public class RetailerEntity implements Serializable {
     Date createdAt;
 
     @OneToMany(mappedBy = "retailer")
-    Set<ProductEntity> products;
+    Set<CoconutProductEntity> products;
 
     @OneToMany(mappedBy = "retailer")
     Set<PostEntity> posts;

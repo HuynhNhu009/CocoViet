@@ -17,5 +17,4 @@ public class ReceiptDetailRequest {
 
     @Size(min = 1)
     int quantity;
-
 }

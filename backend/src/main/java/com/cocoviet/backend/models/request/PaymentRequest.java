@@ -19,8 +19,6 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class PaymentRequest {
 
-    Long paymentId;
-
     @NotBlank(message = "Customer name cannot be empty.")
     @Size(min = 6, max = 50, message = "Customer name must be between 6 and 50 characters.")
     String paymentMethod;

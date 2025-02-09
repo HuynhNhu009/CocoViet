@@ -4,10 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.io.Serializable;
-
 @Entity
-@Table(name = "receipt_detail")
+@Table(name = "product_variants")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Setter
 @Getter
@@ -15,20 +13,25 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 
-public class ReceiptDetailEntity implements Serializable {
+public class CoconutProductVariantsEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long receiptDetailId;
+    Long productVariantsId;
 
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
-    ProductEntity product;
+    CoconutProductEntity product;
 
     @ManyToOne
-    @JoinColumn(name = "productOrder_id", nullable = false)
-    ProductOrderEntity productOrder;
+    @JoinColumn(name = "unit_id", nullable = false)
+    UnitEntity unit;
 
     @Column
-    int quantity;
+    double value; // 100
 
+    @Column
+    double price; // BigDecimal
+
+    @Column
+    int stock;
 }

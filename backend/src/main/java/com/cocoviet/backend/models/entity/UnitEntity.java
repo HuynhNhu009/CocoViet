@@ -25,6 +25,6 @@ public class UnitEntity implements Serializable {
     String unitName;
 
     @OneToMany(mappedBy = "unit")
-    Set<ProductVariantsEntity> variants;
+    Set<CoconutProductVariantsEntity> variants;
 
 }

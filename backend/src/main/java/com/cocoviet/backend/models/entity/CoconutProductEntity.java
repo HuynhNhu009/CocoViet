@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
 
@@ -17,7 +16,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 
-public class ProductEntity implements Serializable {
+public class CoconutProductEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long productId;
@@ -28,8 +27,8 @@ public class ProductEntity implements Serializable {
     @Column(columnDefinition = "TEXT")
     String productDesc;
 
-    @Column
-    int productStock;
+    // @Column
+    // int productStock;
 
     @Column
     String productImage;
@@ -45,14 +44,10 @@ public class ProductEntity implements Serializable {
     @JoinColumn(name = "retailer_id")
     RetailerEntity retailer;
 
-    @ManyToOne
-    @JoinColumn(name = "category_id")
-    CategoryEntity category;
+    @OneToMany(mappedBy = "product")
+    Set<CoconutProductVariantsEntity> variants;
 
     @OneToMany(mappedBy = "product")
-    Set<ProductVariantsEntity> variants;
-
-    @OneToMany(mappedBy = "product")
-    Set<ReceiptDetailEntity> receiptDetails;
+    Set<ReceiptEntity> receiptDetails;
 
 }

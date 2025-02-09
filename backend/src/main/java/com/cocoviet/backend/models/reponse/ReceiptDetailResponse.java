@@ -1,6 +1,5 @@
 package com.cocoviet.backend.models.reponse;
 
-import com.cocoviet.backend.models.entity.ProductEntity;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -11,14 +10,25 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ReceiptResponse {
-    String retailerName ;
-    String customerAddress ;
-    String customerNumber;
-    int quantity;
-    double price;
-    String unitPrice;
-    double totalPrice;
-    Set<ProductEntity> products;
+public class ReceiptDetailResponse {
 
+    String retailerName;
+
+    String customerName;
+
+    String customerAddress;
+
+    String customerNumber;
+
+    int quantity;
+
+    String unitPrice;
+
+    Set<ProductVariantResponse> productVariants;
 }
+
+
+
+
+
+
