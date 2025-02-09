@@ -16,7 +16,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 
-public class PostEntity implements Serializable {
+public class PostEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long postId;
@@ -27,13 +27,14 @@ public class PostEntity implements Serializable {
     @Column
     String postContent;
 
-    @Column
-    Date publishedDate;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(nullable = false, updatable = false)
+    Date publishTime; // Thêm annotation cho thời gian
 
     @Column
     String postImageUrl;
 
     @ManyToOne
-    @JoinColumn(name = "retailer_id")
+    @JoinColumn(name = "retailer_id", nullable = false)
     RetailerEntity retailer;
 }

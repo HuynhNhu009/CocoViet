@@ -5,6 +5,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -39,15 +40,20 @@ public class CoconutProductEntity {
     @Column
     Date createdAt;
 
+//    @ManyToOne
+//    @JoinColumn(name = "retailer_id")
+//    RetailerEntity retailer;
+
+//    @OneToMany(mappedBy = "product")
+//    Set<CoconutProductVariantsEntity> variants;
+//
+//    @OneToMany(mappedBy = "product")
+//    Set<ReceiptEntity> receiptDetails;
 
     @ManyToOne
-    @JoinColumn(name = "retailer_id")
+    @JoinColumn(name = "retailer_id", nullable = false) // Liên kết đến RetailerEntity
     RetailerEntity retailer;
 
-    @OneToMany(mappedBy = "product")
-    Set<CoconutProductVariantsEntity> variants;
-
-    @OneToMany(mappedBy = "product")
-    Set<ReceiptEntity> receiptDetails;
-
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    List<CoconutProductVariantEntity> variants;
 }

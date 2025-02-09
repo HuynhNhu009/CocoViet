@@ -16,14 +16,11 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 
-public class StatusEntity implements Serializable {
+public class StatusEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long statusId;
 
     @Column
     String statusName;
-
-    @OneToMany(mappedBy = "status")
-    List<OrderEntity> productOrders;
 }

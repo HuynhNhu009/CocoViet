@@ -28,13 +28,13 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class RetailerEntity implements Serializable {
+public class RetailerEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long retailerId;
 
     @Column
-    String retailerName ;
+    String retailerName;
 
     @Column
     String retailerPassword;

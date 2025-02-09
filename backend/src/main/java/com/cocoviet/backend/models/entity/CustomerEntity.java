@@ -16,13 +16,13 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CustomerEntity implements Serializable {
+public class CustomerEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long customerId;
 
     @Column
-    String customerName ;
+    String customerName;
 
     @Column
     String customerPassword;
@@ -41,8 +41,4 @@ public class CustomerEntity implements Serializable {
 
     @Column
     Date createdAt;
-
-    @OneToMany(mappedBy = "customer")
-    List<OrderEntity> productOrders;
-
 }

@@ -22,9 +22,4 @@ public class CoconutCategoryEntity implements Serializable {
 
     @Column
     String categoryName;
-
-    @OneToMany(mappedBy = "category")
-    Set<CoconutProductEntity> products;
-
-
 }
