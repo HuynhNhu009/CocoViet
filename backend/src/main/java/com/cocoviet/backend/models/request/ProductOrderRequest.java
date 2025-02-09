@@ -1,11 +1,15 @@
 package com.cocoviet.backend.models.request;
 
-import jakarta.validation.constraints.NotNull;
-import lombok.*;
-import lombok.experimental.FieldDefaults;
-
 import java.util.Date;
-import java.util.List;
+
+import jakarta.validation.constraints.NotNull;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
 @Getter
 @Setter
@@ -14,9 +18,6 @@ import java.util.List;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProductOrderRequest {
-
-    @NotNull(message = "Product order date cannot be null")
-    Date productOrderDate;
 
     @NotNull(message = "Customer ID cannot be null")
     Long customerId;
@@ -27,7 +28,8 @@ public class ProductOrderRequest {
     @NotNull(message = "Payment ID cannot be null")
     Long paymentId;
 
-    @NotNull(message = "Receipt details cannot be null")
-    List<ReceiptDetailRequest> receiptDetails;
+    @NotNull(message = "Product order date cannot be null")
+    Date productOrderDate;
+
 }
 

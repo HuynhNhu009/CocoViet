@@ -49,8 +49,6 @@ public class CustomerRequest {
     Date createdAt; // nullable
 
 
-    // [ Thắc mắc nên có Danh sách ID đơn hàng hay không]
-    //List<Long> productOrderIds; // Danh sách ID đơn hàng của khách hàng (nếu có)
 
 }
 

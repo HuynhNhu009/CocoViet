@@ -4,8 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.io.Serializable;
-
 @Entity
 @Table(name = "product_variants")
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -15,7 +13,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 
-public class ProductVariantsEntity implements Serializable {
+public class ProductVariantsEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long productVariantsId;
@@ -29,9 +27,11 @@ public class ProductVariantsEntity implements Serializable {
     UnitEntity unit;
 
     @Column
-    double size;
+    double value; // 100
 
     @Column
-    double price;
+    double price; // BigDecimal
 
+    @Column
+    int stock;
 }

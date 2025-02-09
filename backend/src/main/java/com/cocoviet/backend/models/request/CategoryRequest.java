@@ -25,9 +25,4 @@ public class CategoryRequest {
     @Size(min = 6, max = 50, message = "Customer name must be between 6 and 50 characters.")
     String categoryName;
 
-
-
-    // [ Giống Customer]
-    List<Long> categoryIds;
-
 }

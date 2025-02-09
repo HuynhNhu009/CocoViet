@@ -24,21 +24,17 @@ import lombok.experimental.FieldDefaults;
 
 public class PostRequest {
 
-    Long postId;
-
     @NotBlank(message = "Customer name cannot be empty.")
     @Size(min = 10, max = 100, message = "Post title must be between 10 and 100 characters.")
     String postTitle;
 
-
-    @NotBlank(message = "Customer name cannot be empty.")
+    @NotBlank(message = "Post content name cannot be empty.")
     @Size(min = 20, max = 500, message = "Post content must be between 20 and 500 characters.")
     String postContent;
 
-    @Column
     Date publishedDate;
 
-    @Column
     String postImageUrl; // Nullable
 
+    String retailerId; //
 }

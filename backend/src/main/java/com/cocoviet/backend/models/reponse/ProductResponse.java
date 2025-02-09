@@ -1,10 +1,14 @@
 package com.cocoviet.backend.models.reponse;
 
-import lombok.*;
-import lombok.experimental.FieldDefaults;
-
 import java.util.Date;
-import java.util.Set;
+
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
 @Getter
 @Setter
@@ -24,5 +28,5 @@ public class ProductResponse {
 
     RetailerResponse retailer;
     CategoryResponse category;
-    Set<ProductVariantResponse> variants;
+//    Set<ProductVariantResponse> variants;
 }

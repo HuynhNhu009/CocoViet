@@ -15,7 +15,7 @@ import java.util.Set;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class RetailerResponse {
-    String retailerName ;
+    String retailerName;
 
     String retailerEmail;
 
@@ -25,6 +25,7 @@ public class RetailerResponse {
 
     String retailerAddress;
 
-    Set<ProductEntity> products;
-    Set<PostEntity> post;
+    Set<ProductResponse> products;
+
+    Set<PostResponse> post;
 }

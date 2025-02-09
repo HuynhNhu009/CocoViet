@@ -1,38 +1,42 @@
 package com.cocoviet.backend.models.request;
 
-import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.*;
+import jakarta.validation.constraints.Size;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
-import java.math.BigDecimal;
 
-@Entity
+
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "product_variants")
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProductVariantsRequest {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
     @NotNull(message = "Product ID cannot be null")
-    private Long productId;
+    Long productId;
+
+    Long unitId;
 
     @NotBlank(message = "Variant name cannot be empty")
-    private String variantName;
+    @Size(min = 6, max = 50, message = "Variant name must be between 6 and 50 characters.")
+    String variantName;
 
     @NotNull(message = "Price cannot be null")
     @Min(value = 0, message = "Price must be greater than or equal to 0")
-    private BigDecimal price;
+    double price;
 
     @NotNull(message = "Stock quantity cannot be null")
     @Min(value = 0, message = "Stock quantity must be at least 0")
-    private Integer stockQuantity;
+    int stock;
 }
 

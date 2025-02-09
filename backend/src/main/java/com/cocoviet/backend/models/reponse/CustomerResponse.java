@@ -5,6 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+import java.util.Set;
+
 @Setter
 @Getter
 @AllArgsConstructor
@@ -12,8 +15,14 @@ import lombok.Setter;
 public class CustomerResponse {
 
     String customerName;
+
     String customerEmail;
+
     String phoneNumbers;
+
     String customerAvatar;
+
     String customerAddress;
+
+    List<ProductOrderResponse> productOrders; // Trả về danh sách Order của Customer
 }

@@ -19,7 +19,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 
-public class ProductOrderEntity implements Serializable {
+public class ProductOrderEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long productOrderId;
@@ -41,6 +41,4 @@ public class ProductOrderEntity implements Serializable {
     @ManyToOne
     @JoinColumn(name = "payment_id")
     PaymentEntity payment ;
-
-
 }

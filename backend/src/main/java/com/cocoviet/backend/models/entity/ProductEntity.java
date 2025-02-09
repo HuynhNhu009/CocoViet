@@ -17,7 +17,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 
-public class ProductEntity implements Serializable {
+public class ProductEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long productId;
@@ -28,8 +28,8 @@ public class ProductEntity implements Serializable {
     @Column(columnDefinition = "TEXT")
     String productDesc;
 
-    @Column
-    int productStock;
+    // @Column
+    // int productStock;
 
     @Column
     String productImage;
