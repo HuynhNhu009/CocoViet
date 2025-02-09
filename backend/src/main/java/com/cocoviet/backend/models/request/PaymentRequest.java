@@ -1,5 +1,4 @@
 package com.cocoviet.backend.models.request;
-import java.util.List;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -11,23 +10,18 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
-@NoArgsConstructor
-@AllArgsConstructor
+
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CategoryRequest {
+public class PaymentRequest {
 
-    Long categoryId;
+    Long paymentId;
 
     @NotBlank(message = "Customer name cannot be empty.")
     @Size(min = 6, max = 50, message = "Customer name must be between 6 and 50 characters.")
-    String categoryName;
-
-
-
-    // [ Giống Customer]
-    List<Long> categoryIds;
-
+    String paymentMethod;
 }
