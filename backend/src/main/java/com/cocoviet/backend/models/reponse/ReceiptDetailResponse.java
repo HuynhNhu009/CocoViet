@@ -1,6 +1,5 @@
 package com.cocoviet.backend.models.reponse;
 
-import com.cocoviet.backend.models.entity.ProductEntity;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 

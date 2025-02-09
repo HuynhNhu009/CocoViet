@@ -15,18 +15,18 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 
-public class ReceiptDetailEntity implements Serializable {
+public class ReceiptEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long receiptDetailId;
 
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
-    ProductEntity product;
+    CoconutProductEntity product;
 
     @ManyToOne
     @JoinColumn(name = "productOrder_id", nullable = false)
-    ProductOrderEntity productOrder;
+    OrderEntity productOrder;
 
     @Column
     int quantity;

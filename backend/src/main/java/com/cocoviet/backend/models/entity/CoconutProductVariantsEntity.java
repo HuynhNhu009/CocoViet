@@ -13,14 +13,14 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @NoArgsConstructor
 
-public class ProductVariantsEntity {
+public class CoconutProductVariantsEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long productVariantsId;
 
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
-    ProductEntity product;
+    CoconutProductEntity product;
 
     @ManyToOne
     @JoinColumn(name = "unit_id", nullable = false)

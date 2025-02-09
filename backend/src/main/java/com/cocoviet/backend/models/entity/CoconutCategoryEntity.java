@@ -5,7 +5,6 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.io.Serializable;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -16,7 +15,7 @@ import java.util.Set;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CategoryEntity implements Serializable {
+public class CoconutCategoryEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long categoryId;
@@ -25,7 +24,7 @@ public class CategoryEntity implements Serializable {
     String categoryName;
 
     @OneToMany(mappedBy = "category")
-    Set<ProductEntity> products;
+    Set<CoconutProductEntity> products;
 
 
 }

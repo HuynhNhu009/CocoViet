@@ -25,5 +25,5 @@ public class StatusEntity implements Serializable {
     String statusName;
 
     @OneToMany(mappedBy = "status")
-    List<ProductOrderEntity> productOrders;
+    List<OrderEntity> productOrders;
 }
