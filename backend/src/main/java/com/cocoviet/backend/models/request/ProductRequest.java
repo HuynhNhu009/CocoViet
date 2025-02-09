@@ -25,6 +25,10 @@ import lombok.experimental.FieldDefaults;
 @Table(name = "products")
 public class ProductRequest {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Long productId;
+
     @NotBlank(message = "Product name cannot be empty")
     @Size(min = 6, max = 50, message = "Product name must be between 6 and 50 characters.")
     String productName;
@@ -44,6 +48,8 @@ public class ProductRequest {
     String productOrigin;
 
     Date createdAt;
+
+
 }
 
 
