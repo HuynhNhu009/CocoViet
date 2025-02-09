@@ -6,6 +6,7 @@ import lombok.experimental.FieldDefaults;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "category")
@@ -24,7 +25,7 @@ public class CategoryEntity implements Serializable {
     String categoryName;
 
     @OneToMany(mappedBy = "category")
-    List<ProductEntity> products;
+    Set<ProductEntity> products;
 
 
 }

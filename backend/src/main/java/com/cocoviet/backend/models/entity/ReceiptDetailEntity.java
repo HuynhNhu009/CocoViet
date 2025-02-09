@@ -31,12 +31,4 @@ public class ReceiptDetailEntity implements Serializable {
     @Column
     int quantity;
 
-    @Column
-    double unitPrice;
-
-    @Column
-    double lineTotal; //quantity*unitPrice
-
-
-
 }

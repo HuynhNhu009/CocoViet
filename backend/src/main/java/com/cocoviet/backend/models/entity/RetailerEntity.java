@@ -7,6 +7,7 @@ import lombok.experimental.FieldDefaults;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "retailer")
@@ -43,11 +44,10 @@ public class RetailerEntity implements Serializable {
     Date createdAt;
 
     @OneToMany(mappedBy = "retailer")
-    List<ProductEntity> products;
-
+    Set<ProductEntity> products;
 
     @OneToMany(mappedBy = "retailer")
-    List<PostEntity> posts;
+    Set<PostEntity> posts;
 
 
 }
