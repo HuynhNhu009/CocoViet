@@ -15,6 +15,7 @@ public class ProductDTO {
     private String productDesc;
     private String productEmail;
     private String productOrigin;
+    private String productImage;
     private String retailerId;
     private String retailerName;
     private String variantId;
