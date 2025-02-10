@@ -6,6 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ICoconutProductRepository extends JpaRepository<CoconutProductEntity, String> {
-//    boolean existsByCustomerEmail(String email);
-
+    boolean existsByProductName(String email);
 }
