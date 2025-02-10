@@ -28,9 +28,6 @@ public class CoconutProductEntity {
     @Column(columnDefinition = "TEXT")
     String productDesc;
 
-    // @Column
-    // int productStock;
-
     @Column
     String productImage;
 
@@ -40,20 +37,13 @@ public class CoconutProductEntity {
     @Column
     Date createdAt;
 
-//    @ManyToOne
-//    @JoinColumn(name = "retailer_id")
-//    RetailerEntity retailer;
-
-//    @OneToMany(mappedBy = "product")
-//    Set<CoconutProductVariantsEntity> variants;
-//
-//    @OneToMany(mappedBy = "product")
-//    Set<ReceiptEntity> receiptDetails;
-
     @ManyToOne
     @JoinColumn(name = "retailer_id", nullable = false) // Liên kết đến RetailerEntity
     RetailerEntity retailer;
 
+//    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//    List<CoconutProductVariantEntity> variants;
+
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    List<CoconutProductVariantEntity> variants;
+    Set<CoconutProductVariantEntity> variants;
 }
