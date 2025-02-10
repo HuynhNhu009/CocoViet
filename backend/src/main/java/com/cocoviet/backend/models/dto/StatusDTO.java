@@ -1,19 +1,18 @@
-package com.cocoviet.backend.models.reponse;
+package com.cocoviet.backend.models.dto;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.util.List;
-import java.util.Set;
 
 @Setter
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class StatusResponse {
+public class StatusDTO {
 
     String statusName;
 
-    List<ProductOrderResponse> orders;
+    List<ProductOrderDTO> orders;
 }

@@ -1,8 +1,5 @@
 package com.cocoviet.backend.service.impl;
 
-import com.cocoviet.backend.models.reponse.CustomerResponse;
-import com.cocoviet.backend.models.request.CustomerRequest;
-import com.cocoviet.backend.repository.ICustomerRepository;
 import com.cocoviet.backend.service.ICustomerService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
