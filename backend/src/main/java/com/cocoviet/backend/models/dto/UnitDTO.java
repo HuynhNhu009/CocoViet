@@ -1,4 +1,4 @@
-package com.cocoviet.backend.models.reponse;
+package com.cocoviet.backend.models.dto;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -8,6 +8,6 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UnitResponse {
+public class UnitDTO {
     String unitName;
 }

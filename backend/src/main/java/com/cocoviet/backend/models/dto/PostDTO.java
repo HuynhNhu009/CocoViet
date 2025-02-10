@@ -1,4 +1,7 @@
-package com.cocoviet.backend.models.reponse;
+package com.cocoviet.backend.models.dto;
+
+import java.util.Date;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,14 +10,21 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
-@NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class PaymentResponse {
+public class PostDTO {
 
-    String paymentMethod;
+    String postTitle;
 
+    String postContent;
+
+    String postImageUrl;
+
+    String authorPost; // retailer
+
+    Date publishedDate;
 }

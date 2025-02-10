@@ -1,4 +1,4 @@
-package com.cocoviet.backend.models.reponse;
+package com.cocoviet.backend.models.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -6,13 +6,12 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
-import java.util.Set;
 
 @Setter
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CustomerResponse {
+public class CustomerDTO {
 
     String customerName;
 
@@ -24,5 +23,5 @@ public class CustomerResponse {
 
     String customerAddress;
 
-    List<ProductOrderResponse> productOrders; // Trả về danh sách Order của Customer
+    List<ProductOrderDTO> productOrders; // Trả về danh sách Order của Customer
 }

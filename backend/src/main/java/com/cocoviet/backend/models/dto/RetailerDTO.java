@@ -1,4 +1,4 @@
-package com.cocoviet.backend.models.reponse;
+package com.cocoviet.backend.models.dto;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -10,7 +10,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class RetailerResponse {
+public class RetailerDTO {
     String retailerName;
 
     String retailerEmail;
@@ -23,5 +23,5 @@ public class RetailerResponse {
 
     Set<ProductResponse> products;
 
-    Set<PostResponse> post;
+    Set<PostDTO> post;
 }
