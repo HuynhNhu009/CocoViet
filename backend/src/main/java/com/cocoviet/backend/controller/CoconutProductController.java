@@ -26,7 +26,7 @@ public class CoconutProductController {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ResponseData.builder()
                         .data(coconutProductService.addProduct(coconutProductRequest))
-                        .msg("Add product: " + coconutProductRequest.getProductId() + " successfully")
+                        .msg("Add product:  successfully")
                         .status("OK")
                         .build());
     }
