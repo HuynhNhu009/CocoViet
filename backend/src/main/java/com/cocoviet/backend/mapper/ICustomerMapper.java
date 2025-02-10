@@ -5,7 +5,7 @@ import com.cocoviet.backend.models.entity.CustomerEntity;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
-public interface CustomerMapper {
+public interface ICustomerMapper {
     CustomerDTO toCustomerDTO(CustomerEntity customerEntity);
-    //
+
 }

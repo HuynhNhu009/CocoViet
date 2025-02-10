@@ -20,15 +20,16 @@ import org.springframework.web.bind.annotation.RestController;
 public class CustomerController {
 
     @Autowired
-    ICustomerService customerService;
+    ICustomerService iCustomerService;
 
     @PostMapping("/register")
     ResponseEntity<ResponseData> registerCustomer(@RequestBody @Valid CustomerRequest customerRequest) {
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ResponseData.builder()
-                        .data(customerService.registerCustomer(customerRequest))
-                        .msg("User registered successfully!" )
+                        .data(iCustomerService.registerCustomer(customerRequest))
+                        .msg("User registered with id: " + customerRequest.getCustomerId() + " successfully")
+                        .status("OK")
                         .build());
     }
 }

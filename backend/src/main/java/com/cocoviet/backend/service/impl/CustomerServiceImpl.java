@@ -1,6 +1,6 @@
 package com.cocoviet.backend.service.impl;
 
-import com.cocoviet.backend.mapper.CustomerMapper;
+import com.cocoviet.backend.mapper.ICustomerMapper;
 import com.cocoviet.backend.models.dto.CustomerDTO;
 import com.cocoviet.backend.models.entity.CustomerEntity;
 import com.cocoviet.backend.models.request.CustomerRequest;
@@ -10,7 +10,12 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @RequiredArgsConstructor
@@ -21,25 +26,43 @@ public class CustomerServiceImpl implements ICustomerService {
     ICustomerRepository iCustomerRepository;
 
     @Autowired
-    CustomerMapper customerMapper;
+    ICustomerMapper iCustomerMapper;
 
     @Override
     public CustomerDTO registerCustomer(CustomerRequest customerRequest) {
-//        if(iCustomerRepository.existsByCustomerEmail(customerRequest.getCustomerEmail())) {
-//            throw new RuntimeException("Customer already exists");
-//        }else{
-            CustomerEntity customerEntity = CustomerEntity.builder()
+        if(iCustomerRepository.existsByCustomerEmail(customerRequest.getCustomerEmail())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Customer email already exists");
+        };
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
+
+        CustomerEntity customerEntity = CustomerEntity.builder()
                     .customerEmail(customerRequest.getCustomerEmail())
                     .customerAddress(customerRequest.getCustomerAddress())
                     .customerName(customerRequest.getCustomerName())
-                    .customerPassword(customerRequest.getCustomerPassword())
+                    .customerPassword(passwordEncoder.encode(customerRequest.getCustomerPassword()))
                     .phoneNumbers(customerRequest.getPhoneNumbers())
                     .customerAvatar(customerRequest.getCustomerAvatar())
                     .build();
-            return customerMapper.toCustomerDTO(iCustomerRepository.save(customerEntity));
-
-//        }
-
-
+            return iCustomerMapper.toCustomerDTO(iCustomerRepository.save(customerEntity));
     }
+
+
+//    public AuthenticationDTO authenticate(AuthenticationRequest userRequest) {
+//        var user =  userRepository.findByUsername(userRequest.getUsername())
+//                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+//
+//        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+//        boolean result = passwordEncoder.matches(userRequest.getPassword(), user.getPassword());
+//
+//        if(!result)
+//            throw new AppException(ErrorCode.UNAUTHENTICATED);
+//
+//        //utils jwtNimbusd.generateToken(user);
+//        var token = jwtNimbusd.generateToken(user);
+//
+//        return  AuthenticationDTO.builder()
+//                .authenticated(true)
+//                .token(token)
+//                .build();
+//    }
 }
