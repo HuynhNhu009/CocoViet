@@ -5,5 +5,5 @@ import com.cocoviet.backend.models.request.CustomerRequest;
 
 public interface ICustomerService {
     CustomerDTO registerCustomer(CustomerRequest customerRequest);
-
+//    String loginCustomer(String email, String password);
 }

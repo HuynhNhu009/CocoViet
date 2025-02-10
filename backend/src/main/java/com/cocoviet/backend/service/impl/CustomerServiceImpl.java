@@ -47,7 +47,9 @@ public class CustomerServiceImpl implements ICustomerService {
     }
 
 
-//    public AuthenticationDTO authenticate(AuthenticationRequest userRequest) {
+
+//    @Autowired
+//    public String loginCustomer(String customerEmail, String customerPassword) {
 //        var user =  userRepository.findByUsername(userRequest.getUsername())
 //                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 //
