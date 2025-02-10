@@ -21,7 +21,7 @@ public class RetailerDTO {
 
     String retailerAddress;
 
-    Set<ProductResponse> products;
+    Set<ProductDTO> products;
 
     Set<PostDTO> post;
 }
