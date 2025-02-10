@@ -22,7 +22,7 @@ public class CustomerController {
     @Autowired
     ICustomerService customerService;
 
-    @PostMapping("/registerCustomer")
+    @PostMapping("/register")
     ResponseEntity<ResponseData> registerCustomer(@RequestBody @Valid CustomerRequest customerRequest) {
 
         return ResponseEntity.status(HttpStatus.CREATED)

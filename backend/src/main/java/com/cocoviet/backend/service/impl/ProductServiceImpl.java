@@ -11,22 +11,22 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ProductServiceImpl implements IProductService {
-
-    @Autowired
-    private ICoconutProductRepository coconutProductRepository; // Inject repository
-
-    @Autowired
-    private IProductMapper productMapper;
-
-    @Override
-    public ProductDTO addProduct(ProductRequest product) {
-        CoconutProductEntity productEntity = CoconutProductEntity.builder()
-                .productName(product.getProductName())
-                .productDesc(product.getProductDesc())
-                .productImage(product.getProductImage())
-                .productOrigin(product.getProductOrigin())
-                .build();
-
-        return productMapper.toProductDTO(coconutProductRepository.save(productEntity));
-    }
+//
+//    @Autowired
+//    private ICoconutProductRepository coconutProductRepository; // Inject repository
+//
+//    @Autowired
+//    private IProductMapper productMapper;
+//
+//    @Override
+//    public ProductDTO addProduct(ProductRequest product) {
+//        CoconutProductEntity productEntity = CoconutProductEntity.builder()
+//                .productName(product.getProductName())
+//                .productDesc(product.getProductDesc())
+//                .productImage(product.getProductImage())
+//                .productOrigin(product.getProductOrigin())
+//                .build();
+//
+//        return productMapper.toProductDTO(coconutProductRepository.save(productEntity));
+//    }
 }

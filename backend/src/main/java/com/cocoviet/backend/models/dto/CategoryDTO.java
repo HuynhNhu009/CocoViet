@@ -19,5 +19,5 @@ public class CategoryDTO {
 
     String categoryName;
 
-    Set<ProductResponse> products; // Trả về danh sách sản phẩ,
+    Set<ProductDTO> products; // Trả về danh sách sản phẩ,
 }
