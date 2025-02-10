@@ -27,9 +27,9 @@ public class CoconutProductServiceImpl implements ICoconutProductService {
     @Override
     public ProductDTO addProduct(ProductRequest product) {
         // Kiểm tra null
-        if (product == null || product.getProductName() == null || product.getProductName().trim().isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Product name cannot be empty");
-        }
+//        if (product == null || product.getProductName() == null || product.getProductName().trim().isEmpty()) {
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Product name cannot be empty");
+//        }
 
         // Kiểm tra nếu sản phẩm đã tồn tại
         if (coconutProductRepository.existsByProductName(product.getProductName())) {
@@ -40,9 +40,9 @@ public class CoconutProductServiceImpl implements ICoconutProductService {
         // Tạo entity từ request
         CoconutProductEntity productEntity = CoconutProductEntity.builder()
                 .productName(product.getProductName())
-                .productDesc(product.getProductDesc() != null ? product.getProductDesc().trim() : "")
-                .productImage(product.getProductImage() != null ? product.getProductImage().trim() : "")
-                .productOrigin(product.getProductOrigin() != null ? product.getProductOrigin().trim() : "")
+                .productDesc(product.getProductDesc() )
+                .productImage(product.getProductImage() )
+                .productOrigin(product.getProductOrigin())
                 .build();
 
         // Lưu vào database
