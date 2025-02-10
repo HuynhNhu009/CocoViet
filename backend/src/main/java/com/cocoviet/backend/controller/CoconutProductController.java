@@ -28,6 +28,4 @@ public class CoconutProductController {
                         .status("OK")
                         .build());
     }
-
-
 }

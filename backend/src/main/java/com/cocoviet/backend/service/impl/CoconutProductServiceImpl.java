@@ -7,29 +7,48 @@ import com.cocoviet.backend.models.request.ProductRequest;
 import com.cocoviet.backend.repository.ICoconutProductRepository;
 import com.cocoviet.backend.service.ICoconutProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service
 public class CoconutProductServiceImpl implements ICoconutProductService {
 
+    private static final Logger logger = LoggerFactory.getLogger(CoconutProductServiceImpl.class);
+
     @Autowired
-    private ICoconutProductRepository coconutProductRepository; // Inject repository
+    private ICoconutProductRepository coconutProductRepository;
 
     @Autowired
     private IProductMapper productMapper;
 
     @Override
     public ProductDTO addProduct(ProductRequest product) {
-        if(coconutProductRepository.existsByProductName(product.getProductName())) {
-            throw new RuntimeException("Product name already exists");
+        // Kiểm tra null
+        if (product == null || product.getProductName() == null || product.getProductName().trim().isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Product name cannot be empty");
         }
+
+        // Kiểm tra nếu sản phẩm đã tồn tại
+        if (coconutProductRepository.existsByProductName(product.getProductName())) {
+            logger.warn("Product with name {} already exists", product.getProductName());
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Product name already exists");
+        }
+
+        // Tạo entity từ request
         CoconutProductEntity productEntity = CoconutProductEntity.builder()
                 .productName(product.getProductName())
-                .productDesc(product.getProductDesc())
-                .productImage(product.getProductImage())
-                .productOrigin(product.getProductOrigin())
+                .productDesc(product.getProductDesc() != null ? product.getProductDesc().trim() : "")
+                .productImage(product.getProductImage() != null ? product.getProductImage().trim() : "")
+                .productOrigin(product.getProductOrigin() != null ? product.getProductOrigin().trim() : "")
                 .build();
 
-        return productMapper.toProductDTO(coconutProductRepository.save(productEntity));
+        // Lưu vào database
+        CoconutProductEntity savedProduct = coconutProductRepository.save(productEntity);
+
+        // Trả về ProductDTO
+        return productMapper.toProductDTO(savedProduct);
     }
 }
