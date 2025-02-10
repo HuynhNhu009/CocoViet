@@ -1,7 +1,8 @@
 package com.cocoviet.backend.service.impl;
 
+import com.cocoviet.backend.mapper.IProductMapper;
+import com.cocoviet.backend.models.dto.ProductDTO;
 import com.cocoviet.backend.models.entity.CoconutProductEntity;
-import com.cocoviet.backend.models.reponse.ProductResponse;
 import com.cocoviet.backend.models.request.ProductRequest;
 import com.cocoviet.backend.repository.ICoconutProductRepository;
 import com.cocoviet.backend.service.IProductService;
@@ -14,8 +15,11 @@ public class ProductServiceImpl implements IProductService {
     @Autowired
     private ICoconutProductRepository coconutProductRepository; // Inject repository
 
+    @Autowired
+    private IProductMapper productMapper;
+
     @Override
-    public ProductResponse addProduct(ProductRequest product) {
+    public ProductDTO addProduct(ProductRequest product) {
         CoconutProductEntity productEntity = CoconutProductEntity.builder()
                 .productName(product.getProductName())
                 .productDesc(product.getProductDesc())
@@ -23,8 +27,6 @@ public class ProductServiceImpl implements IProductService {
                 .productOrigin(product.getProductOrigin())
                 .build();
 
-        CoconutProductEntity savedProductEntity = coconutProductRepository.save(productEntity);
-
-
+        return productMapper.toProductDTO(coconutProductRepository.save(productEntity));
     }
 }
