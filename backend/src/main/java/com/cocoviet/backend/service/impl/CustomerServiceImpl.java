@@ -46,12 +46,9 @@ public class CustomerServiceImpl implements ICustomerService {
             return iCustomerMapper.toCustomerDTO(iCustomerRepository.save(customerEntity));
     }
 
-
-
-//    @Autowired
-//    public String loginCustomer(String customerEmail, String customerPassword) {
-//        var user =  userRepository.findByUsername(userRequest.getUsername())
-//                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+    @Autowired
+    public String loginCustomer(String customerEmail, String customerPassword) {
+//        var customer =  iCustomerRepository.findByCustomerEmail(customerEmail)
 //
 //        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 //        boolean result = passwordEncoder.matches(userRequest.getPassword(), user.getPassword());
@@ -61,10 +58,11 @@ public class CustomerServiceImpl implements ICustomerService {
 //
 //        //utils jwtNimbusd.generateToken(user);
 //        var token = jwtNimbusd.generateToken(user);
-//
+
 //        return  AuthenticationDTO.builder()
 //                .authenticated(true)
 //                .token(token)
 //                .build();
-//    }
+        return "ok";
+    }
 }
