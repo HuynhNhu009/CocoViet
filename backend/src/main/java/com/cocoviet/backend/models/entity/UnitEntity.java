@@ -21,8 +21,8 @@ import java.util.Set;
 
 public class UnitEntity implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long unitId;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    String unitId;
 
     @Column
     String unitName;

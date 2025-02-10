@@ -30,8 +30,8 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 public class RetailerEntity{
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long retailerId;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    String retailerId;
 
     @Column
     String retailerName;

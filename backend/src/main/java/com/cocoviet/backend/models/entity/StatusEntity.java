@@ -18,8 +18,8 @@ import java.util.List;
 
 public class StatusEntity{
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long statusId;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    String statusId;
 
     @Column
     String statusName;

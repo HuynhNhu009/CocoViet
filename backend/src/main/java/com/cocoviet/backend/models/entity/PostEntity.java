@@ -18,8 +18,8 @@ import java.util.Date;
 
 public class PostEntity{
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long postId;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    String postId;
 
     @Column
     String postTitle;

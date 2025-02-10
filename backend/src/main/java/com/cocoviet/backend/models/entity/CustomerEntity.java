@@ -18,8 +18,8 @@ import java.util.List;
 @NoArgsConstructor
 public class CustomerEntity{
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long customerId;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    String customerId;
 
     @Column
     String customerName;
