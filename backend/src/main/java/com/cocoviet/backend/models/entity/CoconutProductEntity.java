@@ -38,7 +38,7 @@ public class CoconutProductEntity {
     Date createdAt;
 
     @ManyToOne
-    @JoinColumn(name = "retailer_id", nullable = false) // Liên kết đến RetailerEntity
+    @JoinColumn(name = "retailer_id") // Liên kết đến RetailerEntity
     RetailerEntity retailer;
 
 //    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
