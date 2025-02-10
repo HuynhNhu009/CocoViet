@@ -1,7 +1,14 @@
 package com.cocoviet.backend.models.dto;
 
+import lombok.*;
+
 import java.util.Date;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 // Data Transfer Object
 public class ProductDTO {
     private String productName;

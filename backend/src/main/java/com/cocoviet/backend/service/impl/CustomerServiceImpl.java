@@ -32,7 +32,6 @@ public class CustomerServiceImpl implements ICustomerService {
                 .phoneNumbers(customerRequest.getPhoneNumbers())
                 .customerAvatar(customerRequest.getCustomerAvatar())
                 .build();
-
         return iCustommerMapper.toCustomerDTO(iCustomerRepository.save(customerEntity));
     }
 }
