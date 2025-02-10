@@ -22,7 +22,7 @@ public class CoconutProductServiceImpl implements ICoconutProductService {
     private ICoconutProductRepository coconutProductRepository;
 
     @Autowired
-    private IProductMapper productMapper;
+    private IProductMapper iProductMapper;
 
     @Override
     public ProductDTO addProduct(ProductRequest product) {
@@ -49,6 +49,6 @@ public class CoconutProductServiceImpl implements ICoconutProductService {
         CoconutProductEntity savedProduct = coconutProductRepository.save(productEntity);
 
         // Trả về ProductDTO
-        return productMapper.toProductDTO(savedProduct);
+        return iProductMapper.toProductDTO(savedProduct);
     }
 }
