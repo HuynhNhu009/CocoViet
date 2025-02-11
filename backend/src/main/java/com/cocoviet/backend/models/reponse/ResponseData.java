@@ -9,10 +9,9 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ResponseData {
-
+public class ResponseData <T>{
     String status;
     String msg;
-    Object data;
+    T data;
 }
 

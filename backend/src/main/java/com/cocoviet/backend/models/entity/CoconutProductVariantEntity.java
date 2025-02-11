@@ -17,8 +17,8 @@ import java.math.BigDecimal;
 
 public class CoconutProductVariantEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long variantsId;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    String variantsId;
 
     @Column
     double value; // 100

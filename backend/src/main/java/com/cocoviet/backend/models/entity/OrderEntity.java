@@ -18,8 +18,8 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class OrderEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long orderId; // Đổi từ productOrderId → orderId
+    @GeneratedValue(strategy = GenerationType.UUID)
+    String orderId; // Đổi từ productOrderId → orderId
 
     @Column(nullable = false)
     Date orderDate; // Đổi tên từ productOrderDate → orderDate

@@ -17,8 +17,8 @@ import java.util.Set;
 @NoArgsConstructor
 public class CoconutCategoryEntity implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long categoryId;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    String categoryId;
 
     @Column
     String categoryName;

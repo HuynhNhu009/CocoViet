@@ -14,8 +14,8 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 public class ProductCategoryEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id; // ID riêng cho bảng trung gian
+    @GeneratedValue(strategy = GenerationType.UUID)
+    String id; // ID riêng cho bảng trung gian
 
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)

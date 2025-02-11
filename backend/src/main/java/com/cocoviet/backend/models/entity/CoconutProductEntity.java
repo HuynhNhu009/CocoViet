@@ -19,8 +19,8 @@ import java.util.Set;
 
 public class CoconutProductEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long productId;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    String productId;
 
     @Column
     String productName;

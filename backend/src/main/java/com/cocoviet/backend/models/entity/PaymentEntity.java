@@ -18,8 +18,8 @@ import java.util.List;
 
 public class PaymentEntity implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long paymentId;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    String paymentId;
 
     @Column
     String paymentMethod;
