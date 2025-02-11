@@ -1,6 +1,7 @@
 package com.cocoviet.backend.models.entity;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Set;
 
@@ -52,7 +53,7 @@ public class RetailerEntity{
     String retailerAddress;
 
     @Column
-    Date createdAt;
+    LocalDateTime createdAt;
 
     @OneToMany(mappedBy = "retailer")
     Set<CoconutProductEntity> products;
