@@ -31,8 +31,8 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductDTO {
-    private String productName;
-    private String productDesc;
-    private String productImage;
-    private String productOrigin;
+     String productName;
+     String productDesc;
+     String productImage;
+     String productOrigin;
 }
