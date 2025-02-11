@@ -5,7 +5,6 @@ import com.cocoviet.backend.models.request.CustomerRequest;
 import com.cocoviet.backend.models.request.UserLoginRequest;
 
 import java.util.List;
-import java.util.Set;
 
 public interface ICustomerService {
     CustomerDTO registerCustomer(CustomerRequest customerRequest);
