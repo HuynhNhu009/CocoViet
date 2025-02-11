@@ -17,8 +17,8 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class ReceiptEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long receiptDetailId;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    String receiptDetailId;
 
     @ManyToOne
     @JoinColumn(name = "order_id", nullable = false) // Đổi từ productOrder_id → order_id

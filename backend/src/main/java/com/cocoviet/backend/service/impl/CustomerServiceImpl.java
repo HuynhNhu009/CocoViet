@@ -4,18 +4,19 @@ import com.cocoviet.backend.mapper.ICustomerMapper;
 import com.cocoviet.backend.models.dto.CustomerDTO;
 import com.cocoviet.backend.models.entity.CustomerEntity;
 import com.cocoviet.backend.models.request.CustomerRequest;
+import com.cocoviet.backend.models.request.UserLoginRequest;
 import com.cocoviet.backend.repository.ICustomerRepository;
 import com.cocoviet.backend.service.ICustomerService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -31,7 +32,7 @@ public class CustomerServiceImpl implements ICustomerService {
     @Override
     public CustomerDTO registerCustomer(CustomerRequest customerRequest) {
         if(iCustomerRepository.existsByCustomerEmail(customerRequest.getCustomerEmail())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Customer email already exists");
+            throw new RuntimeException( "Customer email already exists");
         };
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
 
@@ -43,26 +44,48 @@ public class CustomerServiceImpl implements ICustomerService {
                     .phoneNumbers(customerRequest.getPhoneNumbers())
                     .customerAvatar(customerRequest.getCustomerAvatar())
                     .build();
-            return iCustomerMapper.toCustomerDTO(iCustomerRepository.save(customerEntity));
+
+        return iCustomerMapper.toCustomerDTO(iCustomerRepository.save(customerEntity));
     }
 
-//    @Autowired
-//    public String loginCustomer(String customerEmail, String customerPassword) {
-//        var customer =  iCustomerRepository.findByCustomerEmail(customerEmail)
-//
-//        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-//        boolean result = passwordEncoder.matches(userRequest.getPassword(), user.getPassword());
-//
-//        if(!result)
-//            throw new AppException(ErrorCode.UNAUTHENTICATED);
-//
-//        //utils jwtNimbusd.generateToken(user);
-//        var token = jwtNimbusd.generateToken(user);
+    @Override
+    public CustomerDTO loginCustomer(UserLoginRequest userLoginRequest) {
+        var customer =  iCustomerRepository.findByCustomerEmail(userLoginRequest.getEmail())
+                .orElseThrow(() -> new RuntimeException("Email not found"));
 
-//        return  AuthenticationDTO.builder()
-//                .authenticated(true)
-//                .token(token)
-//                .build();
-//        return "ok";
-//    }
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        boolean result = passwordEncoder.matches(userLoginRequest.getPassword(),customer.getCustomerPassword());
+
+        if(!result)
+            throw new RuntimeException("Password incorrect!");
+
+        return  iCustomerMapper.toCustomerDTO(customer);
+    }
+
+    @Override
+    public CustomerDTO updateCustomerProfile(String customerId, CustomerRequest customerRequest) {
+
+        CustomerEntity customer = iCustomerRepository.findById(customerId)
+                .orElseThrow(() -> new RuntimeException("Customer not found"));
+
+        customer.setCustomerName(customerRequest.getCustomerName());
+        customer.setCustomerAddress(customerRequest.getCustomerAddress());
+        customer.setPhoneNumbers(customerRequest.getPhoneNumbers());
+        customer.setCustomerAvatar(customerRequest.getCustomerAvatar());
+
+        return iCustomerMapper.toCustomerDTO(iCustomerRepository.save(customer));
+    }
+
+    @Override
+    public CustomerDTO getCustomer(String customerId) {
+        CustomerEntity customer = iCustomerRepository.findById(customerId)
+                .orElseThrow(() -> new RuntimeException("Customer not found"));
+        return iCustomerMapper.toCustomerDTO(customer);
+    }
+
+    @Override
+    public List<CustomerDTO> getAllCustomers() {
+        return iCustomerMapper.toCustomerDTOList(iCustomerRepository.findAll());
+    }
+
 }

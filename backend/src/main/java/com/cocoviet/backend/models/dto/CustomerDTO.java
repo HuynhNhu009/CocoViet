@@ -13,6 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 public class CustomerDTO {
 
+    String customerId;
     String customerName;
 
     String customerEmail;
