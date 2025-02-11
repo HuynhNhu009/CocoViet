@@ -46,8 +46,8 @@ public class CustomerServiceImpl implements ICustomerService {
             return iCustomerMapper.toCustomerDTO(iCustomerRepository.save(customerEntity));
     }
 
-    @Autowired
-    public String loginCustomer(String customerEmail, String customerPassword) {
+//    @Autowired
+//    public String loginCustomer(String customerEmail, String customerPassword) {
 //        var customer =  iCustomerRepository.findByCustomerEmail(customerEmail)
 //
 //        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -63,6 +63,6 @@ public class CustomerServiceImpl implements ICustomerService {
 //                .authenticated(true)
 //                .token(token)
 //                .build();
-        return "ok";
-    }
+//        return "ok";
+//    }
 }
