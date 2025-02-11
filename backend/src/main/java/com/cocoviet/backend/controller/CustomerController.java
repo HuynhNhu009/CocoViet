@@ -3,13 +3,12 @@ package com.cocoviet.backend.controller;
 import com.cocoviet.backend.models.reponse.ResponseData;
 import com.cocoviet.backend.models.request.CustomerRequest;
 import com.cocoviet.backend.models.request.UserLoginRequest;
+import com.cocoviet.backend.models.request.UserProfileRequest;
 import com.cocoviet.backend.service.ICustomerService;
 import jakarta.validation.Valid;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -42,24 +41,24 @@ public class CustomerController {
                         .build());
     }
 
-    @PatchMapping("/update-profile")
-    ResponseEntity<ResponseData> updateCustomerProfile(@PathVariable String email,
-                                                       @RequestBody @Valid CustomerRequest customerRequest) {
+    @PatchMapping("/update-profile/{id}")
+    ResponseEntity<ResponseData> updateCustomerProfile(@PathVariable String id,
+                                                       @RequestBody @Valid UserProfileRequest customerRequest) {
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ResponseData.builder()
-                        .data(iCustomerService.updateCustomerProfile(email, customerRequest))
+                        .data(iCustomerService.updateCustomerProfile(id, customerRequest))
                         .msg("Update profile success!")
                         .status("OK")
                         .build());
     }
 
     @GetMapping("/{id}")
-    ResponseEntity<ResponseData> getCustomer(@PathVariable String email){
+    ResponseEntity<ResponseData> getCustomer(@PathVariable String id){
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ResponseData.builder()
-                        .data(iCustomerService.getCustomer(email))
+                        .data(iCustomerService.getCustomer(id))
                         .msg("Get customer success")
                         .status("OK")
                         .build());

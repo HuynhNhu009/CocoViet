@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -35,7 +36,7 @@ public class CoconutProductEntity {
     String productOrigin;
 
     @Column
-    Date createdAt;
+    LocalDateTime createdAt;
 
     @ManyToOne
     @JoinColumn(name = "retailer_id") // Liên kết đến RetailerEntity

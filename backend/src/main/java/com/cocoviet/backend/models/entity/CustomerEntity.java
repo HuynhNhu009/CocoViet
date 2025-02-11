@@ -5,6 +5,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -40,5 +41,5 @@ public class CustomerEntity{
     String customerAddress;
 
     @Column
-    Date createdAt;
+    LocalDateTime createdAt;
 }

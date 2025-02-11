@@ -5,6 +5,7 @@ import com.cocoviet.backend.models.dto.CustomerDTO;
 import com.cocoviet.backend.models.entity.CustomerEntity;
 import com.cocoviet.backend.models.request.CustomerRequest;
 import com.cocoviet.backend.models.request.UserLoginRequest;
+import com.cocoviet.backend.models.request.UserProfileRequest;
 import com.cocoviet.backend.repository.ICustomerRepository;
 import com.cocoviet.backend.service.ICustomerService;
 import lombok.AccessLevel;
@@ -15,8 +16,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -43,6 +44,7 @@ public class CustomerServiceImpl implements ICustomerService {
                     .customerPassword(passwordEncoder.encode(customerRequest.getCustomerPassword()))
                     .phoneNumbers(customerRequest.getPhoneNumbers())
                     .customerAvatar(customerRequest.getCustomerAvatar())
+                    .createdAt(LocalDateTime.now())
                     .build();
 
         return iCustomerMapper.toCustomerDTO(iCustomerRepository.save(customerEntity));
@@ -63,15 +65,15 @@ public class CustomerServiceImpl implements ICustomerService {
     }
 
     @Override
-    public CustomerDTO updateCustomerProfile(String customerId, CustomerRequest customerRequest) {
+    public CustomerDTO updateCustomerProfile(String customerId, UserProfileRequest customerRequest) {
 
         CustomerEntity customer = iCustomerRepository.findById(customerId)
                 .orElseThrow(() -> new RuntimeException("Customer not found"));
 
-        customer.setCustomerName(customerRequest.getCustomerName());
-        customer.setCustomerAddress(customerRequest.getCustomerAddress());
+        customer.setCustomerName(customerRequest.getUserName());
+        customer.setCustomerAddress(customerRequest.getUserAddress());
         customer.setPhoneNumbers(customerRequest.getPhoneNumbers());
-        customer.setCustomerAvatar(customerRequest.getCustomerAvatar());
+        customer.setCustomerAvatar(customerRequest.getUserAvatar());
 
         return iCustomerMapper.toCustomerDTO(iCustomerRepository.save(customer));
     }

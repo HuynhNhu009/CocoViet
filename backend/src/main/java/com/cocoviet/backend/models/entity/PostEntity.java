@@ -5,6 +5,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -29,7 +30,7 @@ public class PostEntity{
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false, updatable = false)
-    Date publishTime; // Thêm annotation cho thời gian
+    LocalDateTime publishTime; // Thêm annotation cho thời gian
 
     @Column
     String postImageUrl;
