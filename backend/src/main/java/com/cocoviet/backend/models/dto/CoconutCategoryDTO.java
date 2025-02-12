@@ -15,9 +15,8 @@ import java.util.Set;
 @Setter
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CategoryDTO {
+public class CoconutCategoryDTO {
 
+    String categoryId;
     String categoryName;
-
-    Set<ProductDTO> products; // Trả về danh sách sản phẩ,
 }
