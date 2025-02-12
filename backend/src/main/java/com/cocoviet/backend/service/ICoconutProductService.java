@@ -5,6 +5,6 @@ import com.cocoviet.backend.models.request.ProductRequest;
 
 public interface ICoconutProductService {
     ProductDTO addProduct(ProductRequest productRequest);
-
-
+    ProductDTO updateProduct(String productId, ProductRequest productRequest);
+    ProductDTO getProduct(String productId);
 }

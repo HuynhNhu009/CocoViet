@@ -8,10 +8,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/products")
@@ -29,5 +26,31 @@ public class CoconutProductController {
                         .msg("Add product: "+ coconutProductRequest.getProductName() + " successfully")
                         .status("OK")
                         .build());
+    }
+
+    @PatchMapping("/{productId}")
+    ResponseEntity<ResponseData> update(@PathVariable("productId") String productId, @RequestBody @Valid ProductRequest coconutProductRequest){
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ResponseData.builder()
+                        .data(coconutProductService.updateProduct(productId,coconutProductRequest))
+                        .msg("Update product Id: "+ productId +" - Name:" + coconutProductRequest.getProductName() + " successfully!")
+                        .status("OK")
+                        .build());
+
+    }
+
+    @GetMapping("/{productId}")
+    ResponseEntity<ResponseData> getProduct(@PathVariable("productId") String productId){
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ResponseData.builder()
+                        .data(coconutProductService.getProduct(productId))
+                        .msg("Update product Id: "+ productId +" successfully!")
+                        .status("OK")
+                        .build());
+    }
+
+    @GetMapping("/get-all-product")
+    ResponseEntity<ResponseData> getProduct(){
+        return null;
     }
 }

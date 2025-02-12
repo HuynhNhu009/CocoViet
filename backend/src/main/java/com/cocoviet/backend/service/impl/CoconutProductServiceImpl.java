@@ -22,7 +22,7 @@ public class CoconutProductServiceImpl implements ICoconutProductService {
     private static final Logger logger = LoggerFactory.getLogger(CoconutProductServiceImpl.class);
 
     @Autowired
-    private ICoconutProductRepository coconutProductRepository;
+    private ICoconutProductRepository iCoconutProductRepository;
 
     @Autowired
     @Qualifier("IProductMapperImpl")
@@ -30,7 +30,7 @@ public class CoconutProductServiceImpl implements ICoconutProductService {
 
     @Override
     public ProductDTO addProduct(ProductRequest product) {
-        if (coconutProductRepository.existsByProductName(product.getProductName())) {
+        if (iCoconutProductRepository.existsByProductName(product.getProductName())) {
             logger.warn("Product with name {} already exists", product.getProductName());
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Product name already exists");
         }
@@ -43,6 +43,25 @@ public class CoconutProductServiceImpl implements ICoconutProductService {
                 .createdAt(LocalDateTime.now())
                 .build();
 
-        return iProductMapper.toProductDTO(coconutProductRepository.save(productEntity));
+        return iProductMapper.toProductDTO(iCoconutProductRepository.save(productEntity));
+    }
+
+    @Override
+    public ProductDTO updateProduct(String productId, ProductRequest productRequest) {
+        CoconutProductEntity coconutProductEntity = iCoconutProductRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+
+        coconutProductEntity.setProductName(productRequest.getProductName());
+        coconutProductEntity.setProductDesc(productRequest.getProductDesc());
+        coconutProductEntity.setProductImage(productRequest.getProductImage());
+        coconutProductEntity.setProductOrigin(productRequest.getProductOrigin());
+
+        return iProductMapper.toProductDTO(iCoconutProductRepository.save(coconutProductEntity));
+    }
+
+    @Override
+    public ProductDTO getProduct(String productId) {
+        return iProductMapper.toProductDTO(iCoconutProductRepository.save(iCoconutProductRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found"))));
     }
 }
