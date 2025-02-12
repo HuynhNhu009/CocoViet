@@ -37,7 +37,6 @@ public class CustomerServiceImpl implements ICustomerService {
     @Autowired
     JwtToken jwtToken;
 
-
     @Override
     public CustomerDTO registerCustomer(CustomerRequest customerRequest) {
         if(iCustomerRepository.existsByCustomerEmail(customerRequest.getCustomerEmail())) {

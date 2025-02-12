@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Setter
@@ -24,6 +25,8 @@ public class CustomerDTO {
     String customerAvatar;
 
     String customerAddress;
+
+    LocalDateTime createdAt;
 
     List<ProductOrderDTO> productOrders; // Trả về danh sách Order của Customer
 }
