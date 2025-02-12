@@ -1,6 +1,7 @@
 package com.cocoviet.backend.service.impl;
 
 import com.cocoviet.backend.mapper.ICustomerMapper;
+import com.cocoviet.backend.models.dto.AuthenticationDTO;
 import com.cocoviet.backend.models.dto.CustomerDTO;
 import com.cocoviet.backend.models.entity.CustomerEntity;
 import com.cocoviet.backend.models.request.CustomerRequest;
@@ -8,11 +9,12 @@ import com.cocoviet.backend.models.request.UserLoginRequest;
 import com.cocoviet.backend.models.request.UserProfileRequest;
 import com.cocoviet.backend.repository.ICustomerRepository;
 import com.cocoviet.backend.service.ICustomerService;
+import com.cocoviet.backend.uitil.JwtToken;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -20,6 +22,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -29,8 +32,10 @@ public class CustomerServiceImpl implements ICustomerService {
     ICustomerRepository iCustomerRepository;
 
     @Autowired
-    @Qualifier("ICustomerMapperImpl")
     ICustomerMapper iCustomerMapper;
+
+    @Autowired
+    JwtToken jwtToken;
 
 
     @Override
@@ -54,8 +59,8 @@ public class CustomerServiceImpl implements ICustomerService {
     }
 
     @Override
-    public CustomerDTO loginCustomer(UserLoginRequest userLoginRequest) {
-        var customer =  iCustomerRepository.findByCustomerEmail(userLoginRequest.getEmail())
+    public AuthenticationDTO loginCustomer(UserLoginRequest userLoginRequest) {
+        CustomerEntity customer =  iCustomerRepository.findByCustomerEmail(userLoginRequest.getEmail())
                 .orElseThrow(() -> new RuntimeException("Email not found"));
 
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -63,11 +68,17 @@ public class CustomerServiceImpl implements ICustomerService {
 
         if(!result)
             throw new RuntimeException("Password incorrect!");
+        log.info("data", customer.getCustomerName());
+        var token = jwtToken.generateToken(customer.getCustomerEmail());
 
-        return  iCustomerMapper.toCustomerDTO(customer);
+        AuthenticationDTO authenticationDTO = new AuthenticationDTO();
+        authenticationDTO.setToken(token);
+
+        authenticationDTO.setData(iCustomerMapper.toCustomerDTO(customer));
+        return authenticationDTO ;
     }
 
-    @Override
+       @Override
     public CustomerDTO updateCustomerProfile(String customerId, UserProfileRequest customerRequest) {
 
         CustomerEntity customer = iCustomerRepository.findById(customerId)
