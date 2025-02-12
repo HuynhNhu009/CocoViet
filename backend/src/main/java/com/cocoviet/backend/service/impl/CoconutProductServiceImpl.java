@@ -2,9 +2,16 @@ package com.cocoviet.backend.service.impl;
 
 import com.cocoviet.backend.mapper.IProductMapper;
 import com.cocoviet.backend.models.dto.ProductDTO;
+import com.cocoviet.backend.models.entity.CoconutCategoryEntity;
 import com.cocoviet.backend.models.entity.CoconutProductEntity;
+import com.cocoviet.backend.models.entity.ProductCategoryEntity;
+import com.cocoviet.backend.models.entity.RetailerEntity;
 import com.cocoviet.backend.models.request.ProductRequest;
+import com.cocoviet.backend.repository.ICategoryRepository;
 import com.cocoviet.backend.repository.ICoconutProductRepository;
+import com.cocoviet.backend.repository.IProductCategoryRepository;
+import com.cocoviet.backend.repository.IRetailerRepository;
+import com.cocoviet.backend.service.ICoconutCategoryService;
 import com.cocoviet.backend.service.ICoconutProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -15,7 +22,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class CoconutProductServiceImpl implements ICoconutProductService {
@@ -26,25 +35,71 @@ public class CoconutProductServiceImpl implements ICoconutProductService {
     private ICoconutProductRepository iCoconutProductRepository;
 
     @Autowired
-    @Qualifier("IProductMapperImpl")
+//    @Qualifier("IProductMapperImpl")
     private IProductMapper iProductMapper;
+
+//    anh
+    @Autowired
+    ICategoryRepository icategoryRepository;
+
+    @Autowired
+    IProductCategoryRepository iproductCategoryRepository;
+
+    @Autowired
+    IRetailerRepository iretailerRepository;
 
     @Override
     public ProductDTO addProduct(ProductRequest productRequest) {
         if (iCoconutProductRepository.existsByProductName(productRequest.getProductName())) {
-            logger.warn("Product with name {} already exists", productRequest.getProductName());
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Product name already exists");
+            throw new RuntimeException("Product name already exists!");
         }
+
+        RetailerEntity retailerEntity = iretailerRepository.findById(productRequest.getRetailerId())
+                .orElseThrow(() -> new RuntimeException("Retailer not found!"));
 
         CoconutProductEntity productEntity = CoconutProductEntity.builder()
                 .productName(productRequest.getProductName())
                 .productDesc(productRequest.getProductDesc())
                 .productImage(productRequest.getProductImage())
                 .productOrigin(productRequest.getProductOrigin())
+                //anh
+                .retailer(retailerEntity)
                 .createdAt(LocalDateTime.now())
                 .build();
 
-        return iProductMapper.toProductDTO(iCoconutProductRepository.save(productEntity));
+        //save productEntity
+        productEntity = iCoconutProductRepository.save(productEntity);
+
+        Set<ProductCategoryEntity> newProductCategoryEntities = new HashSet<>();
+        Set<String> categoryName = new HashSet<>();
+
+        for(String categoryId : productRequest.getCategoryId()) {
+            CoconutCategoryEntity categoryEntity = icategoryRepository.findById(categoryId)
+                    .orElseThrow(() -> new RuntimeException("Category not found"));
+            ProductCategoryEntity productCategoryEntity = new ProductCategoryEntity();
+            productCategoryEntity.setProduct(productEntity);
+            productCategoryEntity.setCategory(categoryEntity);
+
+            newProductCategoryEntities.add(productCategoryEntity);
+            categoryName.add(icategoryRepository.findById(categoryId).get().getCategoryName());
+        }
+        iproductCategoryRepository.saveAll(newProductCategoryEntities);
+
+        //update productEntity
+        productEntity.setProductCategories(newProductCategoryEntities);
+        iCoconutProductRepository.save(productEntity);
+
+        ProductDTO productDTO = ProductDTO.builder()
+                .productId(productEntity.getProductId())
+                .productName(productEntity.getProductName())
+                .productDesc(productEntity.getProductDesc())
+                .productImage(productEntity.getProductImage())
+                .productOrigin(productEntity.getProductOrigin())
+                .categoryName(categoryName)
+                .createdAt(LocalDateTime.now())
+                .retailerName(retailerEntity.getRetailerName())
+                .build();
+        return productDTO;
     }
 
     @Override

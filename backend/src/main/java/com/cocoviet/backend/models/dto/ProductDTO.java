@@ -3,6 +3,7 @@ package com.cocoviet.backend.models.dto;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -16,6 +17,7 @@ public class ProductDTO {
      String productImage;
      String productOrigin;
      LocalDateTime createdAt;
-     String categoryId;
-     String retailerId;
+     //anh
+     Set<String> categoryName;
+     String retailerName;
 }

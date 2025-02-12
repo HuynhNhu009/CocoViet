@@ -44,4 +44,8 @@ public class CoconutProductEntity {
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     Set<CoconutProductVariantEntity> variants;
+
+    //anh
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    Set<ProductCategoryEntity> productCategories ;
 }

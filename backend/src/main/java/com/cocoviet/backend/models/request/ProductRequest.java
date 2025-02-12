@@ -11,6 +11,7 @@ import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -37,7 +38,7 @@ public class ProductRequest {
     @Min(value = 1, message = "Stock greater than or equal to 0")
     int productStock;
 
-    String categoryId;
+    Set<String> categoryId;
 
     String retailerId;
 
