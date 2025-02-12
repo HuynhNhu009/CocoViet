@@ -1,4 +1,4 @@
-package com.cocoviet.backend.uitil;
+package com.cocoviet.backend.utils;
 
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;

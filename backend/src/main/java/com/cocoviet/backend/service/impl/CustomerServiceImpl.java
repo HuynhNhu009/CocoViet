@@ -9,7 +9,7 @@ import com.cocoviet.backend.models.request.UserLoginRequest;
 import com.cocoviet.backend.models.request.UserProfileRequest;
 import com.cocoviet.backend.repository.ICustomerRepository;
 import com.cocoviet.backend.service.ICustomerService;
-import com.cocoviet.backend.uitil.JwtToken;
+import com.cocoviet.backend.utils.JwtToken;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -68,7 +68,6 @@ public class CustomerServiceImpl implements ICustomerService {
 
         if(!result)
             throw new RuntimeException("Password incorrect!");
-        log.info("data", customer.getCustomerName());
         var token = jwtToken.generateToken(customer.getCustomerEmail());
 
         AuthenticationDTO authenticationDTO = new AuthenticationDTO();

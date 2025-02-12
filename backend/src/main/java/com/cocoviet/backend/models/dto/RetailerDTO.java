@@ -11,6 +11,8 @@ import java.util.Set;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class RetailerDTO {
+     String retailerId;
+
     String retailerName;
 
     String retailerEmail;
