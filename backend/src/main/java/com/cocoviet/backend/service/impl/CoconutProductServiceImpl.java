@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class CoconutProductServiceImpl implements ICoconutProductService {
@@ -29,17 +30,17 @@ public class CoconutProductServiceImpl implements ICoconutProductService {
     private IProductMapper iProductMapper;
 
     @Override
-    public ProductDTO addProduct(ProductRequest product) {
-        if (iCoconutProductRepository.existsByProductName(product.getProductName())) {
-            logger.warn("Product with name {} already exists", product.getProductName());
+    public ProductDTO addProduct(ProductRequest productRequest) {
+        if (iCoconutProductRepository.existsByProductName(productRequest.getProductName())) {
+            logger.warn("Product with name {} already exists", productRequest.getProductName());
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Product name already exists");
         }
 
         CoconutProductEntity productEntity = CoconutProductEntity.builder()
-                .productName(product.getProductName())
-                .productDesc(product.getProductDesc())
-                .productImage(product.getProductImage())
-                .productOrigin(product.getProductOrigin())
+                .productName(productRequest.getProductName())
+                .productDesc(productRequest.getProductDesc())
+                .productImage(productRequest.getProductImage())
+                .productOrigin(productRequest.getProductOrigin())
                 .createdAt(LocalDateTime.now())
                 .build();
 
@@ -63,5 +64,11 @@ public class CoconutProductServiceImpl implements ICoconutProductService {
     public ProductDTO getProduct(String productId) {
         return iProductMapper.toProductDTO(iCoconutProductRepository.save(iCoconutProductRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("Product not found"))));
+    }
+
+    @Override
+    public List<ProductDTO> getAllProduct() {
+        return iProductMapper.toProductDTOList(iCoconutProductRepository.findAll());
+
     }
 }

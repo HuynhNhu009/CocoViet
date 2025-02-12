@@ -49,8 +49,13 @@ public class CoconutProductController {
                         .build());
     }
 
-    @GetMapping("/get-all-product")
+    @GetMapping("/get-all-products")
     ResponseEntity<ResponseData> getProduct(){
-        return null;
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ResponseData.builder()
+                        .data(coconutProductService.getAllProduct())
+                        .msg("Get all product successfully!")
+                        .status("OK")
+                        .build());
     }
 }

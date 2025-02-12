@@ -16,4 +16,6 @@ public class ProductDTO {
      String productImage;
      String productOrigin;
      LocalDateTime createdAt;
+     String categoryId;
+     String retailerId;
 }

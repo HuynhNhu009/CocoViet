@@ -39,6 +39,8 @@ public class ProductRequest {
 
     String categoryId;
 
+    String retailerId;
+
     String productImage;
 
     String productOrigin;
