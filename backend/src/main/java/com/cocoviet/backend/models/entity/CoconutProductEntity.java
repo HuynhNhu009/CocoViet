@@ -42,9 +42,6 @@ public class CoconutProductEntity {
     @JoinColumn(name = "retailer_id") // Liên kết đến RetailerEntity
     RetailerEntity retailer;
 
-//    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//    List<CoconutProductVariantEntity> variants;
-
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     Set<CoconutProductVariantEntity> variants;
 }

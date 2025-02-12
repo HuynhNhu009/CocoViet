@@ -14,6 +14,8 @@ import org.springframework.web.server.ResponseStatusException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.LocalDateTime;
+
 @Service
 public class CoconutProductServiceImpl implements ICoconutProductService {
 
@@ -38,6 +40,7 @@ public class CoconutProductServiceImpl implements ICoconutProductService {
                 .productDesc(product.getProductDesc())
                 .productImage(product.getProductImage())
                 .productOrigin(product.getProductOrigin())
+                .createdAt(LocalDateTime.now())
                 .build();
 
         return iProductMapper.toProductDTO(coconutProductRepository.save(productEntity));

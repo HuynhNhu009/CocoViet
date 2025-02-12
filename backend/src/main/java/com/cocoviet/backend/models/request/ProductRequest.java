@@ -9,6 +9,7 @@ import jakarta.validation.constraints.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Getter
@@ -42,7 +43,7 @@ public class ProductRequest {
 
     String productOrigin;
 
-    Date createdAt;
+    LocalDateTime createdAt;
 }
 
 
