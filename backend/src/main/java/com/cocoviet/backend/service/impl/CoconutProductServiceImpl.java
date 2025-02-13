@@ -2,7 +2,7 @@ package com.cocoviet.backend.service.impl;
 
 import com.cocoviet.backend.mapper.IProductMapper;
 import com.cocoviet.backend.models.dto.ProductDTO;
-import com.cocoviet.backend.models.entity.CoconutCategoryEntity;
+import com.cocoviet.backend.models.entity.CategoryEntity;
 import com.cocoviet.backend.models.entity.CoconutProductEntity;
 import com.cocoviet.backend.models.entity.ProductCategoryEntity;
 import com.cocoviet.backend.models.entity.RetailerEntity;
@@ -11,14 +11,10 @@ import com.cocoviet.backend.repository.ICategoryRepository;
 import com.cocoviet.backend.repository.ICoconutProductRepository;
 import com.cocoviet.backend.repository.IProductCategoryRepository;
 import com.cocoviet.backend.repository.IRetailerRepository;
-import com.cocoviet.backend.service.ICoconutCategoryService;
 import com.cocoviet.backend.service.ICoconutProductService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -77,7 +73,7 @@ public class CoconutProductServiceImpl implements ICoconutProductService {
         Set<String> categoryName = new HashSet<>();
 
         for(String categoryId : productRequest.getCategoryId()) {
-            CoconutCategoryEntity categoryEntity = icategoryRepository.findById(categoryId)
+            CategoryEntity categoryEntity = icategoryRepository.findById(categoryId)
                     .orElseThrow(() -> new RuntimeException("Category not found"));
             ProductCategoryEntity productCategoryEntity = new ProductCategoryEntity();
             productCategoryEntity.setProduct(productEntity);
@@ -129,7 +125,7 @@ public class CoconutProductServiceImpl implements ICoconutProductService {
             iproductCategoryRepository.deleteAll(existingProductCategories);
 
             for(String categoryId : productRequest.getCategoryId()) {
-                CoconutCategoryEntity categoryEntity = icategoryRepository.findById(categoryId)
+                CategoryEntity categoryEntity = icategoryRepository.findById(categoryId)
                         .orElseThrow(() -> new RuntimeException("Category not found"));
                 ProductCategoryEntity productCategoryEntity = new ProductCategoryEntity();
                 productCategoryEntity.setProduct(productEntity);

@@ -23,5 +23,5 @@ public class ProductCategoryEntity {
 
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
-    CoconutCategoryEntity category;
+    CategoryEntity category;
 }

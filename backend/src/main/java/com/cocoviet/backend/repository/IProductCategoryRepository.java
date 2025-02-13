@@ -1,6 +1,5 @@
 package com.cocoviet.backend.repository;
 
-import com.cocoviet.backend.models.entity.CoconutCategoryEntity;
 import com.cocoviet.backend.models.entity.CoconutProductEntity;
 import com.cocoviet.backend.models.entity.ProductCategoryEntity;
 import org.springframework.data.jpa.repository.JpaRepository;

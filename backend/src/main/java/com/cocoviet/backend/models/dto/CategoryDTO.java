@@ -7,15 +7,13 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
-import java.util.Set;
-
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CoconutCategoryDTO {
+public class CategoryDTO {
 
     String categoryId;
     String categoryName;

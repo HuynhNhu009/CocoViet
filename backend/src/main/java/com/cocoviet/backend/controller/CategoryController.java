@@ -3,10 +3,7 @@ package com.cocoviet.backend.controller;
 
 import com.cocoviet.backend.models.reponse.ResponseData;
 import com.cocoviet.backend.models.request.CategoryRequest;
-import com.cocoviet.backend.models.request.ProductRequest;
-import com.cocoviet.backend.models.request.UserProfileRequest;
-import com.cocoviet.backend.service.ICoconutCategoryService;
-import com.cocoviet.backend.service.ICoconutProductService;
+import com.cocoviet.backend.service.ICategoryService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,10 +12,10 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/categories")
-public class CoconutCategoryController {
+public class CategoryController {
 
     @Autowired
-    ICoconutCategoryService coconutCategoryService;
+    ICategoryService coconutCategoryService;
 
     @PostMapping("/add")
     ResponseEntity<ResponseData> addCategory(@RequestBody @Valid CategoryRequest categoryRequest){
