@@ -14,7 +14,10 @@ import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring")
 public interface IProductMapper {
+    @Mapping( source = "retailer.retailerName", target = "retailerName" )
+    @Mapping(target = "categoryName", ignore = true)
     ProductDTO toProductDTO(CoconutProductEntity productEntity);
+
     List<ProductDTO> toProductDTOList(List<CoconutProductEntity> productEntity);
 //    CoconutProductEntity toEntity(ProductRequest productRequest);
 

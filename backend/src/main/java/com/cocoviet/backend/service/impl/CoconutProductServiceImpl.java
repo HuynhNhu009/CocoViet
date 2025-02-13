@@ -25,6 +25,7 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class CoconutProductServiceImpl implements ICoconutProductService {
@@ -121,9 +122,20 @@ public class CoconutProductServiceImpl implements ICoconutProductService {
         CoconutProductEntity productEntity = iCoconutProductRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
 
-        ProductCategoryEntity productCategoryEntity =
-        return iProductMapper.toProductDTO(
-                .orElseThrow(() -> new RuntimeException("Product not found"))));
+        Set<ProductCategoryEntity> productCategoryEntities = iproductCategoryRepository.findByProduct(productEntity);
+
+        Set<CoconutCategoryEntity> categories = productCategoryEntities.stream()
+                .map(ProductCategoryEntity::getCategory)
+                .collect(Collectors.toSet());
+
+        Set<String> categoryName = categories.stream() //tra ve set<string>
+                .map(CoconutCategoryEntity::getCategoryName)//get tu CoconutCategoryEntity
+                .collect(Collectors.toSet());
+
+        ProductDTO productDTO = iProductMapper.toProductDTO(productEntity);
+        productDTO.setCategoryName(categoryName);
+
+        return productDTO;
     }
 
     @Override
