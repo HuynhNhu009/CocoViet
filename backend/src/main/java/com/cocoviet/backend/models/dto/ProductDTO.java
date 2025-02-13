@@ -16,8 +16,9 @@ public class ProductDTO {
      String productDesc;
      String productImage;
      String productOrigin;
-     LocalDateTime createdAt;
-     //anh
+
      Set<String> categoryName;
      String retailerName;
+     LocalDateTime createdAt;
+     Set<ProductVariantDTO> variants;
 }

@@ -11,6 +11,7 @@ import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -34,13 +35,17 @@ public class ProductRequest {
     @Size(min = 20, max = 500, message = "Product description must be between 20 and 500 characters.")
     String productDesc;
 
-    Set<String> categoryId;
-
     String retailerId;
 
     String productImage;
 
     String productOrigin;
+
+    //Relationship with Unit
+    List<ProductVariantsRequest> productVariants;
+
+    //Relationship with category
+    Set<String> categoryId;
 
     LocalDateTime createdAt;
 }

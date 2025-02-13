@@ -1,16 +1,13 @@
 package com.cocoviet.backend.service.impl;
 
 import com.cocoviet.backend.mapper.IProductMapper;
+import com.cocoviet.backend.mapper.IProductVariantMapper;
 import com.cocoviet.backend.models.dto.ProductDTO;
-import com.cocoviet.backend.models.entity.CategoryEntity;
-import com.cocoviet.backend.models.entity.ProductEntity;
-import com.cocoviet.backend.models.entity.ProductCategoryEntity;
-import com.cocoviet.backend.models.entity.RetailerEntity;
+import com.cocoviet.backend.models.dto.ProductVariantDTO;
+import com.cocoviet.backend.models.entity.*;
 import com.cocoviet.backend.models.request.ProductRequest;
-import com.cocoviet.backend.repository.ICategoryRepository;
-import com.cocoviet.backend.repository.IProductRepository;
-import com.cocoviet.backend.repository.IProductCategoryRepository;
-import com.cocoviet.backend.repository.IRetailerRepository;
+import com.cocoviet.backend.models.request.ProductVariantsRequest;
+import com.cocoviet.backend.repository.*;
 import com.cocoviet.backend.service.IProductService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,12 +31,19 @@ public class ProductServiceImpl implements IProductService {
     private IProductRepository iProductRepository;
 
     @Autowired
-//    @Qualifier("IProductMapperImpl")
     private IProductMapper iProductMapper;
 
-//    anh
+    @Autowired
+    IProductVariantMapper iProductVariantMapper;
+
     @Autowired
     ICategoryRepository icategoryRepository;
+
+    @Autowired
+    IUnitRepository iUnitRepository;
+
+    @Autowired
+    IProducVariantRepository iProducVariantRepository;
 
     @Autowired
     IProductCategoryRepository iproductCategoryRepository;
@@ -69,6 +73,7 @@ public class ProductServiceImpl implements IProductService {
         //save productEntity
         productEntity = iProductRepository.save(productEntity);
 
+        //-----Relationship with CATEGORY-----
         Set<ProductCategoryEntity> newProductCategoryEntities = new HashSet<>();
         Set<String> categoryName = new HashSet<>();
 
@@ -86,18 +91,51 @@ public class ProductServiceImpl implements IProductService {
 
         //update productEntity
         productEntity.setProductCategories(newProductCategoryEntities);
+        //-----END Relationship with CATEGORY----
+
+        //-----Relationship with UNIT-----
+        Set<ProductVariantEntity> newProductVariantEntities = new HashSet<>();
+
+        for(ProductVariantsRequest getProductVariants : productRequest.getProductVariants()) {
+
+            UnitEntity unitEntity = iUnitRepository.findById(getProductVariants.getUnitId())
+                    .orElseThrow(() -> new RuntimeException("Unit not found"));
+
+            ProductVariantEntity productVariantEntity = ProductVariantEntity.builder()
+                    .product(productEntity)
+                    .unit(unitEntity)
+                    .price(getProductVariants.getPrice())
+                    .stock(getProductVariants.getStock())
+                    .value(getProductVariants.getValue())
+                    .build();
+
+            newProductVariantEntities.add(productVariantEntity);
+        }
+        iProducVariantRepository.saveAll(newProductVariantEntities);
+
+        //update productEntity
+        productEntity.setVariants(newProductVariantEntities);
+
+        //map productVariantEntity to productVariantDTO
+        Set<ProductVariantDTO> productVariantDTOS = newProductVariantEntities.stream()
+                .map(variant -> ProductVariantDTO.builder()
+                        .variantId(variant.getVariantsId())
+                        .unit(variant.getUnit().getUnitName())
+                        .price(variant.getPrice())
+                        .stock(variant.getStock())
+                        .value(variant.getValue())
+                        .build())
+                .collect(Collectors.toSet());
+        //-----END Relationship with UNIT----
+
+        //final update product
         iProductRepository.save(productEntity);
 
-        ProductDTO productDTO = ProductDTO.builder()
-                .productId(productEntity.getProductId())
-                .productName(productEntity.getProductName())
-                .productDesc(productEntity.getProductDesc())
-                .productImage(productEntity.getProductImage())
-                .productOrigin(productEntity.getProductOrigin())
-                .categoryName(categoryName)
-                .createdAt(productEntity.getCreatedAt())
-                .retailerName(retailerEntity.getRetailerName())
-                .build();
+        //map productEntity to productDTO
+        ProductDTO  productDTO = iProductMapper.toProductDTO(productEntity);
+        productDTO.setCategoryName(categoryName);
+        productDTO.setVariants(productVariantDTOS);
+
         return productDTO;
     }
 

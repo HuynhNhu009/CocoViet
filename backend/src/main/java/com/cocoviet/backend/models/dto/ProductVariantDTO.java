@@ -3,6 +3,8 @@ package com.cocoviet.backend.models.dto;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.math.BigDecimal;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -11,11 +13,12 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProductVariantDTO {
 
-    String productName;
-
+    String variantId;
     double value;
 
-    double price;
+    int stock;
+
+    BigDecimal price;
 
     String unit;
 }
