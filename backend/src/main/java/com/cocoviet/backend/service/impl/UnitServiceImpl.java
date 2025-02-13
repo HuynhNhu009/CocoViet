@@ -1,60 +1,61 @@
 package com.cocoviet.backend.service.impl;
 
-import com.cocoviet.backend.mapper.ICategoryMapper;
-import com.cocoviet.backend.models.dto.CategoryDTO;
-import com.cocoviet.backend.models.entity.CategoryEntity;
-import com.cocoviet.backend.models.request.CategoryRequest;
-import com.cocoviet.backend.repository.ICategoryRepository;
-import com.cocoviet.backend.service.ICategoryService;
+import com.cocoviet.backend.mapper.IUnitMapper;
+import com.cocoviet.backend.models.dto.UnitDTO;
+import com.cocoviet.backend.models.entity.UnitEntity;
+import com.cocoviet.backend.models.request.UnitRequest;
+import com.cocoviet.backend.repository.IUnitRepository;
+import com.cocoviet.backend.service.IUnitService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Set;
 
 @Service
-public class CategoryServiceImpl implements ICategoryService {
+public class UnitServiceImpl implements IUnitService {
 
     @Autowired
-    private ICategoryRepository iCategoryRepository;
+    private IUnitRepository iUnitRepository;
 
     @Autowired
-    private ICategoryMapper iCategoryMapper;
+    private IUnitMapper iUnitMapper;
 
     @Override
-    public CategoryDTO addCategory(CategoryRequest categoryRequest) {
-        if (iCategoryRepository.existsByCategoryName(categoryRequest.getCategoryName())) {
-            throw new RuntimeException("Category name already exists");
+    public UnitDTO addUnit(UnitRequest unitRequest) {
+        if (iUnitRepository.existsByUnitName(unitRequest.getUnitName())) {
+            throw new RuntimeException("Unit name already exists");
         }
 
-        CategoryEntity categoryEntity = CategoryEntity.builder()
-                .categoryName(categoryRequest.getCategoryName())
+        UnitEntity unitEntity = UnitEntity.builder()
+                .unitName(unitRequest.getUnitName())
                 .build();
 
-        return iCategoryMapper.toCategoryDTO(iCategoryRepository.save(categoryEntity));
+        return iUnitMapper.toUnitDTO(iUnitRepository.save(unitEntity));
     }
 
     @Override
-    public CategoryDTO updateCategory(String categoryId, CategoryRequest categoryRequest) {
-        CategoryEntity categoryEntity = iCategoryRepository.findById(categoryId)
-                .orElseThrow(() -> new RuntimeException("Category not found"));
+    public UnitDTO updateUnit(String unitId, UnitRequest unitRequest) {
+        UnitEntity unitEntity = iUnitRepository.findById(unitId)
+                .orElseThrow(() -> new RuntimeException("Unit not found"));
 
-        if (iCategoryRepository.existsByCategoryName(categoryRequest.getCategoryName())) {
-            throw new RuntimeException("Category name already exists");
+        if (iUnitRepository.existsByUnitName(unitRequest.getUnitName())) {
+            throw new RuntimeException("Unit name already exists");
         }
 
-        categoryEntity.setCategoryName(categoryRequest.getCategoryName());
-        return iCategoryMapper.toCategoryDTO(iCategoryRepository.save(categoryEntity));
+        unitEntity.setUnitName(unitRequest.getUnitName());
+        return iUnitMapper.toUnitDTO(iUnitRepository.save(unitEntity));
     }
 
     @Override
-    public CategoryDTO getCategoryById(String categoryId) {
-        CategoryEntity categoryEntity = iCategoryRepository.findById(categoryId)
-                .orElseThrow(() -> new RuntimeException("Category not found"));
-        return iCategoryMapper.toCategoryDTO(categoryEntity);
+    public UnitDTO getUnitById(String unitId) {
+        UnitEntity unitEntity = iUnitRepository.findById(unitId)
+                .orElseThrow(() -> new RuntimeException("Unit not found"));
+
+        return iUnitMapper.toUnitDTO(iUnitRepository.save(unitEntity));
     }
 
     @Override
-    public List<CategoryDTO> getAllCategories() {
-        return iCategoryMapper.toListCategoryDTO(iCategoryRepository.findAll());
+    public Set<UnitDTO> getAllUnits() {
+        return iUnitMapper.toSetUnitDTO(iUnitRepository.findAll());
     }
 }

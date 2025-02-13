@@ -3,7 +3,9 @@ package com.cocoviet.backend.controller;
 
 import com.cocoviet.backend.models.reponse.ResponseData;
 import com.cocoviet.backend.models.request.CategoryRequest;
+import com.cocoviet.backend.models.request.UnitRequest;
 import com.cocoviet.backend.service.ICategoryService;
+import com.cocoviet.backend.service.IUnitService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,54 +13,53 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/categories")
-public class CategoryController {
+@RequestMapping("/api/units")
+public class UnitController {
 
     @Autowired
-    ICategoryService coconutCategoryService;
+    IUnitService unitService;
 
     @PostMapping("/add")
-    ResponseEntity<ResponseData> addCategory(@RequestBody @Valid CategoryRequest categoryRequest){
+    ResponseEntity<ResponseData> addUnit(@RequestBody @Valid UnitRequest unitRequest){
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ResponseData.builder()
-                        .data(coconutCategoryService.addCategory(categoryRequest))
-                        .msg("Add category: "+ categoryRequest.getCategoryName() + " successfully")
+                        .data(unitService.addUnit(unitRequest))
+                        .msg("Add unit: "+ unitRequest.getUnitName() + " successfully")
                         .status("OK")
                         .build());
     }
 
 
-    @PutMapping("/update/{categoryId}")
-    ResponseEntity<ResponseData> updateCategory(@PathVariable String categoryId,
-                                                       @RequestBody @Valid CategoryRequest categoryRequest) {
-
+    @PatchMapping("/update/{unitId}")
+    ResponseEntity<ResponseData> updateUnit(@PathVariable String unitId,
+                                                       @RequestBody @Valid UnitRequest unitRequest) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ResponseData.builder()
-                        .data(coconutCategoryService.updateCategory(categoryId, categoryRequest))
-                        .msg("Update Category success!")
+                        .data(unitService.updateUnit(unitId, unitRequest))
+                        .msg("Update Unit success!")
                         .status("OK")
                         .build());
     }
 
-    @GetMapping("/{categoryId}")
-    ResponseEntity<ResponseData> getCategoryById(@PathVariable String categoryId){
+    @GetMapping("/{unitId}")
+    ResponseEntity<ResponseData> getUnitById(@PathVariable String unitId){
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ResponseData.builder()
-                        .data(coconutCategoryService.getCategoryById(categoryId))
-                        .msg("Get Category success")
+                        .data(unitService.getUnitById(unitId))
+                        .msg("Get Unit success")
                         .status("OK")
                         .build());
     }
 
     @GetMapping("/get-all")
-    ResponseEntity<ResponseData> getAllCatgeory(){
+    ResponseEntity<ResponseData> getAllUnits(){
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ResponseData.builder()
-                        .data(coconutCategoryService.getAllCategories())
-                        .msg("Get all categories success")
+                        .data(unitService.getAllUnits())
+                        .msg("Get all units success")
                         .status("OK")
                         .build());
     }
