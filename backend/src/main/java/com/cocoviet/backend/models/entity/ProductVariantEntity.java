@@ -15,7 +15,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 
-public class CoconutProductVariantEntity {
+public class ProductVariantEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     String variantsId;
@@ -31,7 +31,7 @@ public class CoconutProductVariantEntity {
 
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
-    CoconutProductEntity product;
+    ProductEntity product;
 
     @ManyToOne
     @JoinColumn(name = "unit_id", nullable = false)

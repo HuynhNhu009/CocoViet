@@ -3,10 +3,7 @@ package com.cocoviet.backend.controller;
 
 import com.cocoviet.backend.models.reponse.ResponseData;
 import com.cocoviet.backend.models.request.CategoryRequest;
-import com.cocoviet.backend.models.request.ProductRequest;
-import com.cocoviet.backend.models.request.UserProfileRequest;
-import com.cocoviet.backend.service.ICoconutCategoryService;
-import com.cocoviet.backend.service.ICoconutProductService;
+import com.cocoviet.backend.service.ICategoryService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,30 +12,30 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/categories")
-public class CoconutCategoryController {
+public class CategoryController {
 
     @Autowired
-    ICoconutCategoryService coconutCategoryService;
+    ICategoryService categoryService;
 
     @PostMapping("/add")
     ResponseEntity<ResponseData> addCategory(@RequestBody @Valid CategoryRequest categoryRequest){
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ResponseData.builder()
-                        .data(coconutCategoryService.addCategory(categoryRequest))
+                        .data(categoryService.addCategory(categoryRequest))
                         .msg("Add category: "+ categoryRequest.getCategoryName() + " successfully")
                         .status("OK")
                         .build());
     }
 
 
-    @PutMapping("/update/{categoryId}")
+    @PatchMapping("/update/{categoryId}")
     ResponseEntity<ResponseData> updateCategory(@PathVariable String categoryId,
                                                        @RequestBody @Valid CategoryRequest categoryRequest) {
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ResponseData.builder()
-                        .data(coconutCategoryService.updateCategory(categoryId, categoryRequest))
+                        .data(categoryService.updateCategory(categoryId, categoryRequest))
                         .msg("Update Category success!")
                         .status("OK")
                         .build());
@@ -49,7 +46,7 @@ public class CoconutCategoryController {
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ResponseData.builder()
-                        .data(coconutCategoryService.getCategoryById(categoryId))
+                        .data(categoryService.getCategoryById(categoryId))
                         .msg("Get Category success")
                         .status("OK")
                         .build());
@@ -60,7 +57,7 @@ public class CoconutCategoryController {
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ResponseData.builder()
-                        .data(coconutCategoryService.getAllCategories())
+                        .data(categoryService.getAllCategories())
                         .msg("Get all categories success")
                         .status("OK")
                         .build());

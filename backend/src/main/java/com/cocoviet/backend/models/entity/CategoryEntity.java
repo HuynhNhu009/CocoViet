@@ -15,11 +15,12 @@ import java.util.Set;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CoconutCategoryEntity implements Serializable {
+public class CategoryEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     String categoryId;
 
     @Column
     String categoryName;
+
 }
