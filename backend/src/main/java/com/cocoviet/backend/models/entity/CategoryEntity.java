@@ -23,7 +23,4 @@ public class CategoryEntity implements Serializable {
     @Column
     String categoryName;
 
-    //anh
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    Set<ProductCategoryEntity> productCategories ;
 }
