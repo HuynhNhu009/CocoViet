@@ -29,7 +29,7 @@ public class CategoryController {
     }
 
 
-    @PutMapping("/update/{categoryId}")
+    @PatchMapping("/update/{categoryId}")
     ResponseEntity<ResponseData> updateCategory(@PathVariable String categoryId,
                                                        @RequestBody @Valid CategoryRequest categoryRequest) {
 
