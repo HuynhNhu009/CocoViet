@@ -13,6 +13,7 @@ import com.cocoviet.backend.repository.IProductCategoryRepository;
 import com.cocoviet.backend.repository.IRetailerRepository;
 import com.cocoviet.backend.service.ICoconutCategoryService;
 import com.cocoviet.backend.service.ICoconutProductService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -27,6 +28,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class CoconutProductServiceImpl implements ICoconutProductService {
 
@@ -124,12 +126,8 @@ public class CoconutProductServiceImpl implements ICoconutProductService {
 
         Set<ProductCategoryEntity> productCategoryEntities = iproductCategoryRepository.findByProduct(productEntity);
 
-        Set<CoconutCategoryEntity> categories = productCategoryEntities.stream()
-                .map(ProductCategoryEntity::getCategory)
-                .collect(Collectors.toSet());
-
-        Set<String> categoryName = categories.stream() //tra ve set<string>
-                .map(CoconutCategoryEntity::getCategoryName)//get tu CoconutCategoryEntity
+        Set<String> categoryName = productCategoryEntities.stream() //tra ve set<string>
+                .map(productCategory -> productCategory.getCategory().getCategoryName())//get tu CoconutCategoryEntity
                 .collect(Collectors.toSet());
 
         ProductDTO productDTO = iProductMapper.toProductDTO(productEntity);
@@ -140,7 +138,9 @@ public class CoconutProductServiceImpl implements ICoconutProductService {
 
     @Override
     public List<ProductDTO> getAllProduct() {
-        return iProductMapper.toProductDTOList(iCoconutProductRepository.findAll());
+
+        List<ProductDTO> productDTOS = iProductMapper.toProductDTOList(iCoconutProductRepository.findAll());
+        return productDTOS;
 
     }
 }
