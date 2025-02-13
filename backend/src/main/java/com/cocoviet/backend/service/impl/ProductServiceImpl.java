@@ -3,15 +3,15 @@ package com.cocoviet.backend.service.impl;
 import com.cocoviet.backend.mapper.IProductMapper;
 import com.cocoviet.backend.models.dto.ProductDTO;
 import com.cocoviet.backend.models.entity.CategoryEntity;
-import com.cocoviet.backend.models.entity.CoconutProductEntity;
+import com.cocoviet.backend.models.entity.ProductEntity;
 import com.cocoviet.backend.models.entity.ProductCategoryEntity;
 import com.cocoviet.backend.models.entity.RetailerEntity;
 import com.cocoviet.backend.models.request.ProductRequest;
 import com.cocoviet.backend.repository.ICategoryRepository;
-import com.cocoviet.backend.repository.ICoconutProductRepository;
+import com.cocoviet.backend.repository.IProductRepository;
 import com.cocoviet.backend.repository.IProductCategoryRepository;
 import com.cocoviet.backend.repository.IRetailerRepository;
-import com.cocoviet.backend.service.ICoconutProductService;
+import com.cocoviet.backend.service.IProductService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,12 +26,12 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
-public class CoconutProductServiceImpl implements ICoconutProductService {
+public class ProductServiceImpl implements IProductService {
 
-    private static final Logger logger = LoggerFactory.getLogger(CoconutProductServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(ProductServiceImpl.class);
 
     @Autowired
-    private ICoconutProductRepository iCoconutProductRepository;
+    private IProductRepository iProductRepository;
 
     @Autowired
 //    @Qualifier("IProductMapperImpl")
@@ -49,14 +49,14 @@ public class CoconutProductServiceImpl implements ICoconutProductService {
 
     @Override
     public ProductDTO addProduct(ProductRequest productRequest) {
-        if (iCoconutProductRepository.existsByProductName(productRequest.getProductName())) {
+        if (iProductRepository.existsByProductName(productRequest.getProductName())) {
             throw new RuntimeException("Product name already exists!");
         }
 
         RetailerEntity retailerEntity = iretailerRepository.findById(productRequest.getRetailerId())
                 .orElseThrow(() -> new RuntimeException("Retailer not found!"));
 
-        CoconutProductEntity productEntity = CoconutProductEntity.builder()
+        ProductEntity productEntity = ProductEntity.builder()
                 .productName(productRequest.getProductName())
                 .productDesc(productRequest.getProductDesc())
                 .productImage(productRequest.getProductImage())
@@ -67,7 +67,7 @@ public class CoconutProductServiceImpl implements ICoconutProductService {
                 .build();
 
         //save productEntity
-        productEntity = iCoconutProductRepository.save(productEntity);
+        productEntity = iProductRepository.save(productEntity);
 
         Set<ProductCategoryEntity> newProductCategoryEntities = new HashSet<>();
         Set<String> categoryName = new HashSet<>();
@@ -86,7 +86,7 @@ public class CoconutProductServiceImpl implements ICoconutProductService {
 
         //update productEntity
         productEntity.setProductCategories(newProductCategoryEntities);
-        iCoconutProductRepository.save(productEntity);
+        iProductRepository.save(productEntity);
 
         ProductDTO productDTO = ProductDTO.builder()
                 .productId(productEntity.getProductId())
@@ -103,7 +103,7 @@ public class CoconutProductServiceImpl implements ICoconutProductService {
 
     @Override
     public ProductDTO updateProduct(String productId, ProductRequest productRequest) {
-        CoconutProductEntity productEntity = iCoconutProductRepository.findById(productId)
+        ProductEntity productEntity = iProductRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("Product not found!"));
 
         productEntity.setProductName(productRequest.getProductName());
@@ -111,7 +111,7 @@ public class CoconutProductServiceImpl implements ICoconutProductService {
         productEntity.setProductImage(productRequest.getProductImage());
         productEntity.setProductOrigin(productRequest.getProductOrigin());
         productEntity.setCreatedAt(LocalDateTime.now());
-        productEntity = iCoconutProductRepository.save(productEntity);
+        productEntity = iProductRepository.save(productEntity);
 
         //get all Category of product
         Set<ProductCategoryEntity> existingProductCategories = iproductCategoryRepository.findByProduct(productEntity);
@@ -140,7 +140,7 @@ public class CoconutProductServiceImpl implements ICoconutProductService {
 
             //update productEntity
             productEntity.setProductCategories(newProductCategoryEntities);
-            iCoconutProductRepository.save(productEntity);
+            iProductRepository.save(productEntity);
         }else{
             Set<ProductCategoryEntity> productCategoryEntities = iproductCategoryRepository.findByProduct(productEntity);
 
@@ -157,7 +157,7 @@ public class CoconutProductServiceImpl implements ICoconutProductService {
     @Override
     public ProductDTO getProduct(String productId) {
 
-        CoconutProductEntity productEntity = iCoconutProductRepository.findById(productId)
+        ProductEntity productEntity = iProductRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
 
         Set<ProductCategoryEntity> productCategoryEntities = iproductCategoryRepository.findByProduct(productEntity);
@@ -174,7 +174,7 @@ public class CoconutProductServiceImpl implements ICoconutProductService {
 
     @Override
     public List<ProductDTO> getAllProduct() {
-        List<CoconutProductEntity> productEntities = iCoconutProductRepository.findAll();
+        List<ProductEntity> productEntities = iProductRepository.findAll();
 
         List<ProductDTO> productDTOS = productEntities.stream() //tra ve set<string>
                 .map(productEntity -> {

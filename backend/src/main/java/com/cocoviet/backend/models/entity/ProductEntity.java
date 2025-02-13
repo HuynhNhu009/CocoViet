@@ -5,8 +5,6 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -18,7 +16,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 
-public class CoconutProductEntity {
+public class ProductEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     String productId;
@@ -43,7 +41,7 @@ public class CoconutProductEntity {
     RetailerEntity retailer;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    Set<CoconutProductVariantEntity> variants;
+    Set<ProductVariantEntity> variants;
 
     //anh
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

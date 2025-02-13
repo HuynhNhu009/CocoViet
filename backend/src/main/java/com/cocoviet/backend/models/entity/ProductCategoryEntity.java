@@ -19,7 +19,7 @@ public class ProductCategoryEntity {
 
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
-    CoconutProductEntity product;
+    ProductEntity product;
 
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)

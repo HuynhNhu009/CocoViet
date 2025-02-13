@@ -3,7 +3,7 @@ package com.cocoviet.backend.controller;
 
 import com.cocoviet.backend.models.reponse.ResponseData;
 import com.cocoviet.backend.models.request.ProductRequest;
-import com.cocoviet.backend.service.ICoconutProductService;
+import com.cocoviet.backend.service.IProductService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 public class CoconutProductController {
 
     @Autowired
-    ICoconutProductService coconutProductService;
+    IProductService coconutProductService;
 
     @PostMapping("/add")
     ResponseEntity<ResponseData> addProduct(@RequestBody @Valid ProductRequest coconutProductRequest){

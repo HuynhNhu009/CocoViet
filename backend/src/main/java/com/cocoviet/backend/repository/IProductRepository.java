@@ -1,13 +1,10 @@
 package com.cocoviet.backend.repository;
 
-import com.cocoviet.backend.models.entity.CoconutProductEntity;
+import com.cocoviet.backend.models.entity.ProductEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-import java.util.Optional;
-
 @Repository
-public interface ICoconutProductRepository extends JpaRepository<CoconutProductEntity, String> {
+public interface IProductRepository extends JpaRepository<ProductEntity, String> {
     boolean existsByProductName(String email);
 }

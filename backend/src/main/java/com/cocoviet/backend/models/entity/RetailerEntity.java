@@ -1,8 +1,6 @@
 package com.cocoviet.backend.models.entity;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.Set;
 
 import jakarta.persistence.Column;
@@ -56,7 +54,7 @@ public class RetailerEntity{
     LocalDateTime createdAt;
 
     @OneToMany(mappedBy = "retailer")
-    Set<CoconutProductEntity> products;
+    Set<ProductEntity> products;
 
     @OneToMany(mappedBy = "retailer")
     Set<PostEntity> posts;

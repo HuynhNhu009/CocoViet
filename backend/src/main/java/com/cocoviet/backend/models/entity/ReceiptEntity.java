@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 
 @Entity
@@ -26,7 +25,7 @@ public class ReceiptEntity {
 
     @ManyToOne
     @JoinColumn(name = "variant_id", nullable = false)
-    CoconutProductVariantEntity variant;
+    ProductVariantEntity variant;
 
     @Column(nullable = false)
     Long quantity;
