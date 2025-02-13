@@ -107,15 +107,55 @@ public class CoconutProductServiceImpl implements ICoconutProductService {
 
     @Override
     public ProductDTO updateProduct(String productId, ProductRequest productRequest) {
-        CoconutProductEntity coconutProductEntity = iCoconutProductRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException("Product not found"));
+        CoconutProductEntity productEntity = iCoconutProductRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found!"));
 
-        coconutProductEntity.setProductName(productRequest.getProductName());
-        coconutProductEntity.setProductDesc(productRequest.getProductDesc());
-        coconutProductEntity.setProductImage(productRequest.getProductImage());
-        coconutProductEntity.setProductOrigin(productRequest.getProductOrigin());
+        productEntity.setProductName(productRequest.getProductName());
+        productEntity.setProductDesc(productRequest.getProductDesc());
+        productEntity.setProductImage(productRequest.getProductImage());
+        productEntity.setProductOrigin(productRequest.getProductOrigin());
+        productEntity.setCreatedAt(LocalDateTime.now());
+        productEntity = iCoconutProductRepository.save(productEntity);
 
-        return iProductMapper.toProductDTO(iCoconutProductRepository.save(coconutProductEntity));
+        //get all Category of product
+        Set<ProductCategoryEntity> existingProductCategories = iproductCategoryRepository.findByProduct(productEntity);
+        //add newCate
+        Set<ProductCategoryEntity> newProductCategoryEntities = new HashSet<>();
+
+        Set<String> categoryName = new HashSet<>();
+
+        if(productRequest.getCategoryId() != null){
+            //deleted old cate
+            iproductCategoryRepository.deleteAll(existingProductCategories);
+
+            for(String categoryId : productRequest.getCategoryId()) {
+                CoconutCategoryEntity categoryEntity = icategoryRepository.findById(categoryId)
+                        .orElseThrow(() -> new RuntimeException("Category not found"));
+                ProductCategoryEntity productCategoryEntity = new ProductCategoryEntity();
+                productCategoryEntity.setProduct(productEntity);
+                productCategoryEntity.setCategory(categoryEntity);
+
+                newProductCategoryEntities.add(productCategoryEntity);
+                categoryName.add(categoryEntity.getCategoryName());
+            }
+
+            //save productCategory
+            iproductCategoryRepository.saveAll(newProductCategoryEntities);
+
+            //update productEntity
+            productEntity.setProductCategories(newProductCategoryEntities);
+            iCoconutProductRepository.save(productEntity);
+        }else{
+            Set<ProductCategoryEntity> productCategoryEntities = iproductCategoryRepository.findByProduct(productEntity);
+
+            categoryName = productCategoryEntities.stream() //tra ve set<string>
+                    .map(productCategory -> productCategory.getCategory().getCategoryName())//get tu productCategory
+                    .collect(Collectors.toSet());
+        }
+
+        ProductDTO  productDTO = iProductMapper.toProductDTO(productEntity);
+        productDTO.setCategoryName(categoryName);
+        return productDTO;
     }
 
     @Override

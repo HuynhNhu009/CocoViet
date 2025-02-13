@@ -34,10 +34,6 @@ public class ProductRequest {
     @Size(min = 20, max = 500, message = "Product description must be between 20 and 500 characters.")
     String productDesc;
 
-    @NotNull(message = "Stock cannot be null")
-    @Min(value = 1, message = "Stock greater than or equal to 0")
-    int productStock;
-
     Set<String> categoryId;
 
     String retailerId;
