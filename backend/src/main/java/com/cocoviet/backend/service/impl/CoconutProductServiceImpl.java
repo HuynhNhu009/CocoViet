@@ -81,7 +81,7 @@ public class CoconutProductServiceImpl implements ICoconutProductService {
             productCategoryEntity.setCategory(categoryEntity);
 
             newProductCategoryEntities.add(productCategoryEntity);
-            categoryName.add(icategoryRepository.findById(categoryId).get().getCategoryName());
+            categoryName.add(categoryEntity.getCategoryName());
         }
         iproductCategoryRepository.saveAll(newProductCategoryEntities);
 
@@ -96,7 +96,7 @@ public class CoconutProductServiceImpl implements ICoconutProductService {
                 .productImage(productEntity.getProductImage())
                 .productOrigin(productEntity.getProductOrigin())
                 .categoryName(categoryName)
-                .createdAt(LocalDateTime.now())
+                .createdAt(productEntity.getCreatedAt())
                 .retailerName(retailerEntity.getRetailerName())
                 .build();
         return productDTO;
@@ -117,7 +117,12 @@ public class CoconutProductServiceImpl implements ICoconutProductService {
 
     @Override
     public ProductDTO getProduct(String productId) {
-        return iProductMapper.toProductDTO(iCoconutProductRepository.save(iCoconutProductRepository.findById(productId)
+
+        CoconutProductEntity productEntity = iCoconutProductRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+
+        ProductCategoryEntity productCategoryEntity =
+        return iProductMapper.toProductDTO(
                 .orElseThrow(() -> new RuntimeException("Product not found"))));
     }
 
