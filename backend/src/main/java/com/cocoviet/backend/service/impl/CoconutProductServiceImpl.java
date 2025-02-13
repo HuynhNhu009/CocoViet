@@ -127,7 +127,7 @@ public class CoconutProductServiceImpl implements ICoconutProductService {
         Set<ProductCategoryEntity> productCategoryEntities = iproductCategoryRepository.findByProduct(productEntity);
 
         Set<String> categoryName = productCategoryEntities.stream() //tra ve set<string>
-                .map(productCategory -> productCategory.getCategory().getCategoryName())//get tu CoconutCategoryEntity
+                .map(productCategory -> productCategory.getCategory().getCategoryName())//get tu productCategory
                 .collect(Collectors.toSet());
 
         ProductDTO productDTO = iProductMapper.toProductDTO(productEntity);
@@ -138,8 +138,24 @@ public class CoconutProductServiceImpl implements ICoconutProductService {
 
     @Override
     public List<ProductDTO> getAllProduct() {
+        List<CoconutProductEntity> productEntities = iCoconutProductRepository.findAll();
 
-        List<ProductDTO> productDTOS = iProductMapper.toProductDTOList(iCoconutProductRepository.findAll());
+        List<ProductDTO> productDTOS = productEntities.stream() //tra ve set<string>
+                .map(productEntity -> {
+
+                    //su dung lai getProductById
+                    Set<ProductCategoryEntity> productCategoryEntities = iproductCategoryRepository.findByProduct(productEntity);
+
+                    Set<String> categoryName = productCategoryEntities.stream() //tra ve set<string>
+                            .map(productCategory -> productCategory.getCategory().getCategoryName())//get tu productCategory
+                            .collect(Collectors.toSet());
+
+                    ProductDTO productDTO = iProductMapper.toProductDTO(productEntity);
+                    productDTO.setCategoryName(categoryName);
+
+                    return productDTO;
+                }).collect(Collectors.toList());
+
         return productDTOS;
 
     }

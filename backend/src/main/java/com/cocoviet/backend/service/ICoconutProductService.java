@@ -1,6 +1,7 @@
 package com.cocoviet.backend.service;
 
 import com.cocoviet.backend.models.dto.ProductDTO;
+import com.cocoviet.backend.models.entity.CoconutProductEntity;
 import com.cocoviet.backend.models.request.ProductRequest;
 
 import java.util.List;
