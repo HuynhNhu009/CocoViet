@@ -12,6 +12,7 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class StatusDTO {
 
+    String statusId;
     String statusName;
 
     List<ProductOrderDTO> orders;
