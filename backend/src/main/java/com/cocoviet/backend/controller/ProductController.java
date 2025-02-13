@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/products")
-public class CoconutProductController {
+public class ProductController {
 
     @Autowired
     IProductService coconutProductService;
