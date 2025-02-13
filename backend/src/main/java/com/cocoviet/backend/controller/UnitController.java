@@ -15,14 +15,14 @@ import org.springframework.web.bind.annotation.*;
 public class CategoryController {
 
     @Autowired
-    ICategoryService categoryService;
+    ICategoryService coconutCategoryService;
 
     @PostMapping("/add")
     ResponseEntity<ResponseData> addCategory(@RequestBody @Valid CategoryRequest categoryRequest){
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ResponseData.builder()
-                        .data(categoryService.addCategory(categoryRequest))
+                        .data(coconutCategoryService.addCategory(categoryRequest))
                         .msg("Add category: "+ categoryRequest.getCategoryName() + " successfully")
                         .status("OK")
                         .build());
@@ -35,7 +35,7 @@ public class CategoryController {
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ResponseData.builder()
-                        .data(categoryService.updateCategory(categoryId, categoryRequest))
+                        .data(coconutCategoryService.updateCategory(categoryId, categoryRequest))
                         .msg("Update Category success!")
                         .status("OK")
                         .build());
@@ -46,7 +46,7 @@ public class CategoryController {
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ResponseData.builder()
-                        .data(categoryService.getCategoryById(categoryId))
+                        .data(coconutCategoryService.getCategoryById(categoryId))
                         .msg("Get Category success")
                         .status("OK")
                         .build());
@@ -57,7 +57,7 @@ public class CategoryController {
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ResponseData.builder()
-                        .data(categoryService.getAllCategories())
+                        .data(coconutCategoryService.getAllCategories())
                         .msg("Get all categories success")
                         .status("OK")
                         .build());
