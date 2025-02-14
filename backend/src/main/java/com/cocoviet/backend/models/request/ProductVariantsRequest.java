@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
+import java.math.BigDecimal;
 
 
 @Getter
@@ -23,17 +24,15 @@ import lombok.experimental.FieldDefaults;
 public class ProductVariantsRequest {
 
     @NotNull(message = "Product ID cannot be null")
-    Long productId;
+    String productId;
 
-    Long unitId;
+    String unitId;
 
-    @NotBlank(message = "Variant name cannot be empty")
-    @Size(min = 6, max = 50, message = "Variant name must be between 6 and 50 characters.")
-    String variantName;
+    double value;
 
     @NotNull(message = "Price cannot be null")
     @Min(value = 0, message = "Price must be greater than or equal to 0")
-    double price;
+    BigDecimal price;
 
     @NotNull(message = "Stock quantity cannot be null")
     @Min(value = 0, message = "Stock quantity must be at least 0")
