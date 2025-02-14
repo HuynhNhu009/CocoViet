@@ -34,10 +34,8 @@ public class ProductServiceImpl implements IProductService {
     private IProductRepository iProductRepository;
 
     @Autowired
-//    @Qualifier("IProductMapperImpl")
     private IProductMapper iProductMapper;
 
-//    anh
     @Autowired
     ICategoryRepository icategoryRepository;
 

@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/status")
 public class StatusController {
@@ -33,5 +35,25 @@ public class StatusController {
                         .msg("Create Status: "+ statusRequest.getStatusName() +" successfully!")
                         .status("OK")
                         .build());
+    }
+
+    @GetMapping("/get-all-status")
+    public ResponseEntity<ResponseData> getAllStatus(){
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ResponseData.builder()
+                        .data(iStatusService.getAllStatus())
+                        .msg("Get all status successfully!")
+                        .status("OK").build());
+
+    }
+
+    @DeleteMapping("/{statusId}")
+    public  ResponseEntity<ResponseData>  deleteStatus(@PathVariable("statusId") String statusId){
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ResponseData.builder()
+                        .data(iStatusService.deleteStatus(statusId))
+                        .msg("Delete status "+ statusId +" successfully!")
+                        .status("OK").build())
+                ;
     }
 }

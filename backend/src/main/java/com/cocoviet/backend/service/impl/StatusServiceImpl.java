@@ -6,6 +6,7 @@ import com.cocoviet.backend.models.entity.StatusEntity;
 import com.cocoviet.backend.models.request.StatusRequest;
 import com.cocoviet.backend.repository.IStatusRepository;
 import com.cocoviet.backend.service.IStatusService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -13,7 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @Service
@@ -45,8 +46,21 @@ public class StatusServiceImpl implements IStatusService {
     }
 
     @Override
-    public List<StatusDTO> getAllStatus(List<StatusEntity> statusEntityList) {
-        return List.of();
+    public Set<StatusDTO> getAllStatus() {
+        return iStatusMapper.toStatusDTOList(iStatusRepository.findAll());
+    }
+
+
+    @Override
+    public String deleteStatus(String statusId) {
+        StatusDTO statusDTO = iStatusMapper.toStatusDTO(
+                iStatusRepository.findById(statusId)
+                        .orElseThrow(() -> new EntityNotFoundException("Status ID " + statusId + " not found"))
+        );
+
+        iStatusRepository.deleteById(statusId);
+
+        return "Deleted status: " + statusDTO.getStatusName();
     }
 
 
