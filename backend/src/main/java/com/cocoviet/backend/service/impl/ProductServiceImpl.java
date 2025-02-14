@@ -1,7 +1,6 @@
 package com.cocoviet.backend.service.impl;
 
 import com.cocoviet.backend.mapper.IProductMapper;
-import com.cocoviet.backend.mapper.IProductVariantMapper;
 import com.cocoviet.backend.models.dto.ProductDTO;
 import com.cocoviet.backend.models.dto.ProductVariantDTO;
 import com.cocoviet.backend.models.entity.*;
@@ -12,8 +11,6 @@ import com.cocoviet.backend.service.IProductService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -25,16 +22,12 @@ import java.util.stream.Collectors;
 @Service
 public class ProductServiceImpl implements IProductService {
 
-    private static final Logger logger = LoggerFactory.getLogger(ProductServiceImpl.class);
-
     @Autowired
     private IProductRepository iProductRepository;
 
     @Autowired
     private IProductMapper iProductMapper;
 
-    @Autowired
-    IProductVariantMapper iProductVariantMapper;
 
     @Autowired
     ICategoryRepository icategoryRepository;
@@ -65,7 +58,6 @@ public class ProductServiceImpl implements IProductService {
                 .productDesc(productRequest.getProductDesc())
                 .productImage(productRequest.getProductImage())
                 .productOrigin(productRequest.getProductOrigin())
-                //anh
                 .retailer(retailerEntity)
                 .createdAt(LocalDateTime.now())
                 .build();
@@ -118,8 +110,7 @@ public class ProductServiceImpl implements IProductService {
         Set<ProductVariantDTO> productVariantDTOS = newProductVariantEntities.stream()
                 .map(variant -> ProductVariantDTO.builder()
                         .variantId(variant.getVariantsId())
-                        .unit(variant.getUnit())
-//                        .unit(variant.getUnit().getUnitName())
+                        .unitName(variant.getUnit().getUnitName())
                         .price(variant.getPrice())
                         .stock(variant.getStock())
                         .value(variant.getValue())
@@ -219,7 +210,7 @@ public class ProductServiceImpl implements IProductService {
                     .map(variant -> ProductVariantDTO.builder()
                             .variantId(variant.getVariantsId())
 //                            .unit(variant.getUnit().getUnitName())
-                            .unit(variant.getUnit())
+                            .unitName(variant.getUnit().getUnitName())
                             .price(variant.getPrice())
                             .stock(variant.getStock())
                             .value(variant.getValue())
@@ -234,8 +225,8 @@ public class ProductServiceImpl implements IProductService {
             productVariantDTOS = productEntity.getVariants().stream()
                     .map(variant -> ProductVariantDTO.builder()
                             .variantId(variant.getVariantsId())
-                            .unit(variant.getUnit())
-//                            .unit(variant.getUnit().getUnitName())
+//                            .unit(variant.getUnit())
+                            .unitName(variant.getUnit().getUnitName())
                             .price(variant.getPrice())
                             .stock(variant.getStock())
                             .value(variant.getValue())
@@ -267,8 +258,8 @@ public class ProductServiceImpl implements IProductService {
         Set<ProductVariantDTO> productVariantDTOS = productVariantEntity.stream()
                 .map(variant -> ProductVariantDTO.builder()
                         .variantId(variant.getVariantsId())
-                        .unit(variant.getUnit())
-//                        .unit(variant.getUnit().getUnitName())
+//                        .unit(variant.getUnit())
+                        .unitName(variant.getUnit().getUnitName())
                         .price(variant.getPrice())
                         .stock(variant.getStock())
                         .value(variant.getValue())
@@ -301,8 +292,8 @@ public class ProductServiceImpl implements IProductService {
                     Set<ProductVariantDTO> productVariantDTOS = productVariantEntity.stream()
                             .map(variant -> ProductVariantDTO.builder()
                                     .variantId(variant.getVariantsId())
-                                    .unit(variant.getUnit())
-//                                    .unit(variant.getUnit().getUnitName())
+//                                    .unit(variant.getUnit())
+                                    .unitName(variant.getUnit().getUnitName())
                                     .price(variant.getPrice())
                                     .stock(variant.getStock())
                                     .value(variant.getValue())
