@@ -139,9 +139,11 @@ public class ProductServiceImpl implements IProductService {
 
     @Override
     public ProductDTO updateProduct(String productId, ProductRequest productRequest) {
+
         ProductEntity productEntity = iProductRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("Product not found!"));
 
+        //update productEntity
         productEntity.setProductName(productRequest.getProductName());
         productEntity.setProductDesc(productRequest.getProductDesc());
         productEntity.setProductImage(productRequest.getProductImage());
@@ -156,13 +158,12 @@ public class ProductServiceImpl implements IProductService {
         //update newCategory
         Set<ProductCategoryEntity> newProductCategoryEntities = new HashSet<>();
         Set<String> categoryName = new HashSet<>();
+
         //update newVariants
         Set<ProductVariantEntity> newProductVariantEntities = new HashSet<>();
         Set<ProductVariantDTO> productVariantDTOS = new HashSet<>();
 
-        if((productRequest.getCategoryId() != null && productRequest.getProductVariants() != null)
-                || productRequest.getCategoryId() != null || productRequest.getProductVariants() != null){
-
+        if(productRequest.getCategoryId() != null && productRequest.getProductVariants() != null){
             //relationship with CATEGORY
             //deleted old cate
             iproductCategoryRepository.deleteAll(existingProductCategories);
@@ -180,6 +181,20 @@ public class ProductServiceImpl implements IProductService {
             //save productCategory
             iproductCategoryRepository.saveAll(newProductCategoryEntities);
 
+            //update productEntity
+            productEntity.setProductCategories(newProductCategoryEntities);
+            productEntity.setVariants(newProductVariantEntities);
+            iProductRepository.save(productEntity);
+        }else{
+            //No change category and unit
+            Set<ProductCategoryEntity> productCategoryEntities = iproductCategoryRepository.findByProduct(productEntity);
+            categoryName = productCategoryEntities.stream() //tra ve set<string>
+                    .map(productCategory -> productCategory.getCategory().getCategoryName())//get tu productCategory
+                    .collect(Collectors.toSet());
+
+        }
+
+        if(productRequest.getProductVariants() != null){
             //Relationship with Unit
             iProducVariantRepository.deleteAll(exsistProductVariants);
 
@@ -199,20 +214,21 @@ public class ProductServiceImpl implements IProductService {
             }
             iProducVariantRepository.saveAll(newProductVariantEntities);
 
+            productVariantDTOS = newProductVariantEntities.stream()
+                    .map(variant -> ProductVariantDTO.builder()
+                            .variantId(variant.getVariantsId())
+                            .unit(variant.getUnit().getUnitName())
+                            .price(variant.getPrice())
+                            .stock(variant.getStock())
+                            .value(variant.getValue())
+                            .build())
+                    .collect(Collectors.toSet());
 
             //update productEntity
-            productEntity.setProductCategories(newProductCategoryEntities);
             productEntity.setVariants(newProductVariantEntities);
             iProductRepository.save(productEntity);
 
         }else{
-
-            //No change category and unit
-            Set<ProductCategoryEntity> productCategoryEntities = iproductCategoryRepository.findByProduct(productEntity);
-            categoryName = productCategoryEntities.stream() //tra ve set<string>
-                    .map(productCategory -> productCategory.getCategory().getCategoryName())//get tu productCategory
-                    .collect(Collectors.toSet());
-
             productVariantDTOS = productEntity.getVariants().stream()
                     .map(variant -> ProductVariantDTO.builder()
                             .variantId(variant.getVariantsId())
