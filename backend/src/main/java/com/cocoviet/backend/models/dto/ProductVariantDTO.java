@@ -21,5 +21,5 @@ public class ProductVariantDTO {
 
     BigDecimal price;
 
-    String unit;
+    String unitName;
 }
