@@ -10,5 +10,6 @@ import java.util.Set;
 
 @Repository
 public interface IProducVariantRepository extends JpaRepository<ProductVariantEntity, String> {
-    Set<ProductVariantEntity> findByProductVariants(ProductEntity product);
+    Set<ProductVariantEntity> findProductVariantEntityByProduct(ProductEntity product);
+
 }
