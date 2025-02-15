@@ -10,6 +10,6 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class StatusRequest {
-    @Size(min = 10, message = "Status name must be at least 10 characters.")
+    @Size(min = 5, message = "Status name must be at least 10 characters.")
     String statusName;
 }
