@@ -30,4 +30,4 @@ netstat -ano | findstr :3306
 
 taskkill /PID <PID> /F
 
-
+mvn spring-boot:run
