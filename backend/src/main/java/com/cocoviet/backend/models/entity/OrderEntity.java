@@ -38,9 +38,6 @@ public class OrderEntity {
     @JoinColumn(name = "payment_id", nullable = false)
     PaymentEntity payment;
 
-    @Column(nullable = false)
-    BigDecimal totalPrice; // Đảm bảo đơn hàng có tổng giá trị
-
     @OneToMany(mappedBy = "productOrder", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     Set<ReceiptDetailEntity> receiptDetails;
 }

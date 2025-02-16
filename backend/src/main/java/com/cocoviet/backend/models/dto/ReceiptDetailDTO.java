@@ -23,9 +23,11 @@ public class ReceiptDetailDTO {
 
     String customerNumber;
 
-    int quantity;
+    String productName;
 
-    BigDecimal price;
+    int totalQuantity;
+
+    BigDecimal totalPrice;
 
     ProductVariantDTO productVariants;
 }

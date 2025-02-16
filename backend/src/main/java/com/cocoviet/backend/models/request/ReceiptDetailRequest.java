@@ -4,8 +4,6 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.math.BigDecimal;
-
 @Setter
 @Getter
 @AllArgsConstructor
@@ -16,8 +14,6 @@ public class ReceiptDetailRequest {
     String productVariantId;
 
     String orderId;
-
-    BigDecimal price;
 
     @Size(min = 1)
     int quantity;

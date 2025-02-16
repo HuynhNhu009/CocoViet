@@ -100,6 +100,7 @@ public class ProductServiceImpl implements IProductService {
                     .unit(unitEntity)
                     .price(getProductVariants.getPrice())
                     .initStock(getProductVariants.getInitStock())
+                    .stock(getProductVariants.getInitStock())
                     .value(getProductVariants.getValue())
                     .build();
 
@@ -111,18 +112,7 @@ public class ProductServiceImpl implements IProductService {
         productEntity.setVariants(newProductVariantEntities);
 
         //map productVariantEntity to productVariantDTO
-
-
         Set<ProductVariantDTO> productVariantDTOS = productVariantMapper.toDTOSet(productEntity.getVariants());
-//                newProductVariantEntities.stream()
-//                .map(variant -> ProductVariantDTO.builder()
-//                        .variantId(variant.getVariantsId())
-//                        .unitName(variant.getUnit().getUnitName())
-//                        .price(variant.getPrice())
-//                        .initStock(variant.getInitStock())
-//                        .value(variant.getValue())
-//                        .build())
-//                .collect(Collectors.toSet());
         //-----END Relationship with UNIT----
 
         //final update product
@@ -182,7 +172,6 @@ public class ProductServiceImpl implements IProductService {
 
             //update productEntity
             productEntity.setProductCategories(newProductCategoryEntities);
-            productEntity.setVariants(newProductVariantEntities);
             iProductRepository.save(productEntity);
         }else{
             //No change category and unit
@@ -192,7 +181,7 @@ public class ProductServiceImpl implements IProductService {
                     .collect(Collectors.toSet());
 
         }
-
+        //UNIT
         if(productRequest.getProductVariants() != null){
             //Relationship with Unit
             iProducVariantRepository.deleteAll(exsistProductVariants);
@@ -206,6 +195,7 @@ public class ProductServiceImpl implements IProductService {
                         .unit(unitEntity)
                         .price(getProductVariants.getPrice())
                         .initStock(getProductVariants.getInitStock())
+                        .stock(getProductVariants.getInitStock())
                         .value(getProductVariants.getValue())
                         .build();
 
@@ -213,31 +203,14 @@ public class ProductServiceImpl implements IProductService {
             }
             iProducVariantRepository.saveAll(newProductVariantEntities);
 
-            productVariantDTOS = newProductVariantEntities.stream()
-                    .map(variant -> ProductVariantDTO.builder()
-                            .variantId(variant.getVariantsId())
-//                            .unit(variant.getUnit().getUnitName())
-                            .unitName(variant.getUnit().getUnitName())
-                            .price(variant.getPrice())
-                            .initStock(variant.getInitStock())
-                            .value(variant.getValue())
-                            .build())
-                    .collect(Collectors.toSet());
-
+            productVariantDTOS= productVariantMapper.toDTOSet(newProductVariantEntities);
             //update productEntity
             productEntity.setVariants(newProductVariantEntities);
+
             iProductRepository.save(productEntity);
 
         }else{
-            productVariantDTOS = productEntity.getVariants().stream()
-                    .map(variant -> ProductVariantDTO.builder()
-                            .variantId(variant.getVariantsId())
-                            .unitName(variant.getUnit().getUnitName())
-                            .price(variant.getPrice())
-                            .stock(999)
-                            .value(variant.getValue())
-                            .build())
-                    .collect(Collectors.toSet());
+            productVariantDTOS = productVariantMapper.toDTOSet(productEntity.getVariants());
         }
 
         ProductDTO  productDTO = iProductMapper.toProductDTO(productEntity);
@@ -260,17 +233,7 @@ public class ProductServiceImpl implements IProductService {
                 .collect(Collectors.toSet());
 
         //map productVariantEntity to productVariantDTO
-        Set<ProductVariantEntity> productVariantEntity = productEntity.getVariants();
-        Set<ProductVariantDTO> productVariantDTOS = productVariantEntity.stream()
-                .map(variant -> ProductVariantDTO.builder()
-                        .variantId(variant.getVariantsId())
-//                        .unit(variant.getUnit())
-                        .unitName(variant.getUnit().getUnitName())
-                        .price(variant.getPrice())
-                        .stock(999)
-                        .value(variant.getValue())
-                        .build())
-                .collect(Collectors.toSet());
+        Set<ProductVariantDTO> productVariantDTOS = productVariantMapper.toDTOSet(productEntity.getVariants());
 
         ProductDTO productDTO = iProductMapper.toProductDTO(productEntity);
         productDTO.setCategoryName(categoryName);
@@ -294,16 +257,7 @@ public class ProductServiceImpl implements IProductService {
                             .collect(Collectors.toSet());
 
                     //Unit
-                    Set<ProductVariantEntity> productVariantEntity = productEntity.getVariants();
-                    Set<ProductVariantDTO> productVariantDTOS = productVariantEntity.stream()
-                            .map(variant -> ProductVariantDTO.builder()
-                                    .variantId(variant.getVariantsId())
-                                    .unitName(variant.getUnit().getUnitName())
-                                    .price(variant.getPrice())
-                                    .stock(888)
-                                    .value(variant.getValue())
-                                    .build())
-                            .collect(Collectors.toSet());
+                    Set<ProductVariantDTO> productVariantDTOS = productVariantMapper.toDTOSet(productEntity.getVariants());
 
                     ProductDTO productDTO = iProductMapper.toProductDTO(productEntity);
                     productDTO.setCategoryName(categoryName);
