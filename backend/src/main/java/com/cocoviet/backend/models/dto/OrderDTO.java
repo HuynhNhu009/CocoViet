@@ -3,6 +3,7 @@ package com.cocoviet.backend.models.dto;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -13,11 +14,11 @@ import java.util.List;
 
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ProductOrderDTO {
+public class OrderDTO {
 
     List<ReceiptDetailDTO> receiptDetails;
 
     String statusName;
 
-    Date productOrderDate;
+    LocalDateTime orderDate;
 }

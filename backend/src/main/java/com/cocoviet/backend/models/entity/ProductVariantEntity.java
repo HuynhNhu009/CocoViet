@@ -29,6 +29,9 @@ public class ProductVariantEntity {
     @Column
     int stock;
 
+    @Column
+    int initStock;
+
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
     ProductEntity product;

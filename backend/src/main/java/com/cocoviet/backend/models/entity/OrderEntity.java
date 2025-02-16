@@ -4,9 +4,11 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.math.BigDecimal;
+import java.util.Set;
 
 @Entity
 @Table(name = "product_orders")
@@ -22,7 +24,7 @@ public class OrderEntity {
     String orderId; // Đổi từ productOrderId → orderId
 
     @Column(nullable = false)
-    Date orderDate; // Đổi tên từ productOrderDate → orderDate
+    LocalDateTime orderDate; // Đổi tên từ productOrderDate → orderDate
 
     @ManyToOne
     @JoinColumn(name = "customer_id", nullable = false)
@@ -38,4 +40,7 @@ public class OrderEntity {
 
     @Column(nullable = false)
     BigDecimal totalPrice; // Đảm bảo đơn hàng có tổng giá trị
+
+    @OneToMany(mappedBy = "product_order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    Set<ReceiptDetailEntity> receiptDetails;
 }
