@@ -19,6 +19,8 @@ public class ProductVariantDTO {
 
     int stock;
 
+    int initStock;
+
     BigDecimal price;
 
     String unitName;

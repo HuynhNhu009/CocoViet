@@ -37,5 +37,7 @@ public class ProductVariantsRequest {
     @NotNull(message = "Stock quantity cannot be null")
     @Min(value = 0, message = "Stock quantity must be at least 0")
     int stock;
+
+    int initStock;
 }
 
