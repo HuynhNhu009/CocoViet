@@ -8,8 +8,6 @@ public class BackendApplication {
 
 	public static void main(String[] args) {
 
-		SpringApplication.run(BackendApplication.class, args
-		// hihi 22
-		);
+		SpringApplication.run(BackendApplication.class, args);
 	}
 }
