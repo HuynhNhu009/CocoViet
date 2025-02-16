@@ -2,7 +2,7 @@ import useFetchData from "../hooks/useFetchProducts";
 import ProductCard from "../components/ProductCard"; // Ensure you have this import
 
 const ProductListPage = () => {
-  const { data: products, loading, error } = useFetchData("products");
+  // const { data: products, loading, error } = useFetchData("products");
 
   if (loading) return <p>Đang tải...</p>;
   if (error) return <p>Có lỗi xảy ra!</p>;

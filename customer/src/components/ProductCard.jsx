@@ -1,6 +1,6 @@
 import React from "react";
 import { Card, CardContent } from "../components/ui/Card";
-import { Button } from "../components/ui/Card";
+import { Button } from "../components/ui/Button";
 
 const ProductCard = ({ product }) => {
   return (
