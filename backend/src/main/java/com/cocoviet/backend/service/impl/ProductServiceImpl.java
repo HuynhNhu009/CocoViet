@@ -1,6 +1,7 @@
 package com.cocoviet.backend.service.impl;
 
 import com.cocoviet.backend.mapper.IProductMapper;
+import com.cocoviet.backend.mapper.ProductVariantMapper;
 import com.cocoviet.backend.models.dto.ProductDTO;
 import com.cocoviet.backend.models.dto.ProductVariantDTO;
 import com.cocoviet.backend.models.entity.*;
@@ -43,6 +44,9 @@ public class ProductServiceImpl implements IProductService {
 
     @Autowired
     IRetailerRepository iretailerRepository;
+
+    @Autowired
+    ProductVariantMapper productVariantMapper;
 
     @Override
     public ProductDTO addProduct(ProductRequest productRequest) {
@@ -107,15 +111,18 @@ public class ProductServiceImpl implements IProductService {
         productEntity.setVariants(newProductVariantEntities);
 
         //map productVariantEntity to productVariantDTO
-        Set<ProductVariantDTO> productVariantDTOS = newProductVariantEntities.stream()
-                .map(variant -> ProductVariantDTO.builder()
-                        .variantId(variant.getVariantsId())
-                        .unitName(variant.getUnit().getUnitName())
-                        .price(variant.getPrice())
-                        .initStock(variant.getInitStock())
-                        .value(variant.getValue())
-                        .build())
-                .collect(Collectors.toSet());
+
+
+        Set<ProductVariantDTO> productVariantDTOS = productVariantMapper.toDTOSet(productEntity.getVariants());
+//                newProductVariantEntities.stream()
+//                .map(variant -> ProductVariantDTO.builder()
+//                        .variantId(variant.getVariantsId())
+//                        .unitName(variant.getUnit().getUnitName())
+//                        .price(variant.getPrice())
+//                        .initStock(variant.getInitStock())
+//                        .value(variant.getValue())
+//                        .build())
+//                .collect(Collectors.toSet());
         //-----END Relationship with UNIT----
 
         //final update product

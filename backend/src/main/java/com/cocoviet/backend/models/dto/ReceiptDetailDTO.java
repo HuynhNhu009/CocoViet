@@ -27,7 +27,7 @@ public class ReceiptDetailDTO {
 
     BigDecimal price;
 
-    Set<ProductVariantDTO> productVariants;
+    ProductVariantDTO productVariants;
 }
 
 

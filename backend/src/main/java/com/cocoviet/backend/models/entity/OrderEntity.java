@@ -41,6 +41,6 @@ public class OrderEntity {
     @Column(nullable = false)
     BigDecimal totalPrice; // Đảm bảo đơn hàng có tổng giá trị
 
-    @OneToMany(mappedBy = "product_order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "productOrder", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     Set<ReceiptDetailEntity> receiptDetails;
 }

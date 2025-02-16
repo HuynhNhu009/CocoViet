@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface IReceiptDetailRepository extends JpaRepository<ReceiptDetailEntity, String> {
 
-    ReceiptDetailEntity findByReceiptId(String receiptId);
+    ReceiptDetailEntity findByReceiptDetailId(String receiptionDetailId);
 }
