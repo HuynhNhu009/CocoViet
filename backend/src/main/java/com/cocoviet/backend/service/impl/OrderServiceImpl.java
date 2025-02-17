@@ -57,6 +57,7 @@ public class OrderServiceImpl implements IOrderService {
 
         OrderEntity orderEntity = iOrderRepository.findByCustomerId(customerEntity.getCustomerId());
 
+        //gio hag da ton tai
         if(orderEntity == null){
             orderEntity = OrderEntity.builder()
                     .customer(customerEntity)

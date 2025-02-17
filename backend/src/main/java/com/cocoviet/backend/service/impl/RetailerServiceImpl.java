@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
@@ -49,6 +50,7 @@ public class RetailerServiceImpl implements IRetailerService {
                 .retailerEmail(retailerRequest.getRetailerEmail())
                 .phoneNumbers(retailerRequest.getPhoneNumbers())
                 .retailerName(retailerRequest.getRetailerName())
+                .createdAt(LocalDateTime.now())
                 .retailerAddress(retailerRequest.getRetailerAddress())
                 .retailerPassword(passwordEncoderUtil.passwordEncoder().encode(retailerRequest.getRetailerPassword()))
                 .build();
