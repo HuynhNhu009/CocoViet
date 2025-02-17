@@ -11,5 +11,4 @@ public interface IRetailerMapper {
     RetailerDTO toRetailerDTO(RetailerEntity retailerEntity);
 
     List<RetailerDTO> toListRetailerDTO(List<RetailerEntity> retailerEntities);
-
 }

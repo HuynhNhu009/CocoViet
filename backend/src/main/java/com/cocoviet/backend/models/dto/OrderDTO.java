@@ -18,6 +18,7 @@ public class OrderDTO {
     Set<ReceiptDetailDTO> receiptDetails;
 
     String statusName;
+    String paymentMethod;
 
     LocalDateTime orderDate;
 }

@@ -23,304 +23,250 @@ import java.util.stream.Collectors;
 @Service
 public class ProductServiceImpl implements IProductService {
 
-        @Autowired
-        private IProductRepository iProductRepository;
+    @Autowired
+    private IProductRepository iProductRepository;
 
-        @Autowired
-        private IProductMapper iProductMapper;
+    @Autowired
+    private IProductMapper iProductMapper;
 
-        @Autowired
-        ICategoryRepository icategoryRepository;
 
-        @Autowired
-        IUnitRepository iUnitRepository;
+    @Autowired
+    ICategoryRepository icategoryRepository;
 
-        @Autowired
-        IProducVariantRepository iProducVariantRepository;
+    @Autowired
+    IUnitRepository iUnitRepository;
 
-        @Autowired
-        IProductCategoryRepository iproductCategoryRepository;
+    @Autowired
+    IProducVariantRepository iProducVariantRepository;
 
-        @Autowired
-        IRetailerRepository iretailerRepository;
+    @Autowired
+    IProductCategoryRepository iproductCategoryRepository;
 
-        @Autowired
-        ProductVariantMapper productVariantMapper;
+    @Autowired
+    IRetailerRepository iretailerRepository;
 
-        @Override
-        public ProductDTO addProduct(ProductRequest productRequest) {
-                if (iProductRepository.existsByProductName(productRequest.getProductName())) {
-                        throw new RuntimeException("Product name already exists!");
-                }
+    @Autowired
+    ProductVariantMapper productVariantMapper;
 
-                RetailerEntity retailerEntity = iretailerRepository.findById(productRequest.getRetailerId())
-                                .orElseThrow(() -> new RuntimeException("Retailer not found!"));
-
-                ProductEntity productEntity = ProductEntity.builder()
-                                .productName(productRequest.getProductName())
-                                .productDesc(productRequest.getProductDesc())
-                                .productImage(productRequest.getProductImage())
-                                .productOrigin(productRequest.getProductOrigin())
-                                .retailer(retailerEntity)
-                                .createdAt(LocalDateTime.now())
-                                .build();
-
-                // save productEntity
-                productEntity = iProductRepository.save(productEntity);
-
-                // -----Relationship with CATEGORY-----
-                Set<ProductCategoryEntity> newProductCategoryEntities = new HashSet<>();
-                Set<String> categoryName = new HashSet<>();
-
-                for (String categoryId : productRequest.getCategoryId()) {
-                        CategoryEntity categoryEntity = icategoryRepository.findById(categoryId)
-                                        .orElseThrow(() -> new RuntimeException("Category not found"));
-                        ProductCategoryEntity productCategoryEntity = new ProductCategoryEntity();
-                        productCategoryEntity.setProduct(productEntity);
-                        productCategoryEntity.setCategory(categoryEntity);
-
-                        newProductCategoryEntities.add(productCategoryEntity);
-                        categoryName.add(categoryEntity.getCategoryName());
-                }
-                iproductCategoryRepository.saveAll(newProductCategoryEntities);
-                // update productEntity
-                productEntity.setProductCategories(newProductCategoryEntities);
-                // -----END Relationship with CATEGORY----
-
-                // -----Relationship with UNIT-----
-                Set<ProductVariantEntity> newProductVariantEntities = new HashSet<>();
-
-                for (ProductVariantsRequest getProductVariants : productRequest.getProductVariants()) {
-                        UnitEntity unitEntity = iUnitRepository.findById(getProductVariants.getUnitId())
-                                        .orElseThrow(() -> new RuntimeException("Unit not found"));
-
-                        ProductVariantEntity productVariantEntity = ProductVariantEntity.builder()
-                                        .product(productEntity)
-                                        .unit(unitEntity)
-                                        .price(getProductVariants.getPrice())
-                                        .initStock(getProductVariants.getInitStock())
-                                        .value(getProductVariants.getValue())
-                                        .build();
-
-                        newProductVariantEntities.add(productVariantEntity);
-                }
-                iProducVariantRepository.saveAll(newProductVariantEntities);
-
-                // update productEntity
-                productEntity.setVariants(newProductVariantEntities);
-
-                // map productVariantEntity to productVariantDTO
-
-                Set<ProductVariantDTO> productVariantDTOS = productVariantMapper.toDTOSet(productEntity.getVariants());
-                // newProductVariantEntities.stream()
-                // .map(variant -> ProductVariantDTO.builder()
-                // .variantId(variant.getVariantsId())
-                // .unitName(variant.getUnit().getUnitName())
-                // .price(variant.getPrice())
-                // .initStock(variant.getInitStock())
-                // .value(variant.getValue())
-                // .build())
-                // .collect(Collectors.toSet());
-                // -----END Relationship with UNIT----
-
-                // final update product
-                iProductRepository.save(productEntity);
-
-                // map productEntity to productDTO
-                ProductDTO productDTO = iProductMapper.toProductDTO(productEntity);
-                productDTO.setCategoryName(categoryName);
-                productDTO.setVariants(productVariantDTOS);
-
-                return productDTO;
+    @Override
+    public ProductDTO addProduct(ProductRequest productRequest) {
+        if (iProductRepository.existsByProductName(productRequest.getProductName())) {
+            throw new RuntimeException("Product name already exists!");
         }
 
-        @Override
-        public ProductDTO updateProduct(String productId, ProductRequest productRequest) {
+        RetailerEntity retailerEntity = iretailerRepository.findById(productRequest.getRetailerId())
+                .orElseThrow(() -> new RuntimeException("Retailer not found!"));
 
-                ProductEntity productEntity = iProductRepository.findById(productId)
-                                .orElseThrow(() -> new RuntimeException("Product not found!"));
+        ProductEntity productEntity = ProductEntity.builder()
+                .productName(productRequest.getProductName())
+                .productDesc(productRequest.getProductDesc())
+                .productImage(productRequest.getProductImage())
+                .productOrigin(productRequest.getProductOrigin())
+                .retailer(retailerEntity)
+                .createdAt(LocalDateTime.now())
+                .build();
 
-                // update productEntity
-                productEntity.setProductName(productRequest.getProductName());
-                productEntity.setProductDesc(productRequest.getProductDesc());
-                productEntity.setProductImage(productRequest.getProductImage());
-                productEntity.setProductOrigin(productRequest.getProductOrigin());
-                productEntity.setCreatedAt(LocalDateTime.now());
-                productEntity = iProductRepository.save(productEntity);
+        //save productEntity
+        productEntity = iProductRepository.save(productEntity);
 
-                // get all existingProductCategories and existingProductVariant of product
-                Set<ProductCategoryEntity> existingProductCategories = iproductCategoryRepository
-                                .findByProduct(productEntity);
-                Set<ProductVariantEntity> exsistProductVariants = iProducVariantRepository
-                                .findProductVariantEntityByProduct(productEntity);
+        //-----Relationship with CATEGORY-----
+        Set<ProductCategoryEntity> newProductCategoryEntities = new HashSet<>();
+        Set<String> categoryName = new HashSet<>();
 
-                // update newCategory
-                Set<ProductCategoryEntity> newProductCategoryEntities = new HashSet<>();
-                Set<String> categoryName = new HashSet<>();
+        for(String categoryId : productRequest.getCategoryId()) {
+            CategoryEntity categoryEntity = icategoryRepository.findById(categoryId)
+                    .orElseThrow(() -> new RuntimeException("Category not found"));
+            ProductCategoryEntity productCategoryEntity = new ProductCategoryEntity();
+            productCategoryEntity.setProduct(productEntity);
+            productCategoryEntity.setCategory(categoryEntity);
 
-                // update newVariants
-                Set<ProductVariantEntity> newProductVariantEntities = new HashSet<>();
-                Set<ProductVariantDTO> productVariantDTOS = new HashSet<>();
-
-                if (productRequest.getCategoryId() != null && productRequest.getProductVariants() != null) {
-                        // relationship with CATEGORY
-                        // deleted old cate
-                        iproductCategoryRepository.deleteAll(existingProductCategories);
-
-                        for (String categoryId : productRequest.getCategoryId()) {
-                                CategoryEntity categoryEntity = icategoryRepository.findById(categoryId)
-                                                .orElseThrow(() -> new RuntimeException("Category not found"));
-                                ProductCategoryEntity productCategoryEntity = new ProductCategoryEntity();
-                                productCategoryEntity.setProduct(productEntity);
-                                productCategoryEntity.setCategory(categoryEntity);
-
-                                newProductCategoryEntities.add(productCategoryEntity);
-                                categoryName.add(categoryEntity.getCategoryName());
-                        }
-                        // save productCategory
-                        iproductCategoryRepository.saveAll(newProductCategoryEntities);
-
-                        // update productEntity
-                        productEntity.setProductCategories(newProductCategoryEntities);
-                        productEntity.setVariants(newProductVariantEntities);
-                        iProductRepository.save(productEntity);
-                } else {
-                        // No change category and unit
-                        Set<ProductCategoryEntity> productCategoryEntities = iproductCategoryRepository
-                                        .findByProduct(productEntity);
-                        categoryName = productCategoryEntities.stream() // tra ve set<string>
-                                        .map(productCategory -> productCategory.getCategory().getCategoryName())// get
-                                                                                                                // tu
-                                                                                                                // productCategory
-                                        .collect(Collectors.toSet());
-
-                }
-
-                if (productRequest.getProductVariants() != null) {
-                        // Relationship with Unit
-                        iProducVariantRepository.deleteAll(exsistProductVariants);
-
-                        for (ProductVariantsRequest getProductVariants : productRequest.getProductVariants()) {
-                                UnitEntity unitEntity = iUnitRepository.findById(getProductVariants.getUnitId())
-                                                .orElseThrow(() -> new RuntimeException("Unit not found"));
-
-                                ProductVariantEntity productVariantEntity = ProductVariantEntity.builder()
-                                                .product(productEntity)
-                                                .unit(unitEntity)
-                                                .price(getProductVariants.getPrice())
-                                                .initStock(getProductVariants.getInitStock())
-                                                .value(getProductVariants.getValue())
-                                                .build();
-
-                                newProductVariantEntities.add(productVariantEntity);
-                        }
-                        iProducVariantRepository.saveAll(newProductVariantEntities);
-
-                        productVariantDTOS = newProductVariantEntities.stream()
-                                        .map(variant -> ProductVariantDTO.builder()
-                                                        .variantId(variant.getVariantsId())
-                                                        // .unit(variant.getUnit().getUnitName())
-                                                        .unitName(variant.getUnit().getUnitName())
-                                                        .price(variant.getPrice())
-                                                        .initStock(variant.getInitStock())
-                                                        .value(variant.getValue())
-                                                        .build())
-                                        .collect(Collectors.toSet());
-
-                        // update productEntity
-                        productEntity.setVariants(newProductVariantEntities);
-                        iProductRepository.save(productEntity);
-
-                } else {
-                        productVariantDTOS = productEntity.getVariants().stream()
-                                        .map(variant -> ProductVariantDTO.builder()
-                                                        .variantId(variant.getVariantsId())
-                                                        .unitName(variant.getUnit().getUnitName())
-                                                        .price(variant.getPrice())
-                                                        .stock(999)
-                                                        .value(variant.getValue())
-                                                        .build())
-                                        .collect(Collectors.toSet());
-                }
-
-                ProductDTO productDTO = iProductMapper.toProductDTO(productEntity);
-                productDTO.setCategoryName(categoryName);
-                productDTO.setVariants(productVariantDTOS);
-
-                return productDTO;
+            newProductCategoryEntities.add(productCategoryEntity);
+            categoryName.add(categoryEntity.getCategoryName());
         }
+        iproductCategoryRepository.saveAll(newProductCategoryEntities);
+        //update productEntity
+        productEntity.setProductCategories(newProductCategoryEntities);
+        //-----END Relationship with CATEGORY----
 
-        @Override
-        public ProductDTO getProduct(String productId) {
+        //-----Relationship with UNIT-----
+        Set<ProductVariantEntity> newProductVariantEntities = new HashSet<>();
 
-                ProductEntity productEntity = iProductRepository.findById(productId)
-                                .orElseThrow(() -> new RuntimeException("Product not found"));
+        for(ProductVariantsRequest getProductVariants : productRequest.getProductVariants()) {
+            UnitEntity unitEntity = iUnitRepository.findById(getProductVariants.getUnitId())
+                    .orElseThrow(() -> new RuntimeException("Unit not found"));
 
-                // relationship category
-                Set<ProductCategoryEntity> productCategoryEntities = iproductCategoryRepository
-                                .findByProduct(productEntity);
-                Set<String> categoryName = productCategoryEntities.stream() // tra ve set<string>
-                                .map(productCategory -> productCategory.getCategory().getCategoryName())// get tu
-                                                                                                        // productCategory
-                                .collect(Collectors.toSet());
+            ProductVariantEntity productVariantEntity = ProductVariantEntity.builder()
+                    .product(productEntity)
+                    .unit(unitEntity)
+                    .price(getProductVariants.getPrice())
+                    .initStock(getProductVariants.getInitStock())
+                    .stock(getProductVariants.getInitStock())
+                    .value(getProductVariants.getValue())
+                    .build();
 
-                // map productVariantEntity to productVariantDTO
-                Set<ProductVariantEntity> productVariantEntity = productEntity.getVariants();
-                Set<ProductVariantDTO> productVariantDTOS = productVariantEntity.stream()
-                                .map(variant -> ProductVariantDTO.builder()
-                                                .variantId(variant.getVariantsId())
-                                                // .unit(variant.getUnit())
-                                                .unitName(variant.getUnit().getUnitName())
-                                                .price(variant.getPrice())
-                                                .stock(999)
-                                                .value(variant.getValue())
-                                                .build())
-                                .collect(Collectors.toSet());
-
-                ProductDTO productDTO = iProductMapper.toProductDTO(productEntity);
-                productDTO.setCategoryName(categoryName);
-                productDTO.setVariants(productVariantDTOS);
-
-                return productDTO;
+            newProductVariantEntities.add(productVariantEntity);
         }
+        iProducVariantRepository.saveAll(newProductVariantEntities);
 
-        @Override
-        public List<ProductDTO> getAllProduct() {
-                List<ProductEntity> productEntities = iProductRepository.findAll();
+        //update productEntity
+        productEntity.setVariants(newProductVariantEntities);
 
-                List<ProductDTO> productDTOS = productEntities.stream() // tra ve set<string>
-                                .map(productEntity -> {
+        //map productVariantEntity to productVariantDTO
+        Set<ProductVariantDTO> productVariantDTOS = productVariantMapper.toDTOSet(productEntity.getVariants());
+        //-----END Relationship with UNIT----
 
-                                        // su dung lai getProductById
-                                        // Category
-                                        Set<ProductCategoryEntity> productCategoryEntities = iproductCategoryRepository
-                                                        .findByProduct(productEntity);
-                                        Set<String> categoryName = productCategoryEntities.stream() // tra ve
-                                                                                                    // set<string>
-                                                        .map(productCategory -> productCategory.getCategory()
-                                                                        .getCategoryName())// get tu productCategory
-                                                        .collect(Collectors.toSet());
+        //final update product
+        iProductRepository.save(productEntity);
 
-                                        // Unit
-                                        Set<ProductVariantEntity> productVariantEntity = productEntity.getVariants();
-                                        Set<ProductVariantDTO> productVariantDTOS = productVariantEntity.stream()
-                                                        .map(variant -> ProductVariantDTO.builder()
-                                                                        .variantId(variant.getVariantsId())
-                                                                        .unitName(variant.getUnit().getUnitName())
-                                                                        .price(variant.getPrice())
-                                                                        .stock(888)
-                                                                        .value(variant.getValue())
-                                                                        .build())
-                                                        .collect(Collectors.toSet());
+        //map productEntity to productDTO
+        ProductDTO  productDTO = iProductMapper.toProductDTO(productEntity);
+        productDTO.setCategoryName(categoryName);
+        productDTO.setVariants(productVariantDTOS);
 
-                                        ProductDTO productDTO = iProductMapper.toProductDTO(productEntity);
-                                        productDTO.setCategoryName(categoryName);
-                                        productDTO.setVariants(productVariantDTOS);
+        return productDTO;
+    }
 
-                                        return productDTO;
-                                }).collect(Collectors.toList());
+    @Override
+    public ProductDTO updateProduct(String productId, ProductRequest productRequest) {
 
-                return productDTOS;
+        ProductEntity productEntity = iProductRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found!"));
+
+        //update productEntity
+        productEntity.setProductName(productRequest.getProductName());
+        productEntity.setProductDesc(productRequest.getProductDesc());
+        productEntity.setProductImage(productRequest.getProductImage());
+        productEntity.setProductOrigin(productRequest.getProductOrigin());
+        productEntity.setCreatedAt(LocalDateTime.now());
+        productEntity = iProductRepository.save(productEntity);
+
+        //get all existingProductCategories and existingProductVariant of product
+        Set<ProductCategoryEntity> existingProductCategories = iproductCategoryRepository.findByProduct(productEntity);
+        Set<ProductVariantEntity> exsistProductVariants = iProducVariantRepository.findProductVariantEntityByProduct(productEntity);
+
+        //update newCategory
+        Set<ProductCategoryEntity> newProductCategoryEntities = new HashSet<>();
+        Set<String> categoryName = new HashSet<>();
+
+        //update newVariants
+        Set<ProductVariantEntity> newProductVariantEntities = new HashSet<>();
+        Set<ProductVariantDTO> productVariantDTOS = new HashSet<>();
+
+        if(productRequest.getCategoryId() != null && productRequest.getProductVariants() != null){
+            //relationship with CATEGORY
+            //deleted old cate
+            iproductCategoryRepository.deleteAll(existingProductCategories);
+
+            for(String categoryId : productRequest.getCategoryId()) {
+                CategoryEntity categoryEntity = icategoryRepository.findById(categoryId)
+                        .orElseThrow(() -> new RuntimeException("Category not found"));
+                ProductCategoryEntity productCategoryEntity = new ProductCategoryEntity();
+                productCategoryEntity.setProduct(productEntity);
+                productCategoryEntity.setCategory(categoryEntity);
+
+                newProductCategoryEntities.add(productCategoryEntity);
+                categoryName.add(categoryEntity.getCategoryName());
+            }
+            //save productCategory
+            iproductCategoryRepository.saveAll(newProductCategoryEntities);
+
+            //update productEntity
+            productEntity.setProductCategories(newProductCategoryEntities);
+            iProductRepository.save(productEntity);
+        }else{
+            //No change category and unit
+            Set<ProductCategoryEntity> productCategoryEntities = iproductCategoryRepository.findByProduct(productEntity);
+            categoryName = productCategoryEntities.stream() //tra ve set<string>
+                    .map(productCategory -> productCategory.getCategory().getCategoryName())//get tu productCategory
+                    .collect(Collectors.toSet());
 
         }
+        //UNIT
+        if(productRequest.getProductVariants() != null){
+            //Relationship with Unit
+            iProducVariantRepository.deleteAll(exsistProductVariants);
+
+            for(ProductVariantsRequest getProductVariants : productRequest.getProductVariants()) {
+                UnitEntity unitEntity = iUnitRepository.findById(getProductVariants.getUnitId())
+                        .orElseThrow(() -> new RuntimeException("Unit not found"));
+
+                ProductVariantEntity productVariantEntity = ProductVariantEntity.builder()
+                        .product(productEntity)
+                        .unit(unitEntity)
+                        .price(getProductVariants.getPrice())
+                        .initStock(getProductVariants.getInitStock())
+                        .stock(getProductVariants.getInitStock())
+                        .value(getProductVariants.getValue())
+                        .build();
+
+                newProductVariantEntities.add(productVariantEntity);
+            }
+            iProducVariantRepository.saveAll(newProductVariantEntities);
+
+            productVariantDTOS= productVariantMapper.toDTOSet(newProductVariantEntities);
+            //update productEntity
+            productEntity.setVariants(newProductVariantEntities);
+
+            iProductRepository.save(productEntity);
+
+        }else{
+            productVariantDTOS = productVariantMapper.toDTOSet(productEntity.getVariants());
+        }
+
+        ProductDTO  productDTO = iProductMapper.toProductDTO(productEntity);
+        productDTO.setCategoryName(categoryName);
+        productDTO.setVariants(productVariantDTOS);
+
+        return productDTO;
+    }
+
+    @Override
+    public ProductDTO getProduct(String productId) {
+
+        ProductEntity productEntity = iProductRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+
+        //relationship category
+        Set<ProductCategoryEntity> productCategoryEntities = iproductCategoryRepository.findByProduct(productEntity);
+        Set<String> categoryName = productCategoryEntities.stream() //tra ve set<string>
+                .map(productCategory -> productCategory.getCategory().getCategoryName())//get tu productCategory
+                .collect(Collectors.toSet());
+
+        //map productVariantEntity to productVariantDTO
+        Set<ProductVariantDTO> productVariantDTOS = productVariantMapper.toDTOSet(productEntity.getVariants());
+
+        ProductDTO productDTO = iProductMapper.toProductDTO(productEntity);
+        productDTO.setCategoryName(categoryName);
+        productDTO.setVariants(productVariantDTOS);
+
+        return productDTO;
+    }
+
+    @Override
+    public List<ProductDTO> getAllProduct() {
+        List<ProductEntity> productEntities = iProductRepository.findAll();
+
+        List<ProductDTO> productDTOS = productEntities.stream() //tra ve set<string>
+                .map(productEntity -> {
+
+                    //su dung lai getProductById
+                    //Category
+                    Set<ProductCategoryEntity> productCategoryEntities = iproductCategoryRepository.findByProduct(productEntity);
+                    Set<String> categoryName = productCategoryEntities.stream() //tra ve set<string>
+                            .map(productCategory -> productCategory.getCategory().getCategoryName())//get tu productCategory
+                            .collect(Collectors.toSet());
+
+                    //Unit
+                    Set<ProductVariantDTO> productVariantDTOS = productVariantMapper.toDTOSet(productEntity.getVariants());
+
+                    ProductDTO productDTO = iProductMapper.toProductDTO(productEntity);
+                    productDTO.setCategoryName(categoryName);
+                    productDTO.setVariants(productVariantDTOS);
+
+                    return productDTO;
+                }).collect(Collectors.toList());
+
+        return productDTOS;
+
+    }
 }
