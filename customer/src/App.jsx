@@ -1,17 +1,19 @@
 import React from "react";
-import { ProductProvider } from "./contexts/ProductContext";
-import ProductList from "./components/ProductList";
+import Home from "./pages/Home";
+import { Route, Routes } from "react-router-dom";
+import Products from "./pages/Products";
+import Navbar from "./components/Navbar";
 
 function App() {
   return (
-    <ProductProvider>
-      <div className="container mx-auto p-4">
-        <h1 className="text-2xl font-bold text-center mb-4">
-          Danh sách sản phẩm
-        </h1>
-        <ProductList />
-      </div>
-    </ProductProvider>
+    <div className="px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw]">
+      <Navbar />
+      Customer
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/products" element={<Products />} />
+      </Routes>
+    </div>
   );
 }
 
