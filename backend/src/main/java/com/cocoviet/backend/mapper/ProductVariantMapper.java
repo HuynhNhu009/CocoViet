@@ -16,6 +16,7 @@ public class ProductVariantMapper {
                     .unitName(variant.getUnit().getUnitName())
                     .price(variant.getPrice())
                     .initStock(variant.getInitStock())
+                    .stock(variant.getStock())
                     .value(variant.getValue())
                     .build();
         }

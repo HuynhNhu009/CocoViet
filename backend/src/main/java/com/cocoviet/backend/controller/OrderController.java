@@ -18,14 +18,14 @@ public class OrderController {
     @Autowired
     IOrderService orderService;
 
-//    @PostMapping("/create")
-//    ResponseEntity<ResponseData> createOrder(@RequestBody @Valid OrderRequest orderRequest) {
-//
-//        return ResponseEntity.status(HttpStatus.CREATED)
-//                .body(ResponseData.builder()
-//                        .data(orderService.createOrder(orderRequest))
-//                        .msg("Add order successfully")
-//                        .status("OK")
-//                        .build());
-//    }
+    @PostMapping("/create")
+    ResponseEntity<ResponseData> createOrder(@RequestBody @Valid OrderRequest orderRequest) {
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ResponseData.builder()
+                        .data(orderService.createOrder(orderRequest))
+                        .msg("Add order successfully")
+                        .status("OK")
+                        .build());
+    }
 }
