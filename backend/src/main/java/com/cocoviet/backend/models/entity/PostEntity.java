@@ -4,9 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Entity
 @Table(name = "post")
@@ -17,15 +15,15 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 
-public class PostEntity{
+public class PostEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     String postId;
 
-    @Column
+    @Column(length = 255)
     String postTitle;
 
-    @Column
+    @Column(columnDefinition = "TEXT")  // Đặt kiểu dữ liệu là TEXT cho postContent
     String postContent;
 
     @Temporal(TemporalType.TIMESTAMP)

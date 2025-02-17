@@ -1,6 +1,5 @@
 package com.cocoviet.backend.repository;
 
-import com.cocoviet.backend.models.entity.OrderEntity;
 import com.cocoviet.backend.models.entity.ReceiptDetailEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

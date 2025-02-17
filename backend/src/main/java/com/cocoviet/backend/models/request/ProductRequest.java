@@ -1,6 +1,5 @@
 package com.cocoviet.backend.models.request;
 
-
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -10,7 +9,6 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -41,13 +39,11 @@ public class ProductRequest {
 
     String productOrigin;
 
-    //Relationship with Unit
+    // Relationship with Unit
     List<ProductVariantsRequest> productVariants;
 
-    //Relationship with category
+    // Relationship with category
     Set<String> categoryId;
 
     LocalDateTime createdAt;
 }
-
-
