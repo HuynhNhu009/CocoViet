@@ -1,6 +1,5 @@
 package com.cocoviet.backend.models.request;
 
-import jakarta.persistence.Column;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
 import lombok.*;
@@ -16,7 +15,7 @@ import java.util.Date;
 public class RetailerRequest {
 
     @Size(min = 8, message = "Retailer name must be at least 8 characters.")
-    String retailerName ;
+    String retailerName;
 
     @Size(min = 8, message = "Password must be at least 8 characters.")
     String retailerPassword;

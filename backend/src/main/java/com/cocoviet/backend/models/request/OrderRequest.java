@@ -1,10 +1,7 @@
 package com.cocoviet.backend.models.request;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
-import java.util.Set;
-
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -36,4 +33,3 @@ public class OrderRequest {
     LocalDateTime orderDate;
 
 }
-

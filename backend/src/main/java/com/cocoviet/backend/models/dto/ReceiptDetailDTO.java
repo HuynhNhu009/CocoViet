@@ -4,7 +4,6 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.math.BigDecimal;
-import java.util.Set;
 
 @Setter
 @Getter
@@ -29,9 +28,3 @@ public class ReceiptDetailDTO {
 
     ProductVariantDTO productVariants;
 }
-
-
-
-
-
-

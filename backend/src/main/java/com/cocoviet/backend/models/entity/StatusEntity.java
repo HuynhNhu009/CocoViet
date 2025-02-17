@@ -4,9 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.io.Serializable;
-import java.util.List;
-
 @Entity
 @Table(name = "status")
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -16,7 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 
-public class StatusEntity{
+public class StatusEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     String statusId;

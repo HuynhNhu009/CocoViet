@@ -5,7 +5,6 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.math.BigDecimal;
-import java.util.Set;
 
 @Entity
 @Table(name = "receipt")
@@ -29,7 +28,7 @@ public class ReceiptDetailEntity {
     ProductVariantEntity productVariant;
 
     @Column(nullable = false)
-    int  quantity;
+    int quantity;
 
     @Column(nullable = false)
     BigDecimal price;
