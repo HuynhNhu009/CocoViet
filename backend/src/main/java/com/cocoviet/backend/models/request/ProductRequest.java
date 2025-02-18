@@ -36,7 +36,7 @@ public class ProductRequest {
 
     String retailerId;
 
-    MultipartFile productImage;
+    String productImage;
 
     String productOrigin;
 

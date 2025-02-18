@@ -42,7 +42,7 @@ public class CustomerRequest {
     @Pattern(regexp = "\\d+", message = "Phone number must contain only digits.")
     String phoneNumbers;
 
-    MultipartFile customerAvatar; // avatar - nullable
+    String customerAvatar; // avatar - nullable
 
     @NotBlank(message = "Address cannot be empty.")
     String customerAddress;
