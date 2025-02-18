@@ -8,6 +8,7 @@ import com.cocoviet.backend.models.request.RetailerRequest;
 import com.cocoviet.backend.models.request.UserLoginRequest;
 import com.cocoviet.backend.models.request.UserProfileRequest;
 import com.cocoviet.backend.repository.IRetailerRepository;
+import com.cocoviet.backend.service.IFileUpload;
 import com.cocoviet.backend.service.IRetailerService;
 import com.cocoviet.backend.utils.JwtToken;
 import com.cocoviet.backend.utils.PasswordEncoderUtil;
@@ -18,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -39,9 +41,12 @@ public class RetailerServiceImpl implements IRetailerService {
     @Autowired
     PasswordEncoderUtil passwordEncoderUtil;
 
+    @Autowired
+    IFileUpload iFileUpload;
+
 
     @Override
-    public RetailerDTO registerRetailer(RetailerRequest retailerRequest) {
+    public RetailerDTO registerRetailer(RetailerRequest retailerRequest) throws IOException {
 
         if(iRetailerRepository.existsByRetailerEmail(retailerRequest.getRetailerEmail())) {
             throw new RuntimeException( "Retailer already exists");
@@ -50,6 +55,7 @@ public class RetailerServiceImpl implements IRetailerService {
                 .retailerEmail(retailerRequest.getRetailerEmail())
                 .phoneNumbers(retailerRequest.getPhoneNumbers())
                 .retailerName(retailerRequest.getRetailerName())
+                .retailerAvatar(iFileUpload.uploadFile(retailerRequest.getRetailerAvatar(),"retailer-avatar"))
                 .createdAt(LocalDateTime.now())
                 .retailerAddress(retailerRequest.getRetailerAddress())
                 .retailerPassword(passwordEncoderUtil.passwordEncoder().encode(retailerRequest.getRetailerPassword()))

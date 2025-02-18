@@ -6,5 +6,5 @@ import com.cocoviet.backend.models.request.PostRequest;
 import java.io.IOException;
 
 public interface IPostService {
-    PostDTO createPost(PostRequest postRequest, String fileName) throws IOException;
+    PostDTO createPost(PostRequest postRequest) throws IOException;
 }

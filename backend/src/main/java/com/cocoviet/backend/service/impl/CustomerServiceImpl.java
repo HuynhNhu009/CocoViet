@@ -9,6 +9,7 @@ import com.cocoviet.backend.models.request.UserLoginRequest;
 import com.cocoviet.backend.models.request.UserProfileRequest;
 import com.cocoviet.backend.repository.ICustomerRepository;
 import com.cocoviet.backend.service.ICustomerService;
+import com.cocoviet.backend.service.IFileUpload;
 import com.cocoviet.backend.utils.JwtToken;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -37,8 +39,11 @@ public class CustomerServiceImpl implements ICustomerService {
     @Autowired
     JwtToken jwtToken;
 
+    @Autowired
+    IFileUpload iFileUpload;
+
     @Override
-    public CustomerDTO registerCustomer(CustomerRequest customerRequest) {
+    public CustomerDTO registerCustomer(CustomerRequest customerRequest) throws IOException {
         if(iCustomerRepository.existsByCustomerEmail(customerRequest.getCustomerEmail())) {
             throw new RuntimeException( "Customer email already exists");
         };
@@ -50,7 +55,7 @@ public class CustomerServiceImpl implements ICustomerService {
                     .customerName(customerRequest.getCustomerName())
                     .customerPassword(passwordEncoder.encode(customerRequest.getCustomerPassword()))
                     .phoneNumbers(customerRequest.getPhoneNumbers())
-                    .customerAvatar(customerRequest.getCustomerAvatar())
+                    .customerAvatar(iFileUpload.uploadFile(customerRequest.getCustomerAvatar(), "customer-avatar"))
                     .createdAt(LocalDateTime.now())
                     .build();
 

@@ -20,13 +20,11 @@ public class PostController {
     IPostService iPostService;
 
     @PostMapping("/createPost")
-    ResponseEntity<ResponseData> createPost(@ModelAttribute PostRequest postRequest,
-                                            String folderName) throws IOException {
+    ResponseEntity<ResponseData> createPost(@ModelAttribute PostRequest postRequest) throws IOException {
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ResponseData.builder()
-                        .data(iPostService.createPost(postRequest, folderName))
-                        .msg("Create post " + postRequest.getPostTitle() + "successfully.")
+                        .msg("Create post " + postRequest.getPostTitle() + " successfully.")
                         .status("OK")
                         .build());
     }

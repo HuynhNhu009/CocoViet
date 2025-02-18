@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+
 @CrossOrigin("*")   
 @RestController
 @RequestMapping("/api/customers")
@@ -20,7 +22,7 @@ public class CustomerController {
     ICustomerService iCustomerService;
 
     @PostMapping("/register")
-    ResponseEntity<ResponseData> registerCustomer(@RequestBody @Valid CustomerRequest customerRequest) {
+    ResponseEntity<ResponseData> registerCustomer(@ModelAttribute @Valid CustomerRequest customerRequest) throws IOException {
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ResponseData.builder()

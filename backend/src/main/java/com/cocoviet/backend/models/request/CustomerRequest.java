@@ -13,6 +13,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
+import org.springframework.web.multipart.MultipartFile;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -41,7 +42,7 @@ public class CustomerRequest {
     @Pattern(regexp = "\\d+", message = "Phone number must contain only digits.")
     String phoneNumbers;
 
-    String customerAvatar; // avatar - nullable
+    MultipartFile customerAvatar; // avatar - nullable
 
     @NotBlank(message = "Address cannot be empty.")
     String customerAddress;

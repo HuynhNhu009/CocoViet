@@ -13,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+
 
 @RestController
 @RequestMapping("/api/retailers")
@@ -22,7 +24,7 @@ public class RetailerController {
     IRetailerService iRetailerService;
 
     @PostMapping("/register")
-    ResponseEntity<ResponseData> registerRetailer(@RequestBody @Valid RetailerRequest retailerRequest) {
+    ResponseEntity<ResponseData> registerRetailer(@ModelAttribute @Valid RetailerRequest retailerRequest) throws IOException {
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ResponseData.builder()
