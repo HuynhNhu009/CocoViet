@@ -18,6 +18,8 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.List;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -60,4 +62,11 @@ public class PostServiceImpl implements IPostService {
                 .orElseThrow(()-> new RuntimeException("Post not found."));
         return iPostMapper.toPostDTO(post);
     }
+
+//    @Override
+//    public PostDTO getAllPosts(){
+//        List<PostEntity> postEntityList = iPostRepository.findAll();
+//
+//        return iPostMapper.toPostDTO()
+//    }
 }

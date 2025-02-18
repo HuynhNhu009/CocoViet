@@ -7,39 +7,29 @@ const ProductCard = ({ product }) => {
     <div>
       <Card className="p-4 shadow-lg rounded-2xl">
         <img
-          src={product.productImage || "default.jpg"}
-          alt={product.productName}
+          src={product.customerAvatar || "default-avatar.jpg"} // Hiển thị avatar của khách hàng
+          alt={product.customerName}
           className="w-full h-48 object-cover rounded-md"
         />
         <CardContent>
-          <h3 className="text-lg font-bold">{product.productName}</h3>
-          <p className="text-sm text-gray-500">{product.productDesc}</p>
+          <h3 className="text-lg font-bold">{product.customerName}</h3>{" "}
+          {/* Hiển thị tên khách hàng */}
+          <p className="text-sm text-gray-500">{product.customerEmail}</p>{" "}
+          {/* Hiển thị email */}
+          <p className="text-sm">{product.phoneNumbers}</p>{" "}
+          {/* Hiển thị số điện thoại */}
           <p className="text-sm font-semibold">
-            Xuất xứ: {product.productOrigin}
+            Địa chỉ: {product.customerAddress}
           </p>
-          <p className="text-sm font-semibold">
-            Danh mục: {product.categoryName.join(", ")}
-          </p>
-          <p className="text-sm">Nhà bán: {product.retailerName}</p>
           <p className="text-xs text-gray-400">
-            Ngày tạo: {new Date(product.createdAt).toLocaleDateString()}
+            Ngày tạo: {new Date(product.createdAt).toLocaleDateString()}{" "}
+            {/* Hiển thị ngày tạo */}
           </p>
           <div className="mt-2">
-            {product.variants.map((variant) => (
-              <div
-                key={variant.variantId}
-                className="flex justify-between items-center border-t pt-2"
-              >
-                <span>
-                  {variant.value} {variant.unitName}
-                </span>
-                <span className="font-bold text-red-500">
-                  {variant.price.toLocaleString()} đ
-                </span>
-              </div>
-            ))}
+            {/* Nếu bạn muốn thêm các hành động như "Mua ngay", bạn có thể sử dụng Button */}
+            <Button className="mt-3 w-full">Liên hệ</Button>{" "}
+            {/* Thay "Mua ngay" thành "Liên hệ" */}
           </div>
-          <Button className="mt-3 w-full">Mua ngay</Button>
         </CardContent>
       </Card>
     </div>
