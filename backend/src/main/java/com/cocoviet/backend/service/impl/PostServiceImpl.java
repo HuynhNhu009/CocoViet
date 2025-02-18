@@ -36,7 +36,7 @@ public class PostServiceImpl implements IPostService {
     IFileUpload iFileUpload;
 
     @Override
-    public PostDTO createPost(PostRequest postRequest) throws IOException {
+    public PostDTO createPost(PostRequest postRequest)  {
 
         RetailerEntity retailerEntity = iretailerrepository.findById(postRequest.getRetailerId())
                 .orElseThrow(()-> new RuntimeException("Retailer not found."));
@@ -44,7 +44,7 @@ public class PostServiceImpl implements IPostService {
         PostEntity postEntity = PostEntity.builder()
                 .postTitle(postRequest.getPostTitle())
                 .postContent(postRequest.getPostContent())
-                .postImageUrl(iFileUpload.uploadFile(postRequest.getPostImageFile(),"post"))
+                .postImageUrl(postRequest.getPostImageFile())
                 .retailer(retailerEntity)
                 .publishTime(LocalDateTime.now())
                 .build();

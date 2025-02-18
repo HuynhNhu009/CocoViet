@@ -24,7 +24,7 @@ public class RetailerController {
     IRetailerService iRetailerService;
 
     @PostMapping("/register")
-    ResponseEntity<ResponseData> registerRetailer(@ModelAttribute @Valid RetailerRequest retailerRequest) throws IOException {
+    ResponseEntity<ResponseData> registerRetailer(@RequestBody @Valid RetailerRequest retailerRequest){
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ResponseData.builder()

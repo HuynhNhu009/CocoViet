@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.List;
 
 public interface IRetailerService {
-    RetailerDTO registerRetailer(RetailerRequest retailerRequest) throws IOException;
+    RetailerDTO registerRetailer(RetailerRequest retailerRequest);
     AuthenticationDTO loginRetailer(UserLoginRequest userLoginRequest);
     RetailerDTO updateRetailerProfile(String retailerId, UserProfileRequest retailerProfileRequest);
     RetailerDTO getRetailer(String retailerId);

@@ -50,11 +50,11 @@ public class ProductServiceImpl implements IProductService {
     @Autowired
     ProductVariantMapper productVariantMapper;
 
-    @Autowired
-    IFileUpload iFileUpload;
+//    @Autowired
+//    IFileUpload iFileUpload;
 
     @Override
-    public ProductDTO addProduct(ProductRequest productRequest) throws IOException {
+    public ProductDTO addProduct(ProductRequest productRequest){
         if (iProductRepository.existsByProductName(productRequest.getProductName())) {
             throw new RuntimeException("Product name already exists!");
         }
@@ -65,7 +65,7 @@ public class ProductServiceImpl implements IProductService {
         ProductEntity productEntity = ProductEntity.builder()
                 .productName(productRequest.getProductName())
                 .productDesc(productRequest.getProductDesc())
-                .productImage(iFileUpload.uploadFile(productRequest.getProductImage(), "product"))
+                .productImage(productRequest.getProductImage())
                 .productOrigin(productRequest.getProductOrigin())
                 .retailer(retailerEntity)
                 .createdAt(LocalDateTime.now())
@@ -132,7 +132,7 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
-    public ProductDTO updateProduct(String productId, ProductRequest productRequest) throws IOException {
+    public ProductDTO updateProduct(String productId, ProductRequest productRequest)  {
 
         ProductEntity productEntity = iProductRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("Product not found!"));
@@ -140,7 +140,7 @@ public class ProductServiceImpl implements IProductService {
         //update productEntity
         productEntity.setProductName(productRequest.getProductName());
         productEntity.setProductDesc(productRequest.getProductDesc());
-        productEntity.setProductImage(iFileUpload.uploadFile(productRequest.getProductImage(), "product"));
+        productEntity.setProductImage(productRequest.getProductImage());
         productEntity.setProductOrigin(productRequest.getProductOrigin());
         productEntity.setCreatedAt(LocalDateTime.now());
         productEntity = iProductRepository.save(productEntity);

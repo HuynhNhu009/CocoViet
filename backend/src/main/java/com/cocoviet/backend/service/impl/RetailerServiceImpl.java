@@ -41,12 +41,12 @@ public class RetailerServiceImpl implements IRetailerService {
     @Autowired
     PasswordEncoderUtil passwordEncoderUtil;
 
-    @Autowired
-    IFileUpload iFileUpload;
+//    @Autowired
+//    IFileUpload iFileUpload;
 
 
     @Override
-    public RetailerDTO registerRetailer(RetailerRequest retailerRequest) throws IOException {
+    public RetailerDTO registerRetailer(RetailerRequest retailerRequest) {
 
         if(iRetailerRepository.existsByRetailerEmail(retailerRequest.getRetailerEmail())) {
             throw new RuntimeException( "Retailer already exists");
@@ -55,7 +55,7 @@ public class RetailerServiceImpl implements IRetailerService {
                 .retailerEmail(retailerRequest.getRetailerEmail())
                 .phoneNumbers(retailerRequest.getPhoneNumbers())
                 .retailerName(retailerRequest.getRetailerName())
-                .retailerAvatar(iFileUpload.uploadFile(retailerRequest.getRetailerAvatar(),"retailer-avatar"))
+                .retailerAvatar(retailerRequest.getRetailerAvatar())
                 .createdAt(LocalDateTime.now())
                 .retailerAddress(retailerRequest.getRetailerAddress())
                 .retailerPassword(passwordEncoderUtil.passwordEncoder().encode(retailerRequest.getRetailerPassword()))

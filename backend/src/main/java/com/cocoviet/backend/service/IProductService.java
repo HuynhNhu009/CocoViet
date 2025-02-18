@@ -7,8 +7,8 @@ import java.io.IOException;
 import java.util.List;
 
 public interface IProductService {
-    ProductDTO addProduct(ProductRequest productRequest) throws IOException;
-    ProductDTO updateProduct(String productId, ProductRequest productRequest) throws IOException;
+    ProductDTO addProduct(ProductRequest productRequest) ;
+    ProductDTO updateProduct(String productId, ProductRequest productRequest);
     ProductDTO getProduct(String productId);
     List<ProductDTO> getAllProduct();
 }

@@ -19,7 +19,7 @@ public class PostController {
     IPostService iPostService;
 
     @PostMapping("/createPost")
-    ResponseEntity<ResponseData> createPost(@ModelAttribute @Valid PostRequest postRequest) throws IOException {
+    ResponseEntity<ResponseData> createPost(@RequestBody @Valid PostRequest postRequest) {
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ResponseData.builder()

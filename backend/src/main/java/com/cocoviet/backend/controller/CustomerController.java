@@ -22,7 +22,7 @@ public class CustomerController {
     ICustomerService iCustomerService;
 
     @PostMapping("/register")
-    ResponseEntity<ResponseData> registerCustomer(@ModelAttribute @Valid CustomerRequest customerRequest) throws IOException {
+    ResponseEntity<ResponseData> registerCustomer(@RequestBody @Valid CustomerRequest customerRequest) {
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ResponseData.builder()
