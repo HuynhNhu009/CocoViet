@@ -9,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
 @CrossOrigin("*")
@@ -19,7 +22,9 @@ public class ProductController {
     IProductService coconutProductService;
 
     @PostMapping("/add")
-    ResponseEntity<ResponseData> addProduct(@RequestBody @Valid ProductRequest coconutProductRequest){
+    ResponseEntity<ResponseData> addProduct(@RequestBody @Valid ProductRequest coconutProductRequest,
+                                            @RequestPart MultipartFile productImage
+                                            ) throws IOException {
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ResponseData.builder()
@@ -30,7 +35,7 @@ public class ProductController {
     }
 
     @PatchMapping("/{productId}")
-    ResponseEntity<ResponseData> update(@PathVariable("productId") String productId, @RequestBody @Valid ProductRequest coconutProductRequest){
+    ResponseEntity<ResponseData> update(@ModelAttribute("productId") String productId, @RequestBody @Valid ProductRequest coconutProductRequest) throws IOException {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ResponseData.builder()
                         .data(coconutProductService.updateProduct(productId,coconutProductRequest))

@@ -37,6 +37,7 @@ public class PostController {
                         .data(iPostService.getPostById(postId))
                         .msg("Get post Id: " + postId + "successfully")
                         .status("OK")
+                        .data(iPostService.createPost(postRequest))
                         .build());
     }
 }
