@@ -26,6 +26,7 @@ public class PostController {
                 .body(ResponseData.builder()
                         .msg("Create post " + postRequest.getPostTitle() + " successfully.")
                         .status("OK")
+                        .data(iPostService.createPost(postRequest))
                         .build());
     }
 }
