@@ -1,5 +1,6 @@
 package com.cocoviet.backend.models.dto;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import lombok.AccessLevel;
@@ -17,7 +18,7 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class PostDTO {
-
+    
     String postTitle;
 
     String postContent;
@@ -26,5 +27,5 @@ public class PostDTO {
 
     String authorPost; // retailer
 
-    Date publishedDate;
+    LocalDateTime publishedDate;
 }

@@ -47,4 +47,11 @@ public class PostServiceImpl implements IPostService {
 
         return iPostMapper.toPostDTO(postEntity);
     }
+
+    @Override
+    public PostDTO getPostById(String postId){
+        PostEntity post = iPostRepository.findById(postId)
+                .orElseThrow(()-> new RuntimeException("Post not found."));
+        return iPostMapper.toPostDTO(post);
+    }
 }

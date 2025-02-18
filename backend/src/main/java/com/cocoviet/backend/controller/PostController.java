@@ -7,10 +7,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/posts")
@@ -26,6 +23,17 @@ public class PostController {
                 .body(ResponseData.builder()
                         .data(iPostService.createPost(postRequest))
                         .msg("Create post " + postRequest.getPostTitle() + "successfully.")
+                        .status("OK")
+                        .build());
+    }
+
+    @GetMapping("/{postId}")
+    ResponseEntity<ResponseData> getPost(@PathVariable("postId") String postId){
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ResponseData.builder()
+                        .data(iPostService.getPostById(postId))
+                        .msg("Get post Id: " + postId + "successfully")
                         .status("OK")
                         .build());
     }
