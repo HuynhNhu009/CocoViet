@@ -12,6 +12,8 @@ export const ProductProvider = ({ children }) => {
     const fetchProducts = async () => {
       setLoading(true);
       const { products, error } = await productService.getProducts();
+      console.log("Products in context:", products);
+
       setProducts(products);
       setError(error);
       setLoading(false);

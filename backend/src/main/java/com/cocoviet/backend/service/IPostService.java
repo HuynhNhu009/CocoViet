@@ -8,4 +8,5 @@ import java.io.IOException;
 public interface IPostService {
     PostDTO createPost(PostRequest postRequest);
     PostDTO getPostById(String  postId);
+//    PostDTO getAllPosts();
 }

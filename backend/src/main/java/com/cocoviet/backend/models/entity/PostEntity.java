@@ -26,7 +26,6 @@ public class PostEntity {
     @Column(columnDefinition = "TEXT")  // Đặt kiểu dữ liệu là TEXT cho postContent
     String postContent;
 
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false, updatable = false)
     LocalDateTime publishTime; // Thêm annotation cho thời gian
 

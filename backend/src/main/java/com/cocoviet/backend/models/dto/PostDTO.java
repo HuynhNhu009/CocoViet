@@ -27,5 +27,5 @@ public class PostDTO {
 
     String authorPost; // retailer
 
-    LocalDateTime publishedDate;
+    LocalDateTime publishTime;
 }
