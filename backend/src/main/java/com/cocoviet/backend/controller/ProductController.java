@@ -22,9 +22,7 @@ public class ProductController {
     IProductService coconutProductService;
 
     @PostMapping("/add")
-    ResponseEntity<ResponseData> addProduct(@RequestBody @Valid ProductRequest coconutProductRequest,
-                                            @RequestPart MultipartFile productImage
-                                            ) throws IOException {
+    ResponseEntity<ResponseData> addProduct(@RequestBody @Valid ProductRequest coconutProductRequest){
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ResponseData.builder()
@@ -35,7 +33,7 @@ public class ProductController {
     }
 
     @PatchMapping("/{productId}")
-    ResponseEntity<ResponseData> update(@ModelAttribute("productId") String productId, @RequestBody @Valid ProductRequest coconutProductRequest) throws IOException {
+    ResponseEntity<ResponseData> update(@ModelAttribute("productId") String productId, @RequestBody @Valid ProductRequest coconutProductRequest) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ResponseData.builder()
                         .data(coconutProductService.updateProduct(productId,coconutProductRequest))

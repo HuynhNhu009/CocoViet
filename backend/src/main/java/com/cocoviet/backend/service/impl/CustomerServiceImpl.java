@@ -39,11 +39,11 @@ public class CustomerServiceImpl implements ICustomerService {
     @Autowired
     JwtToken jwtToken;
 
-    @Autowired
-    IFileUpload iFileUpload;
+//    @Autowired
+//    IFileUpload iFileUpload;
 
     @Override
-    public CustomerDTO registerCustomer(CustomerRequest customerRequest) throws IOException {
+    public CustomerDTO registerCustomer(CustomerRequest customerRequest)  {
         if(iCustomerRepository.existsByCustomerEmail(customerRequest.getCustomerEmail())) {
             throw new RuntimeException( "Customer email already exists");
         };
@@ -55,7 +55,7 @@ public class CustomerServiceImpl implements ICustomerService {
                     .customerName(customerRequest.getCustomerName())
                     .customerPassword(passwordEncoder.encode(customerRequest.getCustomerPassword()))
                     .phoneNumbers(customerRequest.getPhoneNumbers())
-                    .customerAvatar(iFileUpload.uploadFile(customerRequest.getCustomerAvatar(), "customer-avatar"))
+                    .customerAvatar(customerRequest.getCustomerAvatar())
                     .createdAt(LocalDateTime.now())
                     .build();
 

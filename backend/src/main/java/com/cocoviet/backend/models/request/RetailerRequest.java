@@ -27,7 +27,7 @@ public class RetailerRequest {
     @Size(min = 10, max = 10, message = "Phonenumber must be at 10 characters.")
     String phoneNumbers;
 
-    MultipartFile retailerAvatar;
+    String retailerAvatar;
 
     String retailerAddress;
 

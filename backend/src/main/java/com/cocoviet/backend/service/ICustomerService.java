@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.List;
 
 public interface ICustomerService {
-    CustomerDTO registerCustomer(CustomerRequest customerRequest) throws IOException;
+    CustomerDTO registerCustomer(CustomerRequest customerRequest) ;
     AuthenticationDTO loginCustomer(UserLoginRequest userLoginRequest);
     CustomerDTO updateCustomerProfile(String customerId, UserProfileRequest customerRequest);
     CustomerDTO getCustomer(String customerId);
