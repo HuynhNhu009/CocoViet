@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+
 @RestController
 @RequestMapping("/api/posts")
 public class PostController {
@@ -17,7 +19,7 @@ public class PostController {
     IPostService iPostService;
 
     @PostMapping("/createPost")
-    ResponseEntity<ResponseData> createPost(@RequestBody @Valid PostRequest postRequest){
+    ResponseEntity<ResponseData> createPost(@RequestBody @Valid PostRequest postRequest) throws IOException {
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ResponseData.builder()
