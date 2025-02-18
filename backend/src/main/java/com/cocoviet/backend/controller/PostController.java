@@ -7,10 +7,10 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/posts")
@@ -20,11 +20,12 @@ public class PostController {
     IPostService iPostService;
 
     @PostMapping("/createPost")
-    ResponseEntity<ResponseData> createPost(@RequestBody @Valid PostRequest postRequest){
+    ResponseEntity<ResponseData> createPost(@ModelAttribute PostRequest postRequest,
+                                            String folderName) throws IOException {
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ResponseData.builder()
-                        .data(iPostService.createPost(postRequest))
+                        .data(iPostService.createPost(postRequest, folderName))
                         .msg("Create post " + postRequest.getPostTitle() + "successfully.")
                         .status("OK")
                         .build());

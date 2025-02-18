@@ -3,6 +3,7 @@ package com.cocoviet.backend.models.dto;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Setter
@@ -26,4 +27,7 @@ public class RetailerDTO {
     Set<ProductDTO> products;
 
     Set<PostDTO> post;
+
+    LocalDateTime createdAt;
+
 }
