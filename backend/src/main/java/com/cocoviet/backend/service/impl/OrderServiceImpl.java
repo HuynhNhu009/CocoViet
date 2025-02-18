@@ -57,6 +57,7 @@ public class OrderServiceImpl implements IOrderService {
 
         OrderEntity orderEntity = iOrderRepository.findByCustomerId(customerEntity.getCustomerId());
 
+        //gio hag da ton tai
         if(orderEntity == null){
             orderEntity = OrderEntity.builder()
                     .customer(customerEntity)
@@ -133,23 +134,7 @@ public class OrderServiceImpl implements IOrderService {
         return orderDTO;
     }
 
-//    @Override
-//    public OrderDTO getOrderById(String orderId) {
-////        UnitEntity unitEntity = iUnitRepository.findById(unitId)
-////                .orElseThrow(() -> new RuntimeException("Unit not found"));
-////
-////        if (iUnitRepository.existsByUnitName(unitRequest.getUnitName())) {
-////            throw new RuntimeException("Unit name already exists");
-////        }
-////
-////        unitEntity.setUnitName(unitRequest.getUnitName());
-////        return iUnitMapper.toUnitDTO(iUnitRepository.save(unitEntity));
-//
-//        OrderDTO orderDTO = new  OrderDTO();
-//
-//
-//        return orderDTO;
-//    }
+
 
 
 }

@@ -5,7 +5,9 @@ import com.cocoviet.backend.models.dto.PostDTO;
 import com.cocoviet.backend.models.entity.PostEntity;
 import com.cocoviet.backend.models.entity.RetailerEntity;
 import com.cocoviet.backend.models.request.PostRequest;
-import com.cocoviet.backend.repository.*;
+import com.cocoviet.backend.repository.IPostRepository;
+import com.cocoviet.backend.repository.IRetailerRepository;
+import com.cocoviet.backend.service.IFileUpload;
 import com.cocoviet.backend.service.IPostService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 @Slf4j
 @Service
@@ -29,8 +32,11 @@ public class PostServiceImpl implements IPostService {
     @Autowired
     IPostMapper iPostMapper;
 
+    @Autowired
+    IFileUpload iFileUpload;
+
     @Override
-    public PostDTO createPost(PostRequest postRequest) {
+    public PostDTO createPost(PostRequest postRequest) throws IOException {
 
         RetailerEntity retailerEntity = iretailerrepository.findById(postRequest.getRetailerId())
                 .orElseThrow(()-> new RuntimeException("Retailer not found."));
@@ -38,7 +44,7 @@ public class PostServiceImpl implements IPostService {
         PostEntity postEntity = PostEntity.builder()
                 .postTitle(postRequest.getPostTitle())
                 .postContent(postRequest.getPostContent())
-                .postImageUrl(postRequest.getPostImageUrl())
+                .postImageUrl(iFileUpload.uploadFile(postRequest.getPostImageFile(),"post"))
                 .retailer(retailerEntity)
                 .publishTime(LocalDateTime.now())
                 .build();
