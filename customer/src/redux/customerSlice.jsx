@@ -1,20 +1,19 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const customerSlice = createSlice({
-  name: "Customer",
+  name: "CustomerStore",
   initialState: {
     customer: {},
     cart: [],
-    login: {
-      email: null,
-      password: null,
-    },
+    login: null,
   },
 
   reducers: {
     setLogin: (state, action) => {
-      state.login.email = action.payload;
-      state.login.password = action.payload;
+      state.login ={
+        email: action.payload.email,
+        password : action.payload.password
+      }
     },
 
     resetCustomer: (state) => {
@@ -31,8 +30,11 @@ const customerSlice = createSlice({
   },
 });
 
-export const { setLogin } = customerSlice.actions;
+export const { 
+  setLogin
+  
+ } = customerSlice.actions;
 
-export const getInitialState = (state) => state.Customer.initialState;
+export const getInitialState = (state) => state.CustomerStore.initialState;
 
 export default customerSlice.reducer;

@@ -1,18 +1,19 @@
 import { useState } from "react";
-// import { useDispatch, useSelector } from "react-redux";
-// import { setLogin } from "../redux/customerSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { setLogin } from "../redux/customerSlice";
+import { useNavigate } from "react-router-dom"; 
 
 function LoginForm() {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState({});
-  // const dispatch = useDispatch();
-
+  
+  //test redux
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
-
-  // dispatch(setLogin(formData));
 
 
   const handleSubmit = (e) => {
@@ -25,12 +26,19 @@ function LoginForm() {
 
     setErrors(newErrors);
     if (Object.keys(newErrors).length > 0) return;
-    console.log(formData);
+    // console.log(formData);
+    // alert("Đăng nhập thành công!");
 
-    // console.log(useSelector((state) => state.Customer.login));
+    // test redux
+     dispatch(setLogin(formData));
 
-    alert("Đăng nhập thành công!");
+     navigate("/products")
   };
+
+  //test
+const login = useSelector((state) => state.CustomerStore.login)
+  console.log(login);
+  
 
   return (
     <div className="flex flex-col items-center justify-center flex-grow py-10">
@@ -78,6 +86,7 @@ function LoginForm() {
             className="w-full bg-green-600 text-white font-semibold py-2 mt-4 rounded-lg hover:bg-green-700"
           >
             ĐĂNG NHẬP
+
           </button>
         </form>
       </div>
