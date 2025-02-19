@@ -61,7 +61,7 @@ const Navbar = () => {
           </p>
         </Link>
         <Bars3Icon
-          className="w-7 h-7 cursor-pointer"
+          className="w-7 h-7 cursor-pointer sm:hidden"
           onClick={() => setVisible(true)}
         />
       </div>

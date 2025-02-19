@@ -31,8 +31,8 @@ function LoginForm() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center flex-grow py-10">
-      <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-md sm:max-w-lg lg:max-w-xl border border-gray-200">
+    <div className="flex flex-col items-center justify-center min-h-[90vh] sm:min-h-0 flex-grow pb-20 mx-2 sm:py-10">
+      <div className="bg-white shadow-lg rounded-lg p-4 sm:p-10 w-full max-w-md sm:max-w-lg lg:max-w-xl border border-gray-200">
         <h2 className="text-green-600 text-2xl font-bold text-center mb-6">
           ĐĂNG NHẬP
         </h2>
