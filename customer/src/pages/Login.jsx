@@ -6,6 +6,7 @@ function Login() {
   return (
     <>
       <LoginNavBar></LoginNavBar>
+
       <LoginForm></LoginForm>
       <Footer></Footer>
     </>
