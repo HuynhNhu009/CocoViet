@@ -27,9 +27,10 @@ function App() {
 
           <Route path="/products" element={<Products />} />
         </Routes>
-
-        <Footer />
       </div>
+      {location.pathname !== "/login" && location.pathname !== "/register" && (
+        <Footer />
+      )}
     </>
   );
 }

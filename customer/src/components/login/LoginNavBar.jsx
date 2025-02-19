@@ -5,7 +5,7 @@ function LoginNavBar() {
   const isLogin = location.pathname === "/login";
 
   return (
-    <header className="flex justify-between items-center px-10 py-4 bg-white w-full shadow-md h-[80px]">
+    <header className="flex justify-between items-center py-4 bg-white w-full shadow-md h-[80px] px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw]">
       <Link
         to={"/"}
         className="text-green-600 text-4xl font-bold tracking-wide"

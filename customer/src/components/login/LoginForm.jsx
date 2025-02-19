@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setLogin } from "../../redux/customerSlice";
-import { useNavigate } from "react-router-dom"; 
+import { useNavigate } from "react-router-dom";
 
 function LoginForm() {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState({});
-  
+
   //test redux
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -14,7 +14,6 @@ function LoginForm() {
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
-
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -30,16 +29,15 @@ function LoginForm() {
     // alert("Đăng nhập thành công!");
 
     // test redux
-     dispatch(setLogin(formData));
+    dispatch(setLogin(formData));
   };
 
   //test
-const login = useSelector((state) => state.CustomerStore.login)
+  const login = useSelector((state) => state.CustomerStore.login);
   console.log(login);
-  
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-[90vh] sm:min-h-0 flex-grow pb-20 mx-2 sm:py-10">
+    <div className="flex flex-col items-center justify-center min-h-screen sm:min-h-0 flex-grow p-8 pb-20 mx-2 sm:py-10">
       <div className="bg-white shadow-lg rounded-lg p-4 sm:p-10 w-full max-w-md sm:max-w-lg lg:max-w-xl border border-gray-200">
         <h2 className="text-green-600 text-2xl font-bold text-center mb-6">
           ĐĂNG NHẬP
@@ -84,7 +82,6 @@ const login = useSelector((state) => state.CustomerStore.login)
             className="w-full bg-green-600 text-white font-semibold py-2 mt-4 rounded-lg hover:bg-green-700"
           >
             ĐĂNG NHẬP
-
           </button>
         </form>
       </div>
