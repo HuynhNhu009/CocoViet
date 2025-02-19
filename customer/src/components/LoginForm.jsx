@@ -31,8 +31,6 @@ function LoginForm() {
 
     // test redux
      dispatch(setLogin(formData));
-
-     navigate("/products")
   };
 
   //test
