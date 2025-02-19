@@ -4,14 +4,11 @@ import Footer from "../components/Footer";
 
 function Login() {
   return (
-    <>
-      <LoginNavBar></LoginNavBar>
-
-      <LoginForm></LoginForm>
-      <Footer></Footer>
-    </>
-    // <div className='w-full flex flex-col justify-between'>
-    // </div>
+    <div className="min-h-screen flex flex-col">
+      <LoginNavBar />
+      <LoginForm />
+      <Footer />
+    </div>
   );
 }
 export default Login;
