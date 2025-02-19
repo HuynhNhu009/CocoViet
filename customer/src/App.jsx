@@ -11,14 +11,14 @@ function App() {
   return (
     <>
       <div
-        className={
-          location.pathname !== "/login" && location.pathname !== "/register"
-            ? "px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw]"
-            : ""
-        }
+      // className={
+      //   // location.pathname !== "/login" && location.pathname !== "/register"
+      //   //   ? "px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw]"
+      //   //   : ""
+      // }
       >
-        {location.pathname !== "/login" &&
-          location.pathname !== "/register" && <Navbar />}
+        {/* {location.pathname !== "/login" &&
+          location.pathname !== "/register" && <Navbar />} */}
         <Routes>
           <Route path="/" element={<Home />} />
 

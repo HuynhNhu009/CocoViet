@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
+import { assets } from "../assets/assets";
 import {
   ArrowLeftIcon,
   Bars3Icon,
@@ -14,27 +15,22 @@ const Navbar = () => {
   const [visible, setVisible] = useState(false);
 
   return (
-    <div className="flex items-center justify-between py-5 font-medium">
-      <Link to={"/"}>
-        {/* <img src={assets.logo} className="w-36" alt="" /> */}
-        Logo
+    <div className="relative flex justify-between items-center py-5 font-medium px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw]">
+      <Link to={"/"} className="md:mr-[5%]">
+        <img src={assets.logo} className="w-20" alt="" />
       </Link>
-      <ul className="hidden sm:flex gap-5 text-sm text-gray-700">
+      <ul className="hidden md:flex md:ml-22 lg:gap-20 gap-5 text-md lg:text-xl text-gray-700 mr-auto">
         <NavLink to={"/"} className="flex flex-col items-center gap-1 ">
-          <p className="uppercase">Trang chủ</p>
-          <hr className="w-2/4 border-none h-[1.5px] bg-gray-700 hidden" />
+          <p className="uppercase  text-white">Trang chủ</p>
         </NavLink>
         <NavLink to={"/products"} className="flex flex-col items-center gap-1 ">
-          <p className="uppercase">Sản phẩm</p>
-          <hr className="w-2/4 border-none h-[1.5px] bg-gray-700 hidden" />
+          <p className="uppercase text-white">Sản phẩm</p>
         </NavLink>
         <NavLink to={"/about"} className="flex flex-col items-center gap-1 ">
-          <p className="uppercase">Giới thiệu</p>
-          <hr className="w-2/4 border-none h-[1.5px] bg-gray-700 hidden" />
+          <p className="uppercase text-white">Giới thiệu</p>
         </NavLink>
         <NavLink to={"/blogs"} className="flex flex-col items-center gap-1 ">
-          <p className="uppercase">Bài viết</p>
-          <hr className="w-2/4 border-none h-[1.5px] bg-gray-700 hidden" />
+          <p className="uppercase text-white">Bài viết</p>
         </NavLink>
       </ul>
 
@@ -61,7 +57,7 @@ const Navbar = () => {
           </p>
         </Link>
         <Bars3Icon
-          className="w-7 h-7 cursor-pointer sm:hidden"
+          className="w-7 h-7 cursor-pointer md:hidden"
           onClick={() => setVisible(true)}
         />
       </div>
