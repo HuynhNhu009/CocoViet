@@ -4,6 +4,8 @@ import { Route, Routes, useLocation } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Login from "./pages/Login";
 import Regis from "./pages/Regis";
+import Products from "./pages/Product/Products";
+
 // import ProductList from "./components/ProductList";
 
 function App() {
@@ -23,6 +25,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Regis />} />
+          <Route path="/products" element={<Products />}/>
         </Routes>
       </div>
     </>

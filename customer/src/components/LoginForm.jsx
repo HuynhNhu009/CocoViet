@@ -5,13 +5,15 @@ import { setLogin } from "../redux/customerSlice";
 function LoginForm() {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState({});
-  //   const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
-  //   dispatch(setLogin(formData));
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+
+  // dispatch(setLogin(formData));
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
