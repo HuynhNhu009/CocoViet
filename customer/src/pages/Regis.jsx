@@ -3,13 +3,12 @@ import LoginNaBar from "../components/LoginNavBar";
 import Footer from "../components/Footer";
 
 function Regis() {
-    return (
-        <div>
-            <LoginNaBar type='Đăng ký'></LoginNaBar>
-            <RegisForm></RegisForm>
-            <Footer></Footer>
-        </div>
-    );
-    
+  return (
+    <>
+      <LoginNaBar type="Đăng ký"></LoginNaBar>
+      <RegisForm></RegisForm>
+      <Footer></Footer>
+    </>
+  );
 }
 export default Regis;
