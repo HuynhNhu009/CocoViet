@@ -2,8 +2,9 @@ import React from "react";
 import Home from "./pages/Home";
 import { Route, Routes, useLocation } from "react-router-dom";
 import Navbar from "./components/Navbar";
-
 import Auth from "./pages/Auth"; // Gộp chung Login & Register
+import Footer from "./components/Footer";
+import Products from "./pages/Product/Products";
 
 function App() {
   const location = useLocation();
@@ -26,6 +27,8 @@ function App() {
 
           <Route path="/products" element={<Products />} />
         </Routes>
+
+        <Footer />
       </div>
     </>
   );

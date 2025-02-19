@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setLogin } from "../redux/customerSlice";
+import { setLogin } from "../../redux/customerSlice";
 import { useNavigate } from "react-router-dom"; 
 
 function LoginForm() {
