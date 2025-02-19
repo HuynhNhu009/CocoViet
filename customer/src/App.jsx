@@ -2,11 +2,8 @@ import React from "react";
 import Home from "./pages/Home";
 import { Route, Routes, useLocation } from "react-router-dom";
 import Navbar from "./components/Navbar";
-import Login from "./pages/Login";
-import Regis from "./pages/Regis";
-import Products from "./pages/Product/Products";
 
-// import ProductList from "./components/ProductList";
+import Auth from "./pages/Auth"; // Gộp chung Login & Register
 
 function App() {
   const location = useLocation();
@@ -23,9 +20,11 @@ function App() {
           location.pathname !== "/register" && <Navbar />}
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Regis />} />
-          <Route path="/products" element={<Products />}/>
+
+          <Route path="/login" element={<Auth />} />
+          <Route path="/register" element={<Auth />} />
+
+          <Route path="/products" element={<Products />} />
         </Routes>
       </div>
     </>
