@@ -9,10 +9,10 @@ function Layout() {
 
     return (
         <>
-            <div className="">
+            <div className="flex flex-col min-h-screen">
             {!isAuth && <Navbar />} 
             
-            <div className="">
+            <div className="flex-grow">
                 <Outlet />
             </div>
 
