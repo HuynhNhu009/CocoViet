@@ -8,14 +8,13 @@ import com.cocoviet.backend.models.entity.*;
 import com.cocoviet.backend.models.request.ProductRequest;
 import com.cocoviet.backend.models.request.ProductVariantsRequest;
 import com.cocoviet.backend.repository.*;
-import com.cocoviet.backend.service.IFileUpload;
 import com.cocoviet.backend.service.IProductService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -273,5 +272,34 @@ public class ProductServiceImpl implements IProductService {
 
         return productDTOS;
 
+    }
+
+    @Override
+    public List<ProductDTO> getProductByCategory(String categoryId) {
+
+        List<ProductEntity> productEntities = iProductRepository.findProductsByCategoryId(categoryId);
+        if(productEntities.size() == 0){
+            return null;
+        }
+        List<ProductDTO> productDTOS = productEntities.stream() //tra ve set<string>
+                .map(productEntity -> {
+                    //su dung lai getProductById
+                    //Category
+                    Set<ProductCategoryEntity> productCategoryEntities = iproductCategoryRepository.findByProduct(productEntity);
+                    Set<String> categoryName = productCategoryEntities.stream() //tra ve set<string>
+                            .map(productCategory -> productCategory.getCategory().getCategoryName())//get tu productCategory
+                            .collect(Collectors.toSet());
+
+                    //Unit
+                    Set<ProductVariantDTO> productVariantDTOS = productVariantMapper.toDTOSet(productEntity.getVariants());
+
+                    ProductDTO productDTO = iProductMapper.toProductDTO(productEntity);
+                    productDTO.setCategoryName(categoryName);
+                    productDTO.setVariants(productVariantDTOS);
+
+                    return productDTO;
+                }).collect(Collectors.toList());
+
+        return productDTOS;
     }
 }
