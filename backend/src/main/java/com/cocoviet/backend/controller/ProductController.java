@@ -33,7 +33,7 @@ public class ProductController {
     }
 
     @PatchMapping("/{productId}")
-    ResponseEntity<ResponseData> update(@ModelAttribute("productId") String productId, @RequestBody @Valid ProductRequest coconutProductRequest) {
+    ResponseEntity<ResponseData> update(@PathVariable("productId") String productId, @RequestBody @Valid ProductRequest coconutProductRequest) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ResponseData.builder()
                         .data(coconutProductService.updateProduct(productId,coconutProductRequest))
@@ -58,6 +58,16 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ResponseData.builder()
                         .data(coconutProductService.getAllProduct())
+                        .msg("Get all product successfully!")
+                        .status("OK")
+                        .build());
+    }
+
+    @GetMapping("/category/{categoryId}")
+    ResponseEntity<ResponseData> getAllProduct(@PathVariable String categoryId){
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ResponseData.builder()
+                        .data(coconutProductService.getProductByCategory(categoryId))
                         .msg("Get all product successfully!")
                         .status("OK")
                         .build());
