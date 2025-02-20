@@ -9,10 +9,10 @@ function Auth() {
   const isLoginPage = location.pathname === "/login";
 
   return (
-    <div className="h-[100vh] sm:min-h-screen flex flex-col ">
+    // h-[100vh] sm:min-h-screen flex flex-col
+    <div className=" ">
       <LoginNavBar />
       {isLoginPage ? <LoginForm /> : <RegisForm />}
-      <Footer />
     </div>
   );
 }

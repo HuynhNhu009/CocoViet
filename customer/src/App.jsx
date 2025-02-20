@@ -5,20 +5,21 @@ import Navbar from "./components/Navbar";
 import Auth from "./pages/Auth"; // Gộp chung Login & Register
 import Footer from "./components/Footer";
 import Products from "./pages/Product/Products";
+import AllRoute from "./components/AllRoute";
 
 function App() {
   const location = useLocation();
   return (
     <>
-      <div
-      // className={
-      //   // location.pathname !== "/login" && location.pathname !== "/register"
-      //   //   ? "px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw]"
-      //   //   : ""
-      // }
+      {/* <div
+      className={
+        location.pathname !== "/login" && location.pathname !== "/register"
+          ? "px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw]"
+          : ""
+      }
       >
-        {/* {location.pathname !== "/login" &&
-          location.pathname !== "/register" && <Navbar />} */}
+        {location.pathname !== "/login" &&
+          location.pathname !== "/register" && <Navbar />}
         <Routes>
           <Route path="/" element={<Home />} />
 
@@ -30,7 +31,8 @@ function App() {
       </div>
       {location.pathname !== "/login" && location.pathname !== "/register" && (
         <Footer />
-      )}
+      )} */}
+      <AllRoute />
     </>
   );
 }

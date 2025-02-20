@@ -21,16 +21,16 @@ const Navbar = () => {
       </Link>
       <ul className="hidden md:flex md:ml-22 lg:gap-20 gap-5 text-md lg:text-xl text-gray-700 mr-auto">
         <NavLink to={"/"} className="flex flex-col items-center gap-1 ">
-          <p className="uppercase  text-white">Trang chủ</p>
+          <p className="uppercase  text-black">Trang chủ</p>
         </NavLink>
         <NavLink to={"/products"} className="flex flex-col items-center gap-1 ">
-          <p className="uppercase text-white">Sản phẩm</p>
+          <p className="uppercase text-black">Sản phẩm</p>
         </NavLink>
         <NavLink to={"/about"} className="flex flex-col items-center gap-1 ">
-          <p className="uppercase text-white">Giới thiệu</p>
+          <p className="uppercase text-black">Giới thiệu</p>
         </NavLink>
         <NavLink to={"/blogs"} className="flex flex-col items-center gap-1 ">
-          <p className="uppercase text-white">Bài viết</p>
+          <p className="uppercase text-black">Bài viết</p>
         </NavLink>
       </ul>
 
