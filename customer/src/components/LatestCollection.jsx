@@ -1,11 +1,8 @@
 import React from "react";
+import { assets } from "../assets/assets";
 
 const LatestCollection = () => {
-  return (
-    <div className="py-5 font-medium px-4 sm:px-[5vw] lg:px-[7vw]">
-      LatestCollection
-    </div>
-  );
+  return <div className="h-150 sm:h-[830px]">LatestCollection</div>;
 };
 
 export default LatestCollection;
