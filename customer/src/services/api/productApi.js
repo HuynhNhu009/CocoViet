@@ -1,7 +1,7 @@
-import { apiService } from "../apiService";
+import { productService } from "../productService";
 
 export const productApi = {
-  getAll: async () => await apiService.get("/products/get-all"),
+  getAll: async () => await productService.get("/products/get-all"),
   // getById: async (id) => await apiService.get(`/products/${id}`),
   // create: async (product) => await apiService.post("/products", product),
   // update: async (id, product) =>

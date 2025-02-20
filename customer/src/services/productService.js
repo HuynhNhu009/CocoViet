@@ -1,11 +1,13 @@
-import { productApi } from "./api/productApi";
+const API_BASE_URL = "http://localhost:8082/api";
 
 export const productService = {
-  async getProducts() {
-    const { data, error } = await productApi.getAll();
-    console.log("API response:", data);
-    return error
-      ? { products: [], error }
-      : { products: data.data, error: null };
+  async get(endpoint) {
+    const response = await fetch(`${API_BASE_URL}${endpoint}`);
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Error call API");
+    }
+    return response.json();
   },
+
 };

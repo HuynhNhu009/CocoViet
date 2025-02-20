@@ -1,5 +1,4 @@
 import  { useEffect, useState } from "react";
-// import { Link, NavLink } from "react-router-dom";
 import Search from "../Search";
 import { productApi } from "../../services/api/productApi";
 const Products = () => {
@@ -9,16 +8,16 @@ const Products = () => {
 
   useEffect(() => {
     const fetchProducts = async () => {
-      const data = await productApi.getAll();
-      if (data) {
-        setProducts(data);
+      const response = await productApi.getAll();
+      if (response) {
+        setProducts(response.data);
       }
     };
 
     fetchProducts();
   }, []);
 
-  console.log(products.data);
+  console.log(products);
   
    
   return (
@@ -38,7 +37,7 @@ const Products = () => {
         ))}
       </div>
 
-      {/* <div className=" flex  align-middle grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6 m-0">
+      <div className=" flex  align-middle grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6 m-0">
         {products.map((item, index) => (
           <ul
             key={index.productId}
@@ -46,19 +45,22 @@ const Products = () => {
           >
             <li>
               <img
-                src={item.productImage}
+                src={"https://www.sunnzfood.co.nz/wp-content/uploads/2016/11/Coconut-Products-3.jpg"}
                 alt={`Image ${index + 1}`}
                 className="w-auto object-fill"
               />
             </li>
             <div className="py-2 text-center">
               <li className="">{item.productName}</li>
-              <li className="font-light ">{item.variants.price} VND</li>
+                {item.variants.map((variant, vIndex) => (
+                  <li key={vIndex} className="font-light">{variant.price} VND</li>
+                ))}
+
               <li className=" font-extralight">{item.retailerName}</li>
             </div>
           </ul>
         ))}
-      </div> */}
+      </div>
     </div>
   );
 };
