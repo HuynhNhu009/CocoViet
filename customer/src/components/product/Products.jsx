@@ -42,7 +42,7 @@ const Products = () => {
     }
   ]
   return (
-    <div className=" h-lvh">
+    <div className=" h-lvh items-center py-5 font-medium px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw]">
       <div className="search">
         <Search />
       </div>
