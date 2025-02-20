@@ -34,7 +34,7 @@ function LoginForm() {
 
   //test
   const login = useSelector((state) => state.CustomerStore.login);
-  console.log(login);
+  // console.log(login);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen sm:min-h-0 flex-grow p-8 pb-20 mx-2 sm:py-10">
