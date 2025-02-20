@@ -33,15 +33,18 @@ const HomeAbout = () => {
       />
       <div className="relative flex flex-col items-center gap-4">
         <Title text1={"Về chúng tôi"} color1={"text-white"} />
-
-        <p className="max-w-2xl pb-10 text-white text-lg text-center px-5">
+        <p className="w-[50vw]  xl:w-[30vw] h-[4px] lg:h-[10px] bg-white"></p>
+        <p className="max-w-2xl pb-10 text-white text-lg lg:text-2xl text-center px-5">
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed voluptate
           quos, ipsam incidunt temporibus inventore laudantium provident, iusto
           perspiciatis eius ex, nisi obcaecati enim laborum tenetur voluptatibus
           aut? Animi, voluptatum.
         </p>
 
-        <Button children={"Tìm hiểu thêm"} className="uppercase bg-green-600" />
+        <Button
+          children={"Tìm hiểu thêm"}
+          className="uppercase bg-green-600 font-semibold hover:bg-green-700 cursor-pointer"
+        />
       </div>
     </div>
   );
