@@ -1,23 +1,32 @@
 import  { useEffect, useState } from "react";
 import Search from "../Search";
 import { productApi } from "../../services/api/productApi";
+import { categoryApi } from "../../services/api/categoryApi";
+
 const Products = () => {
-  const category = ["Thực Phẩm", "Nông nghiệp", "Nội thất", "Dụng cụ nhà bếp"];
 
   const [products, setProducts] = useState([]);
+  const [categories, setCategogies] = useState([]);
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      const response = await productApi.getAll();
-      if (response) {
-        setProducts(response.data);
+    const fetchData = async () => {
+      try {
+        const [productResponse, categoriesResponse] = await Promise.all([
+          productApi.getAll(),
+          categoryApi.getAll()
+        ]);
+  
+        if (productResponse) setProducts(productResponse.data);
+        if (categoriesResponse) setCategogies(categoriesResponse.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
       }
     };
-
-    fetchProducts();
+  
+    fetchData();
   }, []);
-
-  console.log(products);
+  
+  console.log(categories);
   
    
   return (
@@ -27,12 +36,12 @@ const Products = () => {
       </div>
 
       <div className="category flex justify-center space-x-8 flex-wrap mb-10">
-        {category.map((item, index) => (
+        {categories.map((item, index) => (
           <div
             key={index}
             className="bg-[#77C27F] text-white rounded-sm shadow-md  "
           >
-            <p className="py-2 w-36 text-center ">{item}</p>
+            <p className="py-2 w-45 text-center ">{item.categoryName}</p>
           </div>
         ))}
       </div>
@@ -40,7 +49,7 @@ const Products = () => {
       <div className=" flex  align-middle grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6 m-0">
         {products.map((item, index) => (
           <ul
-            key={index.productId}
+            key={item.productId}
             className=" shadow-md bg-[#77C27F] text-white  rounded-2xl rounded-md flex flex-col "
           >
             <li>
