@@ -7,7 +7,4 @@ export const productApi = {
   // update: async (id, product) =>
   //   await apiService.put(`/products/${id}`, product),
   // delete: async (id) => await apiService.delete(`/products/${id}`),
-
-
-
 };

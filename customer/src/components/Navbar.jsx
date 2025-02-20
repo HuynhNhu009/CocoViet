@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import {
   ArrowLeftIcon,
+  ArrowUpIcon,
   Bars3Icon,
   MagnifyingGlassIcon,
   ShoppingBagIcon,
@@ -12,6 +13,7 @@ const Navbar = () => {
   const [visible, setVisible] = useState(false);
   const sidebarRef = useRef(null);
   const location = useLocation();
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -19,12 +21,6 @@ const Navbar = () => {
         setVisible(false);
       }
     };
-
-    if (visible) {
-      document.addEventListener("mousedown", handleClickOutside);
-    } else {
-      document.removeEventListener("mousedown", handleClickOutside);
-    }
 
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [visible]);
@@ -72,7 +68,7 @@ const Navbar = () => {
       {!isAuthPage && (
         <>
           {/* Menu */}
-          <ul className="hidden md:flex md:ml-6 lg:ml-10 xl:20 md:gap-5 xl:gap-7 text-md lg:text-xl text-gray-700 mr-auto my-2">
+          <ul className="hidden md:flex md:ml-6 lg:ml-10 xl:ml-30 md:gap-5 xl:gap-9 text-md lg:text-xl text-gray-700 mr-auto my-2">
             <NavLink to={"/"} className="flex flex-col items-center gap-1">
               <p className={`uppercase ${text_Color} ${text_hover}`}>
                 Trang chủ
@@ -97,30 +93,48 @@ const Navbar = () => {
               </p>
             </NavLink>
           </ul>
-
-          {/* Icons */}
           <div className="flex items-center gap-6">
+            {/* Icon tìm kiếm */}
             <MagnifyingGlassIcon
-              className={`size-7 ${text_Color} ${text_hover}`}
+              className={`cursor-pointer size-7 ${text_Color} ${text_hover}`}
             />
 
-            <div className="group relative">
+            {/* User Dropdown */}
+            <div
+              className="relative"
+              onMouseEnter={() => setIsOpen(true)}
+              onMouseLeave={() => setIsOpen(false)}
+            >
               <Link to="/login">
                 <UserCircleIcon
-                  className={`size-7 ${text_Color} ${text_hover}`}
+                  className={`cursor-pointer size-7 transition-all ${
+                    location.pathname === "/"
+                      ? isOpen
+                        ? "text-green-600"
+                        : "text-white"
+                      : !isOpen
+                      ? "text-green-600"
+                      : ""
+                  }`}
                 />
               </Link>
-              <div className="group-hover:block hidden absolute dropdown-menu right-0 pt-4">
-                <div className="flex flex-col gap-2 w-36 px-5 py-3 bg-slate-100 text-gray-500 rounded">
-                  <p className="cursor-pointer hover:text-green-600">
-                    My Profile
-                  </p>
-                  <p className="cursor-pointer hover:text-green-600">Order</p>
-                  <p className="cursor-pointer hover:text-green-600">Logout</p>
+
+              {isOpen && (
+                <div className="absolute dropdown-menu right-0 top-[16px] pt-4 z-30">
+                  <div className="flex flex-col gap-2 w-36 px-5 py-3 bg-slate-100 text-gray-500 rounded shadow-lg">
+                    <p className="cursor-pointer hover:text-green-600">
+                      My Profile
+                    </p>
+                    <p className="cursor-pointer hover:text-green-600">Order</p>
+                    <p className="cursor-pointer hover:text-green-600">
+                      Logout
+                    </p>
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
 
+            {/* Giỏ hàng */}
             <Link to="/cart" className="relative">
               <ShoppingBagIcon
                 className={`size-7 ${text_Color} ${text_hover}`}
@@ -139,8 +153,8 @@ const Navbar = () => {
 
           {/* Sidebar menu */}
           <div
-            className={`absolute top-0 right-0 bottom-0 transition-all ${
-              visible ? "w-full" : "w-0"
+            className={`z-10 absolute top-0 right-0 bottom-0 bg-white transition-all ${
+              visible ? "w-full overflow-visible" : "w-0 overflow-hidden"
             }`}
           >
             <div className="flex flex-col bg-white text-gray-600">
@@ -148,7 +162,7 @@ const Navbar = () => {
                 onClick={() => setVisible(false)}
                 className="flex items-center gap-4 p-3 cursor-pointer"
               >
-                <ArrowLeftIcon className="w-5 h-5 cursor-pointer" />
+                <ArrowUpIcon className="w-5 h-5 cursor-pointer" />
               </div>
               <NavLink
                 className="py-3 pl-6 border-t uppercase"
