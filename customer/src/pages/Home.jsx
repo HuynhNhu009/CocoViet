@@ -7,7 +7,7 @@ const Home = () => {
     <>
       <div className="relative w-full h-screen">
         {/* Navbar - Đặt trên cùng */}
-        <Navbar className=" absolute top-0 left-0 w-full z-20" />
+        <Navbar className=" absolute top-0 left-0 w-full z-20 text-white" />
         {/* Background Image */}
         <div className="absolute inset-0 -z-20">
           <img
