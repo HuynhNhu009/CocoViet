@@ -9,6 +9,7 @@ const Home = () => {
     <div>
       <Hero />
       <LatestCollection />
+
       <HomeAbout />
       <HomeBlog />
       {/* <div className="py-5 font-medium px-4 sm:px-[5vw] lg:px-[7vw] h-[830px]">

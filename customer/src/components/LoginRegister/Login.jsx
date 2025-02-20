@@ -2,12 +2,12 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setLogin } from "../../redux/customerSlice";
 import { useNavigate } from "react-router-dom";
+import { customerApi } from "../../services/customerService";
 
 function LoginForm() {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState({});
 
-  //test redux
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -15,7 +15,7 @@ function LoginForm() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     let newErrors = {};
@@ -25,16 +25,27 @@ function LoginForm() {
 
     setErrors(newErrors);
     if (Object.keys(newErrors).length > 0) return;
-    // console.log(formData);
-    // alert("Đăng nhập thành công!");
 
-    // test redux
-    dispatch(setLogin(formData));
+    console.log(formData);
+
+    const response = await customerApi.login(formData);
+    console.log(response);
+
+    if (response.status === "OK") {
+      const { token, data } = response.data;
+      console.log("Token", token);
+      console.log(data);
+
+      dispatch(setLogin({ token, data }));
+
+      navigate("/");
+    }
   };
-
+  // localStorage.removeItem("token");
   //test
-  const login = useSelector((state) => state.CustomerStore.login);
-  // console.log(login);
+  const login = useSelector((state) => state.CustomerStore.customer);
+  console.log(login);
+  // localStorage.setItem("ABC", login.token);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen sm:min-h-0 flex-grow p-8 pb-20 mx-2 sm:py-10">

@@ -1,39 +1,33 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+const initialState = {
+  customer: {}, // Chứa thông tin khách hàng
+  token: "", // Chứa JWT token
+};
+
 const customerSlice = createSlice({
   name: "CustomerStore",
-  initialState: {
-    customer: {},
-    cart: [],
-    login: null,
-  },
+  initialState,
 
   reducers: {
     setLogin: (state, action) => {
-      state.login ={
-        email: action.payload.email,
-        password : action.payload.password
-      }
-    },
+      const { token, data } = action.payload;
+      // Lấy dữ liệu từ API trả về
+      state.customer = data; // Lưu thông tin khách hàng
+      state.token = token; // Lưu token vào Redux
+      console.log("Redux -- Token", token);
 
-    resetCustomer: (state) => {
-      return {
-        ...state,
-        customer: {},
-        cart: {},
-        login: {
-          email: null,
-          password: null,
-        },
-      };
+      localStorage.setItem("token", token); // Lưu token vào localStorage để sử dụng sau này
+    },
+    logout: (state) => {
+      state.customer = {};
+      state.token = "";
+      localStorage.removeItem("token"); // Xóa token khi logout
     },
   },
 });
 
-export const { 
-  setLogin
-  
- } = customerSlice.actions;
+export const { setLogin } = customerSlice.actions;
 
 export const getInitialState = (state) => state.CustomerStore.initialState;
 
