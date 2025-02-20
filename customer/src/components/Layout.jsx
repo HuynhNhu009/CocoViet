@@ -12,7 +12,7 @@ function Layout() {
             <div className="flex flex-col min-h-screen">
             {!isAuth && <Navbar />} 
             
-            <div className="flex-grow">
+            <div className="flex-grow ">
                 <Outlet />
             </div>
 
