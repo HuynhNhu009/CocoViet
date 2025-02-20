@@ -68,7 +68,7 @@ const Navbar = () => {
       {!isAuthPage && (
         <>
           {/* Menu */}
-          <ul className="hidden md:flex md:ml-6 lg:ml-10 xl:ml-30 md:gap-5 xl:gap-9 text-md lg:text-xl text-gray-700 mr-auto my-2">
+          <ul className="hidden md:flex my-auto md:gap-5 xl:gap-9 text-md lg:text-xl text-gray-700 mx-auto justify-center">
             <NavLink to={"/"} className="flex flex-col items-center gap-1">
               <p className={`uppercase ${text_Color} ${text_hover}`}>
                 Trang chủ
