@@ -4,6 +4,7 @@ import Layout from "../components/Layout";
 import { Navigate } from "react-router-dom";
 import LoginForm from "../components/LoginRegister/Login";
 import Register from "../components/LoginRegister/Register";
+import ProductDetail from "../pages/Product/ProductDetail";
 
 export const routes = [
   {
@@ -25,6 +26,10 @@ export const routes = [
       {
         path: "products",
         element: <Products />,
+      },
+      {
+        path: "product-details",
+        element: <ProductDetail/>,
       },
     ],
   },

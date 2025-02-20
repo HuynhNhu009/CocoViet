@@ -1,13 +1,10 @@
-const API_BASE_URL = "http://localhost:8082/api";
+import api from "./api/api";
 
-export const categoryService = {
-  async get(endpoint) {
-    const response = await fetch(`${API_BASE_URL}${endpoint}`);
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || "Error call API");
-    }
-    return response.json();
+export const categoryAPI = {
+  getAllCategories: async () => {
+    const response = await api.get("/categories/get-all");
+    return response.data;
   },
+
 
 };
