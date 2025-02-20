@@ -1,8 +1,9 @@
 import Products from "../pages/Product/Products";
-import Auth from "../pages/Auth";
 import Home from "../pages/Home";
 import Layout from "../components/Layout";
 import { Navigate } from "react-router-dom";
+import LoginForm from "../components/LoginRegister/Login";
+import Register from "../components/LoginRegister/Register";
 
 export const routes = [
   {
@@ -15,11 +16,11 @@ export const routes = [
       },
       {
         path: "login",
-        element: <Auth />,
+        element: <LoginForm />,
       },
       {
         path: "register",
-        element: <Auth />,
+        element: <Register />,
       },
       {
         path: "products",

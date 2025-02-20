@@ -23,7 +23,7 @@ const Home = () => {
         ></div>
 
         {/* Content */}
-        <div className="relative z-10 text-white flex flex-col items-start p-8 md:p-16">
+        <div className="relative -z-5 text-white flex flex-col items-start p-8 md:p-16">
           {/* Logo */}
           <h1 className="text-4xl font-bold">LOGO</h1>
 
