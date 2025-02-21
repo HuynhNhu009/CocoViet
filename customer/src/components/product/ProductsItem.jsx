@@ -3,8 +3,8 @@ import { productAPI } from "../../services/productService";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { motion } from "framer-motion"; 
-import { useDispatch } from "react-redux";
-import { setProductStore } from "../../redux/productSlice";
+import { useDispatch} from "react-redux";
+import { setProductStore, setProductItem } from "../../redux/productSlice";
 
 const ProductItem = () => {
   const [products, setProducts] = useState([]);
@@ -24,32 +24,30 @@ const ProductItem = () => {
     fetchData();
   }, []);
 
+  const productStore = useSelector(
+    (state) => state.ProductStore.productStore || []
+  );
+
+  useEffect(() => {
+    if (productStore.length > 0) {
+      setProducts(productStore);
+    }
+  }, [productStore]);
 
   const handleNavigate = async (productId) => {
     try {
-        const findByProductId = await productAPI.getByProductId(productId);
-        console.log("get pro by id", findByProductId.data);
-        
-        dispatch(setProductStore(findByProductId.data));
-        setProducts(findByProductId.data);
+        navigate("/product-details");
 
-        console.log("test",products);
-        
+        const findByProductId = await productAPI.getByProductId(productId);
+        dispatch(setProductItem({}));
+        dispatch(setProductItem(findByProductId.data));
+        setProducts(findByProductId.data);
     } catch (error) {
         console.error("Error fetching products by productId:", error);
         setProducts([]);
     }
-
-
         
-    navigate("/product-details");
-  };
-
-
-
-
-  console.log("new", products);
-  
+  }; 
   
 
   return (
