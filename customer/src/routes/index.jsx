@@ -27,21 +27,12 @@ export const routes = [
       {
         path: "products",
         element: <Products />,
-        // children:[
-        //   {
-        //     path: "product-details",
-        //     element: <ProductDetail/>,
-        //   },
-        // ]
-      },
-      {
-<<<<<<< HEAD
-        path: "productss/product-details/:productId",
-        element: <ProductDetail />,
-=======
-        path: "products/product-details/:productId",
-        element: <ProductDetail/>,
->>>>>>> 906907595db41e4b1935080de90a8c9c27eb2831
+        children: [
+          {
+            path: ":productId",
+            element: <ProductDetail />,
+          },
+        ],
       },
     ],
   },

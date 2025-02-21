@@ -37,7 +37,7 @@ const ProductItem = () => {
 
   const handleNavigate = async (productId) => {
     try {
-      navigate(`/products/product-details/${productId}`);
+      navigate(`/products/${productId}`);
 
       const findByProductId = await productAPI.getByProductId(productId);
       dispatch(setProductItem({}));
