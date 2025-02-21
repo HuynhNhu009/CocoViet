@@ -28,12 +28,10 @@ export const routes = [
       {
         path: "products",
         element: <Products />,
-        children: [
-          {
-            path: ":productId",
-            element: <ProductDetail />,
-          },
-        ],
+      },
+      {
+        path: "product/:productId",
+        element: <ProductDetail />,
       },
 
       {
