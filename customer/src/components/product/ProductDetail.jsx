@@ -25,10 +25,10 @@ const ProductDetail = () => {
 
   return (
     <div className="  flex flex-col justify-center align-middle font-medium px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw] my-8">
-      <div className=" section-1">
-        <ProductSearch />
+      <div className="mb-5 text-sm ">
+        <h2 className=" text-white text-right ml-auto  bg-green-600 w-40 px-5">Chi tiết sản phẩm</h2>
+        <hr className="text-green-600"></hr>
       </div>
-
       <div className="section-2 mb-10 w-full flex justify-evenly- flex-row space-x-8 flex-wrap b-10">
         <div className="box-image shadow-md w-[35%] border-3 rounded-2xl border-green-600">
           <img

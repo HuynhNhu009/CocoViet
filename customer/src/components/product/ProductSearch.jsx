@@ -2,13 +2,15 @@ import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setProductSearch, setActive } from "./../../redux/productSlice";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+
 const ProductSearch = () => {
   const dispatch = useDispatch();
   const productStore = useSelector((state) => state.ProductStore.productStore);
   const [products, setProducts] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
+  const location = useLocation;
 
   useEffect(() => {
     setProducts(productStore);
@@ -37,7 +39,9 @@ const ProductSearch = () => {
         removeDiacritics(item.productDesc).includes(searchNormalized) ||
         removeDiacritics(item.productName).includes(searchNormalized)
     );
-    // navigate("/products");
+
+    if(location.pathname !== "/products")
+      navigate("/products");
     setProducts(filteredProducts); 
     dispatch(setProductSearch(filteredProducts)); 
   };

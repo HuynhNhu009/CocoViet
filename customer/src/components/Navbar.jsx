@@ -10,6 +10,7 @@ import {
   UserCircleIcon,
 } from "@heroicons/react/24/outline";
 import { useDispatch, useSelector } from "react-redux";
+import { setNavProduct } from "../redux/productSlice";
 
 const Navbar = () => {
   const [visible, setVisible] = useState(false);
@@ -21,7 +22,7 @@ const Navbar = () => {
 
   const isLoggedIn = useSelector((state) => !!state.CustomerStore.isLogin);
   const customerInfo = useSelector((state) => state.CustomerStore.customer);
-
+  const productStore = useSelector((state) => state.ProductStore.productStore);
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
@@ -52,6 +53,11 @@ const Navbar = () => {
     location.pathname === "/" ? "hover:text-green-500" : "hover:text-black";
 
   console.log(isLoggedIn);
+
+  const handleGetProduct = () => {
+    if(productStore.length >0)
+      dispatch(setNavProduct(productStore));
+  }
 
   return (
     <div className="relative flex justify-between items-center py-5 font-medium px-4 sm:px-[5vw] lg:px-[7vw]">
@@ -85,6 +91,7 @@ const Navbar = () => {
             <NavLink
               to={"/products"}
               className="flex flex-col items-center gap-1"
+              onClick={handleGetProduct}
             >
               <p className={`uppercase ${text_Color} ${text_hover}`}>
                 Sản phẩm
