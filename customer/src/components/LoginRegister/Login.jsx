@@ -26,15 +26,15 @@ function LoginForm() {
     setErrors(newErrors);
     if (Object.keys(newErrors).length > 0) return;
 
-    console.log(formData);
+    // console.log(formData);
 
     const response = await customerApi.login(formData);
-    console.log(response);
+    // console.log(response);
 
     if (response.status === "OK") {
       const { token, data } = response.data;
-      console.log("Token", token);
-      console.log(data);
+      // console.log("Token", token);
+      // console.log(data);
 
       dispatch(setLogin({ token, data }));
 
@@ -44,7 +44,7 @@ function LoginForm() {
   // localStorage.removeItem("token");
   //test
   const login = useSelector((state) => state.CustomerStore.customer);
-  console.log(login);
+  // console.log(login);
   // localStorage.setItem("ABC", login.token);
 
   return (
