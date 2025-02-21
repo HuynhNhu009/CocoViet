@@ -26,12 +26,7 @@ export const routes = [
       {
         path: "products",
         element: <Products />,
-        children:[
-          {
-            path: "product-details",
-            element: <ProductDetail/>,
-          },
-        ]
+
       },
       {
         path: "products/product-details/:productId",

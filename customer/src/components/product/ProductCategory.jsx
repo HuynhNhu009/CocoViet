@@ -49,7 +49,7 @@ const ProductCategory = () => {
                     }`}
                     onClick={() => handleClickCategory(item.categoryId)}
                 >
-                <p className="py-2 w-45 text-center cursor-pointer">
+                <p className="py-1 w-43 text-center cursor-pointer">
                         {item.categoryName}
                     </p>
                    
