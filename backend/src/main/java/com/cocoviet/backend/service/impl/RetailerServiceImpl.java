@@ -79,7 +79,7 @@ public class RetailerServiceImpl implements IRetailerService {
         AuthenticationDTO authenticationDTO = new AuthenticationDTO();
         authenticationDTO.setToken(token);
 
-        authenticationDTO.setData(iRetailerMapper.toRetailerDTO(retailer));
+        authenticationDTO.setInfo(iRetailerMapper.toRetailerDTO(retailer));
         return authenticationDTO ;
     }
 

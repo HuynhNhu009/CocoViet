@@ -9,7 +9,6 @@ import com.cocoviet.backend.models.request.UserLoginRequest;
 import com.cocoviet.backend.models.request.UserProfileRequest;
 import com.cocoviet.backend.repository.ICustomerRepository;
 import com.cocoviet.backend.service.ICustomerService;
-import com.cocoviet.backend.service.IFileUpload;
 import com.cocoviet.backend.utils.JwtToken;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +19,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -77,7 +75,7 @@ public class CustomerServiceImpl implements ICustomerService {
         AuthenticationDTO authenticationDTO = new AuthenticationDTO();
         authenticationDTO.setToken(token);
 
-        authenticationDTO.setData(iCustomerMapper.toCustomerDTO(customer));
+        authenticationDTO.setInfo(iCustomerMapper.toCustomerDTO(customer));
         return authenticationDTO ;
     }
 
