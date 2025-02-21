@@ -35,8 +35,13 @@ export const routes = [
         // ]
       },
       {
+<<<<<<< HEAD
         path: "productss/product-details/:productId",
         element: <ProductDetail />,
+=======
+        path: "products/product-details/:productId",
+        element: <ProductDetail/>,
+>>>>>>> 906907595db41e4b1935080de90a8c9c27eb2831
       },
     ],
   },

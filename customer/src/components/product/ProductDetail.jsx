@@ -2,10 +2,13 @@ import ProductSearch from "./ProductSearch";
 import ProductItem from "./ProductsItem";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 
 const Products = () => {
   const [product, setProducts] = useState([]);
   const response = useSelector((state) => state.ProductStore.productItem || []);
+
+  const { productId } = useParams();
 
   useEffect(() => {
     if (response != {}) {
