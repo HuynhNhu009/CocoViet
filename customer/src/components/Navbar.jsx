@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   ArrowLeftIcon,
   ArrowUpIcon,
@@ -14,6 +15,7 @@ const Navbar = () => {
   const sidebarRef = useRef(null);
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -43,6 +45,16 @@ const Navbar = () => {
     location.pathname === "/" ? "text-white" : "text-green-600";
   const text_hover =
     location.pathname === "/" ? "hover:text-green-500" : "hover:text-black";
+
+
+    const handleProductsClick = (event) => {
+      if (location.pathname === "/products") {
+        event.preventDefault(); // Ngăn chặn điều hướng mặc định
+        window.location.reload(); // Tải lại trang
+      } else {
+        navigate("/products"); // Điều hướng đến /products nếu chưa ở đó
+      }
+    };
 
   return (
     <div className="relative flex justify-between items-center py-5 font-medium px-4 sm:px-[5vw] lg:px-[7vw]">
@@ -77,11 +89,13 @@ const Navbar = () => {
             <NavLink
               to={"/products"}
               className="flex flex-col items-center gap-1"
+              onClick={handleProductsClick}
             >
-              <p className={`uppercase ${text_Color} ${text_hover}`}>
+              <p className={`uppercase ${text_Color} ${text_hover}`} >
                 Sản phẩm
               </p>
             </NavLink>
+            
             <NavLink to={"/about"} className="flex flex-col items-center gap-1">
               <p className={`uppercase ${text_Color} ${text_hover}`}>
                 Giới thiệu

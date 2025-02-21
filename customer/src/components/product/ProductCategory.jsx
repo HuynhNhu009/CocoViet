@@ -1,24 +1,22 @@
 import { useEffect, useState } from "react";
-import Search from "../Search";
 import { productAPI } from "../../services/productService";
 import { categoryAPI } from "../../services/categoryService";
-import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-
+import { useDispatch } from "react-redux";
 import { setProductStore } from "../../redux/productSlice";
+
 const ProductCategory = () => {
     const [products, setProducts] = useState([]);
-    const [categories, setCategogies] = useState([]);
+    const [categories, setCategories] = useState([]);
+    const [activeCategory, setActiveCategory] = useState(null); //activeve
     const dispatch = useDispatch();
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const categoriesResponse = await categoryAPI.getAllCategories();
-
-                if (categoriesResponse) setCategogies(categoriesResponse.data);
+                if (categoriesResponse) setCategories(categoriesResponse.data);
             } catch (error) {
-                console.error("Error fetching data:", error);
+                console.error("Error fetching categories:", error);
             }
         };
 
@@ -27,30 +25,33 @@ const ProductCategory = () => {
 
     const handleClickCategory = async (categoryId) => {
         try {
+            setActiveCategory(categoryId); //activeactive
             const findByCategoryId = await productAPI.getByCategoryId(categoryId);
             dispatch(setProductStore([]));
-            //imidiately 
             dispatch(setProductStore(findByCategoryId.data));
             setProducts(findByCategoryId.data);
-
         } catch (error) {
             console.error("Error fetching products by category:", error);
             setProducts([]);
         }
     };
-    console.log("getPro", products);
 
     return (
         <>
-            {categories.map((item, index) => (
+            {categories.map((item) => (
                 <div
                     key={item.categoryId}
-                    className="bg-[#77C27F] text-white rounded-sm shadow-md  "
+                    className={`rounded-sm mb-5 shadow-md cursor-pointer text-center transition-all duration-200 ${
+                        activeCategory === item.categoryId
+                            ? "bg-green-700 text-white font-bold" // active
+                            : "bg-[#77C27F] text-white hover:bg-green-600"
+                    }`}
                     onClick={() => handleClickCategory(item.categoryId)}
                 >
-                    <p className="py-2 w-45 text-center cursor-pointer">
+                <p className="py-2 w-45 text-center cursor-pointer">
                         {item.categoryName}
                     </p>
+                   
                 </div>
             ))}
         </>
