@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { productAPI } from "../../services/productService";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { motion } from "framer-motion"; 
+import { motion } from "framer-motion";
 import { useDispatch } from "react-redux";
 import { setProductStore } from "../../redux/productSlice";
 
@@ -24,74 +24,63 @@ const ProductItem = () => {
     fetchData();
   }, []);
 
-
   const handleNavigate = async (productId) => {
     try {
-        const findByProductId = await productAPI.getByProductId(productId);
-        console.log("get pro by id", findByProductId.data);
-        
-        dispatch(setProductStore(findByProductId.data));
-        setProducts(findByProductId.data);
+      const findByProductId = await productAPI.getByProductId(productId);
+      console.log("get pro by id", findByProductId.data);
 
-        console.log("test",products);
-        
+      dispatch(setProductStore(findByProductId.data));
+      setProducts(findByProductId.data);
+
+      console.log("test", products);
     } catch (error) {
-        console.error("Error fetching products by productId:", error);
-        setProducts([]);
+      console.error("Error fetching products by productId:", error);
+      setProducts([]);
     }
-
-
-        
     navigate("/product-details");
   };
 
-
-
-
-  console.log("new", products);
-  
-  
+  // console.log("new", products);
 
   return (
     <>
       {products.length > 0 ? (
         products.map((item, index) => (
           <motion.div
-              key={item.productId}
-              initial={{ opacity: 0, y: 20 }} // Bắt đầu từ dưới lên và mờ
-              animate={{ opacity: 1, y: 0 }} // Hiện rõ và lên vị trí ban đầu
-              exit={{ opacity: 0, y: -20 }} // Khi xoá thì trượt lên mờ dần
-              transition={{ duration: 0.5, ease: "easeOut" }} // Tốc độ hiệu ứng
+            key={item.productId}
+            initial={{ opacity: 0, y: 20 }} // Bắt đầu từ dưới lên và mờ
+            animate={{ opacity: 1, y: 0 }} // Hiện rõ và lên vị trí ban đầu
+            exit={{ opacity: 0, y: -20 }} // Khi xoá thì trượt lên mờ dần
+            transition={{ duration: 0.5, ease: "easeOut" }} // Tốc độ hiệu ứng
+          >
+            <ul
+              className="shadow-md transition-opacity duration-700 bg-[#77C27F] text-white rounded-2xl flex flex-col cursor-pointer"
+              onClick={() => handleNavigate(item.productId)}
             >
-              <ul
-                className="shadow-md transition-opacity duration-700 bg-[#77C27F] text-white rounded-2xl flex flex-col cursor-pointer"
-                onClick={() => handleNavigate(item.productId)}
-              >
-                <li>
-                  <img
-                    src="https://www.sunnzfood.co.nz/wp-content/uploads/2016/11/Coconut-Products-3.jpg"
-                    alt={`Image ${index + 1}`}
-                    className="w-full object-cover rounded-t-2xl"
-                  />
-                </li>
-                <div className="py-2 text-center">
-                  <li className="text-lg font-semibold">{item.productName}</li>
-                  {item.variants?.map((variant, vIndex) => (
-                    <li key={vIndex} className="font-light text-sm">
-                      {variant.price} VND
-                    </li>
-                  ))}
-                  <li className="font-extralight text-xs">{item.retailerName}</li>
-                </div>
-              </ul>
-            </motion.div>
+              <li>
+                <img
+                  src="https://www.sunnzfood.co.nz/wp-content/uploads/2016/11/Coconut-Products-3.jpg"
+                  alt={`Image ${index + 1}`}
+                  className="w-full object-cover rounded-t-2xl"
+                />
+              </li>
+              <div className="py-2 text-center">
+                <li className="text-lg font-semibold">{item.productName}</li>
+                {item.variants?.map((variant, vIndex) => (
+                  <li key={vIndex} className="font-light text-sm">
+                    {variant.price} VND
+                  </li>
+                ))}
+                <li className="font-extralight text-xs">{item.retailerName}</li>
+              </div>
+            </ul>
+          </motion.div>
         ))
       ) : (
         <p className="text-center text-gray-500">
           Không có sản phẩm nào trong danh mục này.
         </p>
       )}
-
     </>
   );
 };

@@ -1,14 +1,15 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { logout } from "../redux/customerSlice";
 import {
-  ArrowLeftIcon,
   ArrowUpIcon,
   Bars3Icon,
   MagnifyingGlassIcon,
   ShoppingBagIcon,
   UserCircleIcon,
 } from "@heroicons/react/24/outline";
+import { useDispatch, useSelector } from "react-redux";
 
 const Navbar = () => {
   const [visible, setVisible] = useState(false);
@@ -16,6 +17,9 @@ const Navbar = () => {
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const isLoggedIn = useSelector((state) => !!state.CustomerStore.isLogin);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -46,19 +50,10 @@ const Navbar = () => {
   const text_hover =
     location.pathname === "/" ? "hover:text-green-500" : "hover:text-black";
 
-
-    const handleProductsClick = (event) => {
-      if (location.pathname === "/products") {
-        event.preventDefault(); // Ngăn chặn điều hướng mặc định
-        window.location.reload(); // Tải lại trang
-      } else {
-        navigate("/products"); // Điều hướng đến /products nếu chưa ở đó
-      }
-    };
+  console.log(isLoggedIn);
 
   return (
     <div className="relative flex justify-between items-center py-5 font-medium px-4 sm:px-[5vw] lg:px-[7vw]">
-      {/* Logo */}
       <Link to={"/"}>
         <p className={`${text_Color} text-3xl lg:text-5xl sigmar-font`}>
           CocoViet
@@ -89,13 +84,12 @@ const Navbar = () => {
             <NavLink
               to={"/products"}
               className="flex flex-col items-center gap-1"
-              onClick={handleProductsClick}
             >
-              <p className={`uppercase ${text_Color} ${text_hover}`} >
+              <p className={`uppercase ${text_Color} ${text_hover}`}>
                 Sản phẩm
               </p>
             </NavLink>
-            
+
             <NavLink to={"/about"} className="flex flex-col items-center gap-1">
               <p className={`uppercase ${text_Color} ${text_hover}`}>
                 Giới thiệu
@@ -133,14 +127,17 @@ const Navbar = () => {
                 />
               </Link>
 
-              {isOpen && (
+              {isOpen && isLoggedIn && (
                 <div className="absolute dropdown-menu right-0 top-[16px] pt-4 z-30">
                   <div className="flex flex-col gap-2 w-36 px-5 py-3 bg-slate-100 text-gray-500 rounded shadow-lg">
                     <p className="cursor-pointer hover:text-green-600">
                       My Profile
                     </p>
                     <p className="cursor-pointer hover:text-green-600">Order</p>
-                    <p className="cursor-pointer hover:text-green-600">
+                    <p
+                      onClick={() => dispatch(logout())}
+                      className="cursor-pointer hover:text-green-600"
+                    >
                       Logout
                     </p>
                   </div>

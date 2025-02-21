@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   customer: {}, // Chứa thông tin khách hàng
+  isLogin: false,
   token: "", // Chứa JWT token
 };
 
@@ -13,6 +14,7 @@ const customerSlice = createSlice({
     setLogin: (state, action) => {
       const { token, data } = action.payload;
       // Lấy dữ liệu từ API trả về
+      state.isLogin = true;
       state.customer = data; // Lưu thông tin khách hàng
       state.token = token; // Lưu token vào Redux
       console.log("Redux -- Token", token);
@@ -21,13 +23,14 @@ const customerSlice = createSlice({
     },
     logout: (state) => {
       state.customer = {};
+      state.isLogin = false;
       state.token = "";
       localStorage.removeItem("token"); // Xóa token khi logout
     },
   },
 });
 
-export const { setLogin } = customerSlice.actions;
+export const { setLogin, logout } = customerSlice.actions;
 
 export const getInitialState = (state) => state.CustomerStore.initialState;
 
