@@ -35,13 +35,14 @@ const ProductCategory = () => {
             setProducts([]);
         }
     };
+    
 
     return (
         <>
             {categories.map((item) => (
                 <div
                     key={item.categoryId}
-                    className={`rounded-sm mb-5 shadow-md cursor-pointer text-center transition-all duration-200 ${
+                    className={`rounded-sm mb-5 shadow-md cursor-pointer text-center py-2 transition-all duration-200 ${
                         activeCategory === item.categoryId
                             ? "bg-green-700 text-white font-bold" // active
                             : "bg-[#77C27F] text-white hover:bg-green-600"

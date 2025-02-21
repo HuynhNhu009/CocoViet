@@ -6,43 +6,27 @@ const productSlice = createSlice({
   name: "ProductStore",
   initialState: {
     productStore: [],
+    productItem:{}
     
   },
 
   reducers: {
-    setProductStore: (state, action) => {
-      // state.productStore=[
-      //   {
-      //     productId: action.payload.productId,
-      //     productName: action.payload.productName,
-      //     productDesc: action.payload.productDesc,
-      //     productOrigin:action.payload.productOrigin,
-      //     categoryName: action.payload.categoryName,
-      //     retailerName: action.payload.retailerName,
-      //     variants:[
-      //       {
-      //         // initStock: action.payload.variants.initStock,
-      //         price:action.payload.price,
-      //         // stock:action.payload.variants.stock,
-      //         // unitName:action.payload.variants.unitName,
-      //         // value:action.payload.variants.value,
-      //         // variantId:action.payload.variants.variantId,
-      //       }
-      //     ]
-      //   }
-      // ]
-      
+    setProductStore: (state, action) => {    
       state.productStore = action.payload;
       
     },
     
+    setProductItem: (state, action) => {
+      state.productItem = action.payload;
+    }
   },
 });
 
 
 
 export const { 
-  setProductStore 
+  setProductStore,
+  setProductItem
 
 } = productSlice.actions;
 

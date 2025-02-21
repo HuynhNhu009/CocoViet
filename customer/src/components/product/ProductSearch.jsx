@@ -6,7 +6,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { setProductStore } from "./../../redux/productSlice";
 
 const ProductSearch = () => {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const [originalProducts, setOriginalProducts] = useState([]);
