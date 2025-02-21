@@ -4,22 +4,32 @@ import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-const Products = () => {
+const ProductDetail = () => {
   const [product, setProducts] = useState([]);
+<<<<<<< HEAD
   const response = useSelector((state) => state.ProductStore.productItem || []);
   const productStore = useSelector(
     (state) => state.ProductStore.productStore || []
   );
+=======
+  const productDetail = useSelector((state) => state.ProductStore.productDetail || []);
+  const productStore = useSelector((state) => state.ProductStore.productStore || []);
+>>>>>>> 1f33e8df8ff1abbecdaae699b038549af947a356
 
+  //api
   const { productId } = useParams();
 
   useEffect(() => {
-    if (response != {}) {
-      setProducts(response);
+    if (productDetail != {}) {
+      setProducts(productDetail);
     }
+<<<<<<< HEAD
   }, [response]);
 
   console.log("ok", productStore);
+=======
+  }, [productDetail]);
+>>>>>>> 1f33e8df8ff1abbecdaae699b038549af947a356
 
   return (
     <div className="  flex flex-col justify-center align-middle font-medium px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw] my-8">
@@ -74,11 +84,20 @@ const Products = () => {
         <h2>XEM THÊM</h2>
         <hr className="mb-5"></hr>
         <div className=" productItem flex align-middle grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6 m-0">
-          <ProductItem />
+          {productStore.slice(0, 4).map((item) => (
+              <ProductItem 
+                key={item.productId}  
+                productId={item.productId} 
+                productName={item.productName} 
+                retailerName={item.retailerName} 
+                variants={item.variants || []}
+                />
+            ))}
         </div>
       </div>
     </div>
   );
 };
 
-export default Products;
+
+export default ProductDetail;

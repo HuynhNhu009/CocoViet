@@ -1,6 +1,6 @@
 import ProductSearch from "./ProductSearch";
 import ProductCategory from "./ProductCategory";
-import ProductItem from "./ProductsItem";
+import ProductList from "./ProductList";
 
 const Products = () => {
   return (
@@ -14,7 +14,7 @@ const Products = () => {
       </div>
 
       <div className=" productItem flex  align-middle grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6 m-0">
-        <ProductItem />
+        <ProductList />
       </div>
     </div>
   );
