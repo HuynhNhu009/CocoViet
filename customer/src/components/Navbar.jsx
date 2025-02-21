@@ -20,6 +20,7 @@ const Navbar = () => {
   const dispatch = useDispatch();
 
   const isLoggedIn = useSelector((state) => !!state.CustomerStore.isLogin);
+  const customerInfo = useSelector((state) => state.CustomerStore.customer);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -113,7 +114,11 @@ const Navbar = () => {
               onMouseEnter={() => setIsOpen(true)}
               onMouseLeave={() => setIsOpen(false)}
             >
-              <Link to="/login">
+              <Link
+                to={
+                  !isLoggedIn ? "/login" : `/profile/${customerInfo.customerId}`
+                }
+              >
                 <UserCircleIcon
                   className={`cursor-pointer size-7 transition-all ${
                     location.pathname === "/"
@@ -130,7 +135,13 @@ const Navbar = () => {
               {isOpen && isLoggedIn && (
                 <div className="absolute dropdown-menu right-0 top-[16px] pt-4 z-30">
                   <div className="flex flex-col gap-2 w-36 px-5 py-3 bg-slate-100 text-gray-500 rounded shadow-lg">
-                    <p className="cursor-pointer hover:text-green-600">
+                    <p
+                      onClick={() => {
+                        console.log(customerInfo);
+                        navigate(`/profile/${customerInfo.customerId}`);
+                      }}
+                      className="cursor-pointer hover:text-green-600"
+                    >
                       My Profile
                     </p>
                     <p className="cursor-pointer hover:text-green-600">Order</p>

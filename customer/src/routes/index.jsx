@@ -6,6 +6,7 @@ import LoginForm from "../components/LoginRegister/Login";
 import Register from "../components/LoginRegister/Register";
 import ProductDetail from "../pages/Product/ProductDetail";
 import { path } from "framer-motion/client";
+import Profile from "../pages/Profile";
 
 export const routes = [
   {
@@ -33,6 +34,11 @@ export const routes = [
             element: <ProductDetail />,
           },
         ],
+      },
+
+      {
+        path: "profile/:profileId",
+        element: <Profile />,
       },
     ],
   },
