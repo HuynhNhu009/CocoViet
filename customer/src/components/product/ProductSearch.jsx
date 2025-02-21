@@ -1,8 +1,7 @@
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
-import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { productAPI } from "../../services/productService";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setProductStore } from "./../../redux/productSlice";
 
 const ProductSearch = () => {
@@ -27,12 +26,12 @@ const ProductSearch = () => {
 
     fetchData();
   }, [dispatch]);
-    
+
   //fomart ("DUA", "   xo   dua  ")
   const removeDiacritics = (str) => {
     return str
       .normalize("NFD") //để tách dấu
-      .replace(/[\u0300-\u036f]/g, "") // Xóa dấu 
+      .replace(/[\u0300-\u036f]/g, "") // Xóa dấu
       .replace(/\s+/g, " ") // khoảng trắng
       .trim()
       .toLowerCase();
@@ -40,10 +39,10 @@ const ProductSearch = () => {
 
   const handleSubmit = () => {
     if (!searchTerm.trim()) {
-      dispatch(setProducts(originalProducts)); 
+      dispatch(setProducts(originalProducts));
       return;
     }
-    
+
     const searchNormalized = removeDiacritics(searchTerm);
 
     const filteredProducts = originalProducts.filter(
@@ -54,10 +53,7 @@ const ProductSearch = () => {
 
     dispatch(setProductStore(filteredProducts));
     setOriginalProducts(products);
-    
   };
-
-  
 
   return (
     <div className="mb-10">

@@ -16,7 +16,6 @@ const Products = () => {
     }
   }, [response]);
 
-
   return (
     <div className="  flex flex-col justify-center align-middle font-medium px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw] my-8">
       <div className=" section-1">
@@ -64,14 +63,12 @@ const Products = () => {
       <div className="section-3flex justify-center space-x-8 flex-wrap mb-8 ">
         <h2>GIỚI THIỆU</h2>
         <hr className=""></hr>
-        <p className="font-light mx-auto text-center">
-          {product.productDesc}
-        </p>
+        <p className="font-light mx-auto text-center">{product.productDesc}</p>
       </div>
       <div className="section-4 ">
         <h2>XEM THÊM</h2>
         <hr className="mb-5"></hr>
-        <div className=" productItem flex  align-middle grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6 m-0">
+        <div className=" productItem flex align-middle grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6 m-0">
           <ProductItem />
         </div>
       </div>
