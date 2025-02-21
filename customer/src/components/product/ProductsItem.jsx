@@ -42,6 +42,9 @@ const ProductItem = () => {
       const findByProductId = await productAPI.getByProductId(productId);
       dispatch(setProductItem({}));
       dispatch(setProductItem(findByProductId.data));
+    
+      dispatch(setProductStore(products))
+
       setProducts(findByProductId.data);
     } catch (error) {
       console.error("Error fetching products by productId:", error);
@@ -49,12 +52,17 @@ const ProductItem = () => {
     }
   };
 
+  // console.log(products);
+  
+
+
+
   return (
     <>
       {products.length > 0 ? (
         products.map((item, index) => (
           <motion.div
-            key={item.productId}
+            key={index}
             initial={{ opacity: 0, y: 20 }} // Bắt đầu từ dưới lên và mờ
             animate={{ opacity: 1, y: 0 }} // Hiện rõ và lên vị trí ban đầu
             exit={{ opacity: 0, y: -20 }} // Khi xoá thì trượt lên mờ dần
