@@ -7,7 +7,9 @@ import { useParams } from "react-router-dom";
 const Products = () => {
   const [product, setProducts] = useState([]);
   const response = useSelector((state) => state.ProductStore.productItem || []);
-  const productStore = useSelector((state) => state.ProductStore.productStore || []);
+  const productStore = useSelector(
+    (state) => state.ProductStore.productStore || []
+  );
 
   const { productId } = useParams();
 
@@ -17,10 +19,7 @@ const Products = () => {
     }
   }, [response]);
 
-  console.log("ok",productStore);
-  
-
-
+  console.log("ok", productStore);
 
   return (
     <div className="  flex flex-col justify-center align-middle font-medium px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw] my-8">
@@ -44,7 +43,7 @@ const Products = () => {
           {product.variants?.map((variant, vIndex) => (
             <div key={vIndex}>
               <p className="text-green-600 font-bold text-4xl mb-5">
-                {variant.price} VND
+                {variant.price}.000 VND
               </p>
               <p className="text-lg font-extralight mb-5">
                 Còn lại: {variant.stock} sản phẩm

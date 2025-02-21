@@ -25,26 +25,26 @@ public class CustomerRequest {
 
     Long customerId; // ID của khách hàng, có thể null khi tạo mới
 
-    @NotBlank(message = "Customer name cannot be empty.")
-    @Size(min = 3, max = 50, message = "Customer name must be between 3 and 50 characters.")
+//    @NotBlank(message = "Customer name cannot be empty.")
+//    @Size(min = 3, max = 50, message = "Customer name must be between 3 and 50 characters.")
     String customerName;
 
-    @NotBlank(message = "Password cannot be empty.")
-    @Size(min = 8, message = "Password must be at least 8 characters.")
+//    @NotBlank(message = "Password cannot be empty.")
+//    @Size(min = 8, message = "Password must be at least 8 characters.")
     String customerPassword;
 
-    @NotBlank(message = "Email cannot be empty.")
-    @Email(message = "Invalid email format.")
+//    @NotBlank(message = "Email cannot be empty.")
+//    @Email(message = "Invalid email format.")
     String customerEmail;
 
-    @NotBlank(message = "Phone number cannot be empty.")
-    @Size(min = 10, max = 10, message = "Phone number must be exactly 10 digits.")
-    @Pattern(regexp = "\\d+", message = "Phone number must contain only digits.")
+//    @NotBlank(message = "Phone number cannot be empty.")
+//    @Size(min = 10, max = 10, message = "Phone number must be exactly 10 digits.")
+//    @Pattern(regexp = "\\d+", message = "Phone number must contain only digits.")
     String phoneNumbers;
 
     String customerAvatar; // avatar - nullable
 
-    @NotBlank(message = "Address cannot be empty.")
+//    @NotBlank(message = "Address cannot be empty.")
     String customerAddress;
 
     Date createdAt; // nullable

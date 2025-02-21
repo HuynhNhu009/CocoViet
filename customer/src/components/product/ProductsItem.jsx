@@ -42,8 +42,8 @@ const ProductItem = () => {
       const findByProductId = await productAPI.getByProductId(productId);
       dispatch(setProductItem({}));
       dispatch(setProductItem(findByProductId.data));
-    
-      dispatch(setProductStore(products))
+
+      dispatch(setProductStore(products));
 
       setProducts(findByProductId.data);
     } catch (error) {
@@ -53,9 +53,6 @@ const ProductItem = () => {
   };
 
   // console.log(products);
-  
-
-
 
   return (
     <>
@@ -83,7 +80,7 @@ const ProductItem = () => {
                 <li className="text-lg font-semibold">{item.productName}</li>
                 {item.variants?.map((variant, vIndex) => (
                   <li key={vIndex} className="font-light text-sm">
-                    {variant.price} VND
+                    {variant.price}.000 VND
                   </li>
                 ))}
                 <li className="font-extralight text-xs">{item.retailerName}</li>
@@ -97,7 +94,6 @@ const ProductItem = () => {
         </p>
       )}
       <Outlet />
-
     </>
   );
 };

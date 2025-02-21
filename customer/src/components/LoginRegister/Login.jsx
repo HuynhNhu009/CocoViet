@@ -26,26 +26,17 @@ function LoginForm() {
     setErrors(newErrors);
     if (Object.keys(newErrors).length > 0) return;
 
-    // console.log(formData);
-
     const response = await customerApi.login(formData);
-    // console.log(response);
 
     if (response.status === "OK") {
       const { token, data } = response.data;
-      // console.log("Token", token);
-      // console.log(data);
 
       dispatch(setLogin({ token, data }));
 
       navigate("/");
     }
   };
-  // localStorage.removeItem("token");
-  //test
   const login = useSelector((state) => state.CustomerStore.customer);
-  // console.log(login);
-  // localStorage.setItem("ABC", login.token);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen sm:min-h-0 flex-grow p-8 pb-20 mx-2 sm:py-10">

@@ -5,8 +5,8 @@ import { Navigate } from "react-router-dom";
 import LoginForm from "../components/LoginRegister/Login";
 import Register from "../components/LoginRegister/Register";
 import ProductDetail from "../pages/Product/ProductDetail";
-import { path } from "framer-motion/client";
 import Profile from "../pages/Profile";
+import Cart from "../pages/Cart";
 
 export const routes = [
   {
@@ -34,6 +34,10 @@ export const routes = [
         element: <ProductDetail />,
       },
 
+      {
+        path: "cart",
+        element: <Cart />,
+      },
       {
         path: "profile/:profileId",
         element: <Profile />,

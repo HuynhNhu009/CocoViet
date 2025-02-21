@@ -1,18 +1,24 @@
 import { useState } from "react";
+import api from "../../services/api/api";
+import { customerApi } from "../../services/customerService";
+import { useNavigate } from "react-router-dom";
 
 function RegisForm() {
   const [formData, setFormData] = useState({
     fullname: "",
     email: "",
     phoneNum: "",
-    gender: "",
-    dob: "",
-    password: "",
+    // gender: "",
+    // dob: "",
     confirmPassword: "",
+    password: "",
+    address: "",
     terms: false,
   });
 
   const [errors, setErrors] = useState({});
+  const navigate = useNavigate();
+  // let;
 
   const validateForm = () => {
     let newErrors = {};
@@ -28,15 +34,17 @@ function RegisForm() {
     if (!phoneRegex.test(formData.phoneNum))
       newErrors.phoneNum = "Số điện thoại không hợp lệ (9-11 chữ số).";
 
-    if (!formData.gender) newErrors.gender = "Vui lòng chọn giới tính.";
+    // if (!formData.gender) newErrors.gender = "Vui lòng chọn giới tính.";
 
-    if (!formData.dob) newErrors.dob = "Vui lòng chọn ngày sinh.";
+    // if (!formData.dob) newErrors.dob = "Vui lòng chọn ngày sinh.";
 
     if (formData.password.length < 8)
       newErrors.password = "Mật khẩu phải có ít nhất 8 ký tự.";
 
-    if (formData.password !== formData.confirmPassword)
+    if (formData.password !== confirmPassword)
       newErrors.confirmPassword = "Mật khẩu nhập lại không khớp.";
+
+    if (!formData.address) newErrors.address = "Địa chỉ không được để trống.";
 
     if (!formData.terms)
       newErrors.terms = "Bạn phải đồng ý với điều khoản dịch vụ.";
@@ -58,36 +66,20 @@ function RegisForm() {
     if (!validateForm()) return;
 
     try {
-      const response = await fetch("/abc", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
+      const response = await customerApi.register(formData);
+      console.log(response);
 
-      if (!response.ok) throw new Error("Có lỗi xảy ra khi gửi dữ liệu.");
-
-      alert("Đăng ký thành công!");
-      setFormData({
-        fullname: "",
-        email: "",
-        phoneNum: "",
-        gender: "",
-        dob: "",
-        password: "",
-        confirmPassword: "",
-        terms: false,
-      });
-      setErrors({});
+      navigate("/login");
     } catch (error) {
       console.error("Lỗi:", error);
-      alert("Đăng ký thất bại, vui lòng thử lại.");
+      // alert("Đăng ký thất bại, vui lòng thử lại.");
     }
   };
 
   return (
-<div className="flex-grow flex items-center justify-center mb-8">
-  <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-md sm:max-w-lg lg:max-w-xl  border border-gray-200">
-  <h2 className="text-green-700 text-3xl font-bold text-center mb-6">
+    <div className="flex-grow flex items-center justify-center mb-8">
+      <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-md sm:max-w-lg lg:max-w-xl  border border-gray-200">
+        <h2 className="text-green-700 text-3xl font-bold text-center mb-6">
           ĐĂNG KÝ
         </h2>
         <form onSubmit={handleSubmit}>
@@ -127,7 +119,7 @@ function RegisForm() {
             <span className="text-red-500 text-sm">{errors.phoneNum}</span>
           </div>
 
-          <div>
+          {/* <div>
             <label className="block mt-3 mb-1">Giới tính:</label>
             <div className="flex space-x-4 mb-1">
               {["Nam", "Nữ", "Khác"].map((gender) => (
@@ -145,19 +137,19 @@ function RegisForm() {
               ))}
             </div>
             <span className="text-red-500 text-sm">{errors.gender}</span>
-          </div>
+          </div> */}
 
-          <div>
+          {/* <div>
             <label className="block mt-3 mb-1">Ngày sinh:</label>
             <input
               name="dob"
-              type="date"
+              type="text"
               value={formData.dob}
               onChange={handleChange}
               className="w-full border rounded p-2 mb-1 bg-gray-100"
             />
             <span className="text-red-500 text-sm">{errors.dob}</span>
-          </div>
+          </div> */}
 
           <div>
             <label className="block mt-3 mb-1">Mật khẩu:</label>
@@ -183,6 +175,17 @@ function RegisForm() {
             <span className="text-red-500 text-sm">
               {errors.confirmPassword}
             </span>
+          </div>
+          <div>
+            <label className="block mt-3 mb-1">Nhập lại mật khẩu:</label>
+            <input
+              name="address"
+              type="text"
+              value={formData.address}
+              onChange={handleChange}
+              className="w-full border rounded p-2 mb-1 bg-gray-100"
+            />
+            <span className="text-red-500 text-sm">{errors.address}</span>
           </div>
 
           <div className="flex items-center mt-3 mb-4">

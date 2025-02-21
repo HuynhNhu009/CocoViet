@@ -6,6 +6,11 @@ export const customerApi = {
     return response.data;
   },
 
+  register: async (formData) => {
+    const response = await api.post("/customers/register", formData);
+    return response.data;
+  },
+
   getAllCustomers: async () => {
     const response = await api.get("/customers/get-all");
     return response.data;

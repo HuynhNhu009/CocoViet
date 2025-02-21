@@ -104,9 +104,9 @@ const Navbar = () => {
           </ul>
           <div className="flex items-center gap-6">
             {/* Icon tìm kiếm */}
-            <MagnifyingGlassIcon
+            {/* <MagnifyingGlassIcon
               className={`cursor-pointer size-7 ${text_Color} ${text_hover}`}
-            />
+            /> */}
 
             {/* User Dropdown */}
             <div
@@ -157,14 +157,16 @@ const Navbar = () => {
             </div>
 
             {/* Giỏ hàng */}
-            <Link to="/cart" className="relative">
-              <ShoppingBagIcon
-                className={`size-7 ${text_Color} ${text_hover}`}
-              />
-              <p className="absolute right-[-5px] bottom-[-5px] w-4 text-center leading-4 bg-black text-white rounded-full text-[8px]">
-                9{/* {getCartCount()} */}
-              </p>
-            </Link>
+            {isLoggedIn && (
+              <Link to="/cart" className="relative">
+                <ShoppingBagIcon
+                  className={`size-7 ${text_Color} ${text_hover}`}
+                />
+                <p className="absolute right-[-5px] bottom-[-5px] w-4 text-center leading-4 bg-black text-white rounded-full text-[8px]">
+                  9{/* {getCartCount()} */}
+                </p>
+              </Link>
+            )}
 
             {/* Sidebar menu button */}
             <Bars3Icon
