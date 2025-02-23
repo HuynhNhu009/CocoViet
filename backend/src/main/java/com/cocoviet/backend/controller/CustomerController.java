@@ -101,7 +101,6 @@ public class CustomerController {
                             .msg("User not authenticated: Invalid or expired token")
                             .status("UNAUTHORIZED")
                             .build());
-
         }
     }
 

@@ -17,7 +17,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -49,7 +51,7 @@ public class RetailerServiceImpl implements IRetailerService {
     public RetailerDTO registerRetailer(RetailerRequest retailerRequest) {
 
         if(iRetailerRepository.existsByRetailerEmail(retailerRequest.getRetailerEmail())) {
-            throw new RuntimeException( "Retailer already exists");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Retailer already exists");
         };
         RetailerEntity retailer = RetailerEntity.builder()
                 .retailerEmail(retailerRequest.getRetailerEmail())

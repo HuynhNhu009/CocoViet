@@ -2,11 +2,8 @@ import { useEffect, useState } from "react";
 import { productAPI } from "../../services/productService";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  setProductStore,
-  setProductDetail,
-} from "../../redux/productSlice";
-import ProductItem from "./ProductsItem";
+import { setProductStore, setProductDetail } from "../../redux/productSlice";
+import ProductItem from "./ProductItem";
 
 const ProductList = () => {
   const [products, setProducts] = useState([]);
@@ -25,7 +22,6 @@ const ProductList = () => {
     (state) => state.ProductStore.productSearch || []
   );
 
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -38,10 +34,9 @@ const ProductList = () => {
         console.error("Error fetching data:", error);
       }
     };
-    fetchData();  
+    fetchData();
   }, []);
 
-  
   useEffect(() => {
     if (productCategory.length > 0) {
       setProducts(productCategory);
@@ -64,7 +59,6 @@ const ProductList = () => {
 
   const handleNavigate = async (productId) => {
     try {
-
       navigate(`/product/${productId}`);
       const findByProductId = await productAPI.getByProductId(productId);
 

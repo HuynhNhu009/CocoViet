@@ -3,10 +3,10 @@ import AllRoute from "./components/AllRoute";
 import { useDispatch } from "react-redux";
 import { customerApi } from "./services/customerService";
 import { setLogin, logout } from "./redux/customerSlice";
-import { data } from "react-router-dom";
 
 function App() {
   const dispatch = useDispatch();
+  console.log();
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -18,15 +18,21 @@ function App() {
           dispatch(logout());
           window.location.href = "/login"; // Điều hướng tới login
         }
+      } catch (error) {}
+    };
+
+    const fetchData = async () => {
+      try {
+        const productResponse = await productAPI.getAllProducts();
+        if (productResponse && productResponse.data) {
+          setProducts(productResponse.data);
+          dispatch(setProductStore(productResponse.data));
+        }
       } catch (error) {
-        // console.log(
-        //   "Check auth failed:",
-        //   error.response?.data || error.message
-        // );
-        // dispatch(logout());
-        // window.location.href = "/login"; // Điều hướng nếu lỗi
+        console.error("Error fetching data:", error);
       }
     };
+    fetchData();
 
     checkAuth();
   }, [dispatch]);

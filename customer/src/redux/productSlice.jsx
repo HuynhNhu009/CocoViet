@@ -1,31 +1,26 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { productAPI } from "../services/productService";
 
-
-
 const productSlice = createSlice({
   name: "ProductStore",
   initialState: {
     productStore: [],
-    productDetail:{},
-    productCategory:[],
-    productSearch:[],
-    navProduct:[],
-    active:null,
-    
+    productDetail: {},
+    productCategory: [],
+    productSearch: [],
+    navProduct: [],
+    active: null,
   },
 
   reducers: {
-    setProductStore: (state, action) => {    
+    setProductStore: (state, action) => {
       state.productStore = action.payload;
-      
     },
-    setActive:(state, action) => {
+    setActive: (state, action) => {
       state.active = action.payload;
     },
-    setNavProduct: (state, action) => {    
+    setNavProduct: (state, action) => {
       state.navProduct = action.payload;
-      
     },
     setProductDetail: (state, action) => {
       state.productDetail = action.payload;
@@ -39,23 +34,20 @@ const productSlice = createSlice({
       state.productSearch = action.payload;
     },
 
-    setISClickProductNav:(state,action) => {
+    setISClickProductNav: (state, action) => {
       state.isClickProductNav = action.payload;
     },
   },
 });
 
-
-
-export const { 
+export const {
   setActive,
   setProductStore,
   setProductCategory,
   setProductSearch,
   setProductDetail,
   setISClickProductNav,
-  setNavProduct
-
+  setNavProduct,
 } = productSlice.actions;
 
 export const getInitialState = (state) => state.ProductStore.initialState;

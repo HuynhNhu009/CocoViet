@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 
@@ -26,12 +27,28 @@ public class RetailerController {
     @PostMapping("/register")
     ResponseEntity<ResponseData> registerRetailer(@RequestBody @Valid RetailerRequest retailerRequest){
 
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ResponseData.builder()
-                        .data(iRetailerService.registerRetailer(retailerRequest))
-                        .msg("Register success with email: " + retailerRequest.getRetailerEmail() )
-                        .status("OK")
-                        .build());
+//        return ResponseEntity.status(HttpStatus.CREATED)
+//                .body(ResponseData.builder()
+//                        .data(iRetailerService.registerRetailer(retailerRequest))
+//                        .msg("Register success with email: " + retailerRequest.getRetailerEmail() )
+//                        .status("OK")
+//                        .build());
+
+        try {
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(ResponseData.builder()
+                            .data(iRetailerService.registerRetailer(retailerRequest))
+                            .msg("Register success with email: " + retailerRequest.getRetailerEmail())
+                            .status("201") // HTTP 201 Created
+                            .build());
+        } catch (ResponseStatusException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(ResponseData.builder()
+                            .data(null)
+                            .msg(ex.getReason()) // "Retailer already exists"
+                            .status(String.valueOf(ex.getStatusCode().value())) // Đồng bộ với HTTP 400
+                            .build());
+        }
     }
 
     @PostMapping("/login")

@@ -1,5 +1,5 @@
 import ProductSearch from "./ProductSearch";
-import ProductItem from "./ProductsItem";
+import ProductItem from "./ProductItem";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -26,7 +26,9 @@ const ProductDetail = () => {
   return (
     <div className="  flex flex-col justify-center align-middle font-medium px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw] my-8">
       <div className="mb-5 text-sm ">
-        <h2 className=" text-white text-right ml-auto  bg-green-600 w-40 px-5">Chi tiết sản phẩm</h2>
+        <h2 className=" text-white text-right ml-auto  bg-green-600 w-40 px-5">
+          Chi tiết sản phẩm
+        </h2>
         <hr className="text-green-600"></hr>
       </div>
       <div className="section-2 mb-10 w-full flex justify-evenly- flex-row space-x-8 flex-wrap b-10">
