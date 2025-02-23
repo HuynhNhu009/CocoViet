@@ -70,13 +70,17 @@ public class CustomerServiceImpl implements ICustomerService {
 
         if(!result)
             throw new RuntimeException("Password incorrect!");
-        var token = jwtToken.generateToken(customer.getCustomerEmail());
 
-        AuthenticationDTO authenticationDTO = new AuthenticationDTO();
-        authenticationDTO.setToken(token);
 
-        authenticationDTO.setInfo(iCustomerMapper.toCustomerDTO(customer));
-        return authenticationDTO ;
+        String token = jwtToken.generateToken(customer.getCustomerEmail());
+        return new AuthenticationDTO(token, iCustomerMapper.toCustomerDTO(customer));
+//        var token = jwtToken.generateToken(customer.getCustomerEmail());
+//
+//        AuthenticationDTO authenticationDTO = new AuthenticationDTO();
+//        authenticationDTO.setToken(token);
+//
+//        authenticationDTO.setInfo(iCustomerMapper.toCustomerDTO(customer));
+//        return authenticationDTO ;
     }
 
        @Override
@@ -99,6 +103,14 @@ public class CustomerServiceImpl implements ICustomerService {
                 .orElseThrow(() -> new RuntimeException("Customer not found"));
         return iCustomerMapper.toCustomerDTO(customer);
     }
+
+    @Override
+    public CustomerDTO getCustomerByEmail(String customerEmail) {
+        CustomerEntity customer = iCustomerRepository.findByCustomerEmail(customerEmail)
+                .orElseThrow(() -> new RuntimeException("Customer not found"));
+        return iCustomerMapper.toCustomerDTO(customer);
+    }
+
 
     @Override
     public List<CustomerDTO> getAllCustomers() {

@@ -11,6 +11,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { useDispatch, useSelector } from "react-redux";
 import { setNavProduct } from "../redux/productSlice";
+import { customerApi } from "../services/customerService";
 
 const Navbar = () => {
   const [visible, setVisible] = useState(false);
@@ -55,9 +56,24 @@ const Navbar = () => {
   console.log(isLoggedIn);
 
   const handleGetProduct = () => {
-    if(productStore.length >0)
-      dispatch(setNavProduct(productStore));
-  }
+    if (productStore.length > 0) dispatch(setNavProduct(productStore));
+  };
+
+  const handleLogout = async () => {
+    try {
+      const response = await customerApi.logout();
+      // console.log(response); // { msg: "Logged out successfully", status: "OK" }
+      if (response.status === "OK") {
+        dispatch(logout()); // Cập nhật state Redux
+        navigate("/login");
+      }
+    } catch (error) {
+      console.error(
+        "Đăng xuất thất bại:",
+        error.response?.data || error.message
+      );
+    }
+  };
 
   return (
     <div className="relative flex justify-between items-center py-5 font-medium px-4 sm:px-[5vw] lg:px-[7vw]">
@@ -153,7 +169,7 @@ const Navbar = () => {
                     </p>
                     <p className="cursor-pointer hover:text-green-600">Order</p>
                     <p
-                      onClick={() => dispatch(logout())}
+                      onClick={() => handleLogout()}
                       className="cursor-pointer hover:text-green-600"
                     >
                       Logout

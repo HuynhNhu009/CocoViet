@@ -5,16 +5,11 @@ const API_BASE_URL = "http://localhost:8082/api";
 const api = axios.create({
   baseURL: API_BASE_URL,
   headers: { "Content-Type": "application/json" },
+  withCredentials: true, // ✅ Cho phép gửi cookie qua request
 });
 
-// 🛠️ Tự động thêm token vào request
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem("token");
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-});
+// 🛠️ Xóa interceptor request vì không cần token nữa
+// api.interceptors.request.use((config) => {});
 
 // 🛠️ Xử lý lỗi từ response
 api.interceptors.response.use(

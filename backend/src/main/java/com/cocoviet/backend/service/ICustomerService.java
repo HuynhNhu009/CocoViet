@@ -15,4 +15,5 @@ public interface ICustomerService {
     CustomerDTO updateCustomerProfile(String customerId, UserProfileRequest customerRequest);
     CustomerDTO getCustomer(String customerId);
     List<CustomerDTO> getAllCustomers();
+    CustomerDTO getCustomerByEmail(String customerEmail);
 }

@@ -2,12 +2,16 @@ import api from "./api/api";
 
 export const productAPI = {
   getAllProducts: async () => {
-    const response = await api.get("/products/get-all");
+    const response = await api.get("/products/get-all", {
+      withCredentials: true,
+    });
     return response.data;
   },
 
   getByCategoryId: async (categoryId) => {
-    const response = await api.get(`/products/category/${categoryId}`);
+    const response = await api.get(`/products/category/${categoryId}`, {
+      withCredentials: true,
+    });
     return response.data;
   },
 

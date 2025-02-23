@@ -1,9 +1,33 @@
 import api from "./api/api";
+import { setLogin } from "../redux/customerSlice";
 
 export const customerApi = {
-  login: async (formData) => {
-    const response = await api.post("/customers/login", formData);
+  loginUser: (formData) => async (dispatch) => {
+    try {
+      const response = await api.post("/customers/login", formData, {
+        withCredentials: true,
+      });
+      console.log(response.data);
+      dispatch(setLogin(response.data)); // Lưu vào Redux
+
+      return response.data;
+    } catch (error) {
+      console.error("Login failed:", error);
+    }
+  },
+
+  checkAuth: async () => {
+    const response = await api.get("/customers/check", {
+      withCredentials: true,
+    });
     return response.data;
+  },
+
+  logout: async () => {
+    const response = await api.post("/customers/logout", {
+      withCredentials: true,
+    });
+    return response.data; // { msg: "Logged out successfully", status: "OK" }
   },
 
   register: async (formData) => {
