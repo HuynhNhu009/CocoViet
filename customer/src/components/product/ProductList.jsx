@@ -2,12 +2,11 @@ import { useEffect, useState } from "react";
 import { productAPI } from "../../services/productService";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { setProductStore, setProductDetail } from "../../redux/productSlice";
+import { setProductDetail, setIsNav } from "../../redux/productSlice";
 import ProductItem from "./ProductItem";
 
 const ProductList = () => {
   const [products, setProducts] = useState([]);
-  const [toStore, setToStore] = useState([]);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -15,27 +14,27 @@ const ProductList = () => {
   const productCategory = useSelector(
     (state) => state.ProductStore.productCategory || []
   );
-  const navProduct = useSelector(
-    (state) => state.ProductStore.navProduct || []
-  );
+
   const productSearch = useSelector(
-    (state) => state.ProductStore.productSearch || []
+    (state) => state.ProductStore.productSearch 
+  );
+  const ProductStore = useSelector(
+    (state) => state.ProductStore.productStore
+  );
+  const isNav = useSelector(
+    (state) => state.ProductStore.isNav
   );
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const productResponse = await productAPI.getAllProducts();
-        if (productResponse && productResponse.data) {
-          setProducts(productResponse.data);
-          dispatch(setProductStore(productResponse.data));
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-    fetchData();
-  }, []);
+    if (ProductStore.length > 0) {
+      setProducts(ProductStore);      
+    }
+  }, [ProductStore]);
+
+  useEffect(() => {
+      setProducts(ProductStore);
+      dispatch(setIsNav(null));
+  }, [isNav]);
 
   useEffect(() => {
     if (productCategory.length > 0) {
@@ -49,13 +48,6 @@ const ProductList = () => {
     }
   }, [productSearch]);
 
-  useEffect(() => {
-    if (navProduct.length > 0) {
-      setProducts(navProduct);
-      setToStore([...navProduct]);
-      dispatch(setProductStore(toStore));
-    }
-  }, [navProduct]);
 
   const handleNavigate = async (productId) => {
     try {

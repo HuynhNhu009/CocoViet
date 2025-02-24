@@ -14,6 +14,8 @@ const ProductSearch = () => {
 
   useEffect(() => {
     setProducts(productStore);
+    console.log(productStore);
+    
   }, [productStore]);
 
   const removeDiacritics = (str) => {
@@ -47,7 +49,7 @@ const ProductSearch = () => {
   };
 
   const handleBlur = () => {
-    setTimeout(() => setSearchTerm(""), 1000); // Đợi 200ms trước khi xóa
+    setTimeout(() => setSearchTerm(""), 1000); 
   };
   
 
