@@ -1,12 +1,14 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import AllRoute from "./components/AllRoute";
 import { useDispatch } from "react-redux";
 import { customerApi } from "./services/customerService";
 import { setLogin, logout } from "./redux/customerSlice";
-
+import { setProductStore } from "./redux/productSlice";
+import { productAPI } from "./services/productService";
 function App() {
   const dispatch = useDispatch();
-  console.log();
+  // const [products, setProducts] = useState([]);
+  
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -21,11 +23,12 @@ function App() {
       } catch (error) {}
     };
 
+    
     const fetchData = async () => {
       try {
         const productResponse = await productAPI.getAllProducts();
         if (productResponse && productResponse.data) {
-          setProducts(productResponse.data);
+          // setProducts(productResponse.data);
           dispatch(setProductStore(productResponse.data));
         }
       } catch (error) {

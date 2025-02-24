@@ -21,22 +21,17 @@ const ProductList = () => {
   const productSearch = useSelector(
     (state) => state.ProductStore.productSearch || []
   );
+  const ProductStore = useSelector(
+    (state) => state.ProductStore.productStore || []
+  );
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const productResponse = await productAPI.getAllProducts();
-        if (productResponse && productResponse.data) {
-          setProducts(productResponse.data);
-          dispatch(setProductStore(productResponse.data));
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-    fetchData();
-  }, []);
-
+    if (ProductStore.length > 0) {
+      setProducts(ProductStore);
+      setToStore([...ProductStore]);
+    }
+  }, [ProductStore]);
+  
   useEffect(() => {
     if (productCategory.length > 0) {
       setProducts(productCategory);

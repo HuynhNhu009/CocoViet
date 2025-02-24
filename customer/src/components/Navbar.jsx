@@ -12,6 +12,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { setNavProduct } from "../redux/productSlice";
 import { customerApi } from "../services/customerService";
+import { setActive } from "../redux/productSlice";
 
 const Navbar = () => {
   const [visible, setVisible] = useState(false);
@@ -56,7 +57,8 @@ const Navbar = () => {
   console.log(isLoggedIn);
 
   const handleGetProduct = () => {
-    if (productStore.length > 0) dispatch(setNavProduct(productStore));
+    if (productStore.length > 0) 
+      dispatch(setNavProduct(productStore));
   };
 
   const handleLogout = async () => {
@@ -108,6 +110,7 @@ const Navbar = () => {
               to={"/products"}
               className="flex flex-col items-center gap-1"
               onClick={handleGetProduct}
+              onFocus={() => dispatch(setActive(null))} 
             >
               <p className={`uppercase ${text_Color} ${text_hover}`}>
                 Sản phẩm
