@@ -7,6 +7,7 @@ import Register from "../components/LoginRegister/Register";
 import ProductDetail from "../pages/Product/ProductDetail";
 import Profile from "../pages/Profile";
 import Cart from "../pages/Cart";
+import About from "../pages/About";
 
 export const routes = [
   {
@@ -42,6 +43,10 @@ export const routes = [
         path: "profile/:profileId",
         element: <Profile />,
       },
+      {
+        path: "about",
+        element: <About></About>
+      }
     ],
   },
   {
