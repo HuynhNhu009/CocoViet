@@ -10,9 +10,8 @@ import {
   UserCircleIcon,
 } from "@heroicons/react/24/outline";
 import { useDispatch, useSelector } from "react-redux";
-import { setNavProduct } from "../redux/productSlice";
 import { customerApi } from "../services/customerService";
-import { setActive } from "../redux/productSlice";
+import { setActive, setIsNav } from "../redux/productSlice";
 
 const Navbar = () => {
   const [visible, setVisible] = useState(false);
@@ -24,7 +23,6 @@ const Navbar = () => {
 
   const isLoggedIn = useSelector((state) => !!state.CustomerStore.isLogin);
   const customerInfo = useSelector((state) => state.CustomerStore.customer);
-  const productStore = useSelector((state) => state.ProductStore.productStore);
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
@@ -54,12 +52,7 @@ const Navbar = () => {
   const text_hover =
     location.pathname === "/" ? "hover:text-green-500" : "hover:text-black";
 
-  console.log(isLoggedIn);
-
-  const handleGetProduct = () => {
-    if (productStore.length > 0) 
-      dispatch(setNavProduct(productStore));
-  };
+  console.log("isLoggedIn", isLoggedIn);
 
   const handleLogout = async () => {
     try {
@@ -109,8 +102,10 @@ const Navbar = () => {
             <NavLink
               to={"/products"}
               className="flex flex-col items-center gap-1"
-              onClick={handleGetProduct}
-              onFocus={() => dispatch(setActive(null))} 
+              onFocus={() => {
+                dispatch(setActive(null));
+                dispatch(setIsNav("true"));
+              }}
             >
               <p className={`uppercase ${text_Color} ${text_hover}`}>
                 Sản phẩm

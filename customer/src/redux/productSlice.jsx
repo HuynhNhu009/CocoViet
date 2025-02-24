@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { productAPI } from "../services/productService";
 
 const productSlice = createSlice({
   name: "ProductStore",
@@ -8,8 +7,8 @@ const productSlice = createSlice({
     productDetail: {},
     productCategory: [],
     productSearch: [],
-    navProduct: [],
     active: null,
+    isNav: null, 
   },
 
   reducers: {
@@ -19,9 +18,10 @@ const productSlice = createSlice({
     setActive: (state, action) => {
       state.active = action.payload;
     },
-    setNavProduct: (state, action) => {
-      state.navProduct = action.payload;
+    setIsNav: (state, action) => {
+      state.isNav = action.payload;
     },
+
     setProductDetail: (state, action) => {
       state.productDetail = action.payload;
     },
@@ -47,9 +47,9 @@ export const {
   setProductSearch,
   setProductDetail,
   setISClickProductNav,
-  setNavProduct,
+  setIsNav,
 } = productSlice.actions;
 
-export const getInitialState = (state) => state.ProductStore.initialState;
+// export const getInitialState = (state) => state.ProductStore.initialState;
 
 export default productSlice.reducer;
