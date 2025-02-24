@@ -1,11 +1,14 @@
 import ProductSearch from "./ProductSearch";
 import ProductItem from "./ProductItem";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-
+import { setProductDetail } from "../../redux/productSlice";
+import { useNavigate } from "react-router-dom";
 const ProductDetail = () => {
   const [product, setProducts] = useState([]);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const productDetail = useSelector(
     (state) => state.ProductStore.productDetail || []
@@ -22,6 +25,23 @@ const ProductDetail = () => {
       setProducts(productDetail);
     }
   }, [productDetail]);
+
+  //detail
+  const handleNavigate = (productId) => {
+    const findByProductId = productStore.find(
+      (item) => item.productId === productId
+    );
+
+    if (findByProductId) {
+      dispatch(setProductDetail({}));
+      dispatch(setProductDetail(findByProductId));
+      setProducts(findByProductId);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } else {
+      console.log("Product not found!");
+      setProducts([]);
+    }
+  };
 
   return (
     <div className="  flex flex-col justify-center align-middle font-medium px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw] my-8">
@@ -79,13 +99,16 @@ const ProductDetail = () => {
         <hr className="mb-5"></hr>
         <div className=" productItem flex align-middle grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6 m-0">
           {productStore.slice(0, 4).map((item) => (
-            <ProductItem
-              key={item.productId}
-              productId={item.productId}
-              productName={item.productName}
-              retailerName={item.retailerName}
-              variants={item.variants || []}
-            />
+            <div key={item.productId}
+                onClick={() => handleNavigate(item.productId)}
+            >
+              <ProductItem
+                productId={item.productId}
+                productName={item.productName}
+                retailerName={item.retailerName}
+                variants={item.variants || []}
+              />
+            </div>
           ))}
         </div>
       </div>
