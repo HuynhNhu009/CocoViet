@@ -5,7 +5,7 @@ const AboutInfor = () => {
     return (
         <div
             className="w-full bg-cover bg-fixed bg-center text-white py-16 px-8 flex flex-col items-center  lg:h-[750px]"
-            style={{ backgroundImage: `url(${assets.coconutField})` }}>
+            style={{ backgroundImage: `url(${assets.coconutFieldAb})` }}>
             
                 <h2 className="lg:w-[80%] lg:text-5xl text-2xl text-white text-left font-bold ">Kết nối những giá trị thuần túy...</h2>
                 <p className="mt-6 max-w-5xl lg:text-3xl text-lg leading-normal text-white text-left">
