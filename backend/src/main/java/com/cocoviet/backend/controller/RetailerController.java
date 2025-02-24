@@ -1,5 +1,6 @@
 package com.cocoviet.backend.controller;
 
+import com.cocoviet.backend.models.dto.AuthenticationDTO;
 import com.cocoviet.backend.models.reponse.ResponseData;
 import com.cocoviet.backend.models.request.CustomerRequest;
 import com.cocoviet.backend.models.request.RetailerRequest;
@@ -7,6 +8,8 @@ import com.cocoviet.backend.models.request.UserLoginRequest;
 import com.cocoviet.backend.models.request.UserProfileRequest;
 import com.cocoviet.backend.service.ICustomerService;
 import com.cocoviet.backend.service.IRetailerService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,14 +29,6 @@ public class RetailerController {
 
     @PostMapping("/register")
     ResponseEntity<ResponseData> registerRetailer(@RequestBody @Valid RetailerRequest retailerRequest){
-
-//        return ResponseEntity.status(HttpStatus.CREATED)
-//                .body(ResponseData.builder()
-//                        .data(iRetailerService.registerRetailer(retailerRequest))
-//                        .msg("Register success with email: " + retailerRequest.getRetailerEmail() )
-//                        .status("OK")
-//                        .build());
-
         try {
             return ResponseEntity.status(HttpStatus.CREATED)
                     .body(ResponseData.builder()
@@ -52,11 +47,18 @@ public class RetailerController {
     }
 
     @PostMapping("/login")
-    ResponseEntity<ResponseData> loginRetailer(@RequestBody @Valid UserLoginRequest retailerRequest) {
+    ResponseEntity<ResponseData> loginRetailer(@RequestBody @Valid UserLoginRequest retailerRequest, HttpServletResponse response) {
+        AuthenticationDTO data = iRetailerService.loginRetailer(retailerRequest);
+        Cookie jwtCookie = new Cookie("jwtRetailer", data.getToken());
+        jwtCookie.setHttpOnly(true);
+        jwtCookie.setSecure(false);
+        jwtCookie.setPath("/");
+        jwtCookie.setMaxAge(24 * 60 * 60);
+        response.addCookie(jwtCookie);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ResponseData.builder()
-                        .data(iRetailerService.loginRetailer(retailerRequest))
+                        .data(data.getInfo())
                         .msg("Login success with email: " + retailerRequest.getEmail())
                         .status("OK")
                         .build());

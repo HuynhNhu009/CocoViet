@@ -95,8 +95,8 @@ const Register = () => {
 
   // Giao diện Form đăng ký
   const renderForm = () => (
-    <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
-      <h2 className="text-2xl uppercase font-bold text-center text-gray-800 mb-6 oswald-font">
+    <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md ">
+      <h2 className="text-2xl uppercase font-bold text-center text-gray-800 mb-6 oswald-font ">
         Đăng ký làm nhà bán lẻ
       </h2>
       {errors.general && (
@@ -292,7 +292,7 @@ const Register = () => {
   );
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+    <div className="h-[90vh] mb-30 flex items-center justify-center bg-gray-100">
       {step === "form" && renderForm()}
       {step === "preparing" && renderPreparing()}
       {step === "success" && renderSuccess()}

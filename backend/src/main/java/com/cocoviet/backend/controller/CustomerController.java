@@ -95,12 +95,22 @@ public class CustomerController {
                             .status("OK")
                             .build());
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body(ResponseData.builder()
-                            .data(null)
-                            .msg("User not authenticated: Invalid or expired token")
-                            .status("UNAUTHORIZED")
-                            .build());
+            String errorMsg = e.getMessage();
+            if ("Token is invalid or expired".equals(errorMsg)) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED) // 401
+                        .body(ResponseData.builder()
+                                .data(null)
+                                .msg("Token is invalid or expired")
+                                .status("401")
+                                .build());
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST) // 400 cho lỗi khác
+                        .body(ResponseData.builder()
+                                .data(null)
+                                .msg("Invalid token")
+                                .status("400")
+                                .build());
+            }
         }
     }
 

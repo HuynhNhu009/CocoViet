@@ -72,17 +72,19 @@ public class RetailerServiceImpl implements IRetailerService {
         RetailerEntity retailer =  iRetailerRepository.findByRetailerEmail(userLoginRequest.getEmail())
                 .orElseThrow(() -> new RuntimeException("Retailer not found"));
 
-        boolean result = passwordEncoderUtil.passwordEncoder().matches(userLoginRequest.getPassword(),retailer.getRetailerPassword());
+        boolean result = passwordEncoderUtil.passwordEncoder().matches(userLoginRequest.getPassword(), retailer.getRetailerPassword());
 
         if(!result)
             throw new RuntimeException("Password incorrect!");
-        var token = jwtToken.generateToken(retailer.getRetailerEmail());
 
-        AuthenticationDTO authenticationDTO = new AuthenticationDTO();
-        authenticationDTO.setToken(token);
+        String token = jwtToken.generateToken(retailer.getRetailerEmail());
 
-        authenticationDTO.setInfo(iRetailerMapper.toRetailerDTO(retailer));
-        return authenticationDTO ;
+//        AuthenticationDTO authenticationDTO = new AuthenticationDTO();
+//        authenticationDTO.setToken(token);
+//
+//        authenticationDTO.setInfo(iRetailerMapper.toRetailerDTO(retailer));
+//        return authenticationDTO ;
+        return new AuthenticationDTO(token, iRetailerMapper.toRetailerDTO(retailer));
     }
 
     @Override
