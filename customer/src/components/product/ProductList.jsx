@@ -48,19 +48,19 @@ const ProductList = () => {
     }
   }, [productSearch]);
 
-
-  const handleNavigate = async (productId) => {
-    try {
-      navigate(`/product/${productId}`);
-      const findByProductId = await productAPI.getByProductId(productId);
-
+  const handleNavigate = (productId) => {
+      const findByProductId = ProductStore.find((item) => item.productId === productId);
+    
+      if(findByProductId){
       dispatch(setProductDetail({}));
-      dispatch(setProductDetail(findByProductId.data));
-      setProducts(findByProductId.data);
-    } catch (error) {
-      console.error("Error fetching products by productId:", error);
+      dispatch(setProductDetail(findByProductId));
+      setProducts(findByProductId);
+      navigate(`/product/${productId}`);
+
+      }else{
+        console.log("Product not found!");
       setProducts([]);
-    }
+      }    
   };
 
   return (
