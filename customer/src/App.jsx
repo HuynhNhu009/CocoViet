@@ -16,7 +16,7 @@ function App() {
           dispatch(setLogin(response.data));
         } else if (response.data.status === "UNAUTHORIZED") {
           dispatch(logout());
-          window.location.href = "/login"; // Điều hướng tới login
+          window.location.href = "/login";
         }
       } catch (error) {}
     };

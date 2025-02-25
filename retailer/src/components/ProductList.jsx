@@ -1,7 +1,10 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import { PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
 
-const ProductList = ({ products }) => {
+const ProductList = () => {
+  const products = useSelector((state) => state.RetailerStore.products);
+
   if (!products.length) {
     return (
       <div className="text-center py-4 text-gray-600">
@@ -21,9 +24,9 @@ const ProductList = ({ products }) => {
             <img
               src={product.productImage}
               alt={product.productName}
-              className="w-full h-40 object-cover mb-2"
+              className="w-full h-40 object-cover mb-2 rounded-md"
             />
-            <p className="font-medium">{product.productName}</p>
+            <p className="font-medium text-gray-800">{product.productName}</p>
             <p className="text-gray-600 text-sm">
               Mô tả: {product.productDesc || "Chưa có"}
             </p>
@@ -41,10 +44,10 @@ const ProductList = ({ products }) => {
                 Object.entries(product.variantsByCategory).map(
                   ([category, variants]) => (
                     <div key={category} className="mt-1">
-                      <p className="font-medium">{category}:</p>
+                      <p className="font-medium text-gray-700">{category}:</p>
                       <ul className="list-disc pl-4">
                         {variants.map((variant, index) => (
-                          <li key={index}>
+                          <li key={index} className="text-gray-600">
                             {variant.value} {variant.unit} - {variant.price}đ
                             (Tồn: {variant.initStock})
                           </li>

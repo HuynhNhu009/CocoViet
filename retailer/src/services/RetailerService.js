@@ -5,6 +5,7 @@ export const retailerApi = {
     const response = await api.post("/retailers/register", formData);
     return response.data;
   },
+
   login: async (formData) => {
     const response = await api.post("/retailers/login", formData);
     return response.data;

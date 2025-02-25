@@ -44,30 +44,27 @@ const Login = () => {
     }
 
     try {
-      setStep("preparing"); // Chuyển sang "Đang xử lý"
-      // Gọi API login
+      setStep("preparing");
       console.log(formData);
       const responseData = await retailerApi.login({
         email: formData.email,
         password: formData.password,
       });
       console.log("API response:", responseData);
-      setStep("success"); // Chuyển sang "Thành công"
+      setStep("success");
       setFormData({
         email: "",
         password: "",
       });
       setErrors({});
     } catch (err) {
-      // Xử lý lỗi từ API
       const errorMessage =
         err.response?.data?.msg || "Email hoặc mật khẩu không đúng!";
-      setErrors({ general: errorMessage }); // Hiển thị lỗi chung
-      setStep("form"); // Quay lại form nếu có lỗi
+      setErrors({ general: errorMessage });
+      setStep("form");
     }
   };
 
-  // Giao diện Form đăng nhập
   const renderForm = () => (
     <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md  mb-50">
       <h2 className="text-2xl uppercase font-bold text-center text-gray-800 mb-6 oswald-font">
@@ -140,7 +137,6 @@ const Login = () => {
     </div>
   );
 
-  // Giao diện Đang xử lý
   const renderPreparing = () => (
     <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md text-center">
       <h2 className="text-2xl font-bold text-gray-800 mb-4 oswald-font">
@@ -153,7 +149,6 @@ const Login = () => {
     </div>
   );
 
-  // Giao diện Thành công
   const renderSuccess = () => (
     <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md text-center">
       <h2 className="text-2xl font-bold text-green-600 mb-4 oswald-font">
@@ -161,7 +156,7 @@ const Login = () => {
       </h2>
       <p className="text-gray-600 mb-4">Chào mừng bạn trở lại hệ thống!</p>
       <a
-        href="/dashboard" // Thay bằng route thực tế sau đăng nhập
+        href="/dashboard"
         className="inline-block bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
       >
         Vào trang chính

@@ -185,7 +185,7 @@ const AddProductForm = ({ onAddProduct, initialCategories = [] }) => {
         onSubmit={handleAddProduct}
         className="space-y-6 lg:grid lg:grid-cols-2 lg:gap-6 lg:space-y-0"
       >
-        {/* Cột 1: Thông tin sản phẩm */}
+        {/* Thông tin sản phẩm */}
         <div className="space-y-6">
           <div className="relative">
             <label className="block text-sm font-medium text-gray-700">
@@ -243,7 +243,7 @@ const AddProductForm = ({ onAddProduct, initialCategories = [] }) => {
           </div>
         </div>
 
-        {/* Cột 2: Danh mục và Loại */}
+        {/* Danh mục và Loại */}
         <div className="space-y-6">
           {/* Chọn và thêm danh mục */}
           <div className="space-y-2">
@@ -342,7 +342,7 @@ const AddProductForm = ({ onAddProduct, initialCategories = [] }) => {
                 Vui lòng chọn ít nhất một danh mục trước khi thêm loại.
               </p>
             )}
-            {/* Form inline thêm variant - Không có dropdown */}
+            {/* Form inline thêm variant */}
             {isAddingVariantInline && (
               <div className="hidden lg:grid lg:grid-cols-4 lg:gap-2 mt-2">
                 <input
@@ -407,11 +407,12 @@ const AddProductForm = ({ onAddProduct, initialCategories = [] }) => {
               </div>
             )}
             {/* Danh sách variant */}
-            <div className="max-h-40 overflow-y-auto border border-gray-300 rounded-md p-2">
-              {Object.keys(newProduct.variantsByCategory).length === 0 ? (
-                <p className="text-gray-500 text-sm">Chưa có loại nào.</p>
-              ) : (
-                Object.entries(newProduct.variantsByCategory).map(
+            {Object.keys(newProduct.variantsByCategory).length === 0 ? (
+              // <p className="text-sm text-gray-500">Chưa có loại nào.</p>
+              <></>
+            ) : (
+              <div className="max-h-40 overflow-y-auto rounded-md border border-gray-300 p-2">
+                {Object.entries(newProduct.variantsByCategory).map(
                   ([category, variants]) => (
                     <div key={category} className="mb-2">
                       <p className="font-medium text-gray-700">{category}</p>
@@ -427,18 +428,18 @@ const AddProductForm = ({ onAddProduct, initialCategories = [] }) => {
                           <button
                             type="button"
                             onClick={() => handleDeleteVariant(category, index)}
-                            className="p-1 text-red-600 hover:text-red-800"
+                            className="p-1 text-red-600 hover:text-red-800 disabled:cursor-not-allowed"
                             disabled={loading}
                           >
-                            <TrashIcon className="size-4" />
+                            <TrashIcon className="h-4 w-4" />
                           </button>
                         </div>
                       ))}
                     </div>
                   )
-                )
-              )}
-            </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
 
@@ -480,7 +481,7 @@ const AddProductForm = ({ onAddProduct, initialCategories = [] }) => {
           </div>
         )}
 
-        {/* Nút submit */}
+        {/* submit */}
         <div className="lg:col-span-2">
           <button
             type="submit"

@@ -4,7 +4,7 @@ import {
   CubeIcon,
   PlusIcon,
   XMarkIcon,
-  TagIcon, // Thêm icon cho Quản lý danh mục
+  TagIcon,
 } from "@heroicons/react/24/outline";
 
 const Sidebar = ({ activeTab, setActiveTab, isOpen, setIsOpen }) => {
@@ -52,7 +52,7 @@ const Sidebar = ({ activeTab, setActiveTab, isOpen, setIsOpen }) => {
 
   return (
     <>
-      {/* Sidebar trượt cho mobile */}
+      {/* Sidebar cho mobile */}
       <div
         className={`fixed inset-y-0 left-0 w-64 bg-white p-5 shadow-lg transform ${
           isOpen ? "translate-x-0" : "-translate-x-full"
@@ -76,7 +76,7 @@ const Sidebar = ({ activeTab, setActiveTab, isOpen, setIsOpen }) => {
         </nav>
       </div>
 
-      {/* Sidebar cố định cho desktop */}
+      {/* Sidebar cho desktop */}
       <div
         className="hidden lg:block lg:w-64 flex-shrink-0 bg-white p-5 rounded-lg shadow-md"
         role="navigation"

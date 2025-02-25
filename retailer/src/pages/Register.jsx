@@ -64,12 +64,11 @@ const Register = () => {
     }
 
     try {
-      setStep("preparing"); // Chuyển sang "Chuẩn bị cửa hàng"
-      // Gọi API trực tiếp
+      setStep("preparing");
       console.log(formData);
       const responseData = await retailerApi.register(formData);
       console.log("API response:", responseData);
-      setStep("success"); // Chuyển sang "Thành công" nếu API trả về thành công
+      setStep("success");
       setFormData({
         retailerName: "",
         retailerPassword: "",
@@ -81,7 +80,6 @@ const Register = () => {
       });
       setErrors({});
     } catch (err) {
-      // Xử lý lỗi từ API
       const errorMessage = err?.msg || "Có lỗi xảy ra. Vui lòng thử lại!";
 
       if (errorMessage === "Retailer already exists") {
@@ -93,7 +91,6 @@ const Register = () => {
     }
   };
 
-  // Giao diện Form đăng ký
   const renderForm = () => (
     <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md ">
       <h2 className="text-2xl uppercase font-bold text-center text-gray-800 mb-6 oswald-font ">
@@ -260,7 +257,6 @@ const Register = () => {
     </div>
   );
 
-  // Giao diện Chuẩn bị cửa hàng
   const renderPreparing = () => (
     <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md text-center">
       <h2 className="text-2xl font-bold text-gray-800 mb-4 oswald-font">
@@ -273,7 +269,6 @@ const Register = () => {
     </div>
   );
 
-  // Giao diện Thành công
   const renderSuccess = () => (
     <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md text-center">
       <h2 className="text-2xl font-bold text-green-600 mb-4 oswald-font">

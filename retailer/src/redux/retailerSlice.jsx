@@ -1,11 +1,10 @@
-// src/redux/retailerSlice.js
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   retailer: null,
   isRetailerLogin: false,
   products: [],
-  loading: false, // Thêm trạng thái loading
+  loading: false,
 };
 
 const retailerSlice = createSlice({
@@ -23,10 +22,10 @@ const retailerSlice = createSlice({
     },
     setProducts: (state, action) => {
       state.products = action.payload;
-      state.loading = false; // Khi nhận được dữ liệu, tắt loading
+      state.loading = false;
     },
     setLoading: (state, action) => {
-      state.loading = action.payload; // Bật/tắt loading
+      state.loading = action.payload;
     },
   },
 });

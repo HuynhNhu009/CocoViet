@@ -18,9 +18,9 @@ const ProtectedRoute = ({ children }) => {
         const response = await retailerApi.checkAuth();
         console.log("ProtectedRoute response:", response);
         if (response.status === "OK") {
-          dispatch(setLogin(response.data)); // Lưu vào Redux
+          dispatch(setLogin(response.data));
         } else {
-          dispatch(logout()); // Reset Redux state
+          dispatch(logout());
         }
       } catch (error) {
         console.error("Error verifying auth in ProtectedRoute:", error);

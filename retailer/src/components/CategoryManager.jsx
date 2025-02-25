@@ -15,34 +15,48 @@ const CategoryManager = ({
   const [newCategory, setNewCategory] = useState("");
   const [editingCategory, setEditingCategory] = useState(null);
   const [editValue, setEditValue] = useState("");
+  const [error, setError] = useState("");
 
   const handleAddCategory = () => {
-    if (!newCategory || categories.includes(newCategory)) return;
-    onUpdateCategories([...categories, newCategory]);
+    if (!newCategory.trim()) {
+      setError("Danh mục không được để trống.");
+      return;
+    }
+    if (categories.includes(newCategory.trim())) {
+      setError("Danh mục đã tồn tại.");
+      return;
+    }
+    onUpdateCategories([...categories, newCategory.trim()]);
     setNewCategory("");
     setIsAdding(false);
+    setError("");
   };
 
   const handleEditCategory = (category) => {
     setEditingCategory(category);
     setEditValue(category);
+    setError("");
   };
 
   const handleSaveEdit = () => {
+    if (!editValue.trim()) {
+      setError("Danh mục không được để trống.");
+      return;
+    }
     if (
-      !editValue ||
-      categories.includes(editValue) ||
-      editValue === editingCategory
+      categories.includes(editValue.trim()) &&
+      editValue !== editingCategory
     ) {
-      setEditingCategory(null);
+      setError("Danh mục đã tồn tại.");
       return;
     }
     const updatedCategories = categories.map((cat) =>
-      cat === editingCategory ? editValue : cat
+      cat === editingCategory ? editValue.trim() : cat
     );
     onUpdateCategories(updatedCategories);
     setEditingCategory(null);
     setEditValue("");
+    setError("");
   };
 
   const handleDeleteCategory = (category) => {
@@ -50,7 +64,8 @@ const CategoryManager = ({
   };
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-4">
+      {/* Tiêu đề */}
       <div className="flex items-center justify-between">
         <h3 className="text-xl font-semibold text-gray-800">
           Quản lý danh mục
@@ -58,102 +73,124 @@ const CategoryManager = ({
         <button
           type="button"
           onClick={() => setIsAdding(true)}
-          className="p-1 bg-gray-100 rounded-md hover:bg-gray-200"
+          className="p-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
           disabled={disabled}
           aria-label="Thêm danh mục mới"
         >
-          <PlusIcon className="size-5 text-gray-600" />
+          <PlusIcon className="size-5" />
         </button>
       </div>
 
+      {/* Form thêm danh mục */}
       {isAdding && (
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 bg-gray-50 p-3 rounded-md shadow-sm">
           <input
             type="text"
             value={newCategory}
             onChange={(e) => setNewCategory(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
-            placeholder="Nhập danh mục mới"
+            className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent disabled:bg-gray-200"
+            placeholder="Nhập tên danh mục mới"
             disabled={disabled}
           />
           <button
             type="button"
             onClick={handleAddCategory}
-            className="p-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+            className="p-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors disabled:bg-gray-400"
             disabled={disabled}
           >
             Thêm
           </button>
           <button
             type="button"
-            onClick={() => setIsAdding(false)}
-            className="p-2 bg-gray-200 rounded-md hover:bg-gray-300"
+            onClick={() => {
+              setIsAdding(false);
+              setNewCategory("");
+              setError("");
+            }}
+            className="p-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors disabled:bg-gray-400"
             disabled={disabled}
           >
-            <XMarkIcon className="size-5 text-gray-600" />
+            <XMarkIcon className="size-5" />
           </button>
         </div>
       )}
+      {error && isAdding && (
+        <p className="text-red-600 text-sm mt-1">{error}</p>
+      )}
 
-      <div className="max-h-40 overflow-y-auto border border-gray-300 rounded-md p-2">
+      {/* Danh sách danh mục */}
+      <div className="bg-white border border-gray-200 rounded-md shadow-sm p-4 max-h-60 overflow-y-auto">
         {categories.length === 0 ? (
-          <p className="text-gray-500 text-sm">Chưa có danh mục nào.</p>
+          <p className="text-gray-500 text-sm text-center py-2">
+            Chưa có danh mục nào.
+          </p>
         ) : (
-          categories.map((cat) => (
-            <div key={cat} className="flex items-center justify-between py-1">
-              {editingCategory === cat ? (
-                <div className="flex items-center gap-2 w-full">
-                  <input
-                    type="text"
-                    value={editValue}
-                    onChange={(e) => setEditValue(e.target.value)}
-                    className="w-full px-2 py-1 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500"
-                    disabled={disabled}
-                  />
-                  <button
-                    type="button"
-                    onClick={handleSaveEdit}
-                    className="p-1 bg-green-600 text-white rounded-md hover:bg-green-700"
-                    disabled={disabled}
-                  >
-                    Lưu
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setEditingCategory(null)}
-                    className="p-1 bg-gray-200 rounded-md hover:bg-gray-300"
-                    disabled={disabled}
-                  >
-                    <XMarkIcon className="size-4 text-gray-600" />
-                  </button>
-                </div>
-              ) : (
-                <>
-                  <span className="text-gray-700">{cat}</span>
-                  <div className="flex gap-1">
+          <ul className="space-y-2">
+            {categories.map((cat) => (
+              <li
+                key={cat}
+                className="flex items-center justify-between p-2 bg-gray-50 rounded-md hover:bg-gray-100 transition-colors"
+              >
+                {editingCategory === cat ? (
+                  <div className="flex items-center gap-2 w-full">
+                    <input
+                      type="text"
+                      value={editValue}
+                      onChange={(e) => setEditValue(e.target.value)}
+                      className="flex-1 px-3 py-1 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent disabled:bg-gray-200"
+                      disabled={disabled}
+                    />
                     <button
                       type="button"
-                      onClick={() => handleEditCategory(cat)}
-                      className="p-1 text-blue-600 hover:text-blue-800"
+                      onClick={handleSaveEdit}
+                      className="p-1 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors disabled:bg-gray-400"
                       disabled={disabled}
                     >
-                      <PencilIcon className="size-4" />
+                      Lưu
                     </button>
                     <button
                       type="button"
-                      onClick={() => handleDeleteCategory(cat)}
-                      className="p-1 text-red-600 hover:text-red-800"
+                      onClick={() => {
+                        setEditingCategory(null);
+                        setError("");
+                      }}
+                      className="p-1 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors disabled:bg-gray-400"
                       disabled={disabled}
                     >
-                      <TrashIcon className="size-4" />
+                      <XMarkIcon className="size-4" />
                     </button>
                   </div>
-                </>
-              )}
-            </div>
-          ))
+                ) : (
+                  <>
+                    <span className="text-gray-700 truncate">{cat}</span>
+                    <div className="flex gap-1">
+                      <button
+                        type="button"
+                        onClick={() => handleEditCategory(cat)}
+                        className="p-1 text-blue-600 hover:text-blue-800 transition-colors disabled:text-gray-400"
+                        disabled={disabled}
+                      >
+                        <PencilIcon className="size-5" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteCategory(cat)}
+                        className="p-1 text-red-600 hover:text-red-800 transition-colors disabled:text-gray-400"
+                        disabled={disabled}
+                      >
+                        <TrashIcon className="size-5" />
+                      </button>
+                    </div>
+                  </>
+                )}
+              </li>
+            ))}
+          </ul>
         )}
       </div>
+      {error && editingCategory && (
+        <p className="text-red-600 text-sm mt-1">{error}</p>
+      )}
     </div>
   );
 };
