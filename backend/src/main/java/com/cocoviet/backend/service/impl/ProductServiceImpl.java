@@ -8,13 +8,15 @@ import com.cocoviet.backend.models.entity.*;
 import com.cocoviet.backend.models.request.ProductRequest;
 import com.cocoviet.backend.models.request.ProductVariantsRequest;
 import com.cocoviet.backend.repository.*;
+import com.cocoviet.backend.service.IFileUpload;
 import com.cocoviet.backend.service.IProductService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -48,11 +50,11 @@ public class ProductServiceImpl implements IProductService {
     @Autowired
     ProductVariantMapper productVariantMapper;
 
-//    @Autowired
-//    IFileUpload iFileUpload;
+    @Autowired
+    IFileUpload iFileUpload;
 
     @Override
-    public ProductDTO addProduct(ProductRequest productRequest){
+    public ProductDTO addProduct(ProductRequest productRequest, MultipartFile imageFile) throws IOException {
         if (iProductRepository.existsByProductName(productRequest.getProductName())) {
             throw new RuntimeException("Product name already exists!");
         }
@@ -63,7 +65,8 @@ public class ProductServiceImpl implements IProductService {
         ProductEntity productEntity = ProductEntity.builder()
                 .productName(productRequest.getProductName())
                 .productDesc(productRequest.getProductDesc())
-                .productImage(productRequest.getProductImage())
+//                .productImage(productRequest.getProductImage())
+                .productImage(iFileUpload.uploadFile(imageFile, "product"))
                 .productOrigin(productRequest.getProductOrigin())
                 .retailer(retailerEntity)
                 .createdAt(LocalDateTime.now())

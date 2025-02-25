@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { PlusIcon, XMarkIcon, TrashIcon } from "@heroicons/react/24/outline";
+import UploadImage from "./UpLoadImage";
 
 const AddProductForm = ({ onAddProduct, initialCategories = [] }) => {
   const [newProduct, setNewProduct] = useState({
@@ -185,7 +186,7 @@ const AddProductForm = ({ onAddProduct, initialCategories = [] }) => {
         onSubmit={handleAddProduct}
         className="space-y-6 lg:grid lg:grid-cols-2 lg:gap-6 lg:space-y-0"
       >
-        {/* Thông tin sản phẩm */}
+        {/* Cột 1: Thông tin sản phẩm */}
         <div className="space-y-6">
           <div className="relative">
             <label className="block text-sm font-medium text-gray-700">
@@ -228,7 +229,7 @@ const AddProductForm = ({ onAddProduct, initialCategories = [] }) => {
             />
           </div>
           <div className="relative">
-            <label className="block text-sm font-medium text-gray-700">
+            {/* <label className="block text-sm font-medium text-gray-700">
               Hình ảnh (URL)
             </label>
             <input
@@ -239,11 +240,16 @@ const AddProductForm = ({ onAddProduct, initialCategories = [] }) => {
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
               required
               disabled={loading}
+            /> */}
+            <UploadImage
+              imageUrl={newProduct.productImage}
+              onImageChange={handleInputChange}
+              disabled={loading}
             />
           </div>
         </div>
 
-        {/* Danh mục và Loại */}
+        {/* Cột 2: Danh mục và Loại */}
         <div className="space-y-6">
           {/* Chọn và thêm danh mục */}
           <div className="space-y-2">
@@ -342,7 +348,7 @@ const AddProductForm = ({ onAddProduct, initialCategories = [] }) => {
                 Vui lòng chọn ít nhất một danh mục trước khi thêm loại.
               </p>
             )}
-            {/* Form inline thêm variant */}
+            {/* Form inline thêm variant - Không có dropdown */}
             {isAddingVariantInline && (
               <div className="hidden lg:grid lg:grid-cols-4 lg:gap-2 mt-2">
                 <input
@@ -407,12 +413,11 @@ const AddProductForm = ({ onAddProduct, initialCategories = [] }) => {
               </div>
             )}
             {/* Danh sách variant */}
-            {Object.keys(newProduct.variantsByCategory).length === 0 ? (
-              // <p className="text-sm text-gray-500">Chưa có loại nào.</p>
-              <></>
-            ) : (
-              <div className="max-h-40 overflow-y-auto rounded-md border border-gray-300 p-2">
-                {Object.entries(newProduct.variantsByCategory).map(
+            <div className="max-h-40 overflow-y-auto border border-gray-300 rounded-md p-2">
+              {Object.keys(newProduct.variantsByCategory).length === 0 ? (
+                <p className="text-gray-500 text-sm">Chưa có loại nào.</p>
+              ) : (
+                Object.entries(newProduct.variantsByCategory).map(
                   ([category, variants]) => (
                     <div key={category} className="mb-2">
                       <p className="font-medium text-gray-700">{category}</p>
@@ -428,18 +433,18 @@ const AddProductForm = ({ onAddProduct, initialCategories = [] }) => {
                           <button
                             type="button"
                             onClick={() => handleDeleteVariant(category, index)}
-                            className="p-1 text-red-600 hover:text-red-800 disabled:cursor-not-allowed"
+                            className="p-1 text-red-600 hover:text-red-800"
                             disabled={loading}
                           >
-                            <TrashIcon className="h-4 w-4" />
+                            <TrashIcon className="size-4" />
                           </button>
                         </div>
                       ))}
                     </div>
                   )
-                )}
-              </div>
-            )}
+                )
+              )}
+            </div>
           </div>
         </div>
 
@@ -481,7 +486,7 @@ const AddProductForm = ({ onAddProduct, initialCategories = [] }) => {
           </div>
         )}
 
-        {/* submit */}
+        {/* Nút submit */}
         <div className="lg:col-span-2">
           <button
             type="submit"
