@@ -8,7 +8,6 @@ import com.cocoviet.backend.models.request.RetailerRequest;
 import com.cocoviet.backend.models.request.UserLoginRequest;
 import com.cocoviet.backend.models.request.UserProfileRequest;
 import com.cocoviet.backend.repository.IRetailerRepository;
-import com.cocoviet.backend.service.IFileUpload;
 import com.cocoviet.backend.service.IRetailerService;
 import com.cocoviet.backend.utils.JwtToken;
 import com.cocoviet.backend.utils.PasswordEncoderUtil;
@@ -16,14 +15,15 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.logging.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.logging.Logger;
 
 @Slf4j
 @Service
@@ -69,6 +69,9 @@ public class RetailerServiceImpl implements IRetailerService {
 
     @Override
     public AuthenticationDTO loginRetailer(UserLoginRequest userLoginRequest) {
+        log.info("Retailer logged in: {}", userLoginRequest.getEmail());
+
+
         RetailerEntity retailer =  iRetailerRepository.findByRetailerEmail(userLoginRequest.getEmail())
                 .orElseThrow(() -> new RuntimeException("Retailer not found"));
 
@@ -105,6 +108,13 @@ public class RetailerServiceImpl implements IRetailerService {
     public RetailerDTO getRetailer(String retailerId) {
         RetailerEntity retailer = iRetailerRepository.findById(retailerId)
                 .orElseThrow(() -> new RuntimeException("Retailer not found"));
+        return iRetailerMapper.toRetailerDTO(retailer);
+    }
+
+    @Override
+    public RetailerDTO getRetailerEmail(String retailerEmail){
+        RetailerEntity retailer = iRetailerRepository.findByRetailerEmail(retailerEmail)
+                .orElseThrow(()-> new RuntimeException("Retailer email not found"));
         return iRetailerMapper.toRetailerDTO(retailer);
     }
 

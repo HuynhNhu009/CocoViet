@@ -8,7 +8,10 @@ import com.cocoviet.backend.models.request.UserLoginRequest;
 import com.cocoviet.backend.models.request.UserProfileRequest;
 import com.cocoviet.backend.service.ICustomerService;
 import com.cocoviet.backend.service.IRetailerService;
+import com.cocoviet.backend.utils.JwtToken;
+import com.nimbusds.jwt.JWTClaimsSet;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +29,9 @@ public class RetailerController {
 
     @Autowired
     IRetailerService iRetailerService;
+
+    @Autowired
+    private JwtToken jwtToken;
 
     @PostMapping("/register")
     ResponseEntity<ResponseData> registerRetailer(@RequestBody @Valid RetailerRequest retailerRequest){
@@ -62,6 +68,58 @@ public class RetailerController {
                         .msg("Login success with email: " + retailerRequest.getEmail())
                         .status("OK")
                         .build());
+    }
+
+    @GetMapping("/check")
+    public ResponseEntity<?> checkAuth(HttpServletRequest request) {
+        String jwt = null;
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("jwtRetailer".equals(cookie.getName())) {
+                    jwt = cookie.getValue();
+                    break;
+                }
+            }
+        }
+
+        if (jwt == null || jwt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(ResponseData.builder()
+                            .data(null)
+                            .msg("User not authenticated: No JWT found in cookie")
+                            .status("UNAUTHORIZED")
+                            .build());
+        }
+
+        try {
+            JWTClaimsSet claims = jwtToken.validateToken(jwt);
+            String retailerEmail = claims.getSubject(); // Lấy sub (email hoặc ID) từ JWT
+            Object retailerInfo = iRetailerService.getRetailerEmail(retailerEmail); // Lấy thông tin từ service
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(ResponseData.builder()
+                            .data(retailerInfo) // Trả về thông tin người dùng đầy đủ
+                            .msg("Check success")
+                            .status("OK")
+                            .build());
+        } catch (Exception e) {
+            String errorMsg = e.getMessage();
+            if ("Token is invalid or expired".equals(errorMsg)) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED) // 401
+                        .body(ResponseData.builder()
+                                .data(null)
+                                .msg("Token is invalid or expired")
+                                .status("401")
+                                .build());
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST) // 400 cho lỗi khác
+                        .body(ResponseData.builder()
+                                .data(jwt)
+                                .msg("Invalid token")
+                                .status("400")
+                                .build());
+            }
+        }
     }
 
     @PatchMapping("/update-profile/{id}")

@@ -73,4 +73,13 @@ public class ProductController {
                         .status("OK")
                         .build());
     }
+
+    @GetMapping("/retailer/{retailerId}")
+    ResponseEntity<ResponseData> getAllProductByRetailerId(@PathVariable String retailerId){
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ResponseData.builder()
+                        .data(coconutProductService.getProductListByRetailerId(retailerId))
+                        .msg("Get all product by retailer successfully!")
+                        .status("OK").build());
+    }
 }

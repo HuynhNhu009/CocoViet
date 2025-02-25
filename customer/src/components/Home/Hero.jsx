@@ -6,19 +6,17 @@ const Hero = () => {
   return (
     <div className="relative w-full h-[830px]">
       <Navbar className="absolute top-0 left-0 w-full z-20" />
-      <div className="absolute inset-0 h-[830px] -z-20">
-        <img
-          src={assets.bgHome2}
-          alt="Background"
-          className="w-full h-full -z-10 object-cover bg-fixed"
-        />
+      <div
+        className="absolute inset-0 h-[830px] -z-20 bg-fixed"
+        style={{ backgroundImage: `url(${assets.bgHome2})` }}
+      >
         <div
           className="absolute inset-0 z-0 h-[830px]"
           style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
         ></div>
       </div>
       <div className="relative z-0 text-white flex flex-col items-start pt-15 px-10 md:p-16 sm:px-[5vw] lg:px-[7vw]">
-        <div className="mt-20 md:mt-40">
+        <div className="mt-10 md:mt-20">
           <h2 className="text-6xl font-bold">LOVE COCONUT</h2>
           <h3 className="text-3xl font-bold">
             Tinh hoa từ thiên nhiên, hương vị từ trái dừa Việt Nam

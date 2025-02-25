@@ -1,10 +1,10 @@
-import { path } from "framer-motion/client";
 import Layout from "../components/Layout";
-import Home from "../pages/Home";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
 import Profile from "../pages/Profile";
-
+import Dashboard from "../pages/Dashboard";
+import { Navigate } from "react-router-dom";
+import { ProtectedRoute, PublicRoute } from "../components/ProtectedRoute";
 export const routes = [
   {
     path: "/",
@@ -12,20 +12,48 @@ export const routes = [
     children: [
       {
         index: true,
-        element: <Home />,
+        element: (
+          <ProtectedRoute>
+            <Navigate to="/dashboard" replace />
+          </ProtectedRoute>
+        ),
       },
       {
-        path: "login",
-        element: <Login />,
-      },
-      {
-        path: "register",
-        element: <Register />,
+        path: "dashboard",
+        element: (
+          <ProtectedRoute>
+            <Dashboard />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "profile",
-        element: <Profile />,
+        element: (
+          <ProtectedRoute>
+            <Profile />
+          </ProtectedRoute>
+        ),
       },
     ],
+  },
+  {
+    path: "/login",
+    element: (
+      <PublicRoute>
+        <Login />
+      </PublicRoute>
+    ),
+  },
+  {
+    path: "/register",
+    element: (
+      <PublicRoute>
+        <Register />
+      </PublicRoute>
+    ),
+  },
+  {
+    path: "*",
+    element: <Navigate to="/" replace />,
   },
 ];

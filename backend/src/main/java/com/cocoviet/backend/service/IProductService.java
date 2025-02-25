@@ -12,4 +12,5 @@ public interface IProductService {
     ProductDTO getProduct(String productId);
     List<ProductDTO> getAllProduct();
     List<ProductDTO> getProductByCategory(String categoryId);
+    List<ProductDTO> getProductListByRetailerId(String retailerId);
 }

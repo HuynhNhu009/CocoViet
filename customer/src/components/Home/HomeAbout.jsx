@@ -1,23 +1,3 @@
-// import React from "react";
-// import { assets } from "../../assets/assets";
-// import Title from "../ui/Title";
-
-// const HomeAbout = () => {
-//   return (
-//     <div className="relative h-[830px]">
-//       <img
-//         src={assets.coconutField}
-//         alt="coconutField"
-//         className="absolute w-full h-full -z-10 object-cover bg-fixed"
-//       />
-
-//       <Title text1={"hello"} color1={"text-white"} />
-//     </div>
-//   );
-// };
-
-// export default HomeAbout;
-
 import React from "react";
 import { assets } from "../../assets/assets";
 import Title from "../ui/Title";
@@ -25,12 +5,15 @@ import { Button } from "../ui/Button";
 
 const HomeAbout = () => {
   return (
-    <div className="relative h-150 sm:h-[830px] flex justify-center items-center">
-      <img
+    <div
+      className="relative h-150 sm:h-[830px] flex justify-center items-center bg-fixed"
+      style={{ backgroundImage: `url(${assets.coconutField})` }}
+    >
+      {/* <img
         src={assets.coconutField}
         alt="coconutField"
-        className="absolute w-full h-full -z-10 object-cover bg-fixed"
-      />
+        className="absolute  w-full h-full -z-10 object-cover bg-fixed"
+      /> */}
       <div className="relative flex flex-col items-center gap-4">
         <Title text1={"Về chúng tôi"} color1={"text-white"} />
         <p className="w-[50vw]  xl:w-[30vw] h-[4px] lg:h-[10px] bg-white"></p>

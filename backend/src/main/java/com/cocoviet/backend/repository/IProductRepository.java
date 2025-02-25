@@ -14,4 +14,8 @@ public interface IProductRepository extends JpaRepository<ProductEntity, String>
 
     @Query("SELECT p FROM ProductEntity p JOIN p.productCategories pc WHERE pc.category.id = :categoryId")
     List<ProductEntity> findProductsByCategoryId(@Param("categoryId") String categoryId);
+
+    // Thêm phương thức mới để tìm sản phẩm theo retailerId
+    @Query("SELECT p FROM ProductEntity p WHERE p.retailer.retailerId = :retailerId")
+    List<ProductEntity> findProductsByRetailerId(@Param("retailerId") String retailerId);
 }

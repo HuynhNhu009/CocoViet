@@ -46,6 +46,7 @@ const Login = () => {
     try {
       setStep("preparing"); // Chuyển sang "Đang xử lý"
       // Gọi API login
+      console.log(formData);
       const responseData = await retailerApi.login({
         email: formData.email,
         password: formData.password,

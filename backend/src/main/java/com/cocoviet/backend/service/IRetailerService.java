@@ -14,5 +14,6 @@ public interface IRetailerService {
     AuthenticationDTO loginRetailer(UserLoginRequest userLoginRequest);
     RetailerDTO updateRetailerProfile(String retailerId, UserProfileRequest retailerProfileRequest);
     RetailerDTO getRetailer(String retailerId);
+    RetailerDTO getRetailerEmail(String retailerEmail);
     List<RetailerDTO> getAllRetailer();
 }
