@@ -93,6 +93,15 @@ const Dashboard = () => {
       variants: Object.values(newProduct.variantsByCategory).flat(),
     };
     dispatch(setProducts([...products, formattedProduct]));
+    
+    //postProductt
+    const { productImage, ...productData } = formattedProduct;
+
+    productApi.addProduct(productData, productImage);
+
+    console.log("fort-image", productImage);
+    //end-post
+
 
     newProduct.categoryId.forEach((catName) => {
       if (!categories.some((c) => c.categoryName === catName)) {

@@ -14,8 +14,8 @@ public class ApplicationInitConfig {
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/api/**")
                         .allowedOrigins("http://localhost:3000", "http://localhost:3002")
-                        .allowedMethods("GET", "POST")
-                        .allowCredentials(true); // Quan trọng để gửi cookie
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                        .allowCredentials(true);
             }
         };
     }

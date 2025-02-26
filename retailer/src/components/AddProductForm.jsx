@@ -26,6 +26,16 @@ const AddProductForm = ({ onAddProduct, initialCategories = [] }) => {
     price: "",
     initStock: "",
   });
+
+  //file
+  const [file, setFile] = useState(null);
+
+  const handleImageUpload = (selectedFile) => {
+    setFile(selectedFile);
+    setNewProduct(prev => ({ ...prev, productImage: selectedFile }));
+  };
+  
+
   const [variantErrors, setVariantErrors] = useState("");
 
   const handleInputChange = (e) => {
@@ -142,6 +152,8 @@ const AddProductForm = ({ onAddProduct, initialCategories = [] }) => {
       setMessage("Vui lòng chọn ít nhất một danh mục.");
       return;
     }
+    console.log("newProduct-img",newProduct);
+    
     if (Object.keys(newProduct.variantsByCategory).length === 0) {
       setMessage("Vui lòng thêm ít nhất một loại sản phẩm.");
       return;
@@ -152,6 +164,7 @@ const AddProductForm = ({ onAddProduct, initialCategories = [] }) => {
     setTimeout(() => {
       const productToAdd = { ...newProduct, id: Date.now() };
       onAddProduct(productToAdd);
+
       setNewProduct({
         productName: "",
         productDesc: "",
@@ -242,8 +255,8 @@ const AddProductForm = ({ onAddProduct, initialCategories = [] }) => {
               disabled={loading}
             /> */}
             <UploadImage
-              imageUrl={newProduct.productImage}
-              onImageChange={handleInputChange}
+              image={newProduct.productImage}
+              onImageChange={handleImageUpload }
               disabled={loading}
             />
           </div>
@@ -333,7 +346,7 @@ const AddProductForm = ({ onAddProduct, initialCategories = [] }) => {
               <label className="block text-sm font-medium text-gray-700">
                 Loại sản phẩm
               </label>
-              <button
+              <button 
                 type="button"
                 onClick={() => setIsAddingVariantInline(true)}
                 className="p-2 bg-gray-100 rounded-md hover:bg-gray-200"
@@ -384,7 +397,7 @@ const AddProductForm = ({ onAddProduct, initialCategories = [] }) => {
                   value={newVariant.initStock}
                   onChange={handleVariantChange}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                  placeholder="Tồn kho"
+                  placeholder="Kho"
                   disabled={loading}
                 />
                 <div className="col-span-4 flex items-center justify-between">
@@ -428,7 +441,7 @@ const AddProductForm = ({ onAddProduct, initialCategories = [] }) => {
                         >
                           <span className="text-gray-700">
                             {variant.value} {variant.unit} - {variant.price}đ
-                            (Tồn: {variant.initStock})
+                            (Kho: {variant.initStock})
                           </span>
                           <button
                             type="button"

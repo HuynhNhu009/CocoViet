@@ -17,7 +17,11 @@ export const productApi = {
         formData.append("image", imageFile);
       }
   
-      const response = await api.post("/products/add");
+      const response = await api.post("/products/add", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
   
       console.log(response.data);
       return response.data;

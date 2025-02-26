@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 
-const UploadImage = ({ imageUrl, onImageChange, disabled }) => {
-  const [preview, setPreview] = useState(imageUrl);
+const UploadImage = ({ image, onImageChange, disabled }) => {
+  const [preview, setPreview] = useState(image);
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-    console.log(file.name);
     
     if (file) {
         const reader = new FileReader();
