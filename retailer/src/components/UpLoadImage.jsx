@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
-const UploadImage = ({ image, onImageChange, disabled }) => {
-  const [preview, setPreview] = useState(image);
+const UploadImage = ({ onImageChange, disabled }) => {
+  const [preview, setPreview] = useState(null);
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];

@@ -11,7 +11,6 @@ import com.cocoviet.backend.service.IOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -90,20 +89,34 @@ public class OrderServiceImpl implements IOrderService {
 
                 ProductVariantEntity productVariantEntity =iProducVariantRepository.findByVariantsId(receiptDetailRequest.getProductVariantId());
 
-                Optional<ReceiptDetailEntity> existRecieptDetail = iReceiptDetailRepository
+                Optional<ReceiptDetailEntity> existRecieptDetailByVariants = iReceiptDetailRepository
                         .findByProductVariant_VariantsIdAndProductOrder_OrderId(receiptDetailRequest.getProductVariantId(),orderEntity.getOrderId());
 
-                ReceiptDetailEntity existReceiptDetailEntity = existRecieptDetail.get();
-                existReceiptDetailEntity.setQuantity(receiptDetailRequest.getQuantity() + existReceiptDetailEntity.getQuantity());
 
-                newReceiptDetailEntity.add(existReceiptDetailEntity);
+                if(existRecieptDetailByVariants.isPresent()){
+                    ReceiptDetailEntity existReceiptDetailEntity = existRecieptDetailByVariants.get();
 
-                productVariantEntity.setStock(productVariantEntity.getStock() - receiptDetailRequest.getQuantity());
-                iProducVariantRepository.save(productVariantEntity);
+                    //update quantity
+                    existReceiptDetailEntity.setQuantity(receiptDetailRequest.getQuantity() + existReceiptDetailEntity.getQuantity());
+                    newReceiptDetailEntity.add(existReceiptDetailEntity);
+                    productVariantEntity.setStock(productVariantEntity.getStock() - receiptDetailRequest.getQuantity());
+                    iProducVariantRepository.save(productVariantEntity);
+                    newReceiptDetailEntity.add(existReceiptDetailEntity);
 
+                }else{
+                    ReceiptDetailEntity addRecieptDetail = ReceiptDetailEntity.builder()
+                            .productOrder(orderEntity)
+                            .productVariant(productVariantEntity)
+                            .quantity(receiptDetailRequest.getQuantity())
+                            .price(productVariantEntity.getPrice())
+                            .build();
+
+                    productVariantEntity.setStock(productVariantEntity.getStock() - receiptDetailRequest.getQuantity());
+                    iProducVariantRepository.save(productVariantEntity);
+
+                    newReceiptDetailEntity.add(addRecieptDetail);
+                }
             }
-
-
         }
         iReceiptDetailRepository.saveAll(newReceiptDetailEntity);
 
@@ -126,6 +139,7 @@ public class OrderServiceImpl implements IOrderService {
         iOrderRepository.save(orderEntity);
 
         OrderDTO orderDTO = new OrderDTO();
+        orderDTO.setOrderId(orderEntity.getOrderId());
         orderDTO.setOrderDate(orderEntity.getOrderDate());
         orderDTO.setStatusName(statusEntity.getStatusName());
         orderDTO.setReceiptDetails(receiptDetailDTOS);
@@ -133,8 +147,5 @@ public class OrderServiceImpl implements IOrderService {
 
         return orderDTO;
     }
-
-
-
 
 }

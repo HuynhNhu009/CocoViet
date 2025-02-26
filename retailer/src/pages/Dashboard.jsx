@@ -97,7 +97,11 @@ const Dashboard = () => {
     dispatch(setProducts([...products, formattedProduct]));
 
     const { productImage, ...productData } = formattedProduct;
-    await productApi.addProduct(productData, productImage);
+
+    console.log("productData", productData);
+
+    productApi.addProduct(productData, productImage);
+
     console.log("fort-image", productImage);
 
     // Kiểm tra và thêm đơn vị mới nếu chưa có

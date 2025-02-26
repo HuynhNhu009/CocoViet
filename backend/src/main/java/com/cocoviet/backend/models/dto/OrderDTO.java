@@ -14,7 +14,7 @@ import java.util.Set;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class OrderDTO {
-
+    String orderId;
     Set<ReceiptDetailDTO> receiptDetails;
 
     String statusName;
