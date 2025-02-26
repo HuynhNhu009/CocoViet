@@ -177,8 +177,8 @@ const Navbar = () => {
               )}
             </div>
 
-            {isLoggedIn && (
-              <Link to="/cart" className="relative">
+            {/* {isLoggedIn && ( */}
+              <Link to="/order" className="relative">
                 <ShoppingBagIcon
                   className={`size-7 ${text_Color} ${text_hover}`}
                 />
@@ -186,7 +186,7 @@ const Navbar = () => {
                   9{/* {getCartCount()} */}
                 </p>
               </Link>
-            )}
+            {/* )} */}
 
             {/* Sidebar menu button */}
             <Bars3Icon

@@ -97,6 +97,8 @@ const Dashboard = () => {
     //postProductt
     const { productImage, ...productData } = formattedProduct;
 
+    console.log("productData", productData);
+    
     productApi.addProduct(productData, productImage);
 
     console.log("fort-image", productImage);

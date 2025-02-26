@@ -19,7 +19,7 @@ import java.util.Set;
 public class OrderEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    String orderId; // Đổi từ productOrderId → orderId
+    String orderId;
 
     @Column(nullable = false)
     LocalDateTime orderDate; // Đổi tên từ productOrderDate → orderDate

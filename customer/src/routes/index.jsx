@@ -6,8 +6,8 @@ import LoginForm from "../components/LoginRegister/Login";
 import Register from "../components/LoginRegister/Register";
 import ProductDetail from "../pages/Product/ProductDetail";
 import Profile from "../pages/Profile";
-import Cart from "../pages/Cart";
 import About from "../pages/About";
+import Order from "../pages/Order";
 
 export const routes = [
   {
@@ -36,8 +36,8 @@ export const routes = [
       },
 
       {
-        path: "cart",
-        element: <Cart />,
+        path: "order",
+        element: <Order />,
       },
       {
         path: "profile/:profileId",

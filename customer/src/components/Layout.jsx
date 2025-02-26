@@ -5,6 +5,7 @@ import Navbar from "./Navbar";
 function Layout() {
   const location = useLocation();
   const isAuth = location.pathname === "/";
+  const order = location.pathname ==="/order"
 
   return (
     <>
@@ -14,8 +15,8 @@ function Layout() {
         <div className="flex-grow">
           <Outlet />
         </div>
-
-        <Footer />
+        {!order && <Footer />}
+        
       </div>
     </>
   );

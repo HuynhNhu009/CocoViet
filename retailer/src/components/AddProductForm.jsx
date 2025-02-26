@@ -255,7 +255,7 @@ const AddProductForm = ({ onAddProduct, initialCategories = [] }) => {
               disabled={loading}
             /> */}
             <UploadImage
-              image={newProduct.productImage}
+              // image={newProduct.productImage}
               onImageChange={handleImageUpload }
               disabled={loading}
             />
