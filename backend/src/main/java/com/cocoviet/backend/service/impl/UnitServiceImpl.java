@@ -6,6 +6,7 @@ import com.cocoviet.backend.models.entity.UnitEntity;
 import com.cocoviet.backend.models.request.UnitRequest;
 import com.cocoviet.backend.repository.IUnitRepository;
 import com.cocoviet.backend.service.IUnitService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -57,5 +58,14 @@ public class UnitServiceImpl implements IUnitService {
     @Override
     public Set<UnitDTO> getAllUnits() {
         return iUnitMapper.toSetUnitDTO(iUnitRepository.findAll());
+    }
+
+    @Override
+    public String deleteUnitById(String unitId) {
+        UnitDTO unitDTO = iUnitMapper.toUnitDTO(iUnitRepository.findById(unitId).orElseThrow(()->
+                new EntityNotFoundException("Units ID " + unitId + " not found")));
+
+        iUnitRepository.deleteById(unitId);
+        return "Deleted :" + unitId + " " + unitDTO.getUnitName();
     }
 }

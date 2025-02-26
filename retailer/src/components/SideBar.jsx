@@ -25,8 +25,8 @@ const Sidebar = ({ activeTab, setActiveTab, isOpen, setIsOpen }) => {
       icon: <PlusIcon className="size-5" />,
     },
     {
-      id: "category-manager",
-      label: "Quản lý danh mục",
+      id: "unit-manager",
+      label: "Quản lý đơn vị",
       icon: <TagIcon className="size-5" />,
     },
   ];

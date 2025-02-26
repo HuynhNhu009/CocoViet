@@ -10,4 +10,6 @@ public interface IUnitService {
     UnitDTO updateUnit(String unitId, UnitRequest unitRequest);
     UnitDTO getUnitById(String unitId);
     Set<UnitDTO> getAllUnits();
+    String deleteUnitById(String unitId);
+
 }

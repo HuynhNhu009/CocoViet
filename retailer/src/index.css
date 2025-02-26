@@ -1,12 +1,5 @@
 @import "tailwindcss";
 
-/* @font-face {
-    font-family: "sigmar";
-    src: url("https: //fonts.googleapis.com/css2?family=Sigmar&display=swap") format("truetype");
-    font-weight: normal;
-    font-style: normal;
-} */
-
 * {
   box-sizing: border-box;
 }

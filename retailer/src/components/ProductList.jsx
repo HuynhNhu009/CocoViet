@@ -38,24 +38,17 @@ const ProductList = () => {
             </p>
             <div className="text-sm text-gray-500 mt-1">
               Loại:
-              {Object.keys(product.variantsByCategory).length === 0 ? (
+              {!product.variants || product.variants.length === 0 ? (
                 <span> Chưa có</span>
               ) : (
-                Object.entries(product.variantsByCategory).map(
-                  ([category, variants]) => (
-                    <div key={category} className="mt-1">
-                      <p className="font-medium text-gray-700">{category}:</p>
-                      <ul className="list-disc pl-4">
-                        {variants.map((variant, index) => (
-                          <li key={index} className="text-gray-600">
-                            {variant.value} {variant.unit} - {variant.price}đ
-                            (Tồn: {variant.initStock})
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )
-                )
+                <ul className="list-disc pl-4">
+                  {product.variants.map((variant, index) => (
+                    <li key={index} className="text-gray-600">
+                      {variant.value} {variant.unit} - {variant.price}đ (Tồn:{" "}
+                      {variant.initStock})
+                    </li>
+                  ))}
+                </ul>
               )}
             </div>
             <div className="flex gap-2 mt-2">

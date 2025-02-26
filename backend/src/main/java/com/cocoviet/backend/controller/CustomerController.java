@@ -48,7 +48,7 @@ public class CustomerController {
         AuthenticationDTO data = iCustomerService.loginCustomer(customerRequest);
         Cookie jwtCookie = new Cookie("jwt", data.getToken());
         jwtCookie.setHttpOnly(true);
-        jwtCookie.setSecure(false);
+        jwtCookie.setSecure(false); // https
         jwtCookie.setPath("/");
         jwtCookie.setMaxAge(24 * 60 * 60);
         response.addCookie(jwtCookie);

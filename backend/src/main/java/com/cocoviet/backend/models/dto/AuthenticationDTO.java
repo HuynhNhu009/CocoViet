@@ -12,5 +12,5 @@ import lombok.Setter;
 @NoArgsConstructor
 public class AuthenticationDTO {
     String token;
-    Object info;
+    Object info;///
 }

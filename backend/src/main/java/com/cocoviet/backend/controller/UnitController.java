@@ -30,7 +30,6 @@ public class UnitController {
                         .build());
     }
 
-
     @PatchMapping("/update/{unitId}")
     ResponseEntity<ResponseData> updateUnit(@PathVariable String unitId,
                                                        @RequestBody @Valid UnitRequest unitRequest) {
@@ -62,5 +61,15 @@ public class UnitController {
                         .msg("Get all units success")
                         .status("OK")
                         .build());
+    }
+
+    @DeleteMapping("/delete/{unitId}")
+    ResponseEntity<ResponseData> deleteUnitById(@PathVariable("unitId") String unitId){
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ResponseData.builder()
+                        .data(unitService.deleteUnitById(unitId))
+                        .msg("Delete successfully!")
+                        .status("OK").build());
     }
 }
