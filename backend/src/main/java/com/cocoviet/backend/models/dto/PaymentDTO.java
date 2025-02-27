@@ -16,6 +16,7 @@ import lombok.experimental.FieldDefaults;
 public class PaymentDTO {
 
     String paymentId;
+    String paymentCode;
     String paymentMethod;
 
 }

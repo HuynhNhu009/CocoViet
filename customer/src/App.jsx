@@ -4,7 +4,9 @@ import { useDispatch } from "react-redux";
 import { customerApi } from "./services/customerService";
 import { setLogin, logout } from "./redux/customerSlice";
 import { setProductStore } from "./redux/productSlice";
+import { setStatus } from "./redux/orderSlice";
 import { productAPI } from "./services/productService";
+import { statusAPI } from "./services/statusService";
 function App() {
   const dispatch = useDispatch();
 
@@ -21,6 +23,19 @@ function App() {
       } catch (error) {}
     };
 
+    const status = async() =>{
+      try {
+        const response = await statusAPI.getAllStatus();
+        if(response.data){
+          dispatch(setStatus(response.data))
+        }
+      } catch (error) {
+        console.error("Error fetching status:", error);
+      }
+    }
+    status();
+
+        
     const fetchData = async () => {
       try {
         const productResponse = await productAPI.getAllProducts();
@@ -28,11 +43,15 @@ function App() {
           // setProducts(productResponse.data);
           dispatch(setProductStore(productResponse.data));
         }
-      } catch (error) {}
+      } catch (error) {
+        console.log(error);
+        
+      }
     };
     fetchData();
 
     checkAuth();
+
   }, [dispatch]);
 
   return (

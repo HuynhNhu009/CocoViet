@@ -22,4 +22,6 @@ public class PaymentRequest {
     @NotBlank(message = "Customer name cannot be empty.")
     @Size(min = 6, max = 50, message = "Customer name must be between 6 and 50 characters.")
     String paymentMethod;
+    String paymentCode;
+
 }

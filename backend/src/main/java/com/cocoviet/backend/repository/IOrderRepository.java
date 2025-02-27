@@ -11,7 +11,7 @@ import java.util.Optional;
 public interface IOrderRepository extends JpaRepository<OrderEntity, String> {
     OrderEntity findByOrderId(String orderId);
 
-    @Query("SELECT o FROM OrderEntity o LEFT JOIN FETCH o.receiptDetails WHERE o.customer.customerId = :customerId")
-    OrderEntity findByCustomerId(String customerId);
-//    OrderEntity findByCustomerIdWithReceiptDetails(String customerId);
+    OrderEntity findByCustomer_CustomerIdAndStatus_StatusCode(String customerCustomerId, String statusStatusCode);
+    OrderEntity findByCustomer_CustomerId(String customerCustomerId);
+    //    OrderEntity findByCustomerIdWithReceiptDetails(String customerId);
 }

@@ -19,5 +19,8 @@ public class StatusEntity {
     String statusId;
 
     @Column
+    String statusCode;
+
+    @Column
     String statusName;
 }

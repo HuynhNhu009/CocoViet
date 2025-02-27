@@ -14,5 +14,6 @@ public class StatusDTO {
 
     String statusId;
     String statusName;
+    String statusCode;
     List<OrderDTO> orders;
 }

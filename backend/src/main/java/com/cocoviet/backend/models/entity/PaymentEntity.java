@@ -21,5 +21,8 @@ public class PaymentEntity implements Serializable {
     String paymentId;
 
     @Column
+    String paymentCode;
+
+    @Column
     String paymentMethod;
 }

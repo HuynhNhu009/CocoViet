@@ -2,8 +2,6 @@ package com.cocoviet.backend.service.impl;
 
 import com.cocoviet.backend.mapper.ProductVariantMapper;
 import com.cocoviet.backend.models.dto.OrderDTO;
-import com.cocoviet.backend.models.dto.ProductDTO;
-import com.cocoviet.backend.models.dto.ProductVariantDTO;
 import com.cocoviet.backend.models.dto.ReceiptDetailDTO;
 import com.cocoviet.backend.models.entity.*;
 import com.cocoviet.backend.models.request.OrderRequest;
@@ -14,7 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -48,12 +49,12 @@ public class OrderServiceImpl implements IOrderService {
     @Override
     public OrderDTO createOrder(OrderRequest orderRequest) {
         CustomerEntity customerEntity = iCustomerRepository.findByCustomerId(orderRequest.getCustomerId());
-        StatusEntity statusEntity = iStatusRepository.findByStatusId(orderRequest.getStatusId());
-        PaymentEntity paymentEntity = iPaymentRepository.findByPaymentId(orderRequest.getPaymentId());
+        StatusEntity statusEntity = iStatusRepository.findByStatusCode("CART");
+        PaymentEntity paymentEntity = iPaymentRepository.findByPaymentCode("CASH");
 
         Set<ReceiptDetailEntity> newReceiptDetailEntity = new HashSet<>();
 
-        OrderEntity orderEntity = iOrderRepository.findByCustomerId(customerEntity.getCustomerId());
+        OrderEntity orderEntity = iOrderRepository.findByCustomer_CustomerIdAndStatus_StatusCode(customerEntity.getCustomerId(), "CART");
 
         //gio hag da ton tai
         if(orderEntity == null){
@@ -233,16 +234,16 @@ public class OrderServiceImpl implements IOrderService {
 
         }
 
-        if(orderRequest.getStatusId() != null){
-            StatusEntity statusEntity = iStatusRepository.findByStatusId(orderRequest.getStatusId());
+        if(orderRequest.getStatusCode() != null){
+            StatusEntity statusEntity = iStatusRepository.findByStatusCode(orderRequest.getStatusCode());
             orderDTO.setStatusName(statusEntity.getStatusName());
         }else {
             orderDTO.setStatusName(orderEntity.getStatus().getStatusName());
 
         }
 
-        if(orderRequest.getPaymentId() != null){
-            PaymentEntity paymentEntity = iPaymentRepository.findByPaymentId(orderRequest.getPaymentId());
+        if(orderRequest.getPaymentCode() != null){
+            PaymentEntity paymentEntity = iPaymentRepository.findByPaymentCode(orderRequest.getPaymentCode());
             orderDTO.setPaymentMethod(paymentEntity.getPaymentMethod());
         }else {
             orderDTO.setPaymentMethod(orderEntity.getPayment().getPaymentMethod());
@@ -259,7 +260,7 @@ public class OrderServiceImpl implements IOrderService {
 
     @Override
     public OrderDTO getOrderByCustomerId(String customerId) {
-        OrderEntity orderEntity = iOrderRepository.findByCustomerId(customerId);
+        OrderEntity orderEntity = iOrderRepository.findByCustomer_CustomerId(customerId);
         CustomerEntity customerEntity = iCustomerRepository.findByCustomerId(customerId);
 
         Set<ReceiptDetailDTO> receiptDetailDTOS = orderEntity.getReceiptDetails().stream()

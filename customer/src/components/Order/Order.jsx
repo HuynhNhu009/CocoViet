@@ -2,52 +2,43 @@ import React, { useEffect, useState } from "react";
 import { Button } from "../ui/Button";
 import { useSelector } from "react-redux";
 import { orderAPI } from "../../services/orderService";
+import Status from "./Status";
+import { useDispatch } from "react-redux";
+import { setOrderList } from "../../redux/orderSlice";
+
 function Order() {
   const customer = useSelector((state) => state.CustomerStore.customer);
   const [order, setOrder] = useState({});
   const [totalPrice, setTotalPrice] = useState(0);
-
-  const status = ["Giỏ Hàng", "Đang xử lý", "Đang Giao", "Đã giao", "Đã Hủy"]
-
-  // useEffect(() => {
-  //   if (customer) {
-  //     orderAPI.getOrderByCustomerId(customer.customerId)
-  //       .then((response) => {
-  //         console.log( response);
-  //         setOrder(response.data)
-          
-  //         let price = 0;
-
-  //         response.data.receiptDetails.map((item, index) => (
-  //           price += (item.productVariants.price * item.totalQuantity)
-  //         ))
+  const dispatch = useDispatch();
+  console.log(customer);
   
-  //         setTotalPrice(price);
-  //       })
-  //       .catch((error) => {
-  //         console.error("Error fetching orders:", error);
-  //       });
-  //   }
-  // }, []);
+  useEffect(() => {
+    if (customer) {
+      orderAPI.getOrderByCustomerId(customer.customerId)
+        .then((response) => {
+          console.log( response);
+          dispatch(setOrderList(response.data));
+          setOrder(response.data)
+          
+          let price = 0;
+
+          response.data.receiptDetails.map((item, index) => (
+            price += (item.productVariants.price * item.totalQuantity)
+          ))
+  
+          setTotalPrice(price);
+        })
+        .catch((error) => {
+          console.error("Error fetching orders:", error);
+        });
+    }
+  }, []);
 
   return (
-    <div className="flex justify-center flex-col sm:px-[5vw] md:px-[7vw] lg:px-[9vw] mb-8">
-      <div className="flex flex-row justify-center ">
-        {status && Array.isArray(status) ? (
-          status.map((item, index) => (
-            <div key={index} className="relative bg-green-200 py-3 px-6 w-35 mx-2 before:absolute before:-left-0 before:top-1/2 before:-translate-y-1/2 before:w-0 before:h-0 before:border-y-20 before:border-l-20 before:border-y-transparent before:border-l-green-600">
-  {item}
-</div>
-
-
-
-          ))
-        ) : (
-          <p>Không có dữ liệu</p>
-        )}
-      </div>
-      
-      {/* <table className="w-full mt-10 border-collapse" key={order.orderId}>
+    <div className="flex justify-center flex-col sm:px-[5vw] md:px-[7vw] lg:px-[9vw] my-8">
+      <Status />
+      <table className="w-full mt-10 border-collapse" key={order.orderId}>
         <thead className="bg-[#77C27F]">
           <tr className="  text-white">
             <th className=" px-4 py-2 w-1/12">STT</th>
@@ -95,13 +86,13 @@ function Order() {
           )}
         </tbody>
       </table>
-      {/* fixed bottom-0 w-full left-0 bg-[#77C27F] */}
-      {/* <div className=" font-bold text-lg py-5 pr-8 text-right ">
+      {/* {/* fixed bottom-0 w-full left-0 bg-[#77C27F] */}
+      <div className=" font-bold text-lg py-5 pr-8 text-right ">
         <p className="mb-2 text-green-600">Tổng Cộng : {totalPrice} VND</p>
         <button className="bg-white hover:scale-105 cursor-pointer text-green-600 py-1 px-3 rounded-tl-2xl rounded-br-2xl shadow-md transition-transform duration-400 ease-in-out">
           Thanh Toán
         </button>
-      </div>  */}
+      </div> 
     </div>
   );
 }

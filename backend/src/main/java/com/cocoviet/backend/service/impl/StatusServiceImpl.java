@@ -35,6 +35,7 @@ public class StatusServiceImpl implements IStatusService {
 
         StatusEntity statusEntity = StatusEntity.builder()
                 .statusName(statusRequest.getStatusName())
+                .statusCode(statusRequest.getStatusCode())
                 .build();
         return iStatusMapper.toStatusDTO(iStatusRepository.save(statusEntity));
     }

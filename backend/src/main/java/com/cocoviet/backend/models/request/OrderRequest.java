@@ -23,10 +23,10 @@ public class OrderRequest {
     String customerId;
 
 //    @NotNull(message = "Status ID cannot be null")
-    String statusId;
+    String statusCode;
 
 //    @NotNull(message = "Payment ID cannot be null")
-    String paymentId;
+    String paymentCode;
 
     List<ReceiptDetailRequest> receiptDetailRequests;
 

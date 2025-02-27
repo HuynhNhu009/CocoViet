@@ -8,4 +8,6 @@ import org.springframework.stereotype.Repository;
 public interface IStatusRepository extends JpaRepository<StatusEntity, String> {
     boolean existsByStatusName(String statusName);
     StatusEntity findByStatusId(String StatusId);
+
+    StatusEntity findByStatusCode(String statusCode);
 }
