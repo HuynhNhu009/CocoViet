@@ -9,7 +9,7 @@ import java.util.Optional;
 
 @Repository
 public interface IOrderRepository extends JpaRepository<OrderEntity, String> {
-//    boolean exsitsByCustomerId(String customerId);
+    OrderEntity findByOrderId(String orderId);
 
     @Query("SELECT o FROM OrderEntity o LEFT JOIN FETCH o.receiptDetails WHERE o.customer.customerId = :customerId")
     OrderEntity findByCustomerId(String customerId);

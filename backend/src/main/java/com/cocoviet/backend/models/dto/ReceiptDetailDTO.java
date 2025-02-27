@@ -26,7 +26,7 @@ public class ReceiptDetailDTO {
 
     int totalQuantity;
 
-    BigDecimal totalPrice;
+//    BigDecimal totalPrice;
 
     ProductVariantDTO productVariants;
 }

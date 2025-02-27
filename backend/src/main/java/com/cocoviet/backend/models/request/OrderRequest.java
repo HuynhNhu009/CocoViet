@@ -19,13 +19,13 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class OrderRequest {
 
-    @NotNull(message = "Customer ID cannot be null")
+//    @NotNull(message = "Customer ID cannot be null")
     String customerId;
 
-    @NotNull(message = "Status ID cannot be null")
+//    @NotNull(message = "Status ID cannot be null")
     String statusId;
 
-    @NotNull(message = "Payment ID cannot be null")
+//    @NotNull(message = "Payment ID cannot be null")
     String paymentId;
 
     List<ReceiptDetailRequest> receiptDetailRequests;
