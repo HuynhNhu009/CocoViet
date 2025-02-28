@@ -37,21 +37,24 @@ function OrderItem(orderStore) {
             order.receiptDetails.map((item, index) => (
               <tr
                 key={index}
-                className="text-center border-b-1 border-gray-400"
+                className="text-center border-b-1 border-gray-400 "
               >
                 <td className="px-4 py-2">{index + 1}</td>
                 <td className="flex flex-row justify-center ">
-                  <div className="flex items-center h-28">
+                  <div className="flex items-center justify-between justify-center h-28">
                     <img
                       src="https://th.bing.com/th/id/R.21f948ddaf5ceb8af38722b6525f9576?rik=QXJDXfWA6c5bfw&riu=http%3a%2f%2fimua.com.vn%2fimages%2fAlbum%2fTrai-dua-tuoi-75.jpg&ehk=J0LhHGVtSH9w9QxAw%2fhxbidliOyBUiI6qjp8i2YcWJQ%3d&risl=&pid=ImgRaw&r=0"
                       alt="H1"
-                      className="h-[100%] w-28 object-cover mr-5"
+                      className="h-28 w-28 object-cover mr-2"
                     />
-                    <span className="ml-2">{item.productName}</span>
+                    <span className="ml-2 w-38">{item.productName}</span>
                   </div>
                 </td>
                 <td className="px-4 py-2">{item.productVariants.price}</td>
-                <td className="px-4 py-2">{item.totalQuantity}</td>
+                <td className="px-4 py-2">
+                <input type="number" className=" text-center border-1 rounded-sm w-15" id="quantity" value={item.totalQuantity}/>
+
+                </td>
                 <td className="px-4 py-2">{item.productVariants.price *  item.totalQuantity}</td>
                 <td className="px-4 py-2">
                   <button className="bg-red-500 text-white px-3 py-1 rounded">

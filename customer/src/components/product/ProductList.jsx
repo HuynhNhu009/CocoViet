@@ -62,6 +62,7 @@ const ProductList = () => {
       setProducts([]);
       }    
   };
+  
 
   return (
     <>

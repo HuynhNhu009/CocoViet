@@ -5,8 +5,26 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { setProductDetail } from "../../redux/productSlice";
 import { useNavigate } from "react-router-dom";
+import { BuildingStorefrontIcon } from "@heroicons/react/24/outline";
+import { orderAPI } from "../../services/orderService";
+import { setCreateOrder } from "../../redux/orderSlice";
+
 const ProductDetail = () => {
+  //api
+  const { productId } = useParams();
+
   const [product, setProducts] = useState([]);
+  const [addOrder, setAddOrder] = useState({});
+  const orderRequest = {
+    customerId:"",
+    receiptDetailRequests:[
+      {
+        productVariantId:"",
+        quantity:""
+      }
+    ]
+
+  }
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -17,14 +35,48 @@ const ProductDetail = () => {
     (state) => state.ProductStore.productStore || []
   );
 
-  //api
-  const { productId } = useParams();
+  const customer = useSelector(
+    (state) => state.CustomerStore.customer || []
+  );
 
   useEffect(() => {
     if (productDetail != {}) {
-      setProducts(productDetail);
+      setProducts(productDetail);      
     }
   }, [productDetail]);
+
+  const [selectVariant, setSelectVariant] = useState(productDetail.variants[0]);
+
+  //quantity
+  const [quantity, setQuantity] = useState(1); 
+
+  const handleChangeQuantity = (e) => {
+    let value = e.target.value.trim(); 
+  
+    if (value === "") {
+      setQuantity(""); 
+      return;
+    }
+  
+    let num = parseInt(value, 10);
+    if (!isNaN(num) && num >= 1) {
+      setQuantity(num);
+    }
+  };
+
+  //buy product
+  const buyProduct = async() => {
+      orderRequest.customerId = customer.customerId;
+      orderRequest.receiptDetailRequests = [{
+         productVariantId: selectVariant.variantId,
+         quantity: quantity
+      }]
+      
+      console.log("BUY",orderRequest);
+      await orderAPI.addOrder(orderRequest);
+      dispatch(setCreateOrder(true));
+
+  }
 
   //detail
   const handleNavigate = (productId) => {
@@ -42,6 +94,7 @@ const ProductDetail = () => {
       setProducts([]);
     }
   };
+
 
   return (
     <div className="  flex flex-col justify-center align-middle font-medium px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw] my-8">
@@ -61,30 +114,42 @@ const ProductDetail = () => {
 
         <div className="box-content flex flex-col justify-between w-[62%]">
           <h2 className="font-bold text-4xl mb-0">{product.productName}</h2>
-          <p className="text-2xl">
-            Cửa hàng: <b>{product.retailerName}</b>
+          <p className="text-2xl flex  font-bold">
+            <BuildingStorefrontIcon class="h-7 w-7 mr-2" />
+            {product.retailerName}
           </p>
-          {product.variants?.map((variant, vIndex) => (
-            <div key={vIndex}>
-              <p className="text-green-600 font-bold text-4xl mb-5">
-                {variant.price}.000 VND
-              </p>
-              <p className="text-lg font-extralight mb-5">
-                Còn lại: {variant.stock} sản phẩm
-              </p>
-
-              <div className="border-2 border-green-600 rounded-2xl">
-                <div className=" text-lg inner-content p-5">
-                  <p className="mb-1">Thông tin sản phẩm</p>
-                  <hr className="mb-5 text-green-600"></hr>
-                  <p className="font-extralight">Thể tích: 500ml</p>
-                  <p className="font-extralight">Xuất xứ: Bến Tre</p>
-                </div>
-              </div>
-            </div>
-          ))}
-
-          <button className=" cursor-pointer bg-green-600 shadow-sm shadow-gray-400 p-3 rounded-2xl text-white text-base">
+          <p className="font-extralight">Xuất xứ: {product.productOrigin}</p>
+          <div>
+            <p className=" mb-1 text-green-600 font-bold">Thông tin sản phẩm</p>
+            <hr className="mb-2 text-green-600"></hr>
+          </div>
+          <div className="">
+            <span className="pr-3">Thể tích: </span>
+            {product.variants?.map((variant, vIndex) => (
+              <span
+                onClick={() => setSelectVariant(variant)}
+                key={vIndex}
+                className={`cursor-pointer mr-2 px-2 py-1 rounded-sm border 
+                  ${selectVariant === variant ? "bg-green-500 text-white" : "hover:bg-green-500"}`}
+              >
+                {variant.value}
+                {variant.unitName}
+              </span>
+            ))}
+          </div>
+          <p className="text-green-600 font-bold text-4xl ">{selectVariant.price}.000 VND</p>
+          <div>
+            <span>Số lượng: </span>
+            <input
+            type="number"
+            className=" border-1 px-2 rounded-sm w-15"
+            id="quantity"
+            onChange={handleChangeQuantity}
+            onBlur={() => quantity === "" && setQuantity(1)}
+            value={quantity}
+          />
+          </div>
+          <button onClick={buyProduct} className=" cursor-pointer bg-green-600 shadow-sm shadow-gray-400 p-3 rounded-2xl text-white text-base">
             MUA NGAY
           </button>
         </div>
@@ -99,8 +164,9 @@ const ProductDetail = () => {
         <hr className="mb-5"></hr>
         <div className=" productItem flex align-middle grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6 m-0">
           {productStore.slice(0, 4).map((item) => (
-            <div key={item.productId}
-                onClick={() => handleNavigate(item.productId)}
+            <div
+              key={item.productId}
+              onClick={() => handleNavigate(item.productId)}
             >
               <ProductItem
                 productId={item.productId}

@@ -12,4 +12,10 @@ export const orderAPI = {
     const response = await api.get(`/orders/${customerId}`)
     return response.data;
   },
+
+  addOrder: async (orderRequest) => {
+    const response = await api.post("/orders/create", orderRequest);
+    return response.data;
+  },
+
 };

@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import { customerApi } from "./services/customerService";
 import { setLogin, logout } from "./redux/customerSlice";
 import { setProductStore } from "./redux/productSlice";
-import { setOrderList, setOrderStatus, setStatus, setStatusActive } from "./redux/orderSlice";
+import { setCreateOrder, setOrderList, setOrderStatus, setStatus, setStatusActive } from "./redux/orderSlice";
 import { productAPI } from "./services/productService";
 import { statusAPI } from "./services/statusService";
 import { useSelector } from "react-redux";
@@ -18,6 +18,7 @@ function App() {
   const statusStore = useSelector((state) => state.OrderStore.status);    
   const orderList = useSelector((state) => state.OrderStore.orderList);    
   const statusActive = useSelector((state) => state.OrderStore.statusActive);    
+  const createOrder = useSelector((state) => state.OrderStore.createOrder);    
   const location = useLocation();
 
   useEffect(() => {
@@ -51,7 +52,7 @@ function App() {
         const productResponse = await productAPI.getAllProducts();
         if (productResponse && productResponse.data) {
           // setProducts(productResponse.data);
-          dispatch(setProductStore(productResponse.data));
+          dispatch(setProductStore(productResponse.data));          
         }
       } catch (error) {
         console.log(error);
@@ -80,8 +81,10 @@ function App() {
     };
     fetchOrders();
 
+    dispatch(setCreateOrder(false));
+
     
-  }, [isLogin, customer, dispatch]);
+  }, [isLogin, customer, dispatch, createOrder]);
 
   // 
   useEffect(() => {
