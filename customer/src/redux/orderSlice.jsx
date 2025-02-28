@@ -6,6 +6,7 @@ const orderSlice = createSlice({
     status:[],
     statusActive:null,
     orderList:[],
+    orderStatus:[],
   },
 
   reducers: {
@@ -19,14 +20,27 @@ const orderSlice = createSlice({
     setOrderList: (state, action) => {
       state.orderList = action.payload;      
     },
+
+    setOrderStatus: (state, action) => {
+      state.orderStatus = action.payload;      
+    },
+
+    resetOrderState: () => ({
+      statusActive: null,
+
+    }),
   },
 });
 
 export const {
   setStatus,
   setStatusActive,
-  setOrderList
+  setOrderList,
+  setOrderStatus,
+  resetOrderState
 } = orderSlice.actions;
+
+// export const getInitialState = (state) => state.ProductStore.statusActive;
 
 
 export default orderSlice.reducer;

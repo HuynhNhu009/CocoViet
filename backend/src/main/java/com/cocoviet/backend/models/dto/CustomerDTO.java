@@ -28,5 +28,5 @@ public class CustomerDTO {
 
     LocalDateTime createdAt;
 
-    List<OrderDTO> productOrders; // Trả về danh sách Order của Customer
+    List<OrderDTO> productOrders;
 }

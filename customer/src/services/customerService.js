@@ -7,8 +7,9 @@ export const customerApi = {
       const response = await api.post("/customers/login", formData, {
         withCredentials: true,
       });
-      console.log(response.data);
-      dispatch(setLogin(response.data)); // Lưu vào Redux
+      // console.log("1",response.data);
+      // console.log("2",response.data.data);
+      dispatch(setLogin(response.data.data)); // Lưu vào Redux
 
       return response.data;
     } catch (error) {

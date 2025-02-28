@@ -11,8 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class StatusDTO {
-
-    String statusId;
+    Long statusId;
     String statusName;
     String statusCode;
     List<OrderDTO> orders;

@@ -253,12 +253,15 @@ public class OrderServiceImpl implements IOrderService {
 
 
     @Override
-    public OrderDTO getOrderByCustomerId(String customerId) {
-        OrderEntity orderEntity = iOrderRepository.findByCustomer_CustomerId(customerId);
-        CustomerEntity customerEntity = iCustomerRepository.findByCustomerId(customerId);
+    public List<OrderDTO> getOrderByCustomerId(String customerId) {
+        List<OrderEntity> listOrderEntities = iOrderRepository.findByCustomer_CustomerId(customerId);
 
-        Set<ReceiptDetailDTO> receiptDetailDTOS = orderEntity.getReceiptDetails().stream()
-                .map(response -> ReceiptDetailDTO.builder()
+        List<OrderDTO> orderDTOS = listOrderEntities.stream()
+            .map(orderEntity -> {
+
+                CustomerEntity customerEntity = iCustomerRepository.findByCustomerId(orderEntity.getCustomer().getCustomerId());
+                Set<ReceiptDetailDTO> receiptDetailDTOS = orderEntity.getReceiptDetails().stream()
+                    .map(response -> ReceiptDetailDTO.builder()
                         .receiptDetailId(response.getReceiptDetailId())
                         .totalQuantity(response.getQuantity())
                         .productVariants(productVariantMapper.toDTO(response.getProductVariant()))
@@ -268,17 +271,41 @@ public class OrderServiceImpl implements IOrderService {
                         .productName(response.getProductVariant().getProduct().getProductName())
                         .retailerName(iretailerRepository.findRetailerNameByProductId(response.getProductVariant().getProduct().getProductId()))
                         .build())
-                .collect(Collectors.toSet());
+                    .collect(Collectors.toSet());
 
+                OrderDTO orderDTO = new OrderDTO();
+                orderDTO.setOrderId(orderEntity.getOrderId());
+                orderDTO.setOrderDate(orderEntity.getOrderDate());
+                orderDTO.setStatusName(orderEntity.getStatus().getStatusName());
+                orderDTO.setReceiptDetails(receiptDetailDTOS);
+                orderDTO.setPaymentMethod(orderEntity.getPayment().getPaymentMethod());
 
-        OrderDTO orderDTO = new OrderDTO();
-        orderDTO.setOrderId(orderEntity.getOrderId());
-        orderDTO.setOrderDate(orderEntity.getOrderDate());
-        orderDTO.setStatusName(orderEntity.getStatus().getStatusName());
-        orderDTO.setReceiptDetails(receiptDetailDTOS);
-        orderDTO.setPaymentMethod(orderEntity.getPayment().getPaymentMethod());
+                return orderDTO;
+            }).collect(Collectors.toList());
 
-        return orderDTO;
+        return orderDTOS;
+//        Set<ReceiptDetailDTO> receiptDetailDTOS = orderEntity.getReceiptDetails().stream()
+//                .map(response -> ReceiptDetailDTO.builder()
+//                        .receiptDetailId(response.getReceiptDetailId())
+//                        .totalQuantity(response.getQuantity())
+//                        .productVariants(productVariantMapper.toDTO(response.getProductVariant()))
+//                        .customerName(customerEntity.getCustomerName())
+//                        .customerNumber(customerEntity.getPhoneNumbers())
+//                        .customerAddress(customerEntity.getCustomerAddress())
+//                        .productName(response.getProductVariant().getProduct().getProductName())
+//                        .retailerName(iretailerRepository.findRetailerNameByProductId(response.getProductVariant().getProduct().getProductId()))
+//                        .build())
+//                .collect(Collectors.toSet());
+//
+//
+//        OrderDTO orderDTO = new OrderDTO();
+//        orderDTO.setOrderId(orderEntity.getOrderId());
+//        orderDTO.setOrderDate(orderEntity.getOrderDate());
+//        orderDTO.setStatusName(orderEntity.getStatus().getStatusName());
+//        orderDTO.setReceiptDetails(receiptDetailDTOS);
+//        orderDTO.setPaymentMethod(orderEntity.getPayment().getPaymentMethod());
+//
+//        return orderDTO;
     }
 
     @Override
