@@ -236,24 +236,18 @@ public class OrderServiceImpl implements IOrderService {
 
         if(orderRequest.getStatusCode() != null){
             StatusEntity statusEntity = iStatusRepository.findByStatusCode(orderRequest.getStatusCode());
-            orderDTO.setStatusName(statusEntity.getStatusName());
-        }else {
-            orderDTO.setStatusName(orderEntity.getStatus().getStatusName());
-
+            orderEntity.setStatus(statusEntity);
         }
 
         if(orderRequest.getPaymentCode() != null){
             PaymentEntity paymentEntity = iPaymentRepository.findByPaymentCode(orderRequest.getPaymentCode());
-            orderDTO.setPaymentMethod(paymentEntity.getPaymentMethod());
-        }else {
-            orderDTO.setPaymentMethod(orderEntity.getPayment().getPaymentMethod());
-
+            orderEntity.setPayment(paymentEntity);
         }
-
+        iOrderRepository.save(orderEntity);
         orderDTO.setOrderId(orderEntity.getOrderId());
         orderDTO.setOrderDate(orderEntity.getOrderDate());
-
-
+        orderDTO.setStatusName(orderEntity.getStatus().getStatusName());
+        orderDTO.setPaymentMethod(orderEntity.getPayment().getPaymentMethod());
         return orderDTO;
     }
 
