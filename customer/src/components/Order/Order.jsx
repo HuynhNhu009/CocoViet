@@ -17,7 +17,7 @@ function Order() {
   }, [orderStatus]);
 
   return (
-    <div className="flex justify-center flex-col w-full sm:px-[5vw] md:px-[7vw] lg:px-[9vw] my-8">
+    <div className="flex justify-center flex-col w-full sm:px-[5vw] md:px-[7vw] lg:px-[9vw] mb-8">
       <Status />
       <OrderItem 
         orderStore={order}

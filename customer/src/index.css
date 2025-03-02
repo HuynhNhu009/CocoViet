@@ -24,7 +24,11 @@ input[type="number"]::-webkit-outer-spin-button {
   display: block;
 }
 
-/* html, body {
-    overflow-y: hidden;
-  } */
+thead {
+    position: sticky;
+    top: 0;
+    background: #77C27F;
+    z-index: 10;
+  }
   
+
