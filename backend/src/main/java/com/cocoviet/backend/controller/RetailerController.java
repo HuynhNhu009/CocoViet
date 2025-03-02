@@ -1,6 +1,7 @@
 package com.cocoviet.backend.controller;
 
 import com.cocoviet.backend.models.dto.AuthenticationDTO;
+import com.cocoviet.backend.models.dto.UnitDTO;
 import com.cocoviet.backend.models.reponse.ResponseData;
 import com.cocoviet.backend.models.request.CustomerRequest;
 import com.cocoviet.backend.models.request.RetailerRequest;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
+import java.util.Set;
 
 
 @RestController
@@ -153,6 +155,17 @@ public class RetailerController {
                         .data(iRetailerService.getAllRetailer())
                         .msg("Get all Retailers success")
                         .status("OK")
+                        .build());
+    }
+
+    @GetMapping("/{retailerId}/units")
+    public ResponseEntity<ResponseData> getAllUnitsByRetailerId(@PathVariable String retailerId) {
+        Set<UnitDTO> units = iRetailerService.getUnitsByRetailerId(retailerId);
+        return ResponseEntity.ok()
+                .body(ResponseData.builder()
+                        .data(units)
+                        .msg("Units for retailer '" + retailerId + "' retrieved successfully")
+                        .status("SUCCESS")
                         .build());
     }
 }

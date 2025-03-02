@@ -12,9 +12,9 @@ const api = axios.create({
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    console.error("API Error:", error);
+    // console.error("API Error:", error);
     return Promise.reject(
-      error.response?.data || { message: "Lỗi kết nối đến API." }
+      error|| { message: "Lỗi kết nối đến API." }
     );
   }
 );

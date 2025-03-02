@@ -6,6 +6,7 @@ import lombok.experimental.FieldDefaults;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "unit")
@@ -23,6 +24,9 @@ public class UnitEntity implements Serializable {
 
     @Column
     String unitName;
+
+    @ManyToMany(mappedBy = "units")
+    Set<RetailerEntity> retailers;
 
     @OneToMany(mappedBy = "unit", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     List<ProductVariantEntity> variants;

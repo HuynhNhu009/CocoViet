@@ -1,5 +1,6 @@
 package com.cocoviet.backend.controller;
 
+import com.cocoviet.backend.models.dto.ProductDTO;
 import com.cocoviet.backend.models.reponse.ResponseData;
 import com.cocoviet.backend.models.request.ProductRequest;
 import com.cocoviet.backend.service.IProductService;
@@ -27,16 +28,39 @@ public class ProductController {
     private ObjectMapper objectMapper;
 
     @PostMapping(value = "/add", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    ResponseEntity<ResponseData> addProduct(@RequestPart("product") String productJson,
-                                            @RequestPart("image") MultipartFile imageFile) throws IOException {
-
-        ProductRequest productRequest = objectMapper.readValue(productJson, ProductRequest.class);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ResponseData.builder()
-                        .data(productService.addProduct(productRequest, imageFile))
-                        .msg("Add product: "+ productRequest.getProductName() + " successfully")
-                        .status("OK")
-                        .build());
+    ResponseEntity<ResponseData> addProduct(
+            @RequestPart("product") String productJson,
+            @RequestPart("image") MultipartFile imageFile) throws IOException {
+        try {
+            ProductRequest productRequest = objectMapper.readValue(productJson, ProductRequest.class);
+            ProductDTO productDTO = productService.addProduct(productRequest, imageFile);
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(ResponseData.builder()
+                            .data(productDTO)
+                            .msg("Add product: " + productRequest.getProductName() + " successfully")
+                            .status("OK")
+                            .build());
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(ResponseData.builder()
+                            .msg(e.getMessage())
+                            .status("INVALID_INPUT")
+                            .build());
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(ResponseData.builder()
+                            .msg(e.getMessage())
+                            .status(e.getMessage().contains("Product name already exists")
+                                    ? "PRODUCT_ALREADY_EXISTS"
+                                    : "BAD_REQUEST")
+                            .build());
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(ResponseData.builder()
+                            .msg("Failed to upload image: " + e.getMessage())
+                            .status("SERVER_ERROR")
+                            .build());
+        }
     }
 
     @PatchMapping("/{productId}")

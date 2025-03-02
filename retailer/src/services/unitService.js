@@ -1,13 +1,15 @@
 import api from "./Api";
 
 export const unitApi = {
-  getAllUnits: async () => {
-    const response = await api.get(`/units/get-all`);
+  getAllUnitsRetailerId: async (retailerId) => {
+    console.log("In unitservice", retailerId);
+    
+    const response = await api.get(`/retailers/${retailerId}/units`);
     return response.data;
   },
 
-  addUnit: async (formData) => {
-    const response = await api.post(`/units/add`, formData);
+  addUnit: async (retailerId, formData) => {
+    const response = await api.post(`/units?retailerId=${retailerId}`, formData);
     return response.data;
   },
 
