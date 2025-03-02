@@ -37,7 +37,7 @@ public class StatusController {
                         .build());
     }
 
-    @GetMapping("/get-all-status")
+    @GetMapping("/get-all")
     public ResponseEntity<ResponseData> getAllStatus(){
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ResponseData.builder()

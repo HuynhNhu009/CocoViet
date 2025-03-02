@@ -27,4 +27,38 @@ public class OrderController {
                         .status("OK")
                         .build());
     }
+
+    @PatchMapping("/update/{orderId}")
+
+    ResponseEntity<ResponseData> updateOrder(@PathVariable String orderId, @RequestBody @Valid OrderRequest orderRequest ) {
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ResponseData.builder()
+                        .data(orderService.updateOrder(orderId, orderRequest))
+                        .msg("Get order successfully")
+                        .status("OK")
+                        .build());
+    }
+
+    @GetMapping("/{customerId}")
+    ResponseEntity<ResponseData> getOrderByCustomerId(@PathVariable String customerId ) {
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ResponseData.builder()
+                        .data(orderService.getOrderByCustomerId(customerId))
+                        .msg("Get order successfully")
+                        .status("OK")
+                        .build());
+    }
+
+    @GetMapping("/get-all")
+    ResponseEntity<ResponseData> getAllOrder( ) {
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ResponseData.builder()
+                        .data(orderService.getAllOrders())
+                        .msg("Get all order successfully")
+                        .status("OK")
+                        .build());
+    }
 }

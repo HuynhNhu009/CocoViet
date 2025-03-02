@@ -8,4 +8,6 @@ import org.springframework.stereotype.Repository;
 public interface IPaymentRepository extends JpaRepository<PaymentEntity, String> {
     boolean existsByPaymentMethod(String paymentMethod);
     PaymentEntity findByPaymentId(String paymentId);
+
+    PaymentEntity findByPaymentCode(String paymentCode);
 }

@@ -12,4 +12,5 @@ import lombok.experimental.FieldDefaults;
 public class StatusRequest {
     @Size(min = 5, message = "Status name must be at least 10 characters.")
     String statusName;
+    String statusCode;
 }

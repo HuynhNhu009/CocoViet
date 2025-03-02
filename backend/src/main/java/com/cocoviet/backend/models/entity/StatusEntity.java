@@ -15,8 +15,11 @@ import lombok.experimental.FieldDefaults;
 
 public class StatusEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    String statusId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Long statusId;
+
+    @Column
+    String statusCode;
 
     @Column
     String statusName;

@@ -33,6 +33,7 @@ public class PaymentServiceImpl implements IPaymentService {
 
         PaymentEntity paymentEntity = PaymentEntity.builder()
                 .paymentMethod(paymentRequest.getPaymentMethod())
+                .paymentCode(paymentRequest.getPaymentCode())
                 .build();
 
         return iPaymentMapper.toPaymentDTO(iPaymentRepository.save(paymentEntity));

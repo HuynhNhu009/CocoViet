@@ -5,13 +5,15 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface IOrderRepository extends JpaRepository<OrderEntity, String> {
-//    boolean exsitsByCustomerId(String customerId);
+    OrderEntity findByOrderId(String orderId);
 
-    @Query("SELECT o FROM OrderEntity o LEFT JOIN FETCH o.receiptDetails WHERE o.customer.customerId = :customerId")
-    OrderEntity findByCustomerId(String customerId);
-//    OrderEntity findByCustomerIdWithReceiptDetails(String customerId);
+    OrderEntity findByCustomer_CustomerIdAndStatus_StatusCode(String customerCustomerId, String statusStatusCode);
+//    OrderEntity findByCustomer_CustomerId(String customerCustomerId);
+    List<OrderEntity> findByCustomer_CustomerId(String customerId);
+    //    OrderEntity findByCustomerIdWithReceiptDetails(String customerId);
 }

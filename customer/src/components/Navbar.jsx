@@ -12,6 +12,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { customerApi } from "../services/customerService";
 import { setActive, setIsNav } from "../redux/productSlice";
+import { resetOrderState } from "../redux/orderSlice";
 
 const Navbar = () => {
   const [visible, setVisible] = useState(false);
@@ -177,16 +178,16 @@ const Navbar = () => {
               )}
             </div>
 
-            {/* {isLoggedIn && ( */}
+            {isLoggedIn && (
               <Link to="/order" className="relative">
                 <ShoppingBagIcon
                   className={`size-7 ${text_Color} ${text_hover}`}
                 />
                 <p className="absolute right-[-5px] bottom-[-5px] w-4 text-center leading-4 bg-black text-white rounded-full text-[8px]">
-                  9{/* {getCartCount()} */}
+                  {/* {getCartCount()} */}
                 </p>
               </Link>
-            {/* )} */}
+            )}
 
             {/* Sidebar menu button */}
             <Bars3Icon
