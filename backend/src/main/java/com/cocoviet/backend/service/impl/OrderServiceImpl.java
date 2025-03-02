@@ -178,23 +178,10 @@ public class OrderServiceImpl implements IOrderService {
                     //update quantity
                     existReceiptDetailEntity.setQuantity(receiptDetailRequest.getQuantity() );
                     newReceiptDetailEntity.add(existReceiptDetailEntity);
-//                    productVariantEntity.setStock(productVariantEntity.getStock() - receiptDetailRequest.getQuantity());
+                    //productVariantEntity.setStock(productVariantEntity.getStock() - receiptDetailRequest.getQuantity());
                     iProducVariantRepository.save(productVariantEntity);
                     newReceiptDetailEntity.add(existReceiptDetailEntity);
                 }
-//                else{
-//                    ReceiptDetailEntity addRecieptDetail = ReceiptDetailEntity.builder()
-//                            .productOrder(orderEntity)
-//                            .productVariant(productVariantEntity)
-//                            .quantity(receiptDetailRequest.getQuantity())
-//                            .price(productVariantEntity.getPrice())
-//                            .build();
-//
-//                    productVariantEntity.setStock(productVariantEntity.getStock() - receiptDetailRequest.getQuantity());
-//                    iProducVariantRepository.save(productVariantEntity);
-//
-//                    newReceiptDetailEntity.add(addRecieptDetail);
-//                }
             }
 
             iReceiptDetailRepository.saveAll(newReceiptDetailEntity);
@@ -231,7 +218,6 @@ public class OrderServiceImpl implements IOrderService {
                             .build())
                     .collect(Collectors.toSet());
             orderDTO.setReceiptDetails(receiptDetailDTOS);
-
         }
 
         if(orderRequest.getStatusCode() != null){

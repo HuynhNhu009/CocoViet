@@ -150,7 +150,7 @@ const ProductDetail = () => {
           />
           </div>
           <button onClick={buyProduct} className=" cursor-pointer bg-green-600 shadow-sm shadow-gray-400 p-3 rounded-2xl text-white text-base">
-            MUA NGAY
+            ĐẶT HÀNG
           </button>
         </div>
       </div>

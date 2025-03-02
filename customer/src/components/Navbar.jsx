@@ -12,7 +12,6 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { customerApi } from "../services/customerService";
 import { setActive, setIsNav } from "../redux/productSlice";
-import { resetOrderState } from "../redux/orderSlice";
 
 const Navbar = () => {
   const [visible, setVisible] = useState(false);
@@ -24,6 +23,7 @@ const Navbar = () => {
 
   const isLoggedIn = useSelector((state) => !!state.CustomerStore.isLogin);
   const customerInfo = useSelector((state) => state.CustomerStore.customer);
+  const cartCount = useSelector((state) => state.OrderStore.cartCount);
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
@@ -184,7 +184,7 @@ const Navbar = () => {
                   className={`size-7 ${text_Color} ${text_hover}`}
                 />
                 <p className="absolute right-[-5px] bottom-[-5px] w-4 text-center leading-4 bg-black text-white rounded-full text-[8px]">
-                  {/* {getCartCount()} */}
+                  {cartCount}
                 </p>
               </Link>
             )}

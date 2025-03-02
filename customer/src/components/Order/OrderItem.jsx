@@ -3,20 +3,45 @@ import {useEffect, useState } from "react";
 function OrderItem(orderStore) {
 
   const [order, setOrder] = useState([]);
-  const [totalPrice, setTotalPrice] = useState([]);
+  const [totalPrice, setTotalPrice] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [quantity, setQuantity] = useState({});
 
   useEffect(() => {
     if(orderStore){
-      setOrder(orderStore.orderStore)     
+      setOrder(orderStore.orderStore)  
+      console.log(orderStore);
+         
 
       let price = 0;
-      orderStore?.orderStore?.receiptDetails?.map((item) => (
-        price += (item.productVariants.price * item.totalQuantity)
-      ))
+      orderStore?.orderStore?.receiptDetails?.forEach((item) => {
+        price += item.productVariants.price * item.totalQuantity;
+      });
       setTotalPrice(price);
+      setLoading(false);
     }
-    
   }, [orderStore]);
+
+  if (loading) {
+    return (
+      <p className="text-center text-gray-500">Đang tải đơn hàng...</p>
+    );
+  }
+
+  const handleChangeQuantity = (e, productId) => {
+    let value = e.target.value.trim(); 
+  
+    if (value === "") {
+      setQuantity(0); 
+      return;
+    }
+    console.log(value, productId);
+    
+    let num = parseInt(value, 10);
+    if (!isNaN(num) && num >= 1) {
+      setQuantity(num);
+    }
+  }
   
   
   return (
@@ -52,7 +77,11 @@ function OrderItem(orderStore) {
                 </td>
                 <td className="px-4 py-2">{item.productVariants.price}</td>
                 <td className="px-4 py-2">
-                <input type="number" className=" text-center border-1 rounded-sm w-15" id="quantity" value={item.totalQuantity}/>
+                <input type="number" 
+                    onChange={(e) => handleChangeQuantity(e,item.receiptDetailId )}
+                  onBlur={() => quantity === "" && setQuantity(item.totalQuantity)}
+                  value={quantity[item.totalQuantity]}
+                  className="text-center border-1 rounded-sm w-15" id="quantity" />
 
                 </td>
                 <td className="px-4 py-2">{item.productVariants.price *  item.totalQuantity}</td>

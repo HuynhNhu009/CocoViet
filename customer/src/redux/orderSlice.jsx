@@ -8,12 +8,18 @@ const orderSlice = createSlice({
     orderList:[],
     orderStatus:[],
     createOrder:false,
+    cartCount:0,
   },
 
   reducers: {
     setStatus: (state, action) => {
       state.status = action.payload;      
     },
+
+    setCartCount: (state, action) => {
+      state.cartCount = action.payload;      
+    },
+
     setStatusActive: (state, action) => {
       state.statusActive = action.payload;      
     },
@@ -30,10 +36,7 @@ const orderSlice = createSlice({
       state.orderStatus = action.payload;      
     },
 
-    resetOrderState: () => ({
-      statusActive: null,
 
-    }),
   },
 });
 
@@ -42,8 +45,8 @@ export const {
   setStatusActive,
   setOrderList,
   setOrderStatus,
-  resetOrderState,
-  setCreateOrder
+  setCreateOrder,
+  setCartCount
 } = orderSlice.actions;
 
 // export const getInitialState = (state) => state.ProductStore.statusActive;

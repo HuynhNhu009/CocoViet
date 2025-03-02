@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Button } from "../ui/Button";
 import { useSelector } from "react-redux";
-import { orderAPI } from "../../services/orderService";
 import Status from "./Status";
-import { useDispatch } from "react-redux";
-import { setOrderList } from "../../redux/orderSlice";
 import OrderItem from "./OrderItem";
 
 function Order() {

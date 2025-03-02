@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import { customerApi } from "./services/customerService";
 import { setLogin, logout } from "./redux/customerSlice";
 import { setProductStore } from "./redux/productSlice";
-import { setCreateOrder, setOrderList, setOrderStatus, setStatus, setStatusActive } from "./redux/orderSlice";
+import { setCartCount, setCreateOrder, setOrderList, setOrderStatus, setStatus, setStatusActive } from "./redux/orderSlice";
 import { productAPI } from "./services/productService";
 import { statusAPI } from "./services/statusService";
 import { useSelector } from "react-redux";
@@ -71,7 +71,12 @@ function App() {
           const response = await orderAPI.getOrderByCustomerId(customer.customerId);
           if (response.data) {
             dispatch(setOrderList(response.data));
-            console.log("order",response.data);
+
+            const filteredResults = response.data.filter(
+                (item) => item.statusName === "Giỏ Hàng"
+            );
+            let cartCount = filteredResults[filteredResults.length-1].receiptDetails.length;
+            dispatch(setCartCount(cartCount));
             
           }
         } catch (error) {
