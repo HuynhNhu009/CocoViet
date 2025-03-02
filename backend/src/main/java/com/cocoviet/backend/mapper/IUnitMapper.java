@@ -11,6 +11,7 @@ import java.util.Set;
 public interface IUnitMapper {
 
     UnitDTO toUnitDTO(UnitEntity unitEntity);
-    Set<UnitDTO> toSetUnitDTO(List<UnitEntity> unitEntity);
+    Set<UnitDTO> toSetUnitDTO(List<UnitEntity> unitEntities);
+    Set<UnitDTO> toSetUnitDTO(Set<UnitEntity> unitEntities);
 }
 

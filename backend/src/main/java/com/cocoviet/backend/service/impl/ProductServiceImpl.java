@@ -53,84 +53,84 @@ public class ProductServiceImpl implements IProductService {
     @Autowired
     IFileUpload iFileUpload;
 
-    @Override
-    public ProductDTO addProduct(ProductRequest productRequest, MultipartFile imageFile) throws IOException {
-        if (iProductRepository.existsByProductName(productRequest.getProductName())) {
-            throw new RuntimeException("Product name already exists!");
-        }
+@Override
+public ProductDTO addProduct(ProductRequest productRequest, MultipartFile imageFile) throws IOException {
+    if (iProductRepository.existsByProductName(productRequest.getProductName())) {
+        throw new RuntimeException("Product name already exists");
+    }
 
-        RetailerEntity retailerEntity = iretailerRepository.findById(productRequest.getRetailerId())
-                .orElseThrow(() -> new RuntimeException("Retailer not found!"));
+    RetailerEntity retailerEntity = iretailerRepository.findById(productRequest.getRetailerId())
+            .orElseThrow(() -> new RuntimeException("Retailer not found"));
 
-        ProductEntity productEntity = ProductEntity.builder()
-                .productName(productRequest.getProductName())
-                .productDesc(productRequest.getProductDesc())
-//                .productImage(productRequest.getProductImage())
-                .productImage(iFileUpload.uploadFile(imageFile, "product"))
-                .productOrigin(productRequest.getProductOrigin())
-                .retailer(retailerEntity)
-                .createdAt(LocalDateTime.now())
+    ProductEntity productEntity = ProductEntity.builder()
+            .productName(productRequest.getProductName())
+            .productDesc(productRequest.getProductDesc())
+            .productImage(iFileUpload.uploadFile(imageFile, "product"))
+            .productOrigin(productRequest.getProductOrigin())
+            .retailer(retailerEntity)
+            .createdAt(LocalDateTime.now())
+            .build();
+
+    // Save productEntity
+    productEntity = iProductRepository.save(productEntity);
+
+    // -----Relationship with CATEGORY-----
+    Set<ProductCategoryEntity> newProductCategoryEntities = new HashSet<>();
+    Set<String> categoryName = new HashSet<>();
+
+    for (String categoryId : productRequest.getCategoryId()) {
+        CategoryEntity categoryEntity = icategoryRepository.findById(categoryId)
+                .orElseThrow(() -> new RuntimeException("Category not found"));
+        ProductCategoryEntity productCategoryEntity = new ProductCategoryEntity();
+        productCategoryEntity.setProduct(productEntity);
+        productCategoryEntity.setCategory(categoryEntity);
+
+        newProductCategoryEntities.add(productCategoryEntity);
+        categoryName.add(categoryEntity.getCategoryName());
+    }
+    iproductCategoryRepository.saveAll(newProductCategoryEntities);
+    productEntity.setProductCategories(newProductCategoryEntities);
+
+    // -----Relationship with UNIT-----
+    Set<ProductVariantEntity> newProductVariantEntities = new HashSet<>();
+
+    // Kiểm tra productVariants trước khi duyệt
+    if (productRequest.getProductVariants() == null || productRequest.getProductVariants().isEmpty()) {
+        throw new IllegalArgumentException("Product variants cannot be null or empty");
+    }
+
+    for (ProductVariantsRequest variantRequest : productRequest.getProductVariants()) {
+        UnitEntity unitEntity = iUnitRepository.findById(variantRequest.getUnitId())
+                .orElseThrow(() -> new RuntimeException("Unit not found"));
+
+        ProductVariantEntity productVariantEntity = ProductVariantEntity.builder()
+                .product(productEntity)
+                .unit(unitEntity)
+                .price(variantRequest.getPrice())
+                .initStock(variantRequest.getInitStock())
+                .stock(variantRequest.getInitStock())
+                .value(variantRequest.getValue())
                 .build();
 
-        //save productEntity
-        productEntity = iProductRepository.save(productEntity);
-
-        //-----Relationship with CATEGORY-----
-        Set<ProductCategoryEntity> newProductCategoryEntities = new HashSet<>();
-        Set<String> categoryName = new HashSet<>();
-
-        for(String categoryId : productRequest.getCategoryId()) {
-            CategoryEntity categoryEntity = icategoryRepository.findById(categoryId)
-                    .orElseThrow(() -> new RuntimeException("Category not found"));
-            ProductCategoryEntity productCategoryEntity = new ProductCategoryEntity();
-            productCategoryEntity.setProduct(productEntity);
-            productCategoryEntity.setCategory(categoryEntity);
-
-            newProductCategoryEntities.add(productCategoryEntity);
-            categoryName.add(categoryEntity.getCategoryName());
-        }
-        iproductCategoryRepository.saveAll(newProductCategoryEntities);
-        //update productEntity
-        productEntity.setProductCategories(newProductCategoryEntities);
-        //-----END Relationship with CATEGORY----
-
-        //-----Relationship with UNIT-----
-        Set<ProductVariantEntity> newProductVariantEntities = new HashSet<>();
-
-        for(ProductVariantsRequest getProductVariants : productRequest.getProductVariants()) {
-            UnitEntity unitEntity = iUnitRepository.findById(getProductVariants.getUnitId())
-                    .orElseThrow(() -> new RuntimeException("Unit not found"));
-
-            ProductVariantEntity productVariantEntity = ProductVariantEntity.builder()
-                    .product(productEntity)
-                    .unit(unitEntity)
-                    .price(getProductVariants.getPrice())
-                    .initStock(getProductVariants.getInitStock())
-                    .stock(getProductVariants.getInitStock())
-                    .value(getProductVariants.getValue())
-                    .build();
-
-            newProductVariantEntities.add(productVariantEntity);
-        }
-        iProducVariantRepository.saveAll(newProductVariantEntities);
-
-        //update productEntity
-        productEntity.setVariants(newProductVariantEntities);
-
-        //map productVariantEntity to productVariantDTO
-        Set<ProductVariantDTO> productVariantDTOS = productVariantMapper.toDTOSet(productEntity.getVariants());
-        //-----END Relationship with UNIT----
-
-        //final update product
-        iProductRepository.save(productEntity);
-
-        //map productEntity to productDTO
-        ProductDTO  productDTO = iProductMapper.toProductDTO(productEntity);
-        productDTO.setCategoryName(categoryName);
-        productDTO.setVariants(productVariantDTOS);
-
-        return productDTO;
+        newProductVariantEntities.add(productVariantEntity);
     }
+    iProducVariantRepository.saveAll(newProductVariantEntities);
+    productEntity.setVariants(newProductVariantEntities);
+
+    // Map productVariantEntity to productVariantDTO
+    Set<ProductVariantDTO> productVariantDTOS = productVariantMapper.toDTOSet(productEntity.getVariants());
+
+    // Final update product
+    iProductRepository.save(productEntity);
+
+    // Map productEntity to productDTO
+    ProductDTO productDTO = iProductMapper.toProductDTO(productEntity);
+    productDTO.setCategoryName(categoryName);
+    productDTO.setVariants(productVariantDTOS);
+
+    return productDTO;
+}
+
 
     @Override
     public ProductDTO updateProduct(String productId, ProductRequest productRequest)  {

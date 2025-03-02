@@ -1,9 +1,12 @@
 package com.cocoviet.backend.service.impl;
 
 import com.cocoviet.backend.mapper.IRetailerMapper;
+import com.cocoviet.backend.mapper.IUnitMapper;
 import com.cocoviet.backend.models.dto.AuthenticationDTO;
 import com.cocoviet.backend.models.dto.RetailerDTO;
+import com.cocoviet.backend.models.dto.UnitDTO;
 import com.cocoviet.backend.models.entity.RetailerEntity;
+import com.cocoviet.backend.models.entity.UnitEntity;
 import com.cocoviet.backend.models.request.RetailerRequest;
 import com.cocoviet.backend.models.request.UserLoginRequest;
 import com.cocoviet.backend.models.request.UserProfileRequest;
@@ -23,6 +26,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Logger;
 
 @Slf4j
@@ -36,6 +40,9 @@ public class RetailerServiceImpl implements IRetailerService {
 
     @Autowired
     IRetailerMapper iRetailerMapper;
+
+    @Autowired
+    IUnitMapper iUnitMapper;
 
     @Autowired
     JwtToken jwtToken;
@@ -123,5 +130,13 @@ public class RetailerServiceImpl implements IRetailerService {
         return iRetailerMapper.toListRetailerDTO(iRetailerRepository.findAll());
     }
 
+    @Override
+    public Set<UnitDTO> getUnitsByRetailerId(String retailerId) {
+        RetailerEntity retailer = iRetailerRepository.findById(retailerId)
+                .orElseThrow(() -> new RuntimeException("Retailer not found"));
+        Set<UnitEntity> units = retailer.getUnits();
 
+        return iUnitMapper.toSetUnitDTO(units);
+
+    }
 }

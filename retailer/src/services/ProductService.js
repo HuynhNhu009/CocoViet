@@ -8,7 +8,7 @@ export const productApi = {
 
 
   addProduct: async (productData, imageFile) => {
-    try {
+    
       const formData = new FormData();
       
       formData.append("product", JSON.stringify(productData));
@@ -23,12 +23,8 @@ export const productApi = {
         },
       });
   
-      console.log(response.data);
+      // console.log("ProductService",response.data);
       return response.data;
-    } catch (error) {
-      console.error("Add product failed:", error);
-    }
+    
   }
-  
-  
 };

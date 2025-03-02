@@ -7,12 +7,15 @@ import {
 } from "@heroicons/react/24/outline";
 import { unitApi } from "../services/unitService";
 
-const UnitManager = ({ units = [], onUpdateUnits, disabled = false }) => {
+const UnitManager = ({ retailer, units = [], onUpdateUnits, disabled = false }) => {
   const [isAdding, setIsAdding] = useState(false);
   const [newUnitName, setNewUnitName] = useState("");
   const [editingUnit, setEditingUnit] = useState(null);
   const [editValue, setEditValue] = useState("");
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
+  const [modalError, setModalError] = useState(false);
 
   console.log("Units received in UnitManager:", units);
 
@@ -37,17 +40,24 @@ const UnitManager = ({ units = [], onUpdateUnits, disabled = false }) => {
   const handleAddUnit = async () => {
     if (!validateUnit(newUnitName)) return;
 
+    setIsLoading(true);
+    setModalMessage("Đang thêm đơn vị...");
     const trimmedUnitName = newUnitName.trim();
     try {
-      await unitApi.addUnit({ unitName: trimmedUnitName });
+      await unitApi.addUnit(retailer.retailerId ,{ unitName: trimmedUnitName });
       console.log("Unit added successfully via API");
+      setModalMessage("Thêm đơn vị thành công!");
+      setModalError(false);
       onUpdateUnits();
       setNewUnitName("");
       setIsAdding(false);
       setError("");
     } catch (error) {
       console.error("Lỗi khi thêm đơn vị qua API:", error);
-      setError("Không thể thêm đơn vị. Vui lòng thử lại.");
+      setModalMessage("Không thể thêm đơn vị. Vui lòng thử lại.");
+      setModalError(true);
+    } finally {
+      setTimeout(() => setIsLoading(false), 1000);
     }
   };
 
@@ -60,34 +70,44 @@ const UnitManager = ({ units = [], onUpdateUnits, disabled = false }) => {
   const handleSaveEdit = async () => {
     if (!validateUnit(editValue, editingUnit)) return;
 
+    setIsLoading(true);
+    setModalMessage("Đang cập nhật đơn vị...");
     const trimmedUnitName = editValue.trim();
     try {
-      // Gửi PATCH request để cập nhật đơn vị
-      const reponse = await unitApi.updateUnit(editingUnit.unitId, {
+      await unitApi.updateUnit(editingUnit.unitId, {
         unitName: trimmedUnitName,
       });
       console.log("Unit updated successfully via API");
-
-      // Gửi tín hiệu để Dashboard làm mới danh sách
+      setModalMessage("Cập nhật đơn vị thành công!");
+      setModalError(false);
       onUpdateUnits();
-
       setEditingUnit(null);
       setEditValue("");
       setError("");
     } catch (error) {
       console.error("Lỗi khi cập nhật đơn vị qua API:", error);
-      setError("Không thể cập nhật đơn vị. Vui lòng thử lại.");
+      setModalMessage("Không thể cập nhật đơn vị. Vui lòng thử lại.");
+      setModalError(true);
+    } finally {
+      setTimeout(() => setIsLoading(false), 1000);
     }
   };
 
   const handleDeleteUnit = async (unit) => {
+    setIsLoading(true);
+    setModalMessage("Đang xóa đơn vị...");
     try {
       await unitApi.deleteUnit(unit.unitId);
       console.log("Unit deleted successfully via API");
+      setModalMessage("Xóa đơn vị thành công!");
+      setModalError(false);
       onUpdateUnits();
     } catch (error) {
       console.error("Lỗi khi xóa đơn vị qua API:", error);
-      setError("Không thể xóa đơn vị. Vui lòng thử lại.");
+      setModalMessage("Không thể xóa đơn vị. Vui lòng thử lại.");
+      setModalError(true);
+    } finally {
+      setTimeout(() => setIsLoading(false), 1000);
     }
   };
 
@@ -99,6 +119,48 @@ const UnitManager = ({ units = [], onUpdateUnits, disabled = false }) => {
 
   return (
     <div className="space-y-4">
+      {/* Modal */}
+      {isLoading && (
+        <div className="fixed inset-0 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg flex flex-col items-center gap-4">
+            <svg
+              className="animate-spin h-16 w-16 text-green-600"
+              viewBox="0 0 32 32"
+            >
+              <circle
+                cx="16"
+                cy="16"
+                r="14"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                fill="none"
+                className="opacity-25"
+              />
+              <circle
+                cx="16"
+                cy="16"
+                r="14"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeDasharray="44 88" // Tạo hiệu ứng viền đứt đoạn
+                strokeDashoffset="0"
+                fill="none"
+                className="opacity-75"
+              />
+            </svg>
+            <p
+              className={`text-lg ${
+                modalError ? "text-red-600" : "text-gray-800"
+              }`}
+            >
+              {modalMessage}
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* Tiêu đề */}
       <div className="flex items-center justify-between">
         <h3 className="text-xl font-semibold text-gray-800">Quản lý đơn vị</h3>
@@ -107,7 +169,7 @@ const UnitManager = ({ units = [], onUpdateUnits, disabled = false }) => {
             type="button"
             onClick={() => setIsAdding(true)}
             className="flex items-center gap-1 p-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
-            disabled={disabled}
+            disabled={disabled || isLoading}
             aria-label="Thêm đơn vị mới"
           >
             <PlusIcon className="h-5 w-5" />
@@ -126,7 +188,7 @@ const UnitManager = ({ units = [], onUpdateUnits, disabled = false }) => {
             onKeyPress={(e) => handleKeyPress(e, handleAddUnit)}
             className="px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent disabled:bg-gray-200"
             placeholder="Nhập đơn vị mới (VD: kg, lít)"
-            disabled={disabled}
+            disabled={disabled || isLoading}
             autoFocus
           />
           <div className="flex gap-2">
@@ -134,7 +196,7 @@ const UnitManager = ({ units = [], onUpdateUnits, disabled = false }) => {
               type="button"
               onClick={handleAddUnit}
               className="flex-1 p-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
-              disabled={disabled}
+              disabled={disabled || isLoading}
             >
               Thêm
             </button>
@@ -146,7 +208,7 @@ const UnitManager = ({ units = [], onUpdateUnits, disabled = false }) => {
                 setError("");
               }}
               className="p-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
-              disabled={disabled}
+              disabled={disabled || isLoading}
             >
               <XMarkIcon className="h-5 w-5" />
             </button>
@@ -176,14 +238,14 @@ const UnitManager = ({ units = [], onUpdateUnits, disabled = false }) => {
                       onChange={(e) => setEditValue(e.target.value)}
                       onKeyPress={(e) => handleKeyPress(e, handleSaveEdit)}
                       className="flex-1 px-3 py-1 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent disabled:bg-gray-200"
-                      disabled={disabled}
+                      disabled={disabled || isLoading}
                       autoFocus
                     />
                     <button
                       type="button"
                       onClick={handleSaveEdit}
                       className="p-1 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
-                      disabled={disabled}
+                      disabled={disabled || isLoading}
                     >
                       Lưu
                     </button>
@@ -194,7 +256,7 @@ const UnitManager = ({ units = [], onUpdateUnits, disabled = false }) => {
                         setError("");
                       }}
                       className="p-1 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
-                      disabled={disabled}
+                      disabled={disabled || isLoading}
                     >
                       <XMarkIcon className="h-4 w-4" />
                     </button>
@@ -209,7 +271,7 @@ const UnitManager = ({ units = [], onUpdateUnits, disabled = false }) => {
                         type="button"
                         onClick={() => handleEditUnit(unit)}
                         className="p-1 text-blue-600 hover:text-blue-800 transition-colors disabled:text-gray-400 disabled:cursor-not-allowed"
-                        disabled={disabled}
+                        disabled={disabled || isLoading}
                       >
                         <PencilIcon className="h-5 w-5" />
                       </button>
@@ -217,7 +279,7 @@ const UnitManager = ({ units = [], onUpdateUnits, disabled = false }) => {
                         type="button"
                         onClick={() => handleDeleteUnit(unit)}
                         className="p-1 text-red-600 hover:text-red-800 transition-colors disabled:text-gray-400 disabled:cursor-not-allowed"
-                        disabled={disabled}
+                        disabled={disabled || isLoading}
                       >
                         <TrashIcon className="h-5 w-5" />
                       </button>
