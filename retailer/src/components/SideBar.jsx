@@ -5,6 +5,7 @@ import {
   PlusIcon,
   XMarkIcon,
   TagIcon,
+  CircleStackIcon,
 } from "@heroicons/react/24/outline";
 
 const Sidebar = ({ activeTab, setActiveTab, isOpen, setIsOpen }) => {
@@ -29,6 +30,11 @@ const Sidebar = ({ activeTab, setActiveTab, isOpen, setIsOpen }) => {
       label: "Quản lý đơn vị",
       icon: <TagIcon className="size-5" />,
     },
+    {
+      id: "profit",
+      label: "Quản lý lợi nhuận",
+      icon: <CircleStackIcon className="size-5"/>
+    }
   ];
 
   const renderNavItem = (item, closeOnClick = false) => (
@@ -78,11 +84,11 @@ const Sidebar = ({ activeTab, setActiveTab, isOpen, setIsOpen }) => {
 
       {/* Sidebar cho desktop */}
       <div
-        className="hidden lg:block lg:w-64 flex-shrink-0 bg-white p-5 rounded-lg shadow-md"
+        className="sticky top-30 max-h-100 hidden lg:block lg:w-64 flex-shrink-0 bg-white p-5 rounded-lg shadow-md"
         role="navigation"
         aria-label="Menu điều hướng"
       >
-        <div className="sticky top-10">
+        <div className=" top-10">
           <nav className="flex flex-col gap-3">
             {navItems.map((item) => renderNavItem(item))}
           </nav>

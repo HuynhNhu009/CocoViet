@@ -114,81 +114,6 @@ const AddProductForm = ({
     }));
   };
 
-  // const handleAddProduct = async (e) => {
-  //   e.preventDefault();
-  //   if (newProduct.categoryId.length === 0) {
-  //     setMessage("Vui lòng chọn ít nhất một danh mục.");
-  //     return;
-  //   }
-  //   if (newProduct.variants.length === 0) {
-  //     setMessage("Vui lòng thêm ít nhất một loại sản phẩm.");
-  //     return;
-  //   }
-  //   setLoading(true);
-  //   setMessage(null);
-  
-  //   const productToAdd = {
-  //     productName: newProduct.productName,
-  //     productDesc: newProduct.productDesc,
-  //     retailerId: newProduct.retailerId,
-  //     productOrigin: newProduct.productOrigin,
-  //     categoryId: newProduct.categoryId,
-  //     productVariants: newProduct.variants.map((v) => ({
-  //       unitId: v.unitId,
-  //       value: v.value,
-  //       price: v.price,
-  //       initStock: v.initStock,
-  //     })),
-  //   };
-  
-  //   try {
-  //     const response = await productApi.addProduct(productToAdd, file);
-  //     const imageUrl = response.data.productImage; // Giả sử server trả về URL ảnh
-  //     productToAdd.productImage = imageUrl;
-  
-  //     console.log("Product to add:", productToAdd);
-  
-  //     onAddProduct(productToAdd);
-
-  //     setNewProduct({
-  //       productName: "",
-  //       productDesc: "",
-  //       retailerId: retailerId || "",
-  //       productImage: "",
-  //       productOrigin: "",
-  //       variants: [],
-  //       categoryId: [],
-  //     });
-  //     setFile(null);
-  //     setMessage("Thêm sản phẩm thành công!");
-  //   } catch (error) {
-
-  //     if (error.response) {
-
-  //       const httpStatus = error.response.status;
-  //       const responseStatus = error.response.data.status;
-  //       const errorMsg = error.response.data.msg || "Lỗi không xác định";
-  
-  //       if (httpStatus === 400 && responseStatus === "PRODUCT_ALREADY_EXISTS") {
-  //         setMessage("Tên sản phẩm đã tồn tại, vui lòng chọn tên khác!");
-  //       } else if (httpStatus === 400 && responseStatus === "INVALID_INPUT") {
-  //         setMessage(`Dữ liệu không hợp lệ: ${errorMsg}`);
-  //       } else if (httpStatus === 400) {
-  //         setMessage(`Thêm sản phẩm thất bại: ${errorMsg}`);
-  //       } else if (httpStatus === 500) {
-  //         setMessage(`Lỗi server: ${errorMsg}`);
-  //       } else {
-  //         setMessage(`Thêm sản phẩm thất bại: ${errorMsg}`);
-  //       }
-  //     } else {
-  //       setMessage("Thêm sản phẩm thất bại: Lỗi kết nối server!");
-  //     }
-  //     // console.error("Error adding product:", error);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
   const handleAddProduct = async (e) => {
     e.preventDefault();
     if (newProduct.categoryId.length === 0) {
@@ -218,18 +143,9 @@ const AddProductForm = ({
   
     try {
       const response = await productApi.addProduct(productToAdd, file);
-      // const imageUrl = response.data.productImage; // Giả sử server trả về URL ảnh
-      // if (!imageUrl) {
-      //   throw new Error("Server không trả về URL ảnh!");
-      // }
-      // productToAdd.productImage = imageUrl;
-  
-      // console.log("Product to add:", productToAdd);
-  
-      // Gọi onAddProduct và đợi hoàn thành
+      
       await onAddProduct();
   
-      // Reset form sau khi onAddProduct hoàn tất
       setNewProduct({
         productName: "",
         productDesc: "",
@@ -341,21 +257,21 @@ const AddProductForm = ({
             <label className="block text-sm font-medium text-gray-700">
               Danh mục sản phẩm
             </label>
-            <div className="max-h-40 overflow-y-auto border border-gray-300 rounded-md p-2">
+            <div className="min-h-40 overflow-y-auto border border-gray-300 rounded-md p-2">
               {categories.length === 0 ? (
                 <p className="text-gray-500 text-sm">Chưa có danh mục nào.</p>
               ) : (
                 categories.map((cat) => (
                   <div
                     key={cat.categoryId}
-                    className="flex items-center gap-2 py-1"
+                    className="flex items-center gap-2 py-1 "
                   >
                     <input
                       type="checkbox"
                       checked={newProduct.categoryId.includes(cat.categoryId)}
                       onChange={() => handleCategoryToggle(cat.categoryId)}
                       disabled={loading}
-                      className="h-4 w-4 text-green-600 border-gray-300 rounded focus:ring-green-500"
+                      className=" w-4 text-green-600 border-gray-300 rounded focus:ring-green-500"
                     />
                     <span className="text-gray-700">{cat.categoryName}</span>
                   </div>
@@ -373,7 +289,7 @@ const AddProductForm = ({
               <button
                 type="button"
                 onClick={() => setIsAddingVariantInline(true)}
-                className="p-2 bg-gray-100 rounded-md hover:bg-gray-200"
+                className={`${isAddingVariantInline ? "hidden" :""} p-2 bg-gray-100 rounded-md hover:bg-gray-200`}
                 disabled={loading}
                 aria-label="Thêm loại mới"
               >
@@ -382,7 +298,7 @@ const AddProductForm = ({
             </div>
             {/* Form inline thêm variant */}
             {isAddingVariantInline && (
-              <div className="hidden lg:grid lg:grid-cols-4 lg:gap-2 mt-2">
+              <div className="grid grid-cols-4 gap-2 mt-2">
                 <input
                   type="number"
                   name="value"
@@ -390,6 +306,15 @@ const AddProductForm = ({
                   onChange={handleVariantChange}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
                   placeholder="Số lượng"
+                  disabled={loading}
+                />
+                <input
+                  type="number"
+                  name="price"
+                  value={newVariant.price}
+                  onChange={handleVariantChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  placeholder="Giá"
                   disabled={loading}
                 />
                 <select
@@ -406,15 +331,7 @@ const AddProductForm = ({
                     </option>
                   ))}
                 </select>
-                <input
-                  type="number"
-                  name="price"
-                  value={newVariant.price}
-                  onChange={handleVariantChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                  placeholder="Giá"
-                  disabled={loading}
-                />
+                
                 <input
                   type="number"
                   name="initStock"
@@ -452,7 +369,7 @@ const AddProductForm = ({
             {/* Danh sách variant */}
             <div className="max-h-40 overflow-y-auto border border-gray-300 rounded-md p-2">
               {newProduct.variants.length === 0 ? (
-                <p className="text-gray-500 text-sm">Chưa có loại nào.</p>
+                <p className="text-gray-500 text-sm">Chưa có loại nào được thêm.</p>
               ) : (
                 newProduct.variants.map((variant, index) => (
                   <div

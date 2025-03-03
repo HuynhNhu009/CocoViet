@@ -11,6 +11,7 @@ import UnitManager from "../components/UnitManager";
 import { categoryApi } from "../services/categoryService";
 import { productApi } from "../services/productService";
 import { unitApi } from "../services/unitService";
+import Profit from "../components/Profit";
 
 const Dashboard = () => {
   const dispatch = useDispatch();
@@ -121,6 +122,7 @@ const Dashboard = () => {
       />
     ),
     "unit-manager": <UnitManager retailer={retailer} units={units} onUpdateUnits={updateUnits} />,
+    profit: <Profit/>
   };
 
   if (loading || loadingRedux) {
@@ -128,16 +130,11 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-200 pt-10 px-4 flex flex-col lg:flex-row gap-6">
+  <div className="bg-gray-200 pt-10 min-h-[90vh] px-4 flex flex-col lg:flex-row gap-6 ">
       <div className="lg:hidden flex justify-between items-center mb-4">
         <button onClick={() => setIsSidebarOpen(true)}>
           <Bars3Icon className="size-6 text-gray-700" />
         </button>
-        <Title
-          text1={"DASHBOARD"}
-          text2={retailer?.retailerName || "Retailer"}
-        />
-        <BellIcon className="size-6 text-gray-700" />
       </div>
       <Sidebar
         activeTab={activeTab}
@@ -147,11 +144,6 @@ const Dashboard = () => {
       />
       <div className="flex-1">
         <div className="hidden lg:flex justify-between items-center mb-6">
-          <Title
-            text1={"DASHBOARD"}
-            text2={retailer?.retailerName || "Retailer"}
-          />
-          <BellIcon className="size-7 text-gray-700" />
         </div>
         <div className="bg-white p-6 rounded-lg shadow-md">
           {tabContent[activeTab]}

@@ -2,7 +2,7 @@ import api from "./Api";
 
 export const unitApi = {
   getAllUnitsRetailerId: async (retailerId) => {
-    console.log("In unitservice", retailerId);
+    console.log("In unit Service", retailerId);
     
     const response = await api.get(`/retailers/${retailerId}/units`);
     return response.data;
