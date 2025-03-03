@@ -23,4 +23,9 @@ export const orderAPI = {
     return response.data;
   },
 
+  deleteProductInOrder: async (orderId, receiptDetailId) => {
+    const response = await api.delete(`/orders/${orderId}/receipt/${receiptDetailId}`);
+    return response.data;
+  },
+
 };

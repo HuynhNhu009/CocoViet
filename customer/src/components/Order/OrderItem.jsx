@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { orderAPI } from "../../services/orderService";
 import { useDispatch } from "react-redux";
 import { setCreateOrder } from "../../redux/orderSlice";
+import Swal from 'sweetalert2'
+
 function OrderItem(orderStore) {
   const [order, setOrder] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
@@ -55,16 +57,39 @@ function OrderItem(orderStore) {
          productVariantId: productVariantId,
          quantity: num
       }]
-
-      console.log("orderRequest", orderRequest);
       await orderAPI.updateOrder(order.orderId, orderRequest)
-
       await dispatch(setCreateOrder(true));
-      
-      console.log("new", order);
-      
+
     }
   };
+
+  //delete product
+  const handleDeleteProduct = async(receiptDetailId) => {
+    console.log(receiptDetailId);
+    Swal.fire({
+      title: "Xóa sản phẩm",
+      text: "Bạn có chắc muốn xóa sản phẩm này khỏi giỏ hàng không?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Có, tôi muốn xóa!",
+      cancelButtonText: "Hủy xóa!"
+    }).then( async(result) => {
+      if (result.isConfirmed) {
+        await orderAPI.deleteProductInOrder(order.orderId,receiptDetailId);
+        await dispatch(setCreateOrder(true)); 
+        Swal.fire({
+          title: "Đã xóa!",
+          showConfirmButton: false,
+          icon: "success",
+          timer:1000 
+
+        });
+      }
+    });
+ 
+  }
   
 
   return (
@@ -118,7 +143,7 @@ function OrderItem(orderStore) {
                     {item.productVariants.price * item.totalQuantity}
                   </td>
                   <td className="px-4 py-2">
-                    <button className="bg-red-500 hover:bg-red-600 cursor-pointer text-white px-3 py-1 rounded">
+                    <button onClick={() => handleDeleteProduct(item.receiptDetailId)} className="bg-red-500 hover:bg-red-600 cursor-pointer text-white px-3 py-1 rounded">
                       X
                     </button>
                   </td>

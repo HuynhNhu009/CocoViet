@@ -8,14 +8,13 @@ import { useNavigate } from "react-router-dom";
 import { BuildingStorefrontIcon } from "@heroicons/react/24/outline";
 import { orderAPI } from "../../services/orderService";
 import { setCreateOrder } from "../../redux/orderSlice";
-
+import Swal from 'sweetalert2'
 
 const ProductDetail = () => {
   //api
   const { productId } = useParams();
 
   const [product, setProducts] = useState([]);
-  const [addOrder, setAddOrder] = useState({});
   const orderRequest = {
     customerId:"",
     receiptDetailRequests:[
@@ -24,9 +23,9 @@ const ProductDetail = () => {
         quantity:""
       }
     ]
+
   }
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const productDetail = useSelector(
     (state) => state.ProductStore.productDetail || []
@@ -72,9 +71,14 @@ const ProductDetail = () => {
          quantity: quantity
       }]
       
-      console.log("BUY",orderRequest);
       await orderAPI.addOrder(orderRequest);
       dispatch(setCreateOrder(true));
+      Swal.fire({
+        title: "Thêm sản phẩm vào giỏ thành công!",
+        icon: "success",
+        showConfirmButton: false,
+        timer:1000 
+      });
 
   }
 

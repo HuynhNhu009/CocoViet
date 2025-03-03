@@ -7,8 +7,6 @@ function Status() {
   const orderList = useSelector((state) => state.OrderStore.orderList);
   const statusActive = useSelector((state) => state.OrderStore.statusActive);
 
-  console.log("order - status", orderList);
-
   const [status, setStatus] = useState([]);
   const dispatch = useDispatch();
 
