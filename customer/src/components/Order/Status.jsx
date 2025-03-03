@@ -51,6 +51,8 @@ function Status() {
           const filteredResults = orderList.find(
             (item) => item.statusName === request.statusName
           );
+          console.log("filteredResults",filteredResults);
+          
           if (filteredResults) {
             dispatch(setOrderStatus(filteredResults));
           } else {

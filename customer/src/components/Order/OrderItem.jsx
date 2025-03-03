@@ -2,32 +2,33 @@ import { useEffect, useState } from "react";
 import { orderAPI } from "../../services/orderService";
 import { useDispatch } from "react-redux";
 import { setCreateOrder } from "../../redux/orderSlice";
-import Swal from 'sweetalert2'
+import Swal from "sweetalert2";
 
 function OrderItem(orderStore) {
   const [order, setOrder] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [checkBill, setCheckBill] = useState(false);
   const [quantity, setQuantity] = useState({});
+
+
   const dispatch = useDispatch();
   const orderRequest = {
-    receiptDetailRequests:[
+    receiptDetailRequests: [
       {
-        productVariantId:"",
-        quantity:""
-      }
-    ]
-  }
+        productVariantId: "",
+        quantity: "",
+      },
+    ],
+  };
   useEffect(() => {
     if (orderStore) {
       setOrder(orderStore.orderStore);
-      console.log(orderStore);
       const initialQuantities = {};
       let price = 0;
       orderStore?.orderStore?.receiptDetails?.forEach((item) => {
         price += item.productVariants.price * item.totalQuantity;
         initialQuantities[item.productVariants.variantId] = item.totalQuantity;
-
       });
       setTotalPrice(price);
       setQuantity(initialQuantities);
@@ -35,37 +36,35 @@ function OrderItem(orderStore) {
     }
   }, [orderStore]);
 
-  console.log("old---", order);
-  
 
   if (loading) {
     return <p className="text-center text-gray-500">Đang tải đơn hàng...</p>;
   }
 
-  const handleChangeQuantity = async(e, productVariantId) => {
+  const handleChangeQuantity = async (e, productVariantId) => {
     let value = e.target.value.trim();
-  
+
     if (value === "") {
       setQuantity((prev) => ({ ...prev, [productVariantId]: 1 })); // Nếu rỗng, mặc định là 1
       return;
     }
-  
+
     let num = parseInt(value, 10);
     if (!isNaN(num) && num >= 1) {
       setQuantity((prev) => ({ ...prev, [productVariantId]: num }));
-      orderRequest.receiptDetailRequests = [{
-         productVariantId: productVariantId,
-         quantity: num
-      }]
-      await orderAPI.updateOrder(order.orderId, orderRequest)
+      orderRequest.receiptDetailRequests = [
+        {
+          productVariantId: productVariantId,
+          quantity: num,
+        },
+      ];
+      await orderAPI.updateOrder(order.orderId, orderRequest);
       await dispatch(setCreateOrder(true));
-
     }
   };
 
   //delete product
-  const handleDeleteProduct = async(receiptDetailId) => {
-    console.log(receiptDetailId);
+  const handleDeleteProduct = async (receiptDetailId) => {
     Swal.fire({
       title: "Xóa sản phẩm",
       text: "Bạn có chắc muốn xóa sản phẩm này khỏi giỏ hàng không?",
@@ -74,27 +73,46 @@ function OrderItem(orderStore) {
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
       confirmButtonText: "Có, tôi muốn xóa!",
-      cancelButtonText: "Hủy xóa!"
-    }).then( async(result) => {
+      cancelButtonText: "Hủy xóa!",
+    }).then(async (result) => {
       if (result.isConfirmed) {
-        await orderAPI.deleteProductInOrder(order.orderId,receiptDetailId);
-        await dispatch(setCreateOrder(true)); 
+        await orderAPI.deleteProductInOrder(order.orderId, receiptDetailId);
+        await dispatch(setCreateOrder(true));
         Swal.fire({
           title: "Đã xóa!",
           showConfirmButton: false,
           icon: "success",
-          timer:1000 
-
+          timer: 1000,
         });
       }
     });
- 
-  }
+  };
+
+  //buyProduct
+  const handleNextProcess = async () => {
+    if (!order || !order.orderId) {
+      console.log("Order không hợp lệ");
+      return;
+    }
   
+    console.log("Số lượng sản phẩm:", order?.receiptDetails?.length || 0);
+  
+    try {
+      orderRequest.statusCode = "PROCESSING";
+      
+      await orderAPI.updateOrder(order.orderId, orderRequest);
+      await dispatch(setCreateOrder(true));
+    } catch (error) {
+      console.error("Lỗi cập nhật đơn hàng:", error);
+    }
+  };
+
+
 
   return (
     <>
-      <div className="mt-2 max-h-[380px] overflow-y-scroll">
+    <div>
+       <div className="mt-2 h-[390px] overflow-y-scroll">
         <table className="w-full border-collapse table-fixed">
           <thead className="bg-[#77C27F] text-white ">
             <tr>
@@ -126,24 +144,31 @@ function OrderItem(orderStore) {
                   </td>
                   <td className="px-4 py-2">{item.productVariants.price}</td>
                   <td className="px-4 py-2">
-                  <input
-                    type="number"
-                    onChange={(e) => handleChangeQuantity(e, item.productVariants.variantId )}
-                    onBlur={() => {
-                      if (!quantity[item.productVariants.variantId]) {
-                        setQuantity((prev) => ({ ...prev, [item.productVariants.variantId]: 1 }));
+                    <input
+                      type="number"
+                      onChange={(e) =>
+                        handleChangeQuantity(e, item.productVariants.variantId)
                       }
-                    }}
-                    value={quantity[item.productVariants.variantId] || ""}
-                    className="text-center border-1 rounded-sm w-15"
-                  />
-
+                      onBlur={() => {
+                        if (!quantity[item.productVariants.variantId]) {
+                          setQuantity((prev) => ({
+                            ...prev,
+                            [item.productVariants.variantId]: 1,
+                          }));
+                        }
+                      }}
+                      value={quantity[item.productVariants.variantId] || ""}
+                      className="text-center border-1 rounded-sm w-15"
+                    />
                   </td>
                   <td className="px-4 py-2">
                     {item.productVariants.price * item.totalQuantity}
                   </td>
                   <td className="px-4 py-2">
-                    <button onClick={() => handleDeleteProduct(item.receiptDetailId)} className="bg-red-500 hover:bg-red-600 cursor-pointer text-white px-3 py-1 rounded">
+                    <button
+                      onClick={() => handleDeleteProduct(item.receiptDetailId)}
+                      className="bg-red-500 hover:bg-red-600 cursor-pointer text-white px-3 py-1 rounded"
+                    >
                       X
                     </button>
                   </td>
@@ -160,12 +185,20 @@ function OrderItem(orderStore) {
         </table>
       </div>
 
-      <div className=" font-bold text-lg pt-2 pr-8 text-right ">
-        <p className="mb-2 text-green-600">Tổng Cộng : {totalPrice} VND</p>
-        <button className="bg-green-600 cursor-pointer text-white py-1 px-3 rounded-tl-2xl rounded-br-2xl shadow-md transition-transform hover:scale-105 duration-400 ease-in-out">
-          Thanh Toán
-        </button>
+      <div className=" bg-[#77C27F] text-white rounded-tl-lg rounded-tr-lg pb-3 flex justify-between font-bold text-lg pt-2 pr-8 text-right ">
+        <div className="px-5 font-medium text-sm">
+          {order?.receiptDetails?.length} sản phẩm
+        </div>
+        <div>
+          <p className="mb-2">Tổng Cộng : {totalPrice} VND</p>
+          <button
+            onClick={() => handleNextProcess()}
+           className="bg-green-600 cursor-pointer text-white py-1 px-3 rounded-tl-2xl rounded-br-2xl shadow-md transition-transform hover:scale-105 duration-400 ease-in-out">
+            Thanh Toán
+          </button>
+        </div>
       </div>
+    </div>  
     </>
   );
 }
