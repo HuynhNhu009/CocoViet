@@ -10,5 +10,5 @@ public interface IOrderService {
     OrderDTO updateOrder(String orderId, OrderRequest orderRequest);
     List<OrderDTO> getOrderByCustomerId(String customerId);
     List<OrderDTO> getAllOrders();
-
+    OrderDTO deleteReceipt(String orderId, String receiptId);
 }

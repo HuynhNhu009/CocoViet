@@ -9,6 +9,7 @@ import { BuildingStorefrontIcon } from "@heroicons/react/24/outline";
 import { orderAPI } from "../../services/orderService";
 import { setCreateOrder } from "../../redux/orderSlice";
 
+
 const ProductDetail = () => {
   //api
   const { productId } = useParams();
@@ -23,7 +24,6 @@ const ProductDetail = () => {
         quantity:""
       }
     ]
-
   }
   const dispatch = useDispatch();
   const navigate = useNavigate();

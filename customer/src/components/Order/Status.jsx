@@ -79,7 +79,7 @@ function Status() {
             before:border-l-20 before:border-y-transparent before:border-l-white
             after:absolute after:-right-6 after:top-1/2 after:-translate-y-1/2 
             after:w-0 after:h-0 after:border-y-24 after:border-l-25 after:border-y-transparent 
-            after:border-l-gray-500 cursor-pointer  ${
+            after:border-l-gray-500 cursor-pointer hover:bg-green-600  ${
               statusActive === item.statusCode
                 ? "bg-green-600 after:border-l-green-700 " // active
                 : "bg-gray-400"

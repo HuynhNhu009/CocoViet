@@ -1,47 +1,75 @@
 import { useEffect, useState } from "react";
-
+import { orderAPI } from "../../services/orderService";
+import { useDispatch } from "react-redux";
+import { setCreateOrder } from "../../redux/orderSlice";
 function OrderItem(orderStore) {
   const [order, setOrder] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState({});
-
+  const dispatch = useDispatch();
+  const orderRequest = {
+    receiptDetailRequests:[
+      {
+        productVariantId:"",
+        quantity:""
+      }
+    ]
+  }
   useEffect(() => {
     if (orderStore) {
       setOrder(orderStore.orderStore);
       console.log(orderStore);
-
+      const initialQuantities = {};
       let price = 0;
       orderStore?.orderStore?.receiptDetails?.forEach((item) => {
         price += item.productVariants.price * item.totalQuantity;
+        initialQuantities[item.productVariants.variantId] = item.totalQuantity;
+
       });
       setTotalPrice(price);
+      setQuantity(initialQuantities);
       setLoading(false);
     }
   }, [orderStore]);
+
+  console.log("old---", order);
+  
 
   if (loading) {
     return <p className="text-center text-gray-500">Đang tải đơn hàng...</p>;
   }
 
-  const handleChangeQuantity = (e, productId) => {
+  const handleChangeQuantity = async(e, productVariantId) => {
     let value = e.target.value.trim();
-
+  
     if (value === "") {
-      setQuantity(0);
+      setQuantity((prev) => ({ ...prev, [productVariantId]: 1 })); // Nếu rỗng, mặc định là 1
       return;
     }
-    console.log(value, productId);
-
+  
     let num = parseInt(value, 10);
     if (!isNaN(num) && num >= 1) {
-      setQuantity(num);
+      setQuantity((prev) => ({ ...prev, [productVariantId]: num }));
+      orderRequest.receiptDetailRequests = [{
+         productVariantId: productVariantId,
+         quantity: num
+      }]
+
+      console.log("orderRequest", orderRequest);
+      await orderAPI.updateOrder(order.orderId, orderRequest)
+
+      await dispatch(setCreateOrder(true));
+      
+      console.log("new", order);
+      
     }
   };
+  
 
   return (
     <>
-      <div className="w-[1237px] mt-2 max-h-[380px] overflow-y-scroll">
+      <div className="mt-2 max-h-[380px] overflow-y-scroll">
         <table className="w-full border-collapse table-fixed">
           <thead className="bg-[#77C27F] text-white ">
             <tr>
@@ -73,23 +101,24 @@ function OrderItem(orderStore) {
                   </td>
                   <td className="px-4 py-2">{item.productVariants.price}</td>
                   <td className="px-4 py-2">
-                    <input
-                      type="number"
-                      onChange={(e) =>
-                        handleChangeQuantity(e, item.receiptDetailId)
+                  <input
+                    type="number"
+                    onChange={(e) => handleChangeQuantity(e, item.productVariants.variantId )}
+                    onBlur={() => {
+                      if (!quantity[item.productVariants.variantId]) {
+                        setQuantity((prev) => ({ ...prev, [item.productVariants.variantId]: 1 }));
                       }
-                      onBlur={() =>
-                        quantity === "" && setQuantity(item.totalQuantity)
-                      }
-                      value={quantity[item.totalQuantity]}
-                      className="text-center border-1 rounded-sm w-15"
-                    />
+                    }}
+                    value={quantity[item.productVariants.variantId] || ""}
+                    className="text-center border-1 rounded-sm w-15"
+                  />
+
                   </td>
                   <td className="px-4 py-2">
                     {item.productVariants.price * item.totalQuantity}
                   </td>
                   <td className="px-4 py-2">
-                    <button className="bg-red-500 text-white px-3 py-1 rounded">
+                    <button className="bg-red-500 hover:bg-red-600 cursor-pointer text-white px-3 py-1 rounded">
                       X
                     </button>
                   </td>

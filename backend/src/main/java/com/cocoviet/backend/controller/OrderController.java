@@ -61,4 +61,14 @@ public class OrderController {
                         .status("OK")
                         .build());
     }
+
+    @DeleteMapping("/{orderId}/receipt/{receiptId}")
+    public ResponseEntity<ResponseData> deleteReceipt(@PathVariable String orderId, @PathVariable String receiptId) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ResponseData.builder()
+                        .data(orderService.deleteReceipt(orderId, receiptId))
+                        .msg("Delete receipt successfully")
+                        .status("OK")
+                        .build());
+    }
 }

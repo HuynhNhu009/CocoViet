@@ -20,7 +20,7 @@ public class ReceiptDetailEntity {
     String receiptDetailId;
 
     @ManyToOne
-    @JoinColumn(name = "order_id", nullable = false) // Đổi từ productOrder_id → order_id
+    @JoinColumn(name = "order_id", nullable = false)
     OrderEntity productOrder;
 
     @ManyToOne

@@ -11,6 +11,7 @@ import java.util.Optional;
 @Repository
 public interface IReceiptDetailRepository extends JpaRepository<ReceiptDetailEntity, String> {
     ReceiptDetailEntity findByReceiptDetailId(String receiptionDetailId);
-
     Optional<ReceiptDetailEntity> findByProductVariant_VariantsIdAndProductOrder_OrderId(String productVariantVariantsId, String productOrderOrderId);
+
+    void deleteByReceiptDetailId(String receiptDetailId);
 }
