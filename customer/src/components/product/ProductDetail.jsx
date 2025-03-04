@@ -85,8 +85,6 @@ const ProductDetail = () => {
     }else{
       navigate("/login")
     }
-     
-
   }
 
   //detail

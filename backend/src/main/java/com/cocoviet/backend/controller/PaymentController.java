@@ -43,7 +43,7 @@ public class PaymentController {
                                                 .build());
         }
 
-        @GetMapping("/get-all-payment-method")
+        @GetMapping("/get-all")
         public ResponseEntity<ResponseData> getAllPaymentMethod() {
                 return ResponseEntity.status(HttpStatus.OK)
                                 .body(ResponseData.builder()
