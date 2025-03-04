@@ -3,19 +3,16 @@ import { orderAPI } from "../../services/orderService";
 import { useDispatch, useSelector } from "react-redux";
 import { setCreateOrder } from "../../redux/orderSlice";
 import Swal from "sweetalert2";
-import { PencilSquareIcon } from "@heroicons/react/24/outline";
 
 function OrderBill(orderStore) {
   const [order, setOrder] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [checkBill, setCheckBill] = useState(false);
   const [quantity, setQuantity] = useState({});
   const [selectedOrderIndex, setSelectedOrderIndex] = useState(null);
 
   const CustomerStore = useSelector((state) => state.CustomerStore.customer);
-  console.log(CustomerStore);
-  console.log("111", orderStore);
+
 
   const dispatch = useDispatch();
   const orderRequest = {
@@ -41,33 +38,12 @@ function OrderBill(orderStore) {
     }
   }, [orderStore]);
 
-  console.log(orderStore);
 
   if (loading) {
     return <p className="text-center text-gray-500">Đang tải đơn hàng...</p>;
   }
 
-  const handleChangeQuantity = async (e, productVariantId) => {
-    let value = e.target.value.trim();
-
-    if (value === "") {
-      setQuantity((prev) => ({ ...prev, [productVariantId]: 1 })); // Nếu rỗng, mặc định là 1
-      return;
-    }
-
-    let num = parseInt(value, 10);
-    if (!isNaN(num) && num >= 1) {
-      setQuantity((prev) => ({ ...prev, [productVariantId]: num }));
-      orderRequest.receiptDetailRequests = [
-        {
-          productVariantId: productVariantId,
-          quantity: num,
-        },
-      ];
-      await orderAPI.updateOrder(order.orderId, orderRequest);
-      await dispatch(setCreateOrder(true));
-    }
-  };
+  
 
   //delete product
   const handleDeleteProduct = async (receiptDetailId) => {
@@ -93,11 +69,13 @@ function OrderBill(orderStore) {
       }
     });
   };
+  console.log(order);
+  
 
   return (
     <>
       <div className="mt-5 flex justify-center align-middle self-center flex-col">
-        {order.map((order, index) => (
+        {order?.map((order, index) => (
           <div
             key={order.orderId}
             className=" mb-3 px-8 py-5 border-2 border-green-600 rounded-md bg-white w-[600px]"
