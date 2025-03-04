@@ -50,6 +50,16 @@ public class OrderController {
                         .status("OK")
                         .build());
     }
+    @GetMapping("/by/{retailerId}")
+    ResponseEntity<ResponseData> getOrderByRetailerId(@PathVariable String retailerId ) {
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ResponseData.builder()
+                        .data(orderService.getOrderByRetailerId(retailerId))
+                        .msg("Get order by retailerId successfully")
+                        .status("OK")
+                        .build());
+    }
 
     @GetMapping("/get-all")
     ResponseEntity<ResponseData> getAllOrder( ) {
