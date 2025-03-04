@@ -8,7 +8,6 @@ function OrderItem(orderStore) {
   const [order, setOrder] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [checkBill, setCheckBill] = useState(false);
   const [quantity, setQuantity] = useState({});
 
 
@@ -21,6 +20,7 @@ function OrderItem(orderStore) {
       },
     ],
   };
+
   useEffect(() => {
     if (orderStore) {
       setOrder(orderStore.orderStore);
@@ -91,7 +91,7 @@ function OrderItem(orderStore) {
   //buyProduct
   const handleNextProcess = async () => {
     if (!order || !order.orderId) {
-      console.log("Order không hợp lệ");
+      Swal.fire("Vui lòng thêm sản phẩm vào giỏ hàng!");
       return;
     }
   
@@ -99,7 +99,13 @@ function OrderItem(orderStore) {
   
     try {
       orderRequest.statusCode = "PROCESSING";
-      
+      Swal.fire({
+        title: "Đặt hàng thành công!",
+        content:"Vui lòng xem chi tiết tại trạng thái Đang xử lý ",
+        icon: "success",
+        showConfirmButton: false,
+        timer:1000 
+      });
       await orderAPI.updateOrder(order.orderId, orderRequest);
       await dispatch(setCreateOrder(true));
     } catch (error) {
@@ -185,6 +191,7 @@ function OrderItem(orderStore) {
         </table>
       </div>
 
+      {order?.receiptDetails?.length > 0 && 
       <div className=" bg-[#77C27F] text-white rounded-tl-lg rounded-tr-lg pb-3 flex justify-between font-bold text-lg pt-2 pr-8 text-right ">
         <div className="px-5 font-medium text-sm">
           {order?.receiptDetails?.length} sản phẩm
@@ -194,10 +201,11 @@ function OrderItem(orderStore) {
           <button
             onClick={() => handleNextProcess()}
            className="bg-green-600 cursor-pointer text-white py-1 px-3 rounded-tl-2xl rounded-br-2xl shadow-md transition-transform hover:scale-105 duration-400 ease-in-out">
-            Thanh Toán
+            Đặt Hàng
           </button>
         </div>
       </div>
+      }
     </div>  
     </>
   );

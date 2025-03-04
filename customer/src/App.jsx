@@ -76,6 +76,9 @@ function App() {
                 (item) => item.statusName === "Giỏ Hàng"
             );
             let cartCount = filteredResults[filteredResults.length-1].receiptDetails.length;
+            if(cartCount < 0){
+              cartCount = 0;
+            }
             dispatch(setCartCount(cartCount));
             
           }

@@ -13,6 +13,8 @@ import Swal from 'sweetalert2'
 const ProductDetail = () => {
   //api
   const { productId } = useParams();
+  const navigate = useNavigate();
+  const isLoggedIn = useSelector((state) => !!state.CustomerStore.isLogin);
 
   const [product, setProducts] = useState([]);
   const orderRequest = {
@@ -65,7 +67,8 @@ const ProductDetail = () => {
 
   //buy product
   const buyProduct = async() => {
-      orderRequest.customerId = customer.customerId;
+    if(isLoggedIn){
+       orderRequest.customerId = customer.customerId;
       orderRequest.receiptDetailRequests = [{
          productVariantId: selectVariant.variantId,
          quantity: quantity
@@ -79,6 +82,10 @@ const ProductDetail = () => {
         showConfirmButton: false,
         timer:1000 
       });
+    }else{
+      navigate("/login")
+    }
+     
 
   }
 

@@ -47,7 +47,6 @@ const Navbar = () => {
 
   const isAuthPage =
     location.pathname === "/login" || location.pathname === "/register";
-
   const text_Color =
     location.pathname === "/" ? "text-white" : "text-green-600";
   const text_hover =
