@@ -3,6 +3,9 @@ import { orderAPI } from "../../services/orderService";
 import { useDispatch, useSelector } from "react-redux";
 import { setCreateOrder } from "../../redux/orderSlice";
 import Swal from "sweetalert2";
+import { PencilIcon } from "@heroicons/react/24/outline";
+
+
 
 function OrderBill(orderStore) {
   const [orders, setOrders] = useState([]);
@@ -28,7 +31,7 @@ function OrderBill(orderStore) {
         order?.receiptDetails?.forEach((item) => {
           orderTotal += item.productVariants.price * item.totalQuantity;
         });
-        prices[order.orderId] = orderTotal; 
+        prices[order.orderId] = orderTotal + 30; 
       });
   
       setTotalPrice(prices);
@@ -86,7 +89,7 @@ function OrderBill(orderStore) {
               }
               className="mb-3 hover:text-green-500 text-center cursor-pointer font-bold text-lg text-green-600"
             >
-              HÓA ĐƠN #{index + 1}
+              ĐƠN HÀNG #{order.orderId.split("-")[0].toUpperCase()}
             </div>
             {selectedOrderIndex === index && (
               <>
@@ -104,6 +107,7 @@ function OrderBill(orderStore) {
                         value={CustomerStore?.customerAddress || ""}
                         readOnly
                       />
+                  
                     </div>
 
                     <div>
@@ -160,7 +164,7 @@ function OrderBill(orderStore) {
                   </div>
                 ))}
 
-                <div className="payment mt-5">
+                <div className="payment my-5">
                   <p>Thanh Toán</p>
                   <select name="payment" className="w-full px-3 py-2 border">
                     <option value={order.paymentMethod}>
@@ -169,10 +173,13 @@ function OrderBill(orderStore) {
                     <option>Cash</option>
                   </select>
                 </div>
+                <div className="font-light">
+                  *Phí ship toàn quốc 30.000 VNĐ
+                </div>
 
-                <div className="text-right font-bold text-lg mt-4">
+                <div className="text-right font-bold text-lg mt-2">
                   Tổng tiền:
-                  <span className="text-red-600"> {totalPrice[order.orderId] || 0} VND</span>
+                  <span className="text-red-600"> {totalPrice[order.orderId] || 0} VNĐ</span>
                 </div>
                 <button
                   onClick={() => handleCancelledOrder(order.orderId)}
