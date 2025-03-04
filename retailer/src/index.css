@@ -11,3 +11,17 @@
 .oswald-font {
   font-family: Oswald;
 }
+
+
+.roboto-flex {
+  font-family: "Roboto Flex", sans-serif;
+}
+
+.public-sans {
+  font-family: "Public Sans", sans-serif;
+}
+
+.public-sans-500 {
+  font-family: "Public Sans", sans-serif;
+  font-weight: 500;
+}

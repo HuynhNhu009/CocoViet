@@ -11,6 +11,11 @@ export const retailerApi = {
     return response.data;
   },
 
+  logout: async () => {
+    const response = await api.post("/retailers/logout");
+    return response.data;
+  },
+
   checkAuth: async () => {
     const response = await api.get("/retailers/check", {
       withCredentials: true,

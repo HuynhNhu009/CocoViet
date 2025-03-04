@@ -124,6 +124,42 @@ public class RetailerController {
         }
     }
 
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) {
+        String jwt = null;
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("jwtRetailer".equals(cookie.getName())) {
+                    jwt = cookie.getValue();
+                    break;
+                }
+            }
+        }
+
+        Cookie jwtCookie = new Cookie("jwtRetailer", null);
+        jwtCookie.setHttpOnly(true);
+        jwtCookie.setPath("/");
+        jwtCookie.setMaxAge(0);
+        response.addCookie(jwtCookie);
+
+        if (jwt == null || jwt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(ResponseData.builder()
+                            .data(null)
+                            .msg("No active session to logout")
+                            .status("NO_SESSION")
+                            .build());
+        }
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ResponseData.builder()
+                        .data(null)
+                        .msg("Logout success")
+                        .status("OK")
+                        .build());
+    }
+
     @PatchMapping("/update-profile/{id}")
     ResponseEntity<ResponseData> updateRetailerProfile(@PathVariable String id,
                                                        @RequestBody @Valid UserProfileRequest retailerRequest) {

@@ -121,7 +121,7 @@ const UnitManager = ({ retailer, units = [], onUpdateUnits, disabled = false }) 
     <div className="space-y-4">
       {/* Modal */}
       {isLoading && (
-        <div className="fixed inset-0 flex items-center justify-center z-50">
+        <div className="fixed inset-0 flex items-center justify-center z-10">
           <div className="bg-white p-6 rounded-lg shadow-lg flex flex-col items-center gap-4">
             <svg
               className="animate-spin h-16 w-16 text-green-600"
@@ -162,8 +162,8 @@ const UnitManager = ({ retailer, units = [], onUpdateUnits, disabled = false }) 
       )}
 
       {/* Tiêu đề */}
-      <div className="flex items-center justify-between">
-        <h3 className="text-xl font-semibold text-gray-800">Quản lý đơn vị</h3>
+      <div className="flex items-center justify-end">
+       
         {!isAdding && (
           <button
             type="button"

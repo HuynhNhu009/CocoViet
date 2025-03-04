@@ -1,6 +1,6 @@
 import React from "react";
 
-const OrderList = ({ orders }) => {
+const OrderList = ({ orders }, label) => {
   if (!orders.length) {
     return (
       <div className="text-center py-4 text-gray-600">
@@ -11,9 +11,7 @@ const OrderList = ({ orders }) => {
 
   return (
     <div>
-      <h3 className="text-xl font-semibold mb-4 text-gray-800">
-        Danh sách đơn hàng
-      </h3>
+      
       {/* Bảng cho desktop */}
       <div className="hidden md:block overflow-x-auto">
         <table className="w-full border-collapse">

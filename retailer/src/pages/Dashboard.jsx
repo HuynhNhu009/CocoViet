@@ -12,6 +12,7 @@ import { categoryApi } from "../services/categoryService";
 import { productApi } from "../services/productService";
 import { unitApi } from "../services/unitService";
 import Profit from "../components/Profit";
+import Navbar from "../components/Navbar";
 
 const Dashboard = () => {
   const dispatch = useDispatch();
@@ -25,11 +26,14 @@ const Dashboard = () => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [label, setLable] = useState("Đơn hàng");
 
   const fetchUnits = async () => {
     try {
       setLoading(true);
-      const responseData = await unitApi.getAllUnitsRetailerId(retailer.retailerId);
+      const responseData = await unitApi.getAllUnitsRetailerId(
+        retailer.retailerId
+      );
       console.log("Units from API:", responseData);
       setUnits(responseData.data);
     } catch (error) {
@@ -121,8 +125,14 @@ const Dashboard = () => {
         retailerId={retailer?.retailerId} // Truyền retailerId từ Redux store
       />
     ),
-    "unit-manager": <UnitManager retailer={retailer} units={units} onUpdateUnits={updateUnits} />,
-    profit: <Profit/>
+    "unit-manager": (
+      <UnitManager
+        retailer={retailer}
+        units={units}
+        onUpdateUnits={updateUnits}
+      />
+    ),
+    profit: <Profit />,
   };
 
   if (loading || loadingRedux) {
@@ -130,23 +140,29 @@ const Dashboard = () => {
   }
 
   return (
-  <div className="bg-gray-200 pt-10 min-h-[90vh] px-4 flex flex-col lg:flex-row gap-6 ">
-      <div className="lg:hidden flex justify-between items-center mb-4">
-        <button onClick={() => setIsSidebarOpen(true)}>
-          <Bars3Icon className="size-6 text-gray-700" />
-        </button>
-      </div>
-      <Sidebar
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
-        isOpen={isSidebarOpen}
-        setIsOpen={setIsSidebarOpen}
-      />
-      <div className="flex-1">
-        <div className="hidden lg:flex justify-between items-center mb-6">
-        </div>
-        <div className="bg-white p-6 rounded-lg shadow-md">
-          {tabContent[activeTab]}
+    <div className="relavive flex flex-col min-h-screen">
+      <Navbar />
+      <div className=" bg-gray-200 min-h-[90vh] flex flex-col sm:px-4 lg:flex-row sm:gap-6 ">
+        <Sidebar
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          label={label}
+          setLabel={setLable}
+          isOpen={isSidebarOpen}
+          setIsOpen={setIsSidebarOpen}
+        />
+        <div className="flex-1 sm:mt-8">
+          <div className="bg-white px-4 sm:p-6 sm:rounded-lg sm:shadow-md">
+            <div className="flex items-center mb-4">
+              <button onClick={() => setIsSidebarOpen(true)}>
+                <Bars3Icon className="size-6 text-gray-700" />
+              </button>
+              <h3 className="text-xl font-semibold ml-4 text-gray-700">
+                {label}
+              </h3>
+            </div>
+            {tabContent[activeTab]}
+          </div>
         </div>
       </div>
     </div>

@@ -185,9 +185,6 @@ const AddProductForm = ({
 
   return (
     <div>
-      <h3 className="text-xl font-semibold mb-4 text-gray-800">
-        Thêm sản phẩm mới
-      </h3>
       {message && (
         <div
           className={`p-2 mb-4 text-center rounded-md ${

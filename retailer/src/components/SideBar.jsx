@@ -8,7 +8,7 @@ import {
   CircleStackIcon,
 } from "@heroicons/react/24/outline";
 
-const Sidebar = ({ activeTab, setActiveTab, isOpen, setIsOpen }) => {
+const Sidebar = ({ activeTab, label, setLabel , setActiveTab, isOpen, setIsOpen }) => {
   const navItems = [
     {
       id: "orders",
@@ -17,12 +17,12 @@ const Sidebar = ({ activeTab, setActiveTab, isOpen, setIsOpen }) => {
     },
     {
       id: "products",
-      label: "Sản phẩm",
+      label: "Danh sách sản phẩm",
       icon: <CubeIcon className="size-5" />,
     },
     {
       id: "add-product",
-      label: "Thêm sản phẩm",
+      label: "Thêm sản phẩm mới",
       icon: <PlusIcon className="size-5" />,
     },
     {
@@ -42,6 +42,7 @@ const Sidebar = ({ activeTab, setActiveTab, isOpen, setIsOpen }) => {
       key={item.id}
       onClick={() => {
         setActiveTab(item.id);
+        setLabel(item.label)
         if (closeOnClick) setIsOpen(false);
       }}
       className={`flex items-center gap-2 py-2 px-4 rounded-md transition-colors duration-200 ${
@@ -62,7 +63,8 @@ const Sidebar = ({ activeTab, setActiveTab, isOpen, setIsOpen }) => {
       <div
         className={`fixed inset-y-0 left-0 w-64 bg-white p-5 shadow-lg transform ${
           isOpen ? "translate-x-0" : "-translate-x-full"
-        } transition-transform duration-300 ease-in-out lg:hidden z-50`}
+        } transition-transform duration-300 ease-in-out lg:hidden z-10
+        `}
         role="dialog"
         aria-modal="true"
         aria-label="Menu điều hướng"
