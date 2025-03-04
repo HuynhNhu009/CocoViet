@@ -21,11 +21,14 @@ public class OrderRequest {
 
 //    @NotNull(message = "Customer ID cannot be null")
     String customerId;
+    String customerName;
 
-//    @NotNull(message = "Status ID cannot be null")
+    String customerAddress;
+
+    String customerNumber;
+
     String statusCode;
 
-//    @NotNull(message = "Payment ID cannot be null")
     String paymentCode;
 
     List<ReceiptDetailRequest> receiptDetailRequests;

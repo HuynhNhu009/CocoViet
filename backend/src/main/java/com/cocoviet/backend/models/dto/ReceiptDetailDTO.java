@@ -16,12 +16,6 @@ public class ReceiptDetailDTO {
 
     String retailerName;
 
-    String customerName;
-
-    String customerAddress;
-
-    String customerNumber;
-
     String productName;
 
     int totalQuantity;

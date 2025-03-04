@@ -16,7 +16,9 @@ import java.util.Set;
 public class OrderDTO {
     String orderId;
     Set<ReceiptDetailDTO> receiptDetails;
-
+    String customerName;
+    String customerAddress;
+    String customerNumber;
     String statusName;
     String paymentMethod;
 
