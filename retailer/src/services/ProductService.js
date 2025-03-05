@@ -6,7 +6,6 @@ export const productApi = {
     return response.data;
   },
 
-
   addProduct: async (productData, imageFile) => {
     
       const formData = new FormData();
@@ -22,9 +21,15 @@ export const productApi = {
           "Content-Type": "multipart/form-data",
         },
       });
-  
-      // console.log("ProductService",response.data);
+      
       return response.data;
     
+  },
+
+  updateProduct: async (productData, imageFile) => {
+    const formData = new FormData()
+    
+
+    return 
   }
 };

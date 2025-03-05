@@ -50,6 +50,7 @@ const ProductList = () => {
           <ProductDetail 
             product={selectedProduct} 
             onBack={() => setSelectedProduct(null)}
+            isEdit={false}
           />
         </div>
       )}
