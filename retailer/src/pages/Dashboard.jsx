@@ -1,25 +1,19 @@
-import React, { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
-<<<<<<< HEAD
 import { Bars3Icon } from "@heroicons/react/24/outline";
-import { setProducts } from "../redux/retailerSlice";
-=======
-import { BellIcon, Bars3Icon } from "@heroicons/react/24/outline";
-import { setOrder, setProducts, setStatus } from "../redux/retailerSlice";
-import Title from "../components/Title";
->>>>>>> f54f95ece7b43714ab8d3c38f6bb5db7c9f6801d
-import Sidebar from "../components/SideBar";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import AddProductForm from "../components/AddProductForm";
+import Navbar from "../components/Navbar";
 import OrderList from "../components/Order/OrderList";
 import ProductList from "../components/ProductList";
-import AddProductForm from "../components/AddProductForm";
-import UnitManager from "../components/UnitManager";
-import { categoryApi } from "../services/categoryService";
-import { productApi } from "../services/productService";
-import { unitApi } from "../services/unitService";
 import Profit from "../components/Profit";
-import Navbar from "../components/Navbar";
+import Sidebar from "../components/SideBar";
+import UnitManager from "../components/UnitManager";
+import { setOrder, setProducts, setStatus } from "../redux/retailerSlice";
+import { categoryApi } from "../services/categoryService";
 import { orderAPI } from "../services/orderService";
+import { productApi } from "../services/productService";
 import { statusAPI } from "../services/statusService";
+import { unitApi } from "../services/unitService";
 
 const Dashboard = () => {
   const dispatch = useDispatch();
@@ -75,7 +69,8 @@ const Dashboard = () => {
       dispatch(setOrder(responseData.data))
     } catch (error) {
       console.log("Lỗi khi lấy Order:", error);
-      setCategories([]);
+      dispatch(setOrder([]))
+
     } 
     finally {
       setLoading(false);
@@ -90,7 +85,7 @@ const Dashboard = () => {
       dispatch(setStatus(responseData.data))
     } catch (error) {
       console.log("Lỗi khi lấy status:", error);
-      setCategories([]);
+      dispatch(setStatus([]))
     } 
     finally {
       setLoading(false);
