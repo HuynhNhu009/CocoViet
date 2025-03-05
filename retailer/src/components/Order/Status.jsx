@@ -68,12 +68,12 @@ const Status = () => {
 
   return (
     <>
-      <div className="status flex justify-between mb-3">
+      <div className="status flex justify-between">
         {status.slice(1).map((item, index) => (
-          <div key={index} className={`bg-gray-200 w-full text-center cursor-pointer py-2
-           hover:bg-green-600 hover:text-white  ${
+          <div key={index} className={`bg-gray-200 w-full uppercase text-center cursor-pointer py-2
+            ${
               statusActive === item.statusCode
-                ? "bg-green-600 text-white after:border-l-green-700 " // active
+                ? "bg-green-500 text-white after:border-l-green-700  rounded-tl-md rounded-tr-md" // active
                 : "bg-gray-200"
             }`}>
             {item.statusName}

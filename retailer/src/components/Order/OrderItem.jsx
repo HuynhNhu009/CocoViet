@@ -31,18 +31,18 @@ const OrderItem = ({ orderStatus }) => {
       <div className="hidden md:block overflow-x-auto">
         <table className="w-full border-collapse">
           <thead>
-            <tr className="bg-gray-100 text-center">
-              <th className="p-3 text-sm font-medium text-gray-700">Mã đơn</th>
-              <th className="p-3 text-sm font-medium text-gray-700">
+            <tr className=" text-center bg-green-100 text-gray-600 uppercase">
+              <th className="p-3 text-sm  ">Mã đơn</th>
+              <th className="p-3 text-sm  ">
                 Ngày đặt
               </th>
-              <th className="p-3 text-sm font-medium text-gray-700">
+              <th className="p-3 text-sm ">
                 Tổng tiền
               </th>
-              <th className="p-3 text-sm font-medium text-gray-700">
+              <th className="p-3 text-sm ">
                 Trạng thái
               </th>
-              <th className="p-3 text-sm font-medium text-gray-700">
+              <th className="p-3 text-sm ">
                 Hành động
               </th>
             </tr>
@@ -58,7 +58,7 @@ const OrderItem = ({ orderStatus }) => {
                         selectedOrderId === item.orderId ? null : item.orderId
                       )
                     }
-                    className="border-b cursor-pointer text-center hover:bg-gray-50"
+                    className={`border-b cursor-pointer text-center hover:bg-gray-50 `}
                   >
                     <td className="p-3">
                       {item.orderId.split("-")[0].toUpperCase()}
@@ -84,7 +84,7 @@ const OrderItem = ({ orderStatus }) => {
                   </tr>
                   {/* receiptDetail */}
                   {selectedOrderId === item.orderId && (
-                    <tr>
+                    <tr className="">
                       <td colSpan="5" className="bg-gray-50 p-4 text-left">
                         <h3 className="text-lg font-semibold text-green-600 text-center">
                           Chi tiết đơn hàng
