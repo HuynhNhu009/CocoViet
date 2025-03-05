@@ -83,6 +83,8 @@ const Dashboard = () => {
       setLoading(true);
       const responseData = await statusAPI.getAllStatus();
       dispatch(setStatus(responseData.data))
+      console.log("status",responseData.data);
+      
     } catch (error) {
       console.log("Lỗi khi lấy status:", error);
       dispatch(setStatus([]))

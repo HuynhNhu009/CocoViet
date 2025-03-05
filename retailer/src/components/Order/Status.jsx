@@ -13,7 +13,7 @@ const Status = () => {
     if(statusStore != [] ){
       setstatus(statusStore);
     }
-  }, statusStore);
+  }, [statusStore]);
 
   useEffect(() => {
     if (!statusActive && statusStore.length > 0) {
@@ -38,32 +38,32 @@ const Status = () => {
     }
   }, [statusActive, orderStore, statusStore, dispatch]);
 
-//   const handleClickStatus = async (statusCode) => {
-//     try {
-//       dispatch(setStatusActive(statusCode));
-//       if (statusStore.length > 0) {
-//         const request = statusStore.find(
-//           (item) => item.statusCode === statusCode
-//         );
+  // const handleClickStatus = async (statusCode) => {
+  //   try {
+  //     dispatch(setStatusActive(statusCode));
+  //     if (statusStore.length > 0) {
+  //       const request = statusStore.find(
+  //         (item) => item.statusCode === statusCode
+  //       );
 
-//         if (request) {
-//           const filteredResults = orderList.filter(
-//             (item) => item.statusName === request.statusName
-//           );
-//           console.log("filteredResults",filteredResults);
+  //       if (request) {
+  //         const filteredResults = orderList.filter(
+  //           (item) => item.statusName === request.statusName
+  //         );
+  //         console.log("filteredResults",filteredResults);
           
-//           if (filteredResults) {
-//             dispatch(setOrderStatus(filteredResults));
-//           } else {
-//             dispatch(setOrderStatus([]));
-//           }
-//         }
-//       }
-//     } catch (error) {
-//       console.error("Error fetching order by statusCode:", error);
-//       setStatus([]);
-//     }
-//   };
+  //         if (filteredResults) {
+  //           dispatch(setOrderStatus(filteredResults));
+  //         } else {
+  //           dispatch(setOrderStatus([]));
+  //         }
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching order by statusCode:", error);
+  //     setStatus([]);
+  //   }
+  // };
 
 
   return (
