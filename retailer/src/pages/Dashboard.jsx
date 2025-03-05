@@ -1,10 +1,10 @@
 import { Bars3Icon } from "@heroicons/react/24/outline";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import AddProductForm from "../components/AddProductForm";
+import AddProductForm from "../components/Product/AddProductForm";
 import Navbar from "../components/Navbar";
 import OrderList from "../components/Order/OrderList";
-import ProductList from "../components/ProductList";
+import ProductList from "../components/Product/ProductList";
 import Profit from "../components/Profit";
 import Sidebar from "../components/SideBar";
 import UnitManager from "../components/UnitManager";
