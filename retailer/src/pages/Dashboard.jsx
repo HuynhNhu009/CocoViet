@@ -1,17 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-<<<<<<< HEAD
-import { Bars3Icon } from "@heroicons/react/24/outline";
-import { setProducts } from "../redux/retailerSlice";
-=======
 import { BellIcon, Bars3Icon } from "@heroicons/react/24/outline";
 import { setOrder, setProducts, setStatus } from "../redux/retailerSlice";
 import Title from "../components/Title";
->>>>>>> f54f95ece7b43714ab8d3c38f6bb5db7c9f6801d
 import Sidebar from "../components/SideBar";
 import OrderList from "../components/Order/OrderList";
-import ProductList from "../components/ProductList";
-import AddProductForm from "../components/AddProductForm";
+import ProductList from "../components/Product/ProductList";
+import AddProductForm from "../components/Product/AddProductForm";
 import UnitManager from "../components/UnitManager";
 import { categoryApi } from "../services/categoryService";
 import { productApi } from "../services/productService";

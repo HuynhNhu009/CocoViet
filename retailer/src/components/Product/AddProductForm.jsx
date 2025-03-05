@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { PlusIcon, XMarkIcon, TrashIcon } from "@heroicons/react/24/outline";
-import UploadImage from "./UpLoadImage";
-import { productApi } from "../services/productService";
+import UploadImage from "../UpLoadImage";
+import { productApi } from "../../services/productService";
 
 const AddProductForm = ({
   onAddProduct,
