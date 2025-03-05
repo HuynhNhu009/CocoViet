@@ -286,6 +286,40 @@ public class OrderServiceImpl implements IOrderService {
     }
 
     @Override
+    public List<OrderDTO> getOrderByRetailerId(String retailerId) {
+        List<OrderEntity> listOrderEntities = iOrderRepository.findProcessingOrdersByRetailerId(retailerId);
+
+        List<OrderDTO> orderDTOS = listOrderEntities.stream()
+                .map(orderEntity -> {
+
+                    CustomerEntity customerEntity = iCustomerRepository.findByCustomerId(orderEntity.getCustomer().getCustomerId());
+                    Set<ReceiptDetailDTO> receiptDetailDTOS = orderEntity.getReceiptDetails().stream()
+                            .map(response -> ReceiptDetailDTO.builder()
+                                    .receiptDetailId(response.getReceiptDetailId())
+                                    .totalQuantity(response.getQuantity())
+                                    .productVariants(productVariantMapper.toDTO(response.getProductVariant()))
+                                    .productName(response.getProductVariant().getProduct().getProductName())
+                                    .retailerName(iretailerRepository.findRetailerNameByProductId(response.getProductVariant().getProduct().getProductId()))
+                                    .build())
+                            .collect(Collectors.toSet());
+
+                    OrderDTO orderDTO = new OrderDTO();
+                    orderDTO.setOrderId(orderEntity.getOrderId());
+                    orderDTO.setOrderDate(orderEntity.getOrderDate());
+                    orderDTO.setStatusName(orderEntity.getStatus().getStatusName());
+                    orderDTO.setReceiptDetails(receiptDetailDTOS);
+                    orderDTO.setCustomerName(customerEntity.getCustomerName());
+                    orderDTO.setCustomerAddress(customerEntity.getCustomerAddress());
+                    orderDTO.setCustomerNumber(customerEntity.getPhoneNumbers());
+                    orderDTO.setPaymentMethod(orderEntity.getPayment().getPaymentMethod());
+
+                    return orderDTO;
+                }).sorted(Comparator.comparing(OrderDTO::getOrderDate)).collect(Collectors.toList());
+
+        return orderDTOS;
+    }
+
+    @Override
     public List<OrderDTO> getAllOrders() {
         List<OrderEntity> listOrderEntities = iOrderRepository.findAll();
 

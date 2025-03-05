@@ -6,11 +6,11 @@ import OrderItem from "./OrderItem";
 import OrderBill from "./OrderBill";
 
 function Order() {
-  const orderStatus = useSelector((state) => state.OrderStore.orderStatus);  
+  const orderStatus = useSelector((state) => state.OrderStore.orderStatus);
   const [order, setOrder] = useState({});
   const statusActive = useSelector((state) => state.OrderStore.statusActive);
 
-  useEffect( () => {
+  useEffect(() => {
     if (orderStatus.length == 1) {
       setOrder(orderStatus[0]);
     } else {
@@ -21,17 +21,13 @@ function Order() {
   return (
     <div className="flex justify-center flex-col w-full sm:px-[5vw] md:px-[7vw] lg:px-[9vw] mb-8">
       <Status />
-      {statusActive == "CART" && 
-        <OrderItem 
-          orderStore={order}
-        />
-      }
+      {["CART"].includes(
+        statusActive
+      ) && <OrderItem orderStore={order} />}
 
-      {statusActive == "PROCESSING" && 
-        <OrderBill orderStore={order}/>
-      }
-      
-     
+      {["PROCESSING", "SHIPPING", "DELIVERED", "CANCELLED"].includes(
+        statusActive
+      ) && <OrderBill orderStore={order} />}
     </div>
   );
 }

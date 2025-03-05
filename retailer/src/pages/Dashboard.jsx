@@ -1,9 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
+<<<<<<< HEAD
 import { Bars3Icon } from "@heroicons/react/24/outline";
 import { setProducts } from "../redux/retailerSlice";
+=======
+import { BellIcon, Bars3Icon } from "@heroicons/react/24/outline";
+import { setOrder, setProducts, setStatus } from "../redux/retailerSlice";
+import Title from "../components/Title";
+>>>>>>> f54f95ece7b43714ab8d3c38f6bb5db7c9f6801d
 import Sidebar from "../components/SideBar";
-import OrderList from "../components/OrderList";
+import OrderList from "../components/Order/OrderList";
 import ProductList from "../components/ProductList";
 import AddProductForm from "../components/AddProductForm";
 import UnitManager from "../components/UnitManager";
@@ -12,20 +18,24 @@ import { productApi } from "../services/productService";
 import { unitApi } from "../services/unitService";
 import Profit from "../components/Profit";
 import Navbar from "../components/Navbar";
+import { orderAPI } from "../services/orderService";
+import { statusAPI } from "../services/statusService";
 
 const Dashboard = () => {
   const dispatch = useDispatch();
   const retailer = useSelector((state) => state.RetailerStore.retailer);
   const products = useSelector((state) => state.RetailerStore.products);
   const loadingRedux = useSelector((state) => state.RetailerStore.loading);
+  // const orderStore = useSelector((state) => state.RetailerStore.orderStore);
+  const orderStatus = useSelector((state) => state.RetailerStore.orderStatus);
 
   const [activeTab, setActiveTab] = useState("orders");
-  const [orders, setOrders] = useState([]);
   const [units, setUnits] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [label, setLable] = useState("Đơn hàng");
+  const [getOrderStatus, setGetOrderStatus] = useState([]);
 
   const fetchUnits = async () => {
     try {
@@ -53,6 +63,36 @@ const Dashboard = () => {
       console.log("Lỗi khi lấy danh mục (category):", error);
       setCategories([]);
     } finally {
+      setLoading(false);
+    }
+  };
+
+  // orderlist
+  const fetchOrder = async () => {
+    try {
+      setLoading(true);
+      const responseData = await orderAPI.getAllOrdersByRetailerId(retailer.retailerId);
+      dispatch(setOrder(responseData.data))
+    } catch (error) {
+      console.log("Lỗi khi lấy Order:", error);
+      setCategories([]);
+    } 
+    finally {
+      setLoading(false);
+    }
+  };
+
+  //status
+  const fetchStatus = async () => {
+    try {
+      setLoading(true);
+      const responseData = await statusAPI.getAllStatus();
+      dispatch(setStatus(responseData.data))
+    } catch (error) {
+      console.log("Lỗi khi lấy status:", error);
+      setCategories([]);
+    } 
+    finally {
       setLoading(false);
     }
   };
@@ -95,7 +135,9 @@ const Dashboard = () => {
       fetchProducts();
     }
     fetchCategory();
+    fetchOrder();
     fetchUnits();
+    fetchStatus();
   }, [retailer, dispatch]);
 
   const addProduct = async () => {
@@ -113,8 +155,15 @@ const Dashboard = () => {
     fetchUnits();
   };
 
+  useEffect(() => {
+    if (orderStatus.length > 0) { 
+      setGetOrderStatus(orderStatus);
+    }
+  }, [orderStatus]);  
+ 
+
   const tabContent = {
-    orders: <OrderList orders={orders} />,
+    orders: <OrderList orderStatus={getOrderStatus} />,
     products: <ProductList />,
     "add-product": (
       <AddProductForm

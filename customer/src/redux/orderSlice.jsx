@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { paymentAPI } from "../services/paymentService";
 
 const orderSlice = createSlice({
   name: "OrderStore",
@@ -9,11 +10,15 @@ const orderSlice = createSlice({
     orderStatus:[],
     createOrder:false,
     cartCount:0,
+    payment: []
   },
 
   reducers: {
     setStatus: (state, action) => {
       state.status = action.payload;      
+    },
+    setPayment: (state, action) => {
+      state.payment = action.payload;      
     },
 
     setCartCount: (state, action) => {
@@ -46,10 +51,8 @@ export const {
   setOrderList,
   setOrderStatus,
   setCreateOrder,
-  setCartCount
+  setCartCount,
+  setPayment
 } = orderSlice.actions;
-
-// export const getInitialState = (state) => state.ProductStore.statusActive;
-
 
 export default orderSlice.reducer;

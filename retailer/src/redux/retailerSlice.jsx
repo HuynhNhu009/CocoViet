@@ -6,7 +6,12 @@ const initialState = {
   isRetailerLogin: false,
   products: [],
   category: [],
+  orderStore: [],
+  statusStore: [],
+  orderStatus: [],
+  statusActive: null,
   loading: false,
+
 };
 
 const retailerSlice = createSlice({
@@ -17,6 +22,23 @@ const retailerSlice = createSlice({
       state.isRetailerLogin = true;
       state.retailer = action.payload;
     },
+
+    setOrder: (state, action) => {
+      state.orderStore = action.payload;
+    },
+
+    setOrderStatus: (state, action) => {
+      state.orderStatus = action.payload;
+    },
+
+    setStatusActive: (state, action) => {
+      state.statusActive = action.payload;
+    },
+
+    setStatus: (state, action) => {
+      state.statusStore = action.payload;
+    },
+
     logout: (state) => {
       state.isRetailerLogin = false;
       state.retailer = null;
@@ -35,6 +57,6 @@ const retailerSlice = createSlice({
   },
 });
 
-export const { setLogin, logout, setProducts, setLoading } =
+export const { setLogin,setOrderStatus, setStatusActive, setStatus, setOrder, logout, setProducts, setLoading } =
   retailerSlice.actions;
 export default retailerSlice.reducer;
