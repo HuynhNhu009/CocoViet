@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface IProductService {
     ProductDTO addProduct(ProductRequest productRequest, MultipartFile imageFile) throws IOException;
-    ProductDTO updateProduct(String productId, ProductRequest productRequest);
+    ProductDTO updateProduct(String productId,ProductRequest productRequest, MultipartFile imageFile) throws IOException;
     ProductDTO getProduct(String productId);
     List<ProductDTO> getAllProduct();
     List<ProductDTO> getProductByCategory(String categoryId);

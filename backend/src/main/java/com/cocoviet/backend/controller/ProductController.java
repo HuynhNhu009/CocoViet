@@ -62,12 +62,18 @@ public class ProductController {
         }
     }
 
-    @PatchMapping("/{productId}")
-    ResponseEntity<ResponseData> update(@PathVariable("productId") String productId, @RequestBody @Valid ProductRequest coconutProductRequest) {
-        return ResponseEntity.status(HttpStatus.OK)
+    @PatchMapping(value = "/{productId}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    ResponseEntity<ResponseData> update(@PathVariable("productId") String productId,@RequestPart(value = "product", required = false) String productJson,
+                                        @RequestPart(value = "image", required = false) MultipartFile imageFile) throws IOException {
+        ProductRequest productRequest = (productJson != null)
+                ? objectMapper.readValue(productJson, ProductRequest.class)
+                : new ProductRequest();
+
+        ProductDTO productDTO = productService.updateProduct(productId,productRequest, imageFile);
+        return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ResponseData.builder()
-                        .data(productService.updateProduct(productId,coconutProductRequest))
-                        .msg("Update product Id: "+ productId +" - Name:" + coconutProductRequest.getProductName() + " successfully!")
+                        .data(productDTO)
+                        .msg("Update product successfully")
                         .status("OK")
                         .build());
 

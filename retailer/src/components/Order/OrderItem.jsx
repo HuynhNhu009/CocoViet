@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 const OrderItem = ({ orderStatus }) => {
   const [orders, setOrders] = useState([]);
   const [totalPrice, setTotalPrice] = useState({});
-  const [selectedOrderId, setSelectedOrderId] = useState(null); 
+  const [selectedOrderId, setSelectedOrderId] = useState(null);
 
   useEffect(() => {
     if (orderStatus) {
@@ -33,18 +33,10 @@ const OrderItem = ({ orderStatus }) => {
           <thead>
             <tr className=" text-center bg-green-100 text-gray-600 uppercase">
               <th className="p-3 text-sm  ">Mã đơn</th>
-              <th className="p-3 text-sm  ">
-                Ngày đặt
-              </th>
-              <th className="p-3 text-sm ">
-                Tổng tiền
-              </th>
-              <th className="p-3 text-sm ">
-                Trạng thái
-              </th>
-              <th className="p-3 text-sm ">
-                Hành động
-              </th>
+              <th className="p-3 text-sm  ">Ngày đặt</th>
+              <th className="p-3 text-sm ">Tổng tiền</th>
+              <th className="p-3 text-sm ">Trạng thái</th>
+              <th className="p-3 text-sm ">Hành động</th>
             </tr>
           </thead>
 
@@ -58,7 +50,13 @@ const OrderItem = ({ orderStatus }) => {
                         selectedOrderId === item.orderId ? null : item.orderId
                       )
                     }
-                    className={`border-b cursor-pointer text-center hover:bg-gray-50 `}
+                    className={`border-b cursor-pointer text-center  hover:bg-gray-50 
+                     ${
+                       selectedOrderId === item.orderId
+                         ? " text-green-600  bg-gray-100"
+                         : ""
+                     }
+                    `}
                   >
                     <td className="p-3">
                       {item.orderId.split("-")[0].toUpperCase()}
@@ -96,18 +94,37 @@ const OrderItem = ({ orderStatus }) => {
                         </div>
 
                         <table className="w-full border-collapse border mt-2">
+                          <thead className=" bg-gray-200">
+                            <tr className="border-b text-center">
+                              <th className="border px-2 py-2 w-1/4 font-medium">
+                                Sản phẩm
+                              </th>
+                              <th className="border px-2 py-2 w-1/4 font-medium">
+                                Đơn vị
+                              </th>
+                              <th className="border px-2 py-2 w-1/4 font-medium">
+                                Số lượng
+                              </th>
+                              <th className="border px-2 py-2 w-1/4 font-medium">
+                                Đơn giá
+                              </th>
+                            </tr>
+                          </thead>
+
                           <tbody>
                             {item.receiptDetails.map((item, idx) => (
-                              <tr key={idx} className="border-b">
-                                <td className="border px-2 py-2 w-1/2">
-                                  {item.productName} -{" "}
+                              <tr key={idx} className="border-b text-center">
+                                <td className="border px-2 py-2 w-1/4">
+                                  {item.productName}
+                                </td>
+                                <td className="border px-2 py-2 w-1/4 ">
                                   {item.productVariants.value}
                                   {item.productVariants.unitName}
                                 </td>
-                                <td className="border px-2 py-2 w-1/4 text-center">
+                                <td className="border px-2 py-2 w-1/4">
                                   x{item.totalQuantity}
                                 </td>
-                                <td className="border px-2 py-2 w-1/4 text-center">
+                                <td className="border px-2 py-2 w-1/4 ">
                                   {item.productVariants.price} VND
                                 </td>
                               </tr>
