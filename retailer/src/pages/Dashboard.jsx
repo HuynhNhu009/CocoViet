@@ -21,7 +21,8 @@ const Dashboard = () => {
   const retailer = useSelector((state) => state.RetailerStore.retailer);
   const products = useSelector((state) => state.RetailerStore.products);
   const loadingRedux = useSelector((state) => state.RetailerStore.loading);
-  const orderStore = useSelector((state) => state.RetailerStore.orderStore);
+  // const orderStore = useSelector((state) => state.RetailerStore.orderStore);
+  const orderStatus = useSelector((state) => state.RetailerStore.orderStatus);
 
   const [activeTab, setActiveTab] = useState("orders");
   const [units, setUnits] = useState([]);
@@ -29,6 +30,7 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [label, setLable] = useState("Đơn hàng");
+  const [getOrderStatus, setGetOrderStatus] = useState([]);
 
   const fetchUnits = async () => {
     try {
@@ -64,10 +66,8 @@ const Dashboard = () => {
   const fetchOrder = async () => {
     try {
       setLoading(true);
-      
       const responseData = await orderAPI.getAllOrdersByRetailerId(retailer.retailerId);
       dispatch(setOrder(responseData.data))
-      console.log("Orders from API:", responseData.data);
     } catch (error) {
       console.log("Lỗi khi lấy Order:", error);
       setCategories([]);
@@ -83,7 +83,6 @@ const Dashboard = () => {
       setLoading(true);
       const responseData = await statusAPI.getAllStatus();
       dispatch(setStatus(responseData.data))
-      console.log("Status from API:", responseData.data);
     } catch (error) {
       console.log("Lỗi khi lấy status:", error);
       setCategories([]);
@@ -151,8 +150,15 @@ const Dashboard = () => {
     fetchUnits();
   };
 
+  useEffect(() => {
+    if (orderStatus.length > 0) { 
+      setGetOrderStatus(orderStatus);
+    }
+  }, [orderStatus]);  
+ 
+
   const tabContent = {
-    orders: <OrderList orders={orderStore} />,
+    orders: <OrderList orderStatus={getOrderStatus} />,
     products: <ProductList />,
     "add-product": (
       <AddProductForm

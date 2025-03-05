@@ -48,7 +48,7 @@ function Status() {
         );
 
         if (request) {
-          const filteredResults = orderList.find(
+          const filteredResults = orderList.filter(
             (item) => item.statusName === request.statusName
           );
           console.log("filteredResults",filteredResults);
@@ -69,7 +69,7 @@ function Status() {
   return (
     <div className="flex flex-row justify-center flex-wrap">
       {status.length > 0 ? (
-        status.map((item, index) => (
+        status?.map((item, index) => (
           <div
             key={index}
             onClick={() => handleClickStatus(item.statusCode)}
