@@ -11,7 +11,9 @@ const OrderList = ({ orders }, label) => {
 
   return (
     <div>
-      
+      <div className="status">
+        
+      </div>
       {/* Bảng cho desktop */}
       <div className="hidden md:block overflow-x-auto">
         <table className="w-full border-collapse">
