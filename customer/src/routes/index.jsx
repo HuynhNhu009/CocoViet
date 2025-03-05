@@ -8,6 +8,7 @@ import ProductDetail from "../pages/Product/ProductDetail";
 import Profile from "../pages/Profile";
 import About from "../pages/About";
 import Order from "../pages/Order";
+import Blog from "../pages/Blog";
 
 export const routes = [
   {
@@ -46,11 +47,15 @@ export const routes = [
       {
         path: "about",
         element: <About/>
+      },
+      {
+        path: "blog",
+        element: <Blog/>
       }
     ],
   },
-  {
-    path: "*",
-    element: <Navigate to="/" />,
-  },
+  // {
+  //   path: "*",
+  //   element: <Navigate to="/" />,
+  // },
 ];

@@ -63,10 +63,8 @@ public class PostServiceImpl implements IPostService {
         return iPostMapper.toPostDTO(post);
     }
 
-//    @Override
-//    public PostDTO getAllPosts(){
-//        List<PostEntity> postEntityList = iPostRepository.findAll();
-//
-//        return iPostMapper.toPostDTO()
-//    }
+    @Override
+    public List<PostDTO> getAllPosts(){
+        return iPostMapper.toPostDTOList(iPostRepository.findAll());
+    }
 }

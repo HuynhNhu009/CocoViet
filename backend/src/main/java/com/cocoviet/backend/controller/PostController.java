@@ -18,8 +18,11 @@ public class PostController {
     @Autowired
     IPostService iPostService;
 
-    @PostMapping("/createPost")
-    ResponseEntity<ResponseData> createPost(@RequestBody @Valid PostRequest postRequest) {
+    @PostMapping()
+    ResponseEntity<ResponseData> createPost(
+            @RequestBody @Valid PostRequest postRequest
+
+        ) {
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ResponseData.builder()
@@ -39,10 +42,10 @@ public class PostController {
                         .status("OK")
                         .build());
     }
-//    @GetMapping("/get-all-posts")
-//    ResponseEntity<ResponseData> getAllPost(){
-//        return ResponseEntity.status(HttpStatus.CREATED)
-//                .body(ResponseData.builder()
-//                        .data(iPostService.get).build());
-//    }
+    @GetMapping("/get-all-posts")
+    ResponseEntity<ResponseData> getAllPost(){
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ResponseData.builder()
+                        .data(iPostService.getAllPosts()).build());
+    }
 }

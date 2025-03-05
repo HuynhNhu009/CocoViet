@@ -13,12 +13,14 @@ import {
   setStatus,
   setStatusActive,
 } from "./redux/orderSlice";
+import { setPost } from "./redux/postSlice";
 import { productAPI } from "./services/productService";
 import { statusAPI } from "./services/statusService";
 import { useSelector } from "react-redux";
 import { orderAPI } from "./services/orderService";
 import { useLocation } from "react-router-dom";
 import { paymentAPI } from "./services/paymentService";
+import { postApi } from "./services/postService";
 
 function App() {
   const dispatch = useDispatch();
@@ -29,6 +31,8 @@ function App() {
   const statusActive = useSelector((state) => state.OrderStore.statusActive);
   const createOrder = useSelector((state) => state.OrderStore.createOrder);
   const location = useLocation();
+  // const posts = useSelector((state)=> state.PostStore.post)
+  
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -66,6 +70,7 @@ function App() {
       }
     };
     payment();
+
 
     const fetchData = async () => {
       try {
@@ -115,6 +120,20 @@ function App() {
 
     dispatch(setCreateOrder(false));
   }, [isLogin, customer, dispatch, createOrder]);
+
+  useEffect(()=>{
+    const post = async () => {
+      try {
+        const response = await postApi.getAllPosts();
+        if (response.data) {
+         dispatch(setPost(response.data));
+        }
+      } catch (error) {
+        console.error("Error fetching status:", error);
+      }
+    };
+    post();
+  },[dispatch]);
 
   useEffect(() => {
     if (location.pathname != "/order") {

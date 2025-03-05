@@ -11,6 +11,5 @@ import java.util.List;
 public interface IPostMapper {
     @Mapping(source = "retailer.retailerName", target = "authorPost")
     PostDTO toPostDTO(PostEntity postEntity);
-
-//    List<PostDTO> toPostDTOList(List )
+    List<PostDTO> toPostDTOList(List<PostEntity>  postEntities);
 }

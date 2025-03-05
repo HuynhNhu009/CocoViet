@@ -14,7 +14,7 @@ export const unitApi = {
   },
 
   updateUnit: async (unitId, data) => {
-    const response = await api.patch(`/units/update/${unitId}`, data);
+    const response = await api.patch(`/units/${unitId}`, data);
     return response.data;
   },
 
@@ -23,3 +23,4 @@ export const unitApi = {
     return response.data;
   },
 };
+

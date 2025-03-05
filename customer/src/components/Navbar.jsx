@@ -117,19 +117,13 @@ const Navbar = () => {
                 Giới thiệu
               </p>
             </NavLink>
-            <NavLink to={"/blogs"} className="flex flex-col items-center gap-1">
+            <NavLink to={"/blog"} className="flex flex-col items-center gap-1">
               <p className={`uppercase ${text_Color} ${text_hover}`}>
                 Bài viết
               </p>
             </NavLink>
           </ul>
           <div className="flex items-center gap-6">
-            {/* Icon tìm kiếm */}
-            {/* <MagnifyingGlassIcon
-              className={`cursor-pointer size-7 ${text_Color} ${text_hover}`}
-            /> */}
-
-            {/* User Dropdown */}
             <div
               className="relative"
               onMouseEnter={() => setIsOpen(true)}
@@ -232,7 +226,7 @@ const Navbar = () => {
               <NavLink
                 className="py-3 pl-6 border-y uppercase"
                 onClick={() => setVisible(false)}
-                to="/blogs"
+                to="/blog"
               >
                 Bài viết
               </NavLink>
