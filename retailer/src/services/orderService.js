@@ -6,6 +6,11 @@ export const orderAPI = {
     return response.data;
   },
 
+  updateOrder: async (orderId,orderRequest) => {
+    const response = await api.patch(`/orders/update/${orderId}`, orderRequest);
+    return response.data;
+  },
+
 
   
 };

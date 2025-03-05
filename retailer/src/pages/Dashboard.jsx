@@ -8,7 +8,7 @@ import ProductList from "../components/Product/ProductList";
 import Profit from "../components/Profit";
 import Sidebar from "../components/SideBar";
 import UnitManager from "../components/UnitManager";
-import { setOrder, setProducts, setStatus } from "../redux/retailerSlice";
+import { setLoadOrder, setOrder, setProducts, setStatus } from "../redux/retailerSlice";
 import { categoryApi } from "../services/categoryService";
 import { orderAPI } from "../services/orderService";
 import { productApi } from "../services/productService";
@@ -20,7 +20,8 @@ const Dashboard = () => {
   const retailer = useSelector((state) => state.RetailerStore.retailer);
   const products = useSelector((state) => state.RetailerStore.products);
   const loadingRedux = useSelector((state) => state.RetailerStore.loading);
-  // const orderStore = useSelector((state) => state.RetailerStore.orderStore);
+  // const statusActive = useSelector((state) => state.RetailerStore.statusActive);
+  const loadOrder = useSelector((state) => state.RetailerStore.loadOrder);
   const orderStatus = useSelector((state) => state.RetailerStore.orderStatus);
 
   const [activeTab, setActiveTab] = useState("orders");
@@ -64,7 +65,7 @@ const Dashboard = () => {
   // orderlist
   const fetchOrder = async () => {
     try {
-      setLoading(true);
+      // setLoading(true);
       const responseData = await orderAPI.getAllOrdersByRetailerId(retailer.retailerId);
       dispatch(setOrder(responseData.data))
     } catch (error) {
@@ -132,10 +133,19 @@ const Dashboard = () => {
       fetchProducts();
     }
     fetchCategory();
-    fetchOrder();
     fetchUnits();
     fetchStatus();
   }, [retailer, dispatch]);
+
+  useEffect(() => {
+    fetchOrder();
+
+    const interval = setInterval(() => {
+      fetchOrder();
+  }, 5000); // Lặp lại mỗi 5 giây
+
+  return () => clearInterval(interval);
+  }, [loadOrder]);
 
   const addProduct = async () => {
     try {
@@ -153,9 +163,13 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    if (orderStatus.length > 0) { 
+    if (orderStatus.length > 0) {       
       setGetOrderStatus(orderStatus);
+    }else{
+      setGetOrderStatus([]);
     }
+
+    dispatch(setLoadOrder(false));
   }, [orderStatus]);  
  
 

@@ -21,10 +21,7 @@ function OrderBill(orderStore) {
     customerName: "",
     customerAddress: "",
     customerNumber: "",
-  });
-
-  console.log("status", statusActive);
-  
+  });  
 
   useEffect(() => {
     setCustomerInfo({

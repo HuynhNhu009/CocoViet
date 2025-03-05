@@ -7,6 +7,9 @@ const PostList = () => {
 
   const posts = useSelector((state) => state.PostStore.post);
 
+  console.log(posts);
+  
+
 // console.log("Post at PostList ============",posts.length);
 
   

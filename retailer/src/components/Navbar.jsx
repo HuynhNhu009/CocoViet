@@ -7,7 +7,7 @@ import { logout } from "../redux/retailerSlice";
 
 const Navbar = () => {
   const retailer = useSelector((state) => state.RetailerStore.retailer);
-  console.log("Retailer in Navbar:", retailer);
+  // console.log("Retailer in Navbar:", retailer);
   const [isHovered, setIsHovered] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -16,7 +16,7 @@ const Navbar = () => {
   const handleLogout = async () => {
     try {
       const response = await retailerApi.logout();
-      console.log(response); // { msg: "Logged out successfully", status: "OK" }
+      // console.log(response); 
       if (response.status === "OK") {
         dispatch(logout()); // Cập nhật state Redux
         navigate("/login");
