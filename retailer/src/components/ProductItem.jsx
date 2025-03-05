@@ -10,7 +10,7 @@ const ProductItem = ({ product }) => {
         className="w-fit object-cover mb-2 border border-green-600"
       />
       <p className="font-medium text-green-800 truncate capitalize ">{product.productName}</p>
-      <p className="text-green-600 text-sm">
+      <p className="text-green-600 truncate text-sm">
         Mô tả: {product.productDesc || "Chưa có"}
       </p>
       <p className="text-green-600 text-sm truncate sm:block">

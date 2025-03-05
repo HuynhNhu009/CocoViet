@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { BellIcon, Bars3Icon } from "@heroicons/react/24/outline";
+import { Bars3Icon } from "@heroicons/react/24/outline";
 import { setProducts } from "../redux/retailerSlice";
-import Title from "../components/Title";
 import Sidebar from "../components/SideBar";
 import OrderList from "../components/OrderList";
 import ProductList from "../components/ProductList";
@@ -153,13 +152,13 @@ const Dashboard = () => {
         />
         <div className="flex-1 sm:mt-8">
           <div className="bg-white px-4 sm:p-6 sm:rounded-lg sm:shadow-md">
-            <div className="flex items-center mb-4">
-              <button onClick={() => setIsSidebarOpen(true)}>
+            <div className="flex items-center py-4">
+              <button onClick={() => setIsSidebarOpen(true)} className="sm:hidden">
                 <Bars3Icon className="size-6 text-gray-700" />
               </button>
               <h3 className="text-xl font-semibold ml-4 text-gray-700">
                 {label}
-              </h3>
+              </h3> 
             </div>
             {tabContent[activeTab]}
           </div>

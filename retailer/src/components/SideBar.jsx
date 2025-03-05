@@ -61,7 +61,7 @@ const Sidebar = ({ activeTab, label, setLabel , setActiveTab, isOpen, setIsOpen 
     <>
       {/* Sidebar cho mobile */}
       <div
-        className={`fixed inset-y-0 left-0 w-64 bg-white p-5 shadow-lg transform ${
+        className={`fixed z-20 inset-y-0 left-0 w-64 bg-white p-5 shadow-lg transform ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         } transition-transform duration-300 ease-in-out lg:hidden z-10
         `}
@@ -69,7 +69,7 @@ const Sidebar = ({ activeTab, label, setLabel , setActiveTab, isOpen, setIsOpen 
         aria-modal="true"
         aria-label="Menu điều hướng"
       >
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex justify-between items-center pt-20 mb-6">
           <h3 className="text-xl font-semibold text-gray-800">Menu</h3>
           <button
             onClick={() => setIsOpen(false)}
@@ -100,7 +100,7 @@ const Sidebar = ({ activeTab, label, setLabel , setActiveTab, isOpen, setIsOpen 
       {/* Overlay khi sidebar mở trên mobile */}
       {isOpen && (
         <div
-          className="fixed inset-0 bg-black opacity-50 lg:hidden z-40"
+          className="fixed inset-0 bg-black opacity-50 lg:hidden z-10"
           onClick={() => setIsOpen(false)}
           aria-hidden="true"
         />
