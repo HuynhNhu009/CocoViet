@@ -103,6 +103,9 @@ const ProductDetail = () => {
     }
   };
 
+  console.log("productDetail", product);
+  
+
 
   return (
     <div className="  flex flex-col justify-center align-middle font-medium px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw] my-8">
@@ -166,6 +169,14 @@ const ProductDetail = () => {
         <h2>GIỚI THIỆU</h2>
         <hr className=""></hr>
         <p className="font-light mx-auto text-center">{product.productDesc}</p>
+      </div>
+      <div className="section-3flex justify-center space-x-8 flex-wrap mb-8 ">
+        <h2>LOẠI SẢN PHẨM</h2>
+        <hr className=""></hr>
+        {Array.isArray(product.categoryName) && product.categoryName.map((item, index) => (
+          <p key={index} className="font-light mx-auto">{item}</p>
+        ))}
+
       </div>
       <div className="section-4 ">
         <h2>XEM THÊM</h2>

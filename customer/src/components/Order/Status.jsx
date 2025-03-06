@@ -51,7 +51,7 @@ function Status() {
 
   const handleClickStatus = async (status) => {
     try {
-      dispatch(setStatusActive(status.statusCode));
+      dispatch(setStatusActive(status.statusCode));      
       dispatch(setStatusName(status.statusName));
       const response = await orderAPI.getOrderByCustomerId(
         customer.customerId,

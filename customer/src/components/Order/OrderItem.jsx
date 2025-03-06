@@ -153,7 +153,7 @@ function OrderItem(orderStore) {
                         alt="H1"
                         className="h-28 w-28 object-cover mr-2"
                       />
-                      <span className="ml-2 w-38">{item.productName}</span>
+                      <span className="ml-2 w-38">{item.productName} - ({item.productVariants.value}{item.productVariants.unitName})</span>
                     </div>
                   </td>
                   <td className="px-4 py-2">{item.productVariants.price}</td>

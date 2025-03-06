@@ -14,7 +14,7 @@ function OrderBill(orderStore) {
   const customer = useSelector((state) => state.CustomerStore.customer || []);
   const dispatch = useDispatch();
   const [selectedPayments, setSelectedPayments] = useState({});
-
+  
   const handlePaymentChange = async (orderId, paymentMethod, paymentCode) => {
     setSelectedPayments((prev) => ({ ...prev, [orderId]: paymentMethod }));
     let paymentRequest = { paymentCode };
