@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  post: null,
+  post: [],
 };
 
 const PostSlice = createSlice({

@@ -1,31 +1,13 @@
 import { useSelector } from "react-redux";
 import PostCard from "./PostCard";
-import { useEffect, useState } from "react";
 
 const PostList = () => {
-//   const [listPost, setListPost] = useState([]);
 
   const posts = useSelector((state) => state.PostStore.post);
 
-  console.log(posts);
-  
-
-// console.log("Post at PostList ============",posts.length);
-
-  
-//   useEffect(() => {
-//       console.log("Post at  ============", posts);
-//     if (posts.length > 0) {
-//       setListPost(posts);
-//       console.log("Post at IFFF ============", posts);
-//     }
-//   }, [posts]);
-
-//   console.log("Post at PostList ============", listPost);
-
   return (
-    <>
-      {posts != null ? (
+    <div className="flex flex-col md:flex-row gap-4s">
+      {posts.length>0 ? (
         posts.map((item) => (
           <div key={item.postTitle}>
             <PostCard post={item}></PostCard>
@@ -36,7 +18,7 @@ const PostList = () => {
           Không có sản phẩm nào trong danh mục này.
         </p>
       )}
-    </>
+    </div>
   );
 };
 
