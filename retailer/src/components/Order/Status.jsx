@@ -20,7 +20,7 @@ const Status = () => {
       dispatch(setStatusActive(statusStore[1].statusCode));
     }
   }, [statusStore, statusActive, dispatch]);
-
+  
   useEffect(() => {
     if (statusActive && orderStore) {
       const request = statusStore.find(
@@ -29,8 +29,11 @@ const Status = () => {
 
       if (request) {
         const filteredResults = orderStore.filter(
-          (item) => item.statusName === request.statusName
-        );
+          (item) =>
+            item.receiptDetails.some(
+              (detail) => detail.statusName === request.statusName
+            )
+        );        
         dispatch(
           setOrderStatus(filteredResults.length > 0 ? filteredResults : [])
         );
@@ -47,8 +50,10 @@ const Status = () => {
         );
 
         if (request) {
-          const filteredResults = orderStore.filter(
-            (item) => item.statusName === request.statusName
+          const filteredResults = orderStore.filter((item) =>
+            item.receiptDetails.some(
+              (detail) => detail.statusName === request.statusName
+            )
           );
 
           if (filteredResults.length < 0) {

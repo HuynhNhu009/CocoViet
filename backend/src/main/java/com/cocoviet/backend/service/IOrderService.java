@@ -10,7 +10,7 @@ public interface IOrderService {
 
     OrderDTO updateOrder(String orderId, OrderRequest orderRequest);
 
-    List<OrderDTO> getOrderByCustomerId(String customerId);
+    List<OrderDTO> getOrderByCustomerId(String customerId, String statusName);
 
     List<OrderDTO> getAllOrders();
 
@@ -19,5 +19,4 @@ public interface IOrderService {
     List<OrderDTO> getOrderByRetailerId(String retailerId);
 
     String deleteOrderById(String orderId);
-
 }

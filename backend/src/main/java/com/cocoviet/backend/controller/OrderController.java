@@ -29,7 +29,6 @@ public class OrderController {
     }
 
     @PatchMapping("/update/{orderId}")
-
     ResponseEntity<ResponseData> updateOrder(@PathVariable String orderId, @RequestBody @Valid OrderRequest orderRequest ) {
 
         return ResponseEntity.status(HttpStatus.OK)
@@ -40,12 +39,12 @@ public class OrderController {
                         .build());
     }
 
-    @GetMapping("/{customerId}")
-    ResponseEntity<ResponseData> getOrderByCustomerId(@PathVariable String customerId ) {
+    @GetMapping("/")
+    ResponseEntity<ResponseData> getOrderByCustomerId(@RequestParam String customerId, @RequestParam String statusCode ) {
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ResponseData.builder()
-                        .data(orderService.getOrderByCustomerId(customerId))
+                        .data(orderService.getOrderByCustomerId(customerId, statusCode))
                         .msg("Get order successfully")
                         .status("OK")
                         .build());

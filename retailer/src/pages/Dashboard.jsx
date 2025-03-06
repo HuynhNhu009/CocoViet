@@ -142,7 +142,7 @@ const Dashboard = () => {
 
     const interval = setInterval(() => {
       fetchOrder();
-  }, 5000); // Lặp lại mỗi 5 giây
+  }, 5000); 
 
   return () => clearInterval(interval);
   }, [loadOrder]);

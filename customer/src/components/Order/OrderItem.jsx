@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { orderAPI } from "../../services/orderService";
 import { useDispatch } from "react-redux";
-import { setCreateOrder } from "../../redux/orderSlice";
 import Swal from "sweetalert2";
+import { setCreateOrder } from "../../redux/orderSlice";
+import { orderAPI } from "../../services/orderService";
 
 function OrderItem(orderStore) {
   const [order, setOrder] = useState([]);
@@ -17,9 +17,10 @@ function OrderItem(orderStore) {
       {
         productVariantId: "",
         quantity: "",
+        statusCode:""
       },
     ],
-  };
+  };  
 
   useEffect(() => {
     if (orderStore) {
@@ -45,7 +46,7 @@ function OrderItem(orderStore) {
     let value = e.target.value.trim();
 
     if (value === "") {
-      setQuantity((prev) => ({ ...prev, [productVariantId]: 1 })); // Nếu rỗng, mặc định là 1
+      setQuantity((prev) => ({ ...prev, [productVariantId]: 1 })); 
       return;
     }
 
@@ -90,30 +91,37 @@ function OrderItem(orderStore) {
 
   //buyProduct
   const handleNextProcess = async () => {
-    if (!order || !order.orderId) {
+    if (!order || !order.orderId || !order.receiptDetails?.length) {
       Swal.fire("Vui lòng thêm sản phẩm vào giỏ hàng!");
       return;
-    }
-  
-    console.log("Số lượng sản phẩm:", order?.receiptDetails?.length || 0);
+    }  
   
     try {
-      orderRequest.statusCode = "PROCESSING";
+      const receiptDetailRequests = order.receiptDetails.map((item) => ({
+        productVariantId: item.productVariants.variantId,
+        statusCode: "PROCESSING",
+      }));
+  
+      const orderRequest = {
+        receiptDetailRequests: receiptDetailRequests,
+      };
+  
+      await orderAPI.updateOrder(order.orderId, orderRequest);
+      // await dispatch(setCreateOrder(true));
+  
       Swal.fire({
         title: "Đặt hàng thành công!",
-        content:"Vui lòng xem chi tiết tại trạng thái Đang xử lý ",
+        text: "Vui lòng xem chi tiết tại trạng thái Đang xử lý",
         icon: "success",
         showConfirmButton: false,
-        timer:1000 
+        timer: 1000,
       });
-      await orderAPI.updateOrder(order.orderId, orderRequest);
-      await dispatch(setCreateOrder(true));
     } catch (error) {
       console.error("Lỗi cập nhật đơn hàng:", error);
+      Swal.fire("Đã có lỗi xảy ra khi đặt hàng!", "Vui lòng thử lại sau", "error");
     }
   };
-
-
+  
 
   return (
     <>

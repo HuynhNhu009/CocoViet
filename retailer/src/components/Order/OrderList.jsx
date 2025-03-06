@@ -5,6 +5,9 @@ import OrderItem from "./OrderItem";
 
 const OrderList = ({ orderStatus }, label) => {
 
+  console.log(orderStatus);
+  
+
   return (
     <div>
       <div className="status">

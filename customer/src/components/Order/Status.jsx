@@ -1,11 +1,16 @@
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
-import { setOrderStatus, setStatusActive } from "../../redux/orderSlice";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  setOrderStatus,
+  setStatusActive
+} from "../../redux/orderSlice";
+import { orderAPI } from "../../services/orderService";
 function Status() {
   const statusStore = useSelector((state) => state.OrderStore.status);
-  const orderList = useSelector((state) => state.OrderStore.orderList);
   const statusActive = useSelector((state) => state.OrderStore.statusActive);
+  const customer = useSelector((state) => state.CustomerStore.customer);
+  const createOrder = useSelector((state) => state.OrderStore.createOrder);
+  
 
   const [status, setStatus] = useState([]);
   const dispatch = useDispatch();
@@ -23,43 +28,35 @@ function Status() {
   }, [statusStore, statusActive, dispatch]);
 
   useEffect(() => {
-    if (statusActive && orderList) {
-      const request = statusStore.find(
-        (item) => item.statusCode === statusActive
-      );
+    const fetchOrders = async () => {
+      if (statusActive && customer.customerId) {
+        try {
+          const response = await orderAPI.getOrderByCustomerId(
+            customer.customerId,
+            statusActive
+          );
 
-      if (request) {
-        const filteredResults = orderList.filter(
-          (item) => item.statusName === request.statusName
-        );
-        dispatch(
-          setOrderStatus(filteredResults.length > 0 ? filteredResults : [])
-        );
+          dispatch(
+            setOrderStatus(response.data.length > 0 ? response.data : [])
+          );
+        } catch (error) {
+          console.error("Lỗi khi lấy đơn hàng:", error);
+        }
       }
-    }
-  }, [statusActive, orderList, statusStore, dispatch]);
+    };
+
+    fetchOrders();
+  }, [statusActive, statusStore,createOrder, dispatch]);
 
   const handleClickStatus = async (statusCode) => {
     try {
       dispatch(setStatusActive(statusCode));
-      if (statusStore.length > 0) {
-        const request = statusStore.find(
-          (item) => item.statusCode === statusCode
-        );
+      const response = await orderAPI.getOrderByCustomerId(
+        customer.customerId,
+        statusCode
+      );
 
-        if (request) {
-          const filteredResults = orderList.filter(
-            (item) => item.statusName === request.statusName
-          );
-          console.log("filteredResults",filteredResults);
-          
-          if (filteredResults) {
-            dispatch(setOrderStatus(filteredResults));
-          } else {
-            dispatch(setOrderStatus([]));
-          }
-        }
-      }
+      dispatch(setOrderStatus(response.data.length > 0 ? response.data : []));
     } catch (error) {
       console.error("Error fetching order by statusCode:", error);
       setStatus([]);

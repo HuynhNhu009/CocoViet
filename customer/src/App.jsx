@@ -1,34 +1,28 @@
 import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useLocation } from "react-router-dom";
 import AllRoute from "./components/AllRoute";
-import { useDispatch } from "react-redux";
-import { customerApi } from "./services/customerService";
-import { setLogin, logout } from "./redux/customerSlice";
-import { setProductStore } from "./redux/productSlice";
+import { logout, setLogin } from "./redux/customerSlice";
 import {
   setCartCount,
   setCreateOrder,
-  setOrderList,
-  setOrderStatus,
   setPayment,
   setStatus,
-  setStatusActive,
+  setStatusActive
 } from "./redux/orderSlice";
 import { setPost } from "./redux/postSlice";
-import { productAPI } from "./services/productService";
-import { statusAPI } from "./services/statusService";
-import { useSelector } from "react-redux";
+import { setProductStore } from "./redux/productSlice";
+import { customerApi } from "./services/customerService";
 import { orderAPI } from "./services/orderService";
-import { useLocation } from "react-router-dom";
 import { paymentAPI } from "./services/paymentService";
 import { postApi } from "./services/postService";
+import { productAPI } from "./services/productService";
+import { statusAPI } from "./services/statusService";
 
 function App() {
   const dispatch = useDispatch();
   const customer = useSelector((state) => state.CustomerStore.customer);
   const isLogin = useSelector((state) => state.CustomerStore.isLogin);
-  const statusStore = useSelector((state) => state.OrderStore.status);
-  const orderList = useSelector((state) => state.OrderStore.orderList);
-  const statusActive = useSelector((state) => state.OrderStore.statusActive);
   const createOrder = useSelector((state) => state.OrderStore.createOrder);
   const location = useLocation();
   // const posts = useSelector((state)=> state.PostStore.post)
@@ -76,7 +70,6 @@ function App() {
       try {
         const productResponse = await productAPI.getAllProducts();
         if (productResponse && productResponse.data) {
-          // setProducts(productResponse.data);
           dispatch(setProductStore(productResponse.data));
         }
       } catch (error) {
@@ -92,15 +85,11 @@ function App() {
       if (isLogin && customer) {
         try {
           const response = await orderAPI.getOrderByCustomerId(
-            customer.customerId
+            customer.customerId, "CART"
           );
-          if (response.data) {
-            dispatch(setOrderList(response.data));
-
-            const filteredResults = response.data.filter(
-              (item) => item.statusName === "Giỏ Hàng"
-            );
-            let cartCount = 0;
+          
+          const filteredResults = response.data;
+          let cartCount = 0;
 
             if (filteredResults.length > 0) {
               const lastCartOrder = filteredResults[filteredResults.length - 1];
@@ -109,8 +98,8 @@ function App() {
                 cartCount = lastCartOrder.receiptDetails.length;
               }
             }
-            dispatch(setCartCount(cartCount));
-          }
+            
+            dispatch(setCartCount(cartCount));  
         } catch (error) {
           console.error("Error fetching orders:", error);
         }

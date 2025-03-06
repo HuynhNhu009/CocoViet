@@ -8,10 +8,16 @@ export const orderAPI = {
     return response.data;
   },
 
-  getOrderByCustomerId: async (customerId) => {
-    const response = await api.get(`/orders/${customerId}`)
+  getOrderByCustomerId: async (customerId, statusCode) => {
+    const response = await api.get("/orders/", {
+        params: { 
+            customerId: customerId, 
+            statusCode: statusCode 
+        }
+    });
     return response.data;
-  },
+},
+
 
   addOrder: async (orderRequest) => {
     const response = await api.post("/orders/create", orderRequest);
