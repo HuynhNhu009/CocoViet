@@ -10,6 +10,7 @@ function OrderBill(orderStore) {
   const [selectedOrderIndex, setSelectedOrderIndex] = useState(null);
   const paymentStore = useSelector((state) => state.OrderStore.payment);
   const statusActive = useSelector((state) => state.OrderStore.statusActive);
+  const statusName = useSelector((state) => state.OrderStore.statusName);
   const customer = useSelector((state) => state.CustomerStore.customer || []);
   const dispatch = useDispatch();
   const [selectedPayments, setSelectedPayments] = useState({});
@@ -170,7 +171,7 @@ function OrderBill(orderStore) {
                           .join("/") || "N/A"}
                       </td>
                       <td className="p-3">{totalPrice[item.orderId]} VND</td>
-                      <td className="p-3">{item.statusName}</td>
+                      <td className="p-3">{statusName}</td>
                       {["SHIPPING"].includes(statusActive) && (
                         <td className="p-3 text-center text-sm">
                           <button className="bg-orange-500 shadow-2xl rounded-sm text-white mr-1 px-2 py-1 ">

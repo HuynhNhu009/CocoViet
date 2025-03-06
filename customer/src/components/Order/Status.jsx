@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setOrderStatus,
-  setStatusActive
+  setStatusActive,
+  setStatusName
 } from "../../redux/orderSlice";
 import { orderAPI } from "../../services/orderService";
 function Status() {
@@ -48,12 +49,13 @@ function Status() {
     fetchOrders();
   }, [statusActive, statusStore,createOrder, dispatch]);
 
-  const handleClickStatus = async (statusCode) => {
+  const handleClickStatus = async (status) => {
     try {
-      dispatch(setStatusActive(statusCode));
+      dispatch(setStatusActive(status.statusCode));
+      dispatch(setStatusName(status.statusName));
       const response = await orderAPI.getOrderByCustomerId(
         customer.customerId,
-        statusCode
+        status.statusCode
       );
 
       dispatch(setOrderStatus(response.data.length > 0 ? response.data : []));
@@ -69,7 +71,7 @@ function Status() {
         status?.map((item, index) => (
           <div
             key={index}
-            onClick={() => handleClickStatus(item.statusCode)}
+            onClick={() => handleClickStatus(item)}
             className={`relative mx-3 my-2 text-white font-bold bg-gray-400 py-3 
             text-center w-32 pl-6 before:absolute before:-left-0 before:top-1/2 
             before:-translate-y-1/2 before:w-0 before:h-0 before:border-y-25 
