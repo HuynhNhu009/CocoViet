@@ -115,6 +115,7 @@ const OrderItem = ({ orderStatus }) => {
               orders.map((item, index) => (
                 <React.Fragment key={index}>
                   <tr
+                  title="Xem chi tiết"
                     onClick={() =>
                       setSelectedOrderId(
                         selectedOrderId === item.orderId ? null : item.orderId
