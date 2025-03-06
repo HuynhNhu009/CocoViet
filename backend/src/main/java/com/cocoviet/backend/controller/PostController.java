@@ -46,6 +46,9 @@ public class PostController {
     ResponseEntity<ResponseData> getAllPost(){
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ResponseData.builder()
-                        .data(iPostService.getAllPosts()).build());
+                        .data(iPostService.getAllPosts())
+                        .msg("Get all post successfully")
+                        .status("OK")
+                        .build());
     }
 }
