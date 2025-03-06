@@ -32,4 +32,8 @@ public class ReceiptDetailEntity {
 
     @Column(nullable = false)
     BigDecimal price;
+
+    @ManyToOne
+    @JoinColumn(name = "status_id", nullable = false)
+    StatusEntity status;
 }

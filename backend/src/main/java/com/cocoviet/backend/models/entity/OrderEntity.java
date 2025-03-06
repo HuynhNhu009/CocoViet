@@ -29,10 +29,6 @@ public class OrderEntity {
     CustomerEntity customer;
 
     @ManyToOne
-    @JoinColumn(name = "status_id", nullable = false)
-    StatusEntity status;
-
-    @ManyToOne
     @JoinColumn(name = "payment_id", nullable = false)
     PaymentEntity payment;
 

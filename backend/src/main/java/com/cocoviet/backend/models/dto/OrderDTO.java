@@ -19,8 +19,6 @@ public class OrderDTO {
     String customerName;
     String customerAddress;
     String customerNumber;
-    String statusName;
     String paymentMethod;
-
     LocalDateTime orderDate;
 }

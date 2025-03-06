@@ -15,6 +15,8 @@ public class ReceiptDetailRequest {
 
     String orderId;
 
+    String statusCode;
+
     @Size(min = 1)
     int quantity;
 }

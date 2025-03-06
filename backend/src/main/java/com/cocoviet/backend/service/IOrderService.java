@@ -7,9 +7,17 @@ import java.util.List;
 
 public interface IOrderService {
     OrderDTO createOrder(OrderRequest orderRequest);
+
     OrderDTO updateOrder(String orderId, OrderRequest orderRequest);
+
     List<OrderDTO> getOrderByCustomerId(String customerId);
+
     List<OrderDTO> getAllOrders();
+
     OrderDTO deleteReceipt(String orderId, String receiptId);
+
     List<OrderDTO> getOrderByRetailerId(String retailerId);
+
+    String deleteOrderById(String orderId);
+
 }

@@ -13,14 +13,9 @@ import java.math.BigDecimal;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ReceiptDetailDTO {
     String receiptDetailId;
-
     String retailerName;
-
     String productName;
-
     int totalQuantity;
-
-//    BigDecimal totalPrice;
-
+    String statusName;
     ProductVariantDTO productVariants;
 }

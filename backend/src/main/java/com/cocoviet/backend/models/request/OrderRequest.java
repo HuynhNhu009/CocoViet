@@ -27,8 +27,6 @@ public class OrderRequest {
 
     String customerNumber;
 
-    String statusCode;
-
     String paymentCode;
 
     List<ReceiptDetailRequest> receiptDetailRequests;

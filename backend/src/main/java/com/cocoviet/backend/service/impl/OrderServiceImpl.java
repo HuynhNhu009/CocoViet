@@ -51,13 +51,12 @@ public class OrderServiceImpl implements IOrderService {
 
         Set<ReceiptDetailEntity> newReceiptDetailEntity = new HashSet<>();
 
-        OrderEntity orderEntity = iOrderRepository.findByCustomer_CustomerIdAndStatus_StatusCode(customerEntity.getCustomerId(), "CART");
+        OrderEntity orderEntity = iOrderRepository.findByCustomerIdStatusCode(customerEntity.getCustomerId(), "CART");
 
         //gio hag da ton tai
         if(orderEntity == null){
             orderEntity = OrderEntity.builder()
                     .customer(customerEntity)
-                    .status(statusEntity)
                     .payment(paymentEntity)
                     .receiptDetails(newReceiptDetailEntity)
                     .orderDate(LocalDateTime.now())
@@ -75,6 +74,7 @@ public class OrderServiceImpl implements IOrderService {
                         .productOrder(orderEntity)
                         .productVariant(productVariantEntity)
                         .price(productVariantEntity.getPrice())
+                        .status(statusEntity)
                         .quantity(receiptDetailRequest.getQuantity())
                         .build();
 
@@ -90,22 +90,20 @@ public class OrderServiceImpl implements IOrderService {
                 Optional<ReceiptDetailEntity> existRecieptDetailByVariants = iReceiptDetailRepository
                         .findByProductVariant_VariantsIdAndProductOrder_OrderId(receiptDetailRequest.getProductVariantId(),orderEntity.getOrderId());
 
-
+                //existVariant
                 if(existRecieptDetailByVariants.isPresent()){
                     ReceiptDetailEntity existReceiptDetailEntity = existRecieptDetailByVariants.get();
-
                     //update quantity
                     existReceiptDetailEntity.setQuantity(receiptDetailRequest.getQuantity() + existReceiptDetailEntity.getQuantity());
                     newReceiptDetailEntity.add(existReceiptDetailEntity);
-//                    productVariantEntity.setStock(productVariantEntity.getStock() - receiptDetailRequest.getQuantity());
                     iProducVariantRepository.save(productVariantEntity);
-
                 }
                 else{
                     ReceiptDetailEntity addRecieptDetail = ReceiptDetailEntity.builder()
                             .productOrder(orderEntity)
                             .productVariant(productVariantEntity)
                             .quantity(receiptDetailRequest.getQuantity())
+                            .status(statusEntity)
                             .price(productVariantEntity.getPrice())
                             .build();
 
@@ -122,6 +120,7 @@ public class OrderServiceImpl implements IOrderService {
                 .map(response -> ReceiptDetailDTO.builder()
                         .receiptDetailId(response.getReceiptDetailId())
                         .totalQuantity(response.getQuantity())
+                        .statusName(response.getStatus().getStatusName())
                         .productVariants(productVariantMapper.toDTO(response.getProductVariant()))
                         .productName(response.getProductVariant().getProduct().getProductName())
                         .retailerName(iretailerRepository.findRetailerNameByProductId(response.getProductVariant().getProduct().getProductId()))
@@ -138,7 +137,6 @@ public class OrderServiceImpl implements IOrderService {
         orderDTO.setCustomerName(customerEntity.getCustomerName());
         orderDTO.setCustomerAddress(customerEntity.getCustomerAddress());
         orderDTO.setCustomerNumber(customerEntity.getPhoneNumbers());
-        orderDTO.setStatusName(statusEntity.getStatusName());
         orderDTO.setReceiptDetails(receiptDetailDTOS);
         orderDTO.setPaymentMethod(paymentEntity.getPaymentMethod());
 
@@ -149,32 +147,36 @@ public class OrderServiceImpl implements IOrderService {
     public OrderDTO updateOrder(String orderId, OrderRequest orderRequest) {
 
         OrderEntity orderEntity = iOrderRepository.findByOrderId(orderId);
-
         if(orderEntity == null){
             throw new RuntimeException("Order not found");
         }
-
         CustomerEntity customerEntity = iCustomerRepository.findByCustomerId(orderEntity.getCustomer().getCustomerId());
 
         Set<ReceiptDetailEntity> newReceiptDetailEntity = new HashSet<>();
-
         OrderDTO orderDTO = new OrderDTO();
 
         //change receiptDetail
         if(orderRequest.getReceiptDetailRequests() != null){
 
-
             for(ReceiptDetailRequest receiptDetailRequest : orderRequest.getReceiptDetailRequests()) {
 
                 ProductVariantEntity productVariantEntity =iProducVariantRepository.findByVariantsId(receiptDetailRequest.getProductVariantId());
-
                 Optional<ReceiptDetailEntity> existRecieptDetailByVariants = iReceiptDetailRepository
                         .findByProductVariant_VariantsIdAndProductOrder_OrderId(receiptDetailRequest.getProductVariantId(),orderEntity.getOrderId());
+
+                //variant
                 if(existRecieptDetailByVariants.isPresent()){
                     ReceiptDetailEntity existReceiptDetailEntity = existRecieptDetailByVariants.get();
 
                     //update quantity
-                    existReceiptDetailEntity.setQuantity(receiptDetailRequest.getQuantity() );
+                    if(receiptDetailRequest.getQuantity() != 0){
+                        existReceiptDetailEntity.setQuantity(receiptDetailRequest.getQuantity() );
+                    }
+                    //update status
+                    if(receiptDetailRequest.getStatusCode() != null){
+                        StatusEntity statusEntity = iStatusRepository.findByStatusCode(receiptDetailRequest.getStatusCode());
+                        existReceiptDetailEntity.setStatus(statusEntity);
+                    }
 
                     newReceiptDetailEntity.add(existReceiptDetailEntity);
                     //productVariantEntity.setStock(productVariantEntity.getStock() - receiptDetailRequest.getQuantity());
@@ -190,6 +192,7 @@ public class OrderServiceImpl implements IOrderService {
                             .receiptDetailId(response.getReceiptDetailId())
                             .totalQuantity(response.getQuantity())
                             .productVariants(productVariantMapper.toDTO(response.getProductVariant()))
+                            .statusName(response.getStatus().getStatusName())
                             .productName(response.getProductVariant().getProduct().getProductName())
                             .retailerName(iretailerRepository.findRetailerNameByProductId(response.getProductVariant().getProduct().getProductId()))
                             .build())
@@ -207,16 +210,11 @@ public class OrderServiceImpl implements IOrderService {
                             .totalQuantity(response.getQuantity())
                             .productVariants(productVariantMapper.toDTO(response.getProductVariant()))
                             .productName(response.getProductVariant().getProduct().getProductName())
+                            .statusName(response.getStatus().getStatusName())
                             .retailerName(iretailerRepository.findRetailerNameByProductId(response.getProductVariant().getProduct().getProductId()))
                             .build())
                     .collect(Collectors.toSet());
             orderDTO.setReceiptDetails(receiptDetailDTOS);
-        }
-
-        //change status
-        if(orderRequest.getStatusCode() != null){
-            StatusEntity statusEntity = iStatusRepository.findByStatusCode(orderRequest.getStatusCode());
-            orderEntity.setStatus(statusEntity);
         }
 
         //change payment
@@ -226,26 +224,25 @@ public class OrderServiceImpl implements IOrderService {
         }
 
         //change customerInfor
-        if(orderRequest.getCustomerNumber() != null){
-            orderDTO.setCustomerNumber(orderRequest.getCustomerNumber());
-        }else{
-            orderDTO.setCustomerNumber(customerEntity.getPhoneNumbers());
-        }
-
-        if(orderRequest.getCustomerName() != null){
-            orderDTO.setCustomerName(orderRequest.getCustomerName());
-        }else {
-            orderDTO.setCustomerName(customerEntity.getCustomerName());
-        }
-        if(orderRequest.getCustomerAddress() != null){
-            orderDTO.setCustomerAddress(orderRequest.getCustomerAddress());
-        }else {
-            orderDTO.setCustomerAddress(customerEntity.getCustomerAddress());
-        }
+//        if(orderRequest.getCustomerNumber() != null){
+//            orderDTO.setCustomerNumber(orderRequest.getCustomerNumber());
+//        }else{
+//            orderDTO.setCustomerNumber(customerEntity.getPhoneNumbers());
+//        }
+//
+//        if(orderRequest.getCustomerName() != null){
+//            orderDTO.setCustomerName(orderRequest.getCustomerName());
+//        }else {
+//            orderDTO.setCustomerName(customerEntity.getCustomerName());
+//        }
+//        if(orderRequest.getCustomerAddress() != null){
+//            orderDTO.setCustomerAddress(orderRequest.getCustomerAddress());
+//        }else {
+//            orderDTO.setCustomerAddress(customerEntity.getCustomerAddress());
+//        }
         iOrderRepository.save(orderEntity);
         orderDTO.setOrderId(orderEntity.getOrderId());
         orderDTO.setOrderDate(orderEntity.getOrderDate());
-        orderDTO.setStatusName(orderEntity.getStatus().getStatusName());
         orderDTO.setPaymentMethod(orderEntity.getPayment().getPaymentMethod());
         return orderDTO;
     }
@@ -265,6 +262,7 @@ public class OrderServiceImpl implements IOrderService {
                         .totalQuantity(response.getQuantity())
                         .productVariants(productVariantMapper.toDTO(response.getProductVariant()))
                         .productName(response.getProductVariant().getProduct().getProductName())
+                        .statusName(response.getStatus().getStatusName())
                         .retailerName(iretailerRepository.findRetailerNameByProductId(response.getProductVariant().getProduct().getProductId()))
                         .build())
                     .collect(Collectors.toSet());
@@ -272,7 +270,6 @@ public class OrderServiceImpl implements IOrderService {
                 OrderDTO orderDTO = new OrderDTO();
                 orderDTO.setOrderId(orderEntity.getOrderId());
                 orderDTO.setOrderDate(orderEntity.getOrderDate());
-                orderDTO.setStatusName(orderEntity.getStatus().getStatusName());
                 orderDTO.setReceiptDetails(receiptDetailDTOS);
                 orderDTO.setCustomerName(customerEntity.getCustomerName());
                 orderDTO.setCustomerAddress(customerEntity.getCustomerAddress());
@@ -293,20 +290,23 @@ public class OrderServiceImpl implements IOrderService {
                 .map(orderEntity -> {
 
                     CustomerEntity customerEntity = iCustomerRepository.findByCustomerId(orderEntity.getCustomer().getCustomerId());
-                    Set<ReceiptDetailDTO> receiptDetailDTOS = orderEntity.getReceiptDetails().stream()
-                            .map(response -> ReceiptDetailDTO.builder()
-                                    .receiptDetailId(response.getReceiptDetailId())
-                                    .totalQuantity(response.getQuantity())
-                                    .productVariants(productVariantMapper.toDTO(response.getProductVariant()))
-                                    .productName(response.getProductVariant().getProduct().getProductName())
-                                    .retailerName(iretailerRepository.findRetailerNameByProductId(response.getProductVariant().getProduct().getProductId()))
-                                    .build())
-                            .collect(Collectors.toSet());
+
+                    Set<ReceiptDetailEntity> receiptDetailEntitiesByRetailerId =iReceiptDetailRepository.findReceiptDetailsByRetailerAndOrderId(retailerId, orderEntity.getOrderId());
+
+                    Set<ReceiptDetailDTO> receiptDetailDTOS = receiptDetailEntitiesByRetailerId.stream()
+                        .map(response -> ReceiptDetailDTO.builder()
+                            .receiptDetailId(response.getReceiptDetailId())
+                            .totalQuantity(response.getQuantity())
+                            .productVariants(productVariantMapper.toDTO(response.getProductVariant()))
+                            .productName(response.getProductVariant().getProduct().getProductName())
+                            .statusName(response.getStatus().getStatusName())
+                            .retailerName(iretailerRepository.findRetailerNameByProductId(response.getProductVariant().getProduct().getProductId()))
+                            .build())
+                        .collect(Collectors.toSet());
 
                     OrderDTO orderDTO = new OrderDTO();
                     orderDTO.setOrderId(orderEntity.getOrderId());
                     orderDTO.setOrderDate(orderEntity.getOrderDate());
-                    orderDTO.setStatusName(orderEntity.getStatus().getStatusName());
                     orderDTO.setReceiptDetails(receiptDetailDTOS);
                     orderDTO.setCustomerName(customerEntity.getCustomerName());
                     orderDTO.setCustomerAddress(customerEntity.getCustomerAddress());
@@ -333,6 +333,7 @@ public class OrderServiceImpl implements IOrderService {
                             .totalQuantity(response.getQuantity())
                             .productVariants(productVariantMapper.toDTO(response.getProductVariant()))
                             .productName(response.getProductVariant().getProduct().getProductName())
+                            .statusName(response.getStatus().getStatusName())
                             .retailerName(iretailerRepository.findRetailerNameByProductId(response.getProductVariant().getProduct().getProductId()))
                             .build())
                         .collect(Collectors.toSet());
@@ -343,13 +344,11 @@ public class OrderServiceImpl implements IOrderService {
                     orderDTO.setCustomerName(customerEntity.getCustomerName());
                     orderDTO.setCustomerAddress(customerEntity.getCustomerAddress());
                     orderDTO.setCustomerNumber(customerEntity.getPhoneNumbers());
-                    orderDTO.setStatusName(orderEntity.getStatus().getStatusName());
                     orderDTO.setReceiptDetails(receiptDetailDTOS);
                     orderDTO.setPaymentMethod(orderEntity.getPayment().getPaymentMethod());
 
                     return orderDTO;
                 }).collect(Collectors.toList());
-
         return orderDTOS;
     }
 
@@ -372,12 +371,13 @@ public class OrderServiceImpl implements IOrderService {
 
         Set<ReceiptDetailDTO> receiptDetailDTOS = orderEntity.getReceiptDetails().stream()
                 .map(response -> ReceiptDetailDTO.builder()
-                        .receiptDetailId(response.getReceiptDetailId())
-                        .totalQuantity(response.getQuantity())
-                        .productVariants(productVariantMapper.toDTO(response.getProductVariant()))
-                        .productName(response.getProductVariant().getProduct().getProductName())
-                        .retailerName(iretailerRepository.findRetailerNameByProductId(response.getProductVariant().getProduct().getProductId()))
-                        .build())
+                    .receiptDetailId(response.getReceiptDetailId())
+                    .totalQuantity(response.getQuantity())
+                    .productVariants(productVariantMapper.toDTO(response.getProductVariant()))
+                    .productName(response.getProductVariant().getProduct().getProductName())
+                    .statusName(response.getStatus().getStatusName())
+                    .retailerName(iretailerRepository.findRetailerNameByProductId(response.getProductVariant().getProduct().getProductId()))
+                    .build())
                 .collect(Collectors.toSet());
 
         orderEntity.getReceiptDetails().remove(receiptDetailEntity);
@@ -387,12 +387,19 @@ public class OrderServiceImpl implements IOrderService {
         orderDTO.setCustomerNumber(customerEntity.getPhoneNumbers());
         orderDTO.setOrderId(orderEntity.getOrderId());
         orderDTO.setOrderDate(orderEntity.getOrderDate());
-        orderDTO.setStatusName(orderEntity.getStatus().getStatusName());
         orderDTO.setPaymentMethod(orderEntity.getPayment().getPaymentMethod());
         orderDTO.setReceiptDetails(receiptDetailDTOS);
-
         return orderDTO;
+    }
 
+    @Override
+    public String deleteOrderById(String orderId){
+        OrderEntity orderEntity = iOrderRepository.findByOrderId(orderId);
+        if(orderEntity == null){
+            throw new RuntimeException("Order not found");
+        }
+        iOrderRepository.deleteById(orderId);
+        return "Deleted successfully";
     }
 
 
