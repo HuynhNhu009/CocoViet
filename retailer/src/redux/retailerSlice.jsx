@@ -10,8 +10,8 @@ const initialState = {
   statusStore: [],
   orderStatus: [],
   statusActive: null,
+  loadOrder: false,
   loading: false,
-
 };
 
 const retailerSlice = createSlice({
@@ -25,6 +25,10 @@ const retailerSlice = createSlice({
 
     setOrder: (state, action) => {
       state.orderStore = action.payload;
+    },
+
+    setLoadOrder: (state, action) => {
+      state.loadOrder = action.payload;
     },
 
     setOrderStatus: (state, action) => {
@@ -57,6 +61,15 @@ const retailerSlice = createSlice({
   },
 });
 
-export const { setLogin,setOrderStatus, setStatusActive, setStatus, setOrder, logout, setProducts, setLoading } =
-  retailerSlice.actions;
+export const {
+  setLogin,
+  setOrderStatus,
+  setLoadOrder,
+  setStatusActive,
+  setStatus,
+  setOrder,
+  logout,
+  setProducts,
+  setLoading,
+} = retailerSlice.actions;
 export default retailerSlice.reducer;

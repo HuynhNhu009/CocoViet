@@ -1,9 +1,16 @@
 import React, { useEffect, useState } from "react";
+import { orderAPI } from "../../services/orderService";
+import Swal from "sweetalert2";
+import { useDispatch, useSelector } from "react-redux";
+import { setLoadOrder } from "../../redux/retailerSlice";
 
 const OrderItem = ({ orderStatus }) => {
   const [orders, setOrders] = useState([]);
   const [totalPrice, setTotalPrice] = useState({});
+  const statusActive = useSelector((state) => state.RetailerStore.statusActive);
   const [selectedOrderId, setSelectedOrderId] = useState(null);
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (orderStatus) {
@@ -25,6 +32,69 @@ const OrderItem = ({ orderStatus }) => {
     }
   }, [orderStatus]);
 
+  const handleCancelledOrder = async (orderId) => {
+    try {
+      const orderRequest = { statusCode: "CANCELLED" };
+      Swal.fire({
+        title: "Hủy đơn hàng",
+        text: "Bạn có chắc muốn hủy đơn hàng này không?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Có, tôi hủy!",
+        cancelButtonText: "Không hủy!",
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          await orderAPI.updateOrder(orderId, orderRequest);
+          await dispatch(setLoadOrder(true));
+          Swal.fire({
+            title: "Đã hủy đơn hàng!",
+            showConfirmButton: false,
+            icon: "success",
+            timer: 1000,
+          });
+        }
+      });
+    } catch (error) {
+      console.error("Lỗi cập nhật đơn hàng:", error);
+    }
+  };
+
+  const handleShipping = async (orderId) => {
+    try {
+      const orderRequest = { statusCode: "SHIPPING" };
+      Swal.fire({
+        title: "!",
+        content: "Vui lòng xem chi tiết tại trạng thái Đang xử lý ",
+        icon: "success",
+        showConfirmButton: false,
+        timer: 1000,
+      });
+      await orderAPI.updateOrder(orderId, orderRequest);
+      await dispatch(setLoadOrder(true));
+    } catch (error) {
+      console.error("Lỗi cập nhật đơn hàng:", error);
+    }
+  };
+
+  const handleDelivered = async (orderId) => {
+    try {
+      const orderRequest = { statusCode: "DELIVERED" };
+      // Swal.fire({
+      //   title: "!",
+      //   content: "Vui lòng xem chi tiết tại trạng thái Đang xử lý ",
+      //   icon: "success",
+      //   showConfirmButton: false,
+      //   timer: 1000,
+      // });
+      await orderAPI.updateOrder(orderId, orderRequest);
+      await dispatch(setLoadOrder(true));
+    } catch (error) {
+      console.error("Lỗi cập nhật đơn hàng:", error);
+    }
+  };
+
   return (
     <div>
       {/* Bảng cho desktop */}
@@ -45,6 +115,7 @@ const OrderItem = ({ orderStatus }) => {
               orders.map((item, index) => (
                 <React.Fragment key={index}>
                   <tr
+                  title="Xem chi tiết"
                     onClick={() =>
                       setSelectedOrderId(
                         selectedOrderId === item.orderId ? null : item.orderId
@@ -53,7 +124,7 @@ const OrderItem = ({ orderStatus }) => {
                     className={`border-b cursor-pointer text-center  hover:bg-gray-50 
                      ${
                        selectedOrderId === item.orderId
-                         ? " text-green-600  bg-gray-100"
+                         ? " text-green-600 bg-gray-200 font-bold"
                          : ""
                      }
                     `}
@@ -70,22 +141,55 @@ const OrderItem = ({ orderStatus }) => {
                     </td>
                     <td className="p-3">{totalPrice[item.orderId]} VND</td>
                     <td className="p-3">{item.statusName}</td>
-                    <td className="p-3 text-center text-sm">
-                      <button className="bg-green-600 rounded-sm text-white mr-1 px-2 py-1 hover:text-green-800 ">
-                        Giao Hàng
-                      </button>
 
-                      <button className="bg-red-500 rounded-sm text-white px-2 py-1 hover:text-green-800 ">
-                        Từ chối
-                      </button>
-                    </td>
+                    {!["SHIPPING", "DELIVERED", "CANCELLED"].includes(statusActive) && (
+                      <td className="p-3 text-center text-sm">
+                        <button
+                          onClick={() => handleShipping(item.orderId)}
+                          className="bg-green-600 rounded-sm shadow-2xl text-white mr-1 px-2 py-1 hover:bg-green-500 cursor-pointer"
+                        >
+                          Giao Hàng
+                        </button>
+                        <button
+                          onClick={() => handleCancelledOrder(item.orderId)}
+                          className="bg-red-500 rounded-sm shadow-2xl text-white px-2 py-1 hover:bg-red-600 cursor-pointer "
+                        >
+                          Từ chối
+                        </button>
+                      </td>
+                    )}
+
+                    {["SHIPPING"].includes(statusActive) && (
+                      <td className="p-3 text-center text-sm">
+                        <button
+                          onClick={() => handleDelivered(item.orderId)}
+                          className="bg-orange-500 shadow-2xl rounded-sm text-white mr-1 px-2 py-1 hover:bg-orange-600 cursor-pointer "
+                        >
+                          Đã Giao Hàng
+                        </button>
+                      </td>
+                    )}
+                    {["CANCELLED"].includes(statusActive) && 
+                    
+                    <td className="p-3 text-center text-sm">
+                    <button
+                      // onClick={() => handleDelivered(item.orderId)}
+                      className="bg-red-600 rounded-sm text-white mr-1 px-2 py-1 hover:text-green-800 "
+                    >
+                      Xóa
+                    </button>
+                  </td>
+                  }
                   </tr>
                   {/* receiptDetail */}
                   {selectedOrderId === item.orderId && (
                     <tr className="">
-                      <td colSpan="5" className="bg-gray-50 p-4 text-left">
-                        <h3 className="text-lg font-semibold text-green-600 text-center">
-                          Chi tiết đơn hàng
+                      <td
+                        colSpan="5"
+                        className="bg-gray-50 p-4 text-left shadow-lg rounded-2xl "
+                      >
+                        <h3 className="text-lg text-gray-700 font-bold  bg-green-200 text-center">
+                          CHI TIẾT ĐƠN HÀNG
                         </h3>
                         <div className="info-customer">
                           <p>Khách Hàng: {item.customerName}</p>
@@ -131,6 +235,9 @@ const OrderItem = ({ orderStatus }) => {
                             ))}
                           </tbody>
                         </table>
+                        <p className="mt-2 font-medium text-right">
+                          Tổng: {totalPrice[item.orderId] - 30} VND
+                        </p>
                         <p className="mt-2 font-medium text-right">
                           Phí vận chuyển: 30 VND
                         </p>

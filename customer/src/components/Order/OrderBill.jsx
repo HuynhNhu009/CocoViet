@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { orderAPI } from "../../services/orderService";
 import { useDispatch, useSelector } from "react-redux";
 import { setCreateOrder } from "../../redux/orderSlice";
@@ -22,9 +22,6 @@ function OrderBill(orderStore) {
     customerAddress: "",
     customerNumber: "",
   });
-
-  console.log("status", statusActive);
-  
 
   useEffect(() => {
     setCustomerInfo({
@@ -136,206 +133,197 @@ function OrderBill(orderStore) {
     }
   };
 
+  const isDisabled = ["SHIPPING", "DELIVERED", "CANCELLED"].includes(
+    statusActive
+  );
+
   return (
-    <div className="mt-5 flex justify-center flex-col items-center">
-      {orders.length > 0 ? (
-        orders.map((order, index) => (
-          <div
-            key={order.orderId}
-            className="mb-3 px-8 py-5 border-2 border-green-600 rounded-md bg-white w-[600px]"
-          >
-            <div
-              onClick={() =>
-                setSelectedOrderIndex(
-                  selectedOrderIndex === index ? null : index
-                )
-              }
-              className=" hover:text-green-500 text-center cursor-pointer font-bold text-lg text-green-600"
-            >
-              ĐƠN HÀNG #{order.orderId.split("-")[0].toUpperCase()}
-            </div>
-            <p className="mb-3 text-sm font-light text-red-400 text-center">-Đang chờ người bán xác nhận-</p>
-            {selectedOrderIndex === index && (
-              <>
-                <div className="infor-customer flex justify-between">
-                  <div>
-                    <div className="flex justify-between items-center">
-                      <span className="font-medium">Khách hàng:</span>
-                      <div className="relative flex-1">
-                        <input
-                          type="text"
-                          name="customerName"
-                          className={`w-full px-2 py-1 transition-all outline-none border-b ${
-                            isEditing
-                              ? "border-green-600"
-                              : "border-transparent"
-                          }`}
-                          value={customerInfo.customerName}
-                          onChange={handleInputChange}
-                          readOnly={!isEditing}
-                        />
-                      </div>
-                    </div>
+    // mt-5 flex justify-center flex-col items-center
+    <div className="">
+      <div>
+        {/* Bảng cho desktop */}
+        <div className=" md:block w-full overflow-x-auto">
+          <table className="w-full border-collapse">
+            <thead>
+              <tr className=" text-center bg-green-100 text-gray-600 uppercase">
+                <th className="p-3 text-sm  ">Mã đơn</th>
+                <th className="p-3 text-sm  ">Ngày đặt</th>
+                <th className="p-3 text-sm ">Tổng tiền</th>
+                <th className="p-3 text-sm ">Trạng thái</th>
+                <th className="p-3 text-sm ">Hành động</th>
+              </tr>
+            </thead>
 
-                    <div className="flex justify-between items-center">
-                      <span className="font-medium">Địa chỉ:</span>
-                      <div className="relative flex-1">
-                        <input
-                          type="text"
-                          name="customerAddress"
-                          className={`w-full px-2 py-1 transition-all outline-none border-b ${
-                            isEditing
-                              ? "border-green-600"
-                              : "border-transparent"
-                          }`}
-                          value={customerInfo.customerAddress}
-                          onChange={handleInputChange}
-                          readOnly={!isEditing}
-                        />
-                      </div>
-                    </div>
-
-                    <div className=" flex justify-between items-center">
-                      <span className="font-medium">Số điện thoại:</span>
-                      <div className="relative flex-1">
-                        <input
-                          type="text"
-                          name="customerNumber"
-                          className={`w-full px-2 py-1 transition-all outline-none border-b ${
-                            isEditing
-                              ? "border-green-600"
-                              : "border-transparent"
-                          }`}
-                          value={customerInfo.customerNumber}
-                          onChange={handleInputChange}
-                          readOnly={!isEditing}
-                        />
-                      </div>
-                    </div>
-                    <div className="">
-                      {!isEditing ? (
-                        <p
-                          onClick={() => setIsEditing(true)}
-                          className=" text-white text-center px-2 py-1 bg-green-500 hover:bg-green-600 w-20 text-sm rounded-4xl rounded-tl-none cursor-pointer"
-                        >
-                          Cập nhật
-                        </p>
-                      ) : (
-                        <button
-                          className="px-3 py-1 bg-green-600 cursor-pointer text-white text-sm  rounded"
-                          onClick={async () => {
-                            await hanldleSaveInfo(order.orderId);
-                            setIsEditing(false);
-                          }}
-                        >
-                          Lưu
-                        </button>
+            <tbody className="w-full">
+              {orders.length > 0 ? (
+                orders.map((item, index) => (
+                  <React.Fragment key={index}>
+                    <tr
+                    title="Xem chi tiết"
+                      onClick={() =>
+                        setSelectedOrderIndex(
+                          selectedOrderIndex === item.orderId
+                            ? null
+                            : item.orderId
+                        )
+                      }
+                      className={`border-b cursor-pointer w-full text-center  hover:bg-gray-50 
+                           ${
+                             selectedOrderIndex === item.orderId
+                               ? " text-green-600 bg-gray-200 font-bold"
+                               : ""
+                           }
+                          `}
+                    >
+                      <td className="p-3">
+                        {item.orderId.split("-")[0].toUpperCase()}
+                      </td>
+                      <td className="p-3">
+                        {item.orderDate
+                          ?.split("T")[0]
+                          .split("-")
+                          .reverse()
+                          .join("/") || "N/A"}
+                      </td>
+                      <td className="p-3">{totalPrice[item.orderId]} VND</td>
+                      <td className="p-3">{item.statusName}</td>
+                      {["SHIPPING"].includes(statusActive) && (
+                        <td className="p-3 text-center text-sm">
+                          <button className="bg-orange-500 shadow-2xl rounded-sm text-white mr-1 px-2 py-1 ">
+                            Đã Giao Hàng
+                          </button>
+                        </td>
                       )}
-                    </div>
-                  </div>
 
-                  <div>
-                    <p>Mã đơn: {order.orderId.split("-")[0].toUpperCase()}</p>
-                    <p>
-                      Ngày:{" "}
-                      {order.orderDate
-                        ?.split("T")[0]
-                        .split("-")
-                        .reverse()
-                        .join("/") || "N/A"}
-                    </p>
-                  </div>
-                </div>
-                {Object.entries(
-                  order?.receiptDetails?.reduce((acc, item) => {
-                    if (!acc[item.retailerName]) acc[item.retailerName] = [];
-                    acc[item.retailerName].push(item);
-                    return acc;
-                  }, {})
-                ).map(([retailerName, items], idx) => (
-                  <div key={idx}>
-                    <div className="product bg-gray-300 px-3 py-1 font-bold mt-4">
-                      {retailerName}
-                    </div>
-                    <table className="w-full border-collapse border mt-2">
-                      <tbody>
-                        {items.map((item, id) => (
-                          <tr key={id} className="border-b">
-                            <td className="border px-2 py-2 w-1/2">
-                              {item.productName} - {item.productVariants.value}
-                              {item.productVariants.unitName}
-                            </td>
-                            <td className="border px-2 py-2 w-1/4 text-center">
-                              x{item.totalQuantity}
-                            </td>
-                            <td className="border px-2 py-2 w-1/4 text-center">
-                              {item.productVariants.price} VND
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                ))}
+                      {["DELIVERED", "CANCELLED"].includes(statusActive) && (
+                        <td className="p-3 text-center text-sm">
+                          <button className="bg-red-600 shadow-2xl rounded-sm text-white mr-1 px-2 py-1 ">
+                            Xóa
+                          </button>
+                        </td>
+                      )}
+                      {["PROCESSING"].includes(statusActive) && (
+                        <td className="p-3 text-center text-sm">
+                          <button
+                            onClick={() => handleCancelledOrder(item.orderId)}
+                            className="bg-red-600 rounded-sm text-white mr-1 px-2 py-1 hover:bg-red-700 cursor-pointer"
+                          >
+                            Hủy đơn
+                          </button>
+                        </td>
+                      )}
+                    </tr>
 
-                <div className="payment my-5">
-                  <p>Thanh Toán</p>
-                  <select
-                    name="payment"
-                    className="w-full px-3 py-2 border"
-                    value={selectedPayments[order.orderId] || ""}
-                    onChange={(e) =>
-                      handlePaymentChange(
-                        order.orderId,
-                        e.target.value,
-                        e.target.selectedOptions[0].dataset.key
-                      )
-                    }
-                  >
-                    {paymentStore.map((method) => (
-                      <option
-                        key={method.paymentCode}
-                        data-key={method.paymentCode}
-                        value={method.paymentMethod}
-                      >
-                        {method.paymentMethod}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div className="font-light">*Phí ship toàn quốc 30.000 VNĐ</div>
+                    {/* receiptDetail */}
+                    {selectedOrderIndex === item.orderId && (
+                      <tr className="">
+                        <td
+                          colSpan="5"
+                          className="bg-gray-50 p-4 text-left shadow-lg rounded-2xl "
+                        >
+                          <h3 className="text-lg text-gray-700 font-bold  bg-green-200 text-center">
+                            CHI TIẾT ĐƠN HÀNG
+                          </h3>
+                          <div className="info-customer">
+                            <p>Khách Hàng: {item.customerName}</p>
+                            <p>Địa chỉ: {item.customerAddress}</p>
+                            <p>Số điện thoại: {item.customerNumber}</p>
+                          </div>
 
-                <div className="text-right font-bold text-lg mt-2">
-                  Tổng tiền:
-                  <span className="text-red-600">
-                    {" "}
-                    {totalPrice[order.orderId] || 0} VNĐ
-                  </span>
-                </div>
-                {(statusActive && statusActive !== "CANCELLED") ? (
-                  <button
-                    onClick={() => handleCancelledOrder(order.orderId)}
-                    className="bg-green-600 text-white px-4 py-2 rounded mt-4 w-full hover:bg-green-700"
-                  >
-                    Hủy đơn
-                  </button>
-                ) : (
-                  <button
-                    onClick={() => buyAgain(order.orderId)}
-                    className="bg-green-600 text-white px-4 py-2 rounded mt-4 w-full hover:bg-green-700"
-                  >
-                    Mua Lại
-                  </button>
-                )}
+                          {Object.entries(
+                            item?.receiptDetails?.reduce((acc, item) => {
+                              if (!acc[item.retailerName])
+                                acc[item.retailerName] = [];
+                              acc[item.retailerName].push(item);
+                              return acc;
+                            }, {})
+                          ).map(([retailerName, items], idx) => (
+                            <div key={idx}>
+                              <div className="product bg-gray-300 px-3 py-1 font-bold mt-4">
+                                {retailerName}
+                              </div>
+                              <table className="w-full border-collapse border mt-2">
+                                <tbody>
+                                  {items.map((item, id) => (
+                                    <tr key={id} className="border-b">
+                                      <td className="border px-2 py-2 w-1/2">
+                                        {item.productName} -{" "}
+                                        {item.productVariants.value}
+                                        {item.productVariants.unitName}
+                                      </td>
+                                      <td className="border px-2 py-2 w-1/4 text-center">
+                                        x{item.totalQuantity}
+                                      </td>
+                                      <td className="border px-2 py-2 w-1/4 text-center">
+                                        {item.productVariants.price} VND
+                                      </td>
+                                    </tr>
+                                  ))}
+                                </tbody>
+                              </table>
+                            </div>
+                          ))}
 
-                
-              </>
-            )}
-          </div>
-        ))
-      ) : (
-        <p className="text-center text-gray-500">Không có hóa đơn nào.</p>
-      )}
+                          <div className="payment my-5 ">
+                            <p className="text-green-600 font-bold">
+                              Phương thức
+                            </p>
+
+                            {["SHIPPING", "DELIVERED", "CANCELLED"].includes(
+                              statusActive
+                            ) ? (
+                              <p> {selectedPayments[item.orderId] || ""}</p>
+                            ) : (
+                              <select
+                                name="payment"
+                                className="w-full px-3 py-2 border"
+                                value={selectedPayments[item.orderId] || ""}
+                                onChange={(e) =>
+                                  handlePaymentChange(
+                                    item.orderId,
+                                    e.target.value,
+                                    e.target.selectedOptions[0].dataset.key
+                                  )
+                                }
+                              >
+                                {paymentStore.map((method) => (
+                                  <option
+                                    key={method.paymentCode}
+                                    data-key={method.paymentCode}
+                                    value={method.paymentMethod}
+                                  >
+                                    {method.paymentMethod}
+                                  </option>
+                                ))}
+                              </select>
+                            )}
+                          </div>
+                          <div className="font-light">
+                            *Phí ship toàn quốc 30.000 VNĐ
+                          </div>
+
+                          <p className="mt-2 font-medium text-right">
+                            Tổng: {totalPrice[item.orderId] - 30} VND
+                          </p>
+                          <p className="mt-2 font-medium text-right">
+                            Phí vận chuyển: 30 VND
+                          </p>
+                        </td>
+                      </tr>
+                    )}
+                  </React.Fragment>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="5" className="text-center py-4 text-gray-600">
+                    Chưa có đơn hàng nào.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   );
 }
