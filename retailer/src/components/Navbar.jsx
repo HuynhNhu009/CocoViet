@@ -1,22 +1,35 @@
 import { BellIcon } from "@heroicons/react/24/outline";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { retailerApi } from "../services/RetailerService";
 import { logout } from "../redux/retailerSlice";
+import { retailerApi } from "../services/RetailerService";
 
 const Navbar = () => {
   const retailer = useSelector((state) => state.RetailerStore.retailer);
+  const countOrder = useSelector((state) => state.RetailerStore.countOrder);
   // console.log("Retailer in Navbar:", retailer);
   const [isHovered, setIsHovered] = useState(false);
+  const [showNotification, setShowNotification] = useState(false);
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  
+  useEffect(() => {
+    if (countOrder > 0) {
+      setShowNotification(true);
+      const timer = setTimeout(() => {
+        setShowNotification(false);
+      }, 2000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [countOrder]);
+
   const handleLogout = async () => {
     try {
       const response = await retailerApi.logout();
-      // console.log(response); 
+      // console.log(response);
       if (response.status === "OK") {
         dispatch(logout()); // Cập nhật state Redux
         navigate("/login");
@@ -43,6 +56,14 @@ const Navbar = () => {
       {retailer && (
         <div className="flex gap-5">
           <BellIcon className="size-6 lg:size-7" />
+          {showNotification && countOrder > 0 && (
+            <div
+              className="absolute right-[201px] bottom-[-6px] text-center text-sm leading-4 bg-orange-500 shadow-lg text-white px-3 py-2 rounded-sm 
+            before:absolute before:-top-3 before:left-1/2 before:-translate-x-1/2 before:border-[7px] before:border-transparent before:border-b-orange-500"
+            >
+              Bạn có {countOrder} đơn hàng mới
+            </div>
+          )}
           <div
             className="relative"
             onMouseEnter={() => setIsHovered(true)}
@@ -62,7 +83,7 @@ const Navbar = () => {
                 <button
                   className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                   onClick={() => {
-                    handleLogout()
+                    handleLogout();
                   }}
                 >
                   Đăng xuất

@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setLoadOrder, setOrderStatus, setStatusActive, setStatusName } from "../../redux/retailerSlice";
+import { setCountOrder, setLoadOrder, setOrderStatus, setStatusActive, setStatusName } from "../../redux/retailerSlice";
 const Status = () => {
   const statusStore = useSelector((state) => state.RetailerStore.statusStore);
   const statusActive = useSelector((state) => state.RetailerStore.statusActive);
+  const statusName = useSelector((state) => state.RetailerStore.statusName);
   const orderStore = useSelector((state) => state.RetailerStore.orderStore);
   const loadOrder = useSelector((state) => state.RetailerStore.loadOrder);
   const [status, setstatus] = useState([]);
@@ -18,8 +19,10 @@ const Status = () => {
   useEffect(() => {
     if (!statusActive && statusStore.length > 0) {
       dispatch(setStatusActive(statusStore[1].statusCode));
+      dispatch(setStatusName(statusStore[1].statusName));
+
     }
-  }, [statusStore, statusActive, dispatch]);
+  }, [statusStore, statusActive,statusName, dispatch]);
   
   useEffect(() => {
     if (statusActive && orderStore) {
@@ -33,10 +36,15 @@ const Status = () => {
             item.receiptDetails.some(
               (detail) => detail.statusName === request.statusName
             )
-        );        
+        );            
+        if(request.statusCode == "PROCESSING"){
+          dispatch(setCountOrder(filteredResults.length > 0 ? filteredResults.length : 0))          
+        }
+        
         dispatch(
           setOrderStatus(filteredResults.length > 0 ? filteredResults : [])
         );
+
       }
     }
   }, [statusActive, orderStore,loadOrder, statusStore, dispatch]);

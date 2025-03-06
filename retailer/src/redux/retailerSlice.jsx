@@ -11,6 +11,7 @@ const initialState = {
   orderStatus: [],
   statusActive: null,
   statusName: null,
+  countOrder:0,
   loadOrder: false,
   loading: false,
 };
@@ -22,6 +23,10 @@ const retailerSlice = createSlice({
     setLogin: (state, action) => {
       state.isRetailerLogin = true;
       state.retailer = action.payload;
+    },
+
+    setCountOrder: (state, action) => {
+      state.countOrder = action.payload;
     },
 
     setOrder: (state, action) => {
@@ -73,6 +78,7 @@ export const {
   setStatusActive,
   setStatus,
   setOrder,
+  setCountOrder,
   logout,
   setProducts,
   setStatusName,
