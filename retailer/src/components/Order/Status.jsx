@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setLoadOrder, setOrderStatus, setStatusActive } from "../../redux/retailerSlice";
+import { setLoadOrder, setOrderStatus, setStatusActive, setStatusName } from "../../redux/retailerSlice";
 const Status = () => {
   const statusStore = useSelector((state) => state.RetailerStore.statusStore);
   const statusActive = useSelector((state) => state.RetailerStore.statusActive);
@@ -41,12 +41,13 @@ const Status = () => {
     }
   }, [statusActive, orderStore,loadOrder, statusStore, dispatch]);
 
-  const handleClickStatus = async (statusCode) => {
+  const handleClickStatus = async (status) => {
     try {
-      dispatch(setStatusActive(statusCode));
+      dispatch(setStatusActive(status.statusCode));
+      dispatch(setStatusName(status.statusName));
       if (statusStore.length > 0) {
         const request = statusStore.find(
-          (item) => item.statusCode === statusCode
+          (item) => item.statusCode === status.statusCode
         );
 
         if (request) {
@@ -77,7 +78,7 @@ const Status = () => {
         {status.slice(1).map((item, index) => (
           <div
             key={index}
-            onClick={() => handleClickStatus(item.statusCode)}
+            onClick={() => handleClickStatus(item)}
             className={`w-full uppercase text-center cursor-pointer py-2 hover:text-gray-600
             ${
               statusActive === item.statusCode

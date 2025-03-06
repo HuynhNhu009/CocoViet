@@ -8,6 +8,7 @@ const OrderItem = ({ orderStatus }) => {
   const [orders, setOrders] = useState([]);
   const [totalPrice, setTotalPrice] = useState({});
   const statusActive = useSelector((state) => state.RetailerStore.statusActive);
+  const statusName = useSelector((state) => state.RetailerStore.statusName);
   const [selectedOrderId, setSelectedOrderId] = useState(null);
   const dispatch = useDispatch();
 
@@ -166,7 +167,7 @@ const OrderItem = ({ orderStatus }) => {
                         .join("/") || "N/A"}
                     </td>
                     <td className="p-3">{totalPrice[item.orderId]} VND</td>
-                    <td className="p-3">{item.statusName}</td>
+                    <td className="p-3">{statusName}</td>
 
                     {!["SHIPPING", "DELIVERED", "CANCELLED"].includes(
                       statusActive
