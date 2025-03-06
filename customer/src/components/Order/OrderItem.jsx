@@ -107,7 +107,7 @@ function OrderItem(orderStore) {
       };
   
       await orderAPI.updateOrder(order.orderId, orderRequest);
-      // await dispatch(setCreateOrder(true));
+      await dispatch(setCreateOrder(true));
   
       Swal.fire({
         title: "Đặt hàng thành công!",

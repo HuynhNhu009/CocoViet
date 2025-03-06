@@ -33,5 +33,9 @@ export const orderAPI = {
     const response = await api.delete(`/orders/${orderId}/receipt/${receiptDetailId}`);
     return response.data;
   },
+  deleteOrder: async (orderId) => {
+    const response = await api.delete(`/orders/${orderId}`);
+    return response.data;
+  },
 
 };

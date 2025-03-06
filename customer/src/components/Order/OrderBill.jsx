@@ -8,11 +8,10 @@ function OrderBill(orderStore) {
   const [orders, setOrders] = useState([]);
   const [totalPrice, setTotalPrice] = useState({});
   const [selectedOrderIndex, setSelectedOrderIndex] = useState(null);
-
   const paymentStore = useSelector((state) => state.OrderStore.payment);
   const statusActive = useSelector((state) => state.OrderStore.statusActive);
+  const customer = useSelector((state) => state.CustomerStore.customer || []);
   const dispatch = useDispatch();
-
   const [selectedPayments, setSelectedPayments] = useState({});
 
   const handlePaymentChange = async (orderId, paymentMethod, paymentCode) => {
@@ -49,10 +48,9 @@ function OrderBill(orderStore) {
   }, [orderStore]);
 
   const handleCancelledOrder = async (getOrder) => {
-
     try {
       const receiptDetailRequests = getOrder.receiptDetails.map((item) => ({
-        productVariantId: item.productVariants?.variantId, 
+        productVariantId: item.productVariants?.variantId,
         statusCode: "CANCELLED",
       }));
 
@@ -87,16 +85,16 @@ function OrderBill(orderStore) {
   };
 
   const buyAgain = async (getOrder) => {
-    try {      
+    try {
       const receiptDetailRequests = getOrder.receiptDetails.map((item) => ({
         productVariantId: item.productVariants.variantId,
-        statusCode: "CART",
+        quantity: item.totalQuantity,
       }));
 
-      const orderRequest = {
+      const addOrder = {
+        customerId: customer.customerId,
         receiptDetailRequests: receiptDetailRequests,
       };
-
       Swal.fire({
         title: "Bạn muốn mua lại",
         text: "Bạn muốn mua lại các sản phẩm trong đơn hàng này?",
@@ -108,7 +106,8 @@ function OrderBill(orderStore) {
         cancelButtonText: "Không mua!",
       }).then(async (result) => {
         if (result.isConfirmed) {
-          await orderAPI.updateOrder(getOrder.orderId, orderRequest);
+          await orderAPI.addOrder(addOrder);
+          await orderAPI.deleteOrder(getOrder.orderId);
           await dispatch(setCreateOrder(true));
           Swal.fire({
             title: "Đã thêm vào giỏ hàng!",

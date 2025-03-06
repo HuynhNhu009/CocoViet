@@ -25,7 +25,6 @@ const ProductDetail = () => {
         quantity:""
       }
     ]
-
   }
   const dispatch = useDispatch();
 
