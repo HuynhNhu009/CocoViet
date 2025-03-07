@@ -2,8 +2,9 @@ import { PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
 import React from "react";
 
 const ProductItem = ({ product }) => {
+  console.log("ProductItem", product)
   return (
-    <div key={product.id} className="p-4 mb-5 w-full h-80 rounded-md shadow-sm cursor-pointer hover:shadow-lg overflow-hidden">
+    <div key={product.id} className="p-4 mb-5 w-full h-80 rounded-md shadow-sm cursor-pointer hover:shadow-lg hover:border-2 hover:border-green-200 overflow-hidden">
       <img
         src={product.productImage}
         alt={product.productName}
@@ -17,8 +18,14 @@ const ProductItem = ({ product }) => {
         Nguồn gốc: {product.productOrigin || "Chưa có"}
       </p>
       <p className="text-green-600 text-sm truncate hidden sm:block">
-        Danh mục: {product.categoryId.join(", ") || "Chưa có"}
-      </p>
+        Danh mục: {product.categories && Array.isArray(product.categories)
+          ? product.categories
+              .map((cat) =>
+                typeof cat === "object" ? cat.categoryName : cat
+              )
+              .join(", ") || "Chưa có"
+          : "Chưa có"}
+      </p>  
     </div>
   );
 };

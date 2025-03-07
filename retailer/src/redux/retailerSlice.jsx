@@ -10,6 +10,7 @@ const initialState = {
   revenueStore: {},
   statusStore: [],
   orderStatus: [],
+  units: [],
   statusActive: null,
   statusName: null,
   countOrder:0,
@@ -74,6 +75,10 @@ const retailerSlice = createSlice({
     setCategory: (state, action) => {
       state.category = action.payload;
     },
+
+    setUnits: (state, action) =>{
+      state.units = action.payload;
+    }
   },
 });
 
@@ -85,10 +90,12 @@ export const {
   setStatusActive,
   setStatus,
   setOrder,
+  setCategory,
   setCountOrder,
   logout,
   setProducts,
   setStatusName,
   setLoading,
+  setUnits,
 } = retailerSlice.actions;
 export default retailerSlice.reducer;
