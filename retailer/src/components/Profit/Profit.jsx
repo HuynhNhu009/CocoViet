@@ -56,7 +56,6 @@ const Profit = () => {
         .filter(Boolean);
 
       const top3 = matchingProducts.slice(0, 3);
-      const top1 = matchingProducts.slice(1);
 
       const orderTop= top3.map((order, index) => ({
         productName: order?.productName || "Chưa có",
@@ -64,9 +63,19 @@ const Profit = () => {
           revenueStore.bestSellingProduct[index]?.totalSold  || 0,
       }));
 
-      console.log("orderStats", orderStats);
+      
+      if(matchingProducts.length > 1){
+        const top1 = matchingProducts.slice(1);
+        if (top1 && top1.length > 0) {
+          setProductName(top1[0].productName);
+        } 
+      }else{
+        setProductName(matchingProducts[0].productName);        
+      }
+           
 
-      setProductName(top1[0].productName);
+      console.log("productName", matchingProducts);
+      
       setOrderStats(orderTop); 
     } else {
       console.log("Không có sản phẩm bán chạy.");

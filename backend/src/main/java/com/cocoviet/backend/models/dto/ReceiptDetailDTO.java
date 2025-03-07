@@ -15,6 +15,7 @@ public class ReceiptDetailDTO {
     String receiptDetailId;
     String retailerName;
     String productName;
+    String productImage;
     int totalQuantity;
     BigDecimal totalPrice;
     String statusName;
