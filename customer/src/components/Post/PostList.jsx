@@ -6,7 +6,7 @@ const PostList = () => {
   const posts = useSelector((state) => state.PostStore.post);
 
   return (
-    <div className="flex flex-col md:flex-row gap-4s">
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 lg:w-[80%] w-[90%] mx-auto md:my-[20px]">
       {posts.length>0 ? (
         posts.map((item) => (
           <div key={item.postTitle}>
