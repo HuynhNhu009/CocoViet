@@ -29,7 +29,6 @@ public class OrderController {
     }
 
     @PatchMapping("/update/{orderId}")
-
     ResponseEntity<ResponseData> updateOrder(@PathVariable String orderId, @RequestBody @Valid OrderRequest orderRequest ) {
 
         return ResponseEntity.status(HttpStatus.OK)
@@ -40,12 +39,12 @@ public class OrderController {
                         .build());
     }
 
-    @GetMapping("/{customerId}")
-    ResponseEntity<ResponseData> getOrderByCustomerId(@PathVariable String customerId ) {
+    @GetMapping("/")
+    ResponseEntity<ResponseData> getOrderByCustomerId(@RequestParam String customerId, @RequestParam String statusCode ) {
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ResponseData.builder()
-                        .data(orderService.getOrderByCustomerId(customerId))
+                        .data(orderService.getOrderByCustomerId(customerId, statusCode))
                         .msg("Get order successfully")
                         .status("OK")
                         .build());
@@ -78,6 +77,28 @@ public class OrderController {
                 .body(ResponseData.builder()
                         .data(orderService.deleteReceipt(orderId, receiptId))
                         .msg("Delete receipt successfully")
+                        .status("OK")
+                        .build());
+    }
+
+
+    @DeleteMapping("/{orderId}")
+    public ResponseEntity<ResponseData> deleteReceipt(@PathVariable String orderId) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ResponseData.builder()
+                        .data(orderService.deleteOrderById(orderId))
+                        .msg("Delete order successfully")
+                        .status("OK")
+                        .build());
+    }
+
+
+    @GetMapping("/revenue")
+    public ResponseEntity<ResponseData> getRevenue(@RequestParam String retailerId, @RequestParam String statusCode) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ResponseData.builder()
+                        .data(orderService.getRevenue(retailerId, statusCode))
+                        .msg("Get revenue successfully")
                         .status("OK")
                         .build());
     }

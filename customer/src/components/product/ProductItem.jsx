@@ -1,6 +1,24 @@
 import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 
-const ProductItem = ({ productId, productName, retailerName, variants }) => {
+const ProductItem = ({
+  productId,
+  productName,
+  retailerName,
+  variants,
+  productImage,
+}) => {
+  console.log(variants);
+  const [price, setprice] = useState(0);
+
+  useEffect(() => {
+    if (variants.length > 0) {
+      variants.map((variant) => setprice(variant.price));
+
+      console.log(price);
+    }
+  }, [variants]);
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -9,23 +27,21 @@ const ProductItem = ({ productId, productName, retailerName, variants }) => {
       transition={{ duration: 0.5, ease: "easeOut" }}
       className="cursor-pointer"
     >
-      <ul className="shadow-md transition-opacity duration-700 bg-[#77C27F] hover:bg-green-600 text-white rounded-2xl flex flex-col">
-        <li>
+      <ul className="shadow-md h-72 transition-opacity duration-700
+       bg-[#77C27F] hover:bg-green-600 text-white rounded-2xl flex flex-col">
+        <li className="h-48 w-full">
           <img
-            src="https://th.bing.com/th/id/R.21f948ddaf5ceb8af38722b6525f9576?rik=QXJDXfWA6c5bfw&riu=http%3a%2f%2fimua.com.vn%2fimages%2fAlbum%2fTrai-dua-tuoi-75.jpg&ehk=J0LhHGVtSH9w9QxAw%2fhxbidliOyBUiI6qjp8i2YcWJQ%3d&risl=&pid=ImgRaw&r=0"
+            src={productImage}
             alt={`Product ${productName}`}
-            className="w-full object-cover rounded-t-2xl"
+            className="w-full h-full object-cover rounded-t-2xl"
           />
         </li>
-        <div className="py-2 text-center">
-          <li className="text-lg font-semibold">{productName}</li>
-          {variants > 0 &&
-            variants.map((variant, vIndex) => (
-              <li key={vIndex} className="font-light text-sm">
-                {variant.price} VND
-              </li>
-            ))}
-          <li className="font-extralight text-xs">{retailerName}</li>
+        <div className="py-2 text-center mt-2">
+        <li className="text-lg font-semibold truncate max-w-full px-2 overflow-hidden whitespace-nowrap text-ellipsis">
+  {productName}
+</li>
+          <li className="font-light text-sm ">{price} VND</li>
+          <li className="font-extralight text-xs mt-2 text-right pr-5">{retailerName}</li>
         </div>
       </ul>
     </motion.div>

@@ -6,6 +6,7 @@ const orderSlice = createSlice({
   initialState: {
     status:[],
     statusActive:null,
+    statusName:null,
     orderList:[],
     orderStatus:[],
     createOrder:false,
@@ -27,6 +28,9 @@ const orderSlice = createSlice({
 
     setStatusActive: (state, action) => {
       state.statusActive = action.payload;      
+    },
+    setStatusName: (state, action) => {
+      state.statusName = action.payload;      
     },
 
     setCreateOrder:(state, action) => {
@@ -52,6 +56,7 @@ export const {
   setOrderStatus,
   setCreateOrder,
   setCartCount,
+  setStatusName,
   setPayment
 } = orderSlice.actions;
 

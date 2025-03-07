@@ -1,11 +1,17 @@
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
-import { setOrderStatus, setStatusActive } from "../../redux/orderSlice";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  setOrderStatus,
+  setStatusActive,
+  setStatusName
+} from "../../redux/orderSlice";
+import { orderAPI } from "../../services/orderService";
 function Status() {
   const statusStore = useSelector((state) => state.OrderStore.status);
-  const orderList = useSelector((state) => state.OrderStore.orderList);
   const statusActive = useSelector((state) => state.OrderStore.statusActive);
+  const customer = useSelector((state) => state.CustomerStore.customer);
+  const createOrder = useSelector((state) => state.OrderStore.createOrder);
+  
 
   const [status, setStatus] = useState([]);
   const dispatch = useDispatch();
@@ -23,43 +29,36 @@ function Status() {
   }, [statusStore, statusActive, dispatch]);
 
   useEffect(() => {
-    if (statusActive && orderList) {
-      const request = statusStore.find(
-        (item) => item.statusCode === statusActive
-      );
-
-      if (request) {
-        const filteredResults = orderList.filter(
-          (item) => item.statusName === request.statusName
-        );
-        dispatch(
-          setOrderStatus(filteredResults.length > 0 ? filteredResults : [])
-        );
-      }
-    }
-  }, [statusActive, orderList, statusStore, dispatch]);
-
-  const handleClickStatus = async (statusCode) => {
-    try {
-      dispatch(setStatusActive(statusCode));
-      if (statusStore.length > 0) {
-        const request = statusStore.find(
-          (item) => item.statusCode === statusCode
-        );
-
-        if (request) {
-          const filteredResults = orderList.filter(
-            (item) => item.statusName === request.statusName
+    const fetchOrders = async () => {
+      if (statusActive && customer.customerId) {
+        try {
+          const response = await orderAPI.getOrderByCustomerId(
+            customer.customerId,
+            statusActive
           );
-          console.log("filteredResults",filteredResults);
-          
-          if (filteredResults) {
-            dispatch(setOrderStatus(filteredResults));
-          } else {
-            dispatch(setOrderStatus([]));
-          }
+
+          dispatch(
+            setOrderStatus(response.data.length > 0 ? response.data : [])
+          );
+        } catch (error) {
+          console.error("Lỗi khi lấy đơn hàng:", error);
         }
       }
+    };
+
+    fetchOrders();
+  }, [statusActive, statusStore,createOrder, dispatch]);
+
+  const handleClickStatus = async (status) => {
+    try {
+      dispatch(setStatusActive(status.statusCode));      
+      dispatch(setStatusName(status.statusName));
+      const response = await orderAPI.getOrderByCustomerId(
+        customer.customerId,
+        status.statusCode
+      );
+
+      dispatch(setOrderStatus(response.data.length > 0 ? response.data : []));
     } catch (error) {
       console.error("Error fetching order by statusCode:", error);
       setStatus([]);
@@ -72,7 +71,7 @@ function Status() {
         status?.map((item, index) => (
           <div
             key={index}
-            onClick={() => handleClickStatus(item.statusCode)}
+            onClick={() => handleClickStatus(item)}
             className={`relative mx-3 my-2 text-white font-bold bg-gray-400 py-3 
             text-center w-32 pl-6 before:absolute before:-left-0 before:top-1/2 
             before:-translate-y-1/2 before:w-0 before:h-0 before:border-y-25 

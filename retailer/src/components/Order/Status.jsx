@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setLoadOrder, setOrderStatus, setStatusActive } from "../../redux/retailerSlice";
+import { setCountOrder, setLoadOrder, setOrderStatus, setStatusActive, setStatusName } from "../../redux/retailerSlice";
 const Status = () => {
   const statusStore = useSelector((state) => state.RetailerStore.statusStore);
   const statusActive = useSelector((state) => state.RetailerStore.statusActive);
+  const statusName = useSelector((state) => state.RetailerStore.statusName);
   const orderStore = useSelector((state) => state.RetailerStore.orderStore);
   const loadOrder = useSelector((state) => state.RetailerStore.loadOrder);
   const [status, setstatus] = useState([]);
@@ -18,9 +19,11 @@ const Status = () => {
   useEffect(() => {
     if (!statusActive && statusStore.length > 0) {
       dispatch(setStatusActive(statusStore[1].statusCode));
-    }
-  }, [statusStore, statusActive, dispatch]);
+      dispatch(setStatusName(statusStore[1].statusName));
 
+    }
+  }, [statusStore, statusActive,statusName, dispatch]);
+  
   useEffect(() => {
     if (statusActive && orderStore) {
       const request = statusStore.find(
@@ -29,26 +32,37 @@ const Status = () => {
 
       if (request) {
         const filteredResults = orderStore.filter(
-          (item) => item.statusName === request.statusName
-        );
+          (item) =>
+            item.receiptDetails.some(
+              (detail) => detail.statusName === request.statusName
+            )
+        );            
+        if(request.statusCode == "PROCESSING"){
+          dispatch(setCountOrder(filteredResults.length > 0 ? filteredResults.length : 0))          
+        }
+        
         dispatch(
           setOrderStatus(filteredResults.length > 0 ? filteredResults : [])
         );
+
       }
     }
   }, [statusActive, orderStore,loadOrder, statusStore, dispatch]);
 
-  const handleClickStatus = async (statusCode) => {
+  const handleClickStatus = async (status) => {
     try {
-      dispatch(setStatusActive(statusCode));
+      dispatch(setStatusActive(status.statusCode));
+      dispatch(setStatusName(status.statusName));
       if (statusStore.length > 0) {
         const request = statusStore.find(
-          (item) => item.statusCode === statusCode
+          (item) => item.statusCode === status.statusCode
         );
 
         if (request) {
-          const filteredResults = orderStore.filter(
-            (item) => item.statusName === request.statusName
+          const filteredResults = orderStore.filter((item) =>
+            item.receiptDetails.some(
+              (detail) => detail.statusName === request.statusName
+            )
           );
 
           if (filteredResults.length < 0) {
@@ -72,7 +86,7 @@ const Status = () => {
         {status.slice(1).map((item, index) => (
           <div
             key={index}
-            onClick={() => handleClickStatus(item.statusCode)}
+            onClick={() => handleClickStatus(item)}
             className={`w-full uppercase text-center cursor-pointer py-2 hover:text-gray-600
             ${
               statusActive === item.statusCode

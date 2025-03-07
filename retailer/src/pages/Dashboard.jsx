@@ -5,9 +5,10 @@ import AddProductForm from "../components/Product/AddProductForm";
 import Navbar from "../components/Navbar";
 import OrderList from "../components/Order/OrderList";
 import ProductList from "../components/Product/ProductList";
-import Profit from "../components/Profit";
+import Profit from "../components/Profit/Profit";
 import Sidebar from "../components/SideBar";
 import UnitManager from "../components/UnitManager";
+<<<<<<< HEAD
 import {
   setLoadOrder,
   setOrder,
@@ -16,6 +17,9 @@ import {
   setCategory,
   setUnits,
 } from "../redux/retailerSlice";
+=======
+import { setLoadOrder, setOrder, setProducts, setRevenue, setStatus } from "../redux/retailerSlice";
+>>>>>>> 9291f2d39170f70ce6ea8dc59088563191e799de
 import { categoryApi } from "../services/categoryService";
 import { orderAPI } from "../services/orderService";
 import { productApi } from "../services/productService";
@@ -27,6 +31,10 @@ const Dashboard = () => {
   const retailer = useSelector((state) => state.RetailerStore.retailer);
   const products = useSelector((state) => state.RetailerStore.products);
   const loadingRedux = useSelector((state) => state.RetailerStore.loading);
+<<<<<<< HEAD
+=======
+  const statusStore = useSelector((state) => state.RetailerStore.statusStore);
+>>>>>>> 9291f2d39170f70ce6ea8dc59088563191e799de
   const loadOrder = useSelector((state) => state.RetailerStore.loadOrder);
   const orderStatus = useSelector((state) => state.RetailerStore.orderStatus);
   const categoryStore = useSelector((state) => state.RetailerStore.category);
@@ -62,6 +70,31 @@ const Dashboard = () => {
     }
   };
 
+<<<<<<< HEAD
+=======
+  // order-delivered
+  const fetchRevenue = async () => {
+    try {
+      const responseData = await orderAPI.getRevenue(retailer.retailerId, "DELIVERED");
+      dispatch(setRevenue(responseData.data))      
+    } catch (error) {
+      console.log("Lỗi khi lấy Order:", error);
+      dispatch(setOrder([]))
+    } 
+    finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
+    if (retailer?.retailerId && statusStore) {
+      fetchRevenue();
+    }
+
+  }, [retailer, statusStore, loadOrder]);
+
+  
+  //status
+>>>>>>> 9291f2d39170f70ce6ea8dc59088563191e799de
   const fetchStatus = async () => {
     try {
       const responseData = await statusAPI.getAllStatus();
@@ -153,6 +186,7 @@ const Dashboard = () => {
 
     fetchOrder();
 
+<<<<<<< HEAD
     const interval = setInterval(() => {
       fetchOrder();
     }, 5000);
@@ -168,6 +202,14 @@ const Dashboard = () => {
     }
     dispatch(setLoadOrder(false));
   }, [orderStatus, dispatch]);
+=======
+     const interval = setInterval(() => {
+       fetchOrder();
+   }, 10000); 
+
+   return () => clearInterval(interval);
+  }, [loadOrder]);
+>>>>>>> 9291f2d39170f70ce6ea8dc59088563191e799de
 
   const addProduct = async () => {
     try {

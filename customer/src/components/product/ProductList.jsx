@@ -62,6 +62,9 @@ const ProductList = () => {
       setProducts([]);
       }    
   };
+
+  console.log(products);
+  
   
 
   return (
@@ -74,6 +77,7 @@ const ProductList = () => {
               productName={item.productName}
               retailerName={item.retailerName}
               variants={item.variants || []}
+              productImage={item.productImage || []}
             />
           </div>
         ))

@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { orderAPI } from "../../services/orderService";
 import { useDispatch } from "react-redux";
-import { setCreateOrder } from "../../redux/orderSlice";
 import Swal from "sweetalert2";
+import { setCreateOrder } from "../../redux/orderSlice";
+import { orderAPI } from "../../services/orderService";
 
 function OrderItem(orderStore) {
   const [order, setOrder] = useState([]);
@@ -17,9 +17,10 @@ function OrderItem(orderStore) {
       {
         productVariantId: "",
         quantity: "",
+        statusCode:""
       },
     ],
-  };
+  };  
 
   useEffect(() => {
     if (orderStore) {
@@ -45,7 +46,7 @@ function OrderItem(orderStore) {
     let value = e.target.value.trim();
 
     if (value === "") {
-      setQuantity((prev) => ({ ...prev, [productVariantId]: 1 })); // Nếu rỗng, mặc định là 1
+      setQuantity((prev) => ({ ...prev, [productVariantId]: 1 })); 
       return;
     }
 
@@ -90,30 +91,38 @@ function OrderItem(orderStore) {
 
   //buyProduct
   const handleNextProcess = async () => {
-    if (!order || !order.orderId) {
+    if (!order || !order.orderId || !order.receiptDetails?.length) {
       Swal.fire("Vui lòng thêm sản phẩm vào giỏ hàng!");
       return;
-    }
-  
-    console.log("Số lượng sản phẩm:", order?.receiptDetails?.length || 0);
+    }  
   
     try {
-      orderRequest.statusCode = "PROCESSING";
-      Swal.fire({
-        title: "Đặt hàng thành công!",
-        content:"Vui lòng xem chi tiết tại trạng thái Đang xử lý ",
-        icon: "success",
-        showConfirmButton: false,
-        timer:1000 
-      });
+      const receiptDetailRequests = order.receiptDetails.map((item) => ({
+        productVariantId: item.productVariants.variantId,
+        statusCode: "PROCESSING",
+      }));
+  
+      const orderRequest = {
+        receiptDetailRequests: receiptDetailRequests,
+      };
+  
       await orderAPI.updateOrder(order.orderId, orderRequest);
       await dispatch(setCreateOrder(true));
+  
+      Swal.fire({
+        title: "Đặt hàng thành công!",
+        text: "Vui lòng xem chi tiết tại trạng thái Đang xử lý",
+        icon: "success",
+        showConfirmButton: false,
+        timer: 1000,
+      });
     } catch (error) {
       console.error("Lỗi cập nhật đơn hàng:", error);
+      Swal.fire("Đã có lỗi xảy ra khi đặt hàng!", "Vui lòng thử lại sau", "error");
     }
   };
-
-
+  
+console.log(order);
 
   return (
     <>
@@ -141,11 +150,11 @@ function OrderItem(orderStore) {
                   <td className="flex flex-row justify-center">
                     <div className="flex items-center justify-between h-28">
                       <img
-                        src="https://th.bing.com/th/id/R.21f948ddaf5ceb8af38722b6525f9576?rik=QXJDXfWA6c5bfw&riu=http%3a%2f%2fimua.com.vn%2fimages%2fAlbum%2fTrai-dua-tuoi-75.jpg&ehk=J0LhHGVtSH9w9QxAw%2fhxbidliOyBUiI6qjp8i2YcWJQ%3d&risl=&pid=ImgRaw&r=0"
-                        alt="H1"
+                        src={item.productImage}
+                        // alt="H1"
                         className="h-28 w-28 object-cover mr-2"
                       />
-                      <span className="ml-2 w-38">{item.productName}</span>
+                      <span className="ml-2 w-38">{item.productName} - ({item.productVariants.value}{item.productVariants.unitName})</span>
                     </div>
                   </td>
                   <td className="px-4 py-2">{item.productVariants.price}</td>

@@ -7,10 +7,13 @@ const initialState = {
   products: [],
   category: [],
   orderStore: [],
+  revenueStore: {},
   statusStore: [],
   orderStatus: [],
   units: [],
   statusActive: null,
+  statusName: null,
+  countOrder:0,
   loadOrder: false,
   loading: false,
 };
@@ -23,6 +26,15 @@ const retailerSlice = createSlice({
       state.isRetailerLogin = true;
       state.retailer = action.payload;
     },
+
+    setCountOrder: (state, action) => {
+      state.countOrder = action.payload;
+    },
+
+    setRevenue: (state, action) => {
+      state.revenueStore = action.payload;
+    },
+
 
     setOrder: (state, action) => {
       state.orderStore = action.payload;
@@ -38,6 +50,10 @@ const retailerSlice = createSlice({
 
     setStatusActive: (state, action) => {
       state.statusActive = action.payload;
+    },
+
+    setStatusName: (state, action) => {
+      state.statusName = action.payload;
     },
 
     setStatus: (state, action) => {
@@ -70,12 +86,15 @@ export const {
   setLogin,
   setOrderStatus,
   setLoadOrder,
+  setRevenue,
   setStatusActive,
   setStatus,
   setOrder,
   setCategory,
+  setCountOrder,
   logout,
   setProducts,
+  setStatusName,
   setLoading,
   setUnits,
 } = retailerSlice.actions;

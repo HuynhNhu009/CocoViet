@@ -8,9 +8,19 @@ const OrderItem = ({ orderStatus }) => {
   const [orders, setOrders] = useState([]);
   const [totalPrice, setTotalPrice] = useState({});
   const statusActive = useSelector((state) => state.RetailerStore.statusActive);
+  const statusName = useSelector((state) => state.RetailerStore.statusName);
   const [selectedOrderId, setSelectedOrderId] = useState(null);
-
   const dispatch = useDispatch();
+
+  const orderRequest = {
+    receiptDetailRequests: [
+      {
+        productVariantId: "",
+        quantity: "",
+        statusCode: "",
+      },
+    ],
+  };
 
   useEffect(() => {
     if (orderStatus) {
@@ -32,9 +42,15 @@ const OrderItem = ({ orderStatus }) => {
     }
   }, [orderStatus]);
 
-  const handleCancelledOrder = async (orderId) => {
+  const handleCancelledOrder = async (orderId, productVariantId) => {
     try {
       const orderRequest = { statusCode: "CANCELLED" };
+      orderRequest.receiptDetailRequests = [
+        {
+          productVariantId: productVariantId,
+          statusCode: "CANCELLED",
+        },
+      ];
       Swal.fire({
         title: "Hủy đơn hàng",
         text: "Bạn có chắc muốn hủy đơn hàng này không?",
@@ -61,16 +77,23 @@ const OrderItem = ({ orderStatus }) => {
     }
   };
 
-  const handleShipping = async (orderId) => {
+  const handleShipping = async (orderId, productVariantId) => {
     try {
-      const orderRequest = { statusCode: "SHIPPING" };
+      orderRequest.receiptDetailRequests = [
+        {
+          productVariantId: productVariantId,
+          statusCode: "SHIPPING",
+        },
+      ];
+
       Swal.fire({
-        title: "!",
-        content: "Vui lòng xem chi tiết tại trạng thái Đang xử lý ",
+        title: "Giao đơn hàng!",
+        content: "Vui lòng xem chi tiết tại trạng thái Đang giao hàng.",
         icon: "success",
         showConfirmButton: false,
         timer: 1000,
       });
+
       await orderAPI.updateOrder(orderId, orderRequest);
       await dispatch(setLoadOrder(true));
     } catch (error) {
@@ -78,16 +101,20 @@ const OrderItem = ({ orderStatus }) => {
     }
   };
 
-  const handleDelivered = async (orderId) => {
+  const handleDelivered = async (orderId, productVariantId) => {
     try {
-      const orderRequest = { statusCode: "DELIVERED" };
-      // Swal.fire({
-      //   title: "!",
-      //   content: "Vui lòng xem chi tiết tại trạng thái Đang xử lý ",
-      //   icon: "success",
-      //   showConfirmButton: false,
-      //   timer: 1000,
-      // });
+      orderRequest.receiptDetailRequests = [
+        {
+          productVariantId: productVariantId,
+          statusCode: "DELIVERED",
+        },
+      ];
+      Swal.fire({
+        title: "Giao hàng thành công!",
+        icon: "success",
+        showConfirmButton: false,
+        timer: 1000,
+      });
       await orderAPI.updateOrder(orderId, orderRequest);
       await dispatch(setLoadOrder(true));
     } catch (error) {
@@ -115,7 +142,7 @@ const OrderItem = ({ orderStatus }) => {
               orders.map((item, index) => (
                 <React.Fragment key={index}>
                   <tr
-                  title="Xem chi tiết"
+                    title="Xem chi tiết"
                     onClick={() =>
                       setSelectedOrderId(
                         selectedOrderId === item.orderId ? null : item.orderId
@@ -140,18 +167,36 @@ const OrderItem = ({ orderStatus }) => {
                         .join("/") || "N/A"}
                     </td>
                     <td className="p-3">{totalPrice[item.orderId]} VND</td>
-                    <td className="p-3">{item.statusName}</td>
+                    <td className="p-3">{statusName}</td>
 
-                    {!["SHIPPING", "DELIVERED", "CANCELLED"].includes(statusActive) && (
+                    {!["SHIPPING", "DELIVERED", "CANCELLED"].includes(
+                      statusActive
+                    ) && (
                       <td className="p-3 text-center text-sm">
                         <button
-                          onClick={() => handleShipping(item.orderId)}
+                          onClick={(e) => {
+                            item.receiptDetails.forEach((detail) => {
+                              handleShipping(
+                                item.orderId,
+                                detail.productVariants.variantId
+                              );
+                            });
+                            e.stopPropagation();
+                          }}
                           className="bg-green-600 rounded-sm shadow-2xl text-white mr-1 px-2 py-1 hover:bg-green-500 cursor-pointer"
                         >
                           Giao Hàng
                         </button>
                         <button
-                          onClick={() => handleCancelledOrder(item.orderId)}
+                          onClick={(e) => {
+                            item.receiptDetails.forEach((detail) => {
+                              handleCancelledOrder(
+                                item.orderId,
+                                detail.productVariants.variantId
+                              );
+                            });
+                            e.stopPropagation();
+                          }}
                           className="bg-red-500 rounded-sm shadow-2xl text-white px-2 py-1 hover:bg-red-600 cursor-pointer "
                         >
                           Từ chối
@@ -162,24 +207,31 @@ const OrderItem = ({ orderStatus }) => {
                     {["SHIPPING"].includes(statusActive) && (
                       <td className="p-3 text-center text-sm">
                         <button
-                          onClick={() => handleDelivered(item.orderId)}
+                          onClick={(e) => {
+                            item.receiptDetails.forEach((detail) => {
+                              handleDelivered(
+                                item.orderId,
+                                detail.productVariants.variantId
+                              );
+                            });
+                            e.stopPropagation();
+                          }}
                           className="bg-orange-500 shadow-2xl rounded-sm text-white mr-1 px-2 py-1 hover:bg-orange-600 cursor-pointer "
                         >
                           Đã Giao Hàng
                         </button>
                       </td>
                     )}
-                    {["CANCELLED"].includes(statusActive) && 
-                    
-                    <td className="p-3 text-center text-sm">
-                    <button
-                      // onClick={() => handleDelivered(item.orderId)}
-                      className="bg-red-600 rounded-sm text-white mr-1 px-2 py-1 hover:text-green-800 "
-                    >
-                      Xóa
-                    </button>
-                  </td>
-                  }
+                    {["CANCELLED"].includes(statusActive) && (
+                      <td className="p-3 text-center text-sm">
+                        <button
+                          // onClick={() => handleDelivered(item.orderId)}
+                          className="bg-red-600 rounded-sm text-white mr-1 px-2 py-1 hover:text-green-800 "
+                        >
+                          Xóa
+                        </button>
+                      </td>
+                    )}
                   </tr>
                   {/* receiptDetail */}
                   {selectedOrderId === item.orderId && (

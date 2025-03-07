@@ -25,7 +25,6 @@ const ProductDetail = () => {
         quantity:""
       }
     ]
-
   }
   const dispatch = useDispatch();
 
@@ -73,7 +72,7 @@ const ProductDetail = () => {
          productVariantId: selectVariant.variantId,
          quantity: quantity
       }]
-      
+            
       await orderAPI.addOrder(orderRequest);
       dispatch(setCreateOrder(true));
       Swal.fire({
@@ -103,6 +102,7 @@ const ProductDetail = () => {
       setProducts([]);
     }
   };
+  
 
 
   return (
@@ -116,7 +116,7 @@ const ProductDetail = () => {
       <div className="section-2 mb-10 w-full flex justify-evenly- flex-row space-x-8 flex-wrap b-10">
         <div className="box-image shadow-md w-[35%] border-3 rounded-2xl border-green-600">
           <img
-            src="https://th.bing.com/th/id/R.21f948ddaf5ceb8af38722b6525f9576?rik=QXJDXfWA6c5bfw&riu=http%3a%2f%2fimua.com.vn%2fimages%2fAlbum%2fTrai-dua-tuoi-75.jpg&ehk=J0LhHGVtSH9w9QxAw%2fhxbidliOyBUiI6qjp8i2YcWJQ%3d&risl=&pid=ImgRaw&r=0"
+            src={product.productImage}
             className="w-full object-center p-5 rounded-3xl"
           />
         </div>
@@ -146,7 +146,7 @@ const ProductDetail = () => {
               </span>
             ))}
           </div>
-          <p className="text-green-600 font-bold text-4xl ">{selectVariant.price}.000 VND</p>
+          <p className="text-green-600 font-bold text-4xl ">{selectVariant.price} VND</p>
           <div>
             <span>Số lượng: </span>
             <input
@@ -168,6 +168,14 @@ const ProductDetail = () => {
         <hr className=""></hr>
         <p className="font-light mx-auto text-center">{product.productDesc}</p>
       </div>
+      <div className="section-3flex justify-center space-x-8 flex-wrap mb-8 ">
+        <h2>LOẠI SẢN PHẨM</h2>
+        <hr className=""></hr>
+        {Array.isArray(product.categoryName) && product.categoryName.map((item, index) => (
+          <p key={index} className="font-light mx-auto">{item}</p>
+        ))}
+
+      </div>
       <div className="section-4 ">
         <h2>XEM THÊM</h2>
         <hr className="mb-5"></hr>
@@ -182,6 +190,7 @@ const ProductDetail = () => {
                 productName={item.productName}
                 retailerName={item.retailerName}
                 variants={item.variants || []}
+                productImage={item.productImage || []}
               />
             </div>
           ))}

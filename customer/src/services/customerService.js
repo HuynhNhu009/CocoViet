@@ -40,4 +40,9 @@ export const customerApi = {
     const response = await api.get("/customers/get-all");
     return response.data;
   },
+
+  updateProfile: async (customerId, formData) => {
+    const response = await api.patch(`/customers/update-profile/${customerId}`,formData);
+    return response.data;
+  },
 };

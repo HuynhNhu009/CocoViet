@@ -8,10 +8,16 @@ export const orderAPI = {
     return response.data;
   },
 
-  getOrderByCustomerId: async (customerId) => {
-    const response = await api.get(`/orders/${customerId}`)
+  getOrderByCustomerId: async (customerId, statusCode) => {
+    const response = await api.get("/orders/", {
+        params: { 
+            customerId: customerId, 
+            statusCode: statusCode 
+        }
+    });
     return response.data;
-  },
+},
+
 
   addOrder: async (orderRequest) => {
     const response = await api.post("/orders/create", orderRequest);
@@ -25,6 +31,10 @@ export const orderAPI = {
 
   deleteProductInOrder: async (orderId, receiptDetailId) => {
     const response = await api.delete(`/orders/${orderId}/receipt/${receiptDetailId}`);
+    return response.data;
+  },
+  deleteOrder: async (orderId) => {
+    const response = await api.delete(`/orders/${orderId}`);
     return response.data;
   },
 

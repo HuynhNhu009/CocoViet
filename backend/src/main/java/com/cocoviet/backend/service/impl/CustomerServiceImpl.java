@@ -89,11 +89,21 @@ public class CustomerServiceImpl implements ICustomerService {
         CustomerEntity customer = iCustomerRepository.findById(customerId)
                 .orElseThrow(() -> new RuntimeException("Customer not found"));
 
-        customer.setCustomerName(customerRequest.getUserName());
-        customer.setCustomerAddress(customerRequest.getUserAddress());
-        customer.setPhoneNumbers(customerRequest.getPhoneNumbers());
-        customer.setCustomerAvatar(customerRequest.getUserAvatar());
-
+        if(customerRequest.getUserName() != null){
+            customer.setCustomerName(customerRequest.getUserName());
+        }else{
+            customer.setCustomerName(customer.getCustomerName());
+        }
+        if(customerRequest.getPhoneNumbers() != null){
+            customer.setPhoneNumbers(customerRequest.getPhoneNumbers());
+        }else{
+            customer.setPhoneNumbers(customer.getPhoneNumbers());
+        }
+        if(customerRequest.getUserAddress() != null){
+            customer.setCustomerAddress(customerRequest.getUserAddress());
+        }else{
+            customer.setCustomerAvatar(customer.getCustomerAddress());
+        }
         return iCustomerMapper.toCustomerDTO(iCustomerRepository.save(customer));
     }
 

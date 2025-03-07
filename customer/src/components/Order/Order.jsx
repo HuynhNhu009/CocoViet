@@ -16,7 +16,10 @@ function Order() {
     } else {
       setOrder(orderStatus);
     }
-  }, [orderStatus]);
+  }, [orderStatus, statusActive]);
+
+  console.log("order-----",order);
+  
 
   return (
     <div className="flex justify-center flex-col w-full sm:px-[5vw] md:px-[7vw] lg:px-[9vw] mb-8">

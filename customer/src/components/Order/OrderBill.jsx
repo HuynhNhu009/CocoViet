@@ -1,47 +1,20 @@
 import React, { useEffect, useState } from "react";
-import { orderAPI } from "../../services/orderService";
 import { useDispatch, useSelector } from "react-redux";
-import { setCreateOrder } from "../../redux/orderSlice";
 import Swal from "sweetalert2";
+import { setCreateOrder } from "../../redux/orderSlice";
+import { orderAPI } from "../../services/orderService";
 
 function OrderBill(orderStore) {
   const [orders, setOrders] = useState([]);
   const [totalPrice, setTotalPrice] = useState({});
   const [selectedOrderIndex, setSelectedOrderIndex] = useState(null);
-  const [isEditing, setIsEditing] = useState(false);
-
-  const CustomerStore = useSelector((state) => state.CustomerStore.customer);
   const paymentStore = useSelector((state) => state.OrderStore.payment);
   const statusActive = useSelector((state) => state.OrderStore.statusActive);
+  const statusName = useSelector((state) => state.OrderStore.statusName);
+  const customer = useSelector((state) => state.CustomerStore.customer || []);
   const dispatch = useDispatch();
-
   const [selectedPayments, setSelectedPayments] = useState({});
-
-  const [customerInfo, setCustomerInfo] = useState({
-    customerName: "",
-    customerAddress: "",
-    customerNumber: "",
-  });
-
-  useEffect(() => {
-    setCustomerInfo({
-      customerName: CustomerStore.customerName,
-      customerAddress: CustomerStore.customerAddress,
-      customerNumber: CustomerStore.phoneNumbers,
-    });
-  }, [CustomerStore]);
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setCustomerInfo((prev) => ({ ...prev, [name]: value }));
-  };
-
-  //infor
-  const hanldleSaveInfo = async (orderId) => {
-    await orderAPI.updateOrder(orderId, customerInfo);
-    await dispatch(setCreateOrder(true));
-  };
-
+  
   const handlePaymentChange = async (orderId, paymentMethod, paymentCode) => {
     setSelectedPayments((prev) => ({ ...prev, [orderId]: paymentMethod }));
     let paymentRequest = { paymentCode };
@@ -75,9 +48,17 @@ function OrderBill(orderStore) {
     }
   }, [orderStore]);
 
-  const handleCancelledOrder = async (orderId) => {
+  const handleCancelledOrder = async (getOrder) => {
     try {
-      const orderRequest = { statusCode: "CANCELLED" };
+      const receiptDetailRequests = getOrder.receiptDetails.map((item) => ({
+        productVariantId: item.productVariants?.variantId,
+        statusCode: "CANCELLED",
+      }));
+
+      const orderRequest = {
+        receiptDetailRequests: receiptDetailRequests,
+      };
+
       Swal.fire({
         title: "Hủy đơn hàng",
         text: "Bạn có chắc muốn hủy đơn hàng này không?",
@@ -89,7 +70,7 @@ function OrderBill(orderStore) {
         cancelButtonText: "Không hủy!",
       }).then(async (result) => {
         if (result.isConfirmed) {
-          await orderAPI.updateOrder(orderId, orderRequest);
+          await orderAPI.updateOrder(getOrder.orderId, orderRequest);
           await dispatch(setCreateOrder(true));
           Swal.fire({
             title: "Đã hủy đơn hàng!",
@@ -104,9 +85,17 @@ function OrderBill(orderStore) {
     }
   };
 
-  const buyAgain = async (orderId) => {
+  const buyAgain = async (getOrder) => {
     try {
-      const orderRequest = { statusCode: "CART" };
+      const receiptDetailRequests = getOrder.receiptDetails.map((item) => ({
+        productVariantId: item.productVariants.variantId,
+        quantity: item.totalQuantity,
+      }));
+
+      const addOrder = {
+        customerId: customer.customerId,
+        receiptDetailRequests: receiptDetailRequests,
+      };
       Swal.fire({
         title: "Bạn muốn mua lại",
         text: "Bạn muốn mua lại các sản phẩm trong đơn hàng này?",
@@ -118,7 +107,8 @@ function OrderBill(orderStore) {
         cancelButtonText: "Không mua!",
       }).then(async (result) => {
         if (result.isConfirmed) {
-          await orderAPI.updateOrder(orderId, orderRequest);
+          await orderAPI.addOrder(addOrder);
+          await orderAPI.deleteOrder(getOrder.orderId);
           await dispatch(setCreateOrder(true));
           Swal.fire({
             title: "Đã thêm vào giỏ hàng!",
@@ -133,12 +123,7 @@ function OrderBill(orderStore) {
     }
   };
 
-  const isDisabled = ["SHIPPING", "DELIVERED", "CANCELLED"].includes(
-    statusActive
-  );
-
   return (
-    // mt-5 flex justify-center flex-col items-center
     <div className="">
       <div>
         {/* Bảng cho desktop */}
@@ -159,7 +144,7 @@ function OrderBill(orderStore) {
                 orders.map((item, index) => (
                   <React.Fragment key={index}>
                     <tr
-                    title="Xem chi tiết"
+                      title="Xem chi tiết"
                       onClick={() =>
                         setSelectedOrderIndex(
                           selectedOrderIndex === item.orderId
@@ -186,7 +171,7 @@ function OrderBill(orderStore) {
                           .join("/") || "N/A"}
                       </td>
                       <td className="p-3">{totalPrice[item.orderId]} VND</td>
-                      <td className="p-3">{item.statusName}</td>
+                      <td className="p-3">{statusName}</td>
                       {["SHIPPING"].includes(statusActive) && (
                         <td className="p-3 text-center text-sm">
                           <button className="bg-orange-500 shadow-2xl rounded-sm text-white mr-1 px-2 py-1 ">
@@ -195,9 +180,23 @@ function OrderBill(orderStore) {
                         </td>
                       )}
 
-                      {["DELIVERED", "CANCELLED"].includes(statusActive) && (
+                      {["DELIVERED"].includes(statusActive) && (
                         <td className="p-3 text-center text-sm">
                           <button className="bg-red-600 shadow-2xl rounded-sm text-white mr-1 px-2 py-1 ">
+                            Xóa
+                          </button>
+                        </td>
+                      )}
+
+                      {["CANCELLED"].includes(statusActive) && (
+                        <td className="p-3 text-center text-sm">
+                          <button
+                            onClick={() => buyAgain(item)}
+                            className="bg-green-600 shadow-2xl rounded-sm cursor-pointer text-white mr-1 px-2 py-1 "
+                          >
+                            Mua lại
+                          </button>
+                          <button className="bg-red-600 shadow-2xl rounded-sm cursor-pointer text-white mr-1 px-2 py-1 ">
                             Xóa
                           </button>
                         </td>
@@ -205,7 +204,7 @@ function OrderBill(orderStore) {
                       {["PROCESSING"].includes(statusActive) && (
                         <td className="p-3 text-center text-sm">
                           <button
-                            onClick={() => handleCancelledOrder(item.orderId)}
+                            onClick={() => handleCancelledOrder(item)}
                             className="bg-red-600 rounded-sm text-white mr-1 px-2 py-1 hover:bg-red-700 cursor-pointer"
                           >
                             Hủy đơn
