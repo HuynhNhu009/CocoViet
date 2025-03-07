@@ -72,7 +72,7 @@ const ProductDetail = () => {
          productVariantId: selectVariant.variantId,
          quantity: quantity
       }]
-      
+            
       await orderAPI.addOrder(orderRequest);
       dispatch(setCreateOrder(true));
       Swal.fire({
@@ -102,8 +102,6 @@ const ProductDetail = () => {
       setProducts([]);
     }
   };
-
-  console.log("productDetail", product);
   
 
 

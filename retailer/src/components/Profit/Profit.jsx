@@ -20,12 +20,6 @@ import {
   CurrencyDollarIcon,
   ChartBarIcon,
 } from "@heroicons/react/24/outline";
-const orderStats = [
-  { name: "Hoàn tất", value: 400, color: "#4CAF50" },
-  { name: "Đang vận chuyển", value: 300, color: "#000" },
-  { name: "Hủy bỏ", value: 200, color: "#FF9800" },
-  { name: "Tiếp nhận", value: 500, color: "#8BC34A" },
-];
 
 const Profit = () => {
   const products = useSelector((state) => state.RetailerStore.products);
@@ -33,7 +27,8 @@ const Profit = () => {
   const statusStore = useSelector((state) => state.RetailerStore.statusStore);
   const revenueStore = useSelector((state) => state.RetailerStore.revenueStore);
   const [countProduct, setcountProduct] = useState();
-  const [productName, setProductName] = useState();
+  const [productName, setProductName] = useState("");
+  const [orderStats, setOrderStats] = useState([]);
   const [orders, setOrders] = useState();
   const [revenue, setRevenue] = useState();
 
@@ -48,17 +43,31 @@ const Profit = () => {
   useEffect(() => {
     if (revenueStore && revenueStore.bestSellingProduct?.length > 0) {
       setRevenue(revenueStore);
-      revenueStore.bestSellingProduct.map((item) => {
-        const variantId = item.productVariant?.variantId;
 
-        const matchingProduct = products.find((product) =>
-          product.variants.some((variant) => variant.variantId === variantId)
-        );
+      console.log("Chưa lọc ---", revenueStore.bestSellingProduct);
 
-        setProductName(
-          matchingProduct ? matchingProduct.productName : "Không có"
-        );
-      });
+      const matchingProducts = revenueStore.bestSellingProduct
+        .map((item) => {
+          const variantId = item.productVariant?.variantId;
+          return products.find((product) =>
+            product.variants.some((variant) => variant.variantId === variantId)
+          );
+        })
+        .filter(Boolean);
+
+      const top3 = matchingProducts.slice(0, 3);
+      const top1 = matchingProducts.slice(1);
+
+      const orderTop= top3.map((order, index) => ({
+        productName: order?.productName || "Chưa có",
+        totalSold:
+          revenueStore.bestSellingProduct[index]?.totalSold  || 0,
+      }));
+
+      console.log("orderStats", orderStats);
+
+      setProductName(top1[0].productName);
+      setOrderStats(orderTop); 
     } else {
       console.log("Không có sản phẩm bán chạy.");
     }
@@ -126,7 +135,7 @@ const Profit = () => {
         <div className="ml-8">
           <p className="text-lg font-bold">Tổng đơn hàng</p>
           <p className="text-xl font-semibold text-blue-600">
-            {revenue?.countOrder}
+            {revenue ? revenue.countOrder : 0}
           </p>
         </div>
       </div>
@@ -135,7 +144,7 @@ const Profit = () => {
         <div className="ml-8">
           <p className="text-lg font-bold ">Tổng lợi nhuận</p>
           <p className="text-xl font-semibold  text-yellow-500">
-            {revenue?.totalRevenue} VND
+            {revenue ? revenue.totalRevenue : 0} VND
           </p>
         </div>
       </div>
@@ -206,25 +215,27 @@ const Profit = () => {
       </div>
 
       <div className=" border-gray-400 rounded-lg shadow-md col-span-2 p-4">
-        <p className="text-lg font-bold uppercase text-green-600">
-          Thống kê trạng thái đơn hàng
+        <p className="text-lg text-center font-bold uppercase">
+          Top 3 sản phẩm bán chạy
         </p>
         <ResponsiveContainer width="100%" height={300}>
-          <PieChart>
-            <Pie
-              data={orderStats}
-              dataKey="value"
-              nameKey="name"
-              outerRadius={100}
-            >
-              {orderStats.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={entry.color} />
-              ))}
-            </Pie>
-            <Tooltip />
-            <Legend />
-          </PieChart>
+  <PieChart>
+    <Pie
+      data={orderStats}
+      dataKey="totalSold" 
+      nameKey="productName" 
+      outerRadius={100}
+      label
+    >
+      {orderStats.map((entry, index) => (
+        <Cell key={`cell-${index}`} fill={["#E79833", "#4C300A", "#00A63E"][index]} />
+      ))}
+    </Pie>
+    <Tooltip />
+    <Legend />
+  </PieChart>
         </ResponsiveContainer>
+
       </div>
     </div>
   );

@@ -440,14 +440,13 @@ public class OrderServiceImpl implements IOrderService {
                 bestSelling = iReceiptDetailRepository.getBestSellingProducts(statusCode);
             }
         }
-        if (bestSelling.isEmpty()) {
-            revenueDTO.setBestSellingProduct(null);
-        }
-
-        long maxSold = (long) bestSelling.get(0)[1];
+//        if (bestSelling.isEmpty()) {
+//            revenueDTO.setBestSellingProduct(null);
+//        }
+//        long maxSold = (long) bestSelling.get(0)[1];
 
         List<BestSellingProductDTO> bestSellingProducts = bestSelling.stream()
-                .filter(p -> (long) p[1] == maxSold)
+//                .filter(p -> (long) p[1] == maxSold)
                 .map(row -> {
                     ProductVariantEntity productVariantEntity = (ProductVariantEntity) row[0];
                     Long totalSold = (Long) row[1];

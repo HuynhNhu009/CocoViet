@@ -96,10 +96,9 @@ const Dashboard = () => {
       fetchRevenue();
     }
 
-  }, [retailer, statusStore]);
+  }, [retailer, statusStore, loadOrder]);
 
   
-
   //status
   const fetchStatus = async () => {
     try {
@@ -162,11 +161,11 @@ const Dashboard = () => {
   useEffect(() => {
     fetchOrder();
 
-  //   const interval = setInterval(() => {
-  //     fetchOrder();
-  // }, 10000); 
+     const interval = setInterval(() => {
+       fetchOrder();
+   }, 10000); 
 
-  // return () => clearInterval(interval);
+   return () => clearInterval(interval);
   }, [loadOrder]);
 
   const addProduct = async () => {
