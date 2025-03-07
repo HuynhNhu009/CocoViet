@@ -1,6 +1,7 @@
 package com.cocoviet.backend.service;
 
 import com.cocoviet.backend.models.dto.OrderDTO;
+import com.cocoviet.backend.models.dto.RevenueDTO;
 import com.cocoviet.backend.models.request.OrderRequest;
 
 import java.util.List;
@@ -19,4 +20,6 @@ public interface IOrderService {
     List<OrderDTO> getOrderByRetailerId(String retailerId);
 
     String deleteOrderById(String orderId);
+
+    RevenueDTO getRevenue(String retailerId, String statusCode);
 }

@@ -29,6 +29,15 @@ public interface IOrderRepository extends JpaRepository<OrderEntity, String> {
             "WHERE p.retailer.retailerId = :retailerId")
     List<OrderEntity> findProcessingOrdersByRetailerId(@Param("retailerId") String retailerId);
 
+    @Query("SELECT o FROM OrderEntity o " +
+            "JOIN o.receiptDetails rd " +
+            "JOIN rd.productVariant pv " +
+            "JOIN pv.product p " +
+            "WHERE p.retailer.retailerId = :retailerId " +
+            "AND rd.status.statusCode = :statusCode"
+    )
+    List<OrderEntity> findDeliveredOrdersByRetailerId(@Param("retailerId") String retailerId, @Param("statusCode") String statusCode);
+
 //    List<OrderEntity> findByOrderDateBeforeAndStatus_StatusCode(LocalDateTime orderDateBefore, String statusStatusCode);
 
 

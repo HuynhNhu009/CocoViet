@@ -1,6 +1,8 @@
 package com.cocoviet.backend.repository;
 
+import com.cocoviet.backend.models.dto.BestSellingProductDTO;
 import com.cocoviet.backend.models.entity.OrderEntity;
+import com.cocoviet.backend.models.entity.ProductVariantEntity;
 import com.cocoviet.backend.models.entity.ReceiptDetailEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -26,5 +28,15 @@ public interface IReceiptDetailRepository extends JpaRepository<ReceiptDetailEnt
     Set<ReceiptDetailEntity> findReceiptDetailsByRetailerAndOrderId(
             @Param("retailerId") String retailerId,
             @Param("orderId") String orderId);
+
+    @Query("SELECT r.productVariant, SUM(r.quantity) as totalSold " +
+            "FROM ReceiptDetailEntity r " +
+            "WHERE r.status.statusCode = :statusCode " +
+            "GROUP BY r.productVariant " +
+            "ORDER BY totalSold DESC")
+    List<Object[]> getBestSellingProducts(@Param("statusCode") String statusCode);
+
+
+
 
 }

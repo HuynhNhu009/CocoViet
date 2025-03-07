@@ -5,10 +5,10 @@ import AddProductForm from "../components/Product/AddProductForm";
 import Navbar from "../components/Navbar";
 import OrderList from "../components/Order/OrderList";
 import ProductList from "../components/Product/ProductList";
-import Profit from "../components/Profit";
+import Profit from "../components/Profit/Profit";
 import Sidebar from "../components/SideBar";
 import UnitManager from "../components/UnitManager";
-import { setLoadOrder, setOrder, setProducts, setStatus } from "../redux/retailerSlice";
+import { setLoadOrder, setOrder, setProducts, setRevenue, setStatus } from "../redux/retailerSlice";
 import { categoryApi } from "../services/categoryService";
 import { orderAPI } from "../services/orderService";
 import { productApi } from "../services/productService";
@@ -20,7 +20,7 @@ const Dashboard = () => {
   const retailer = useSelector((state) => state.RetailerStore.retailer);
   const products = useSelector((state) => state.RetailerStore.products);
   const loadingRedux = useSelector((state) => state.RetailerStore.loading);
-  // const statusActive = useSelector((state) => state.RetailerStore.statusActive);
+  const statusStore = useSelector((state) => state.RetailerStore.statusStore);
   const loadOrder = useSelector((state) => state.RetailerStore.loadOrder);
   const orderStatus = useSelector((state) => state.RetailerStore.orderStatus);
 
@@ -77,6 +77,28 @@ const Dashboard = () => {
       setLoading(false);
     }
   };
+
+  // order-delivered
+  const fetchRevenue = async () => {
+    try {
+      const responseData = await orderAPI.getRevenue(retailer.retailerId, "DELIVERED");
+      dispatch(setRevenue(responseData.data))      
+    } catch (error) {
+      console.log("Lỗi khi lấy Order:", error);
+      dispatch(setOrder([]))
+    } 
+    finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
+    if (retailer?.retailerId && statusStore) {
+      fetchRevenue();
+    }
+
+  }, [retailer, statusStore]);
+
+  
 
   //status
   const fetchStatus = async () => {
@@ -140,11 +162,11 @@ const Dashboard = () => {
   useEffect(() => {
     fetchOrder();
 
-    const interval = setInterval(() => {
-      fetchOrder();
-  }, 10000); 
+  //   const interval = setInterval(() => {
+  //     fetchOrder();
+  // }, 10000); 
 
-  return () => clearInterval(interval);
+  // return () => clearInterval(interval);
   }, [loadOrder]);
 
   const addProduct = async () => {

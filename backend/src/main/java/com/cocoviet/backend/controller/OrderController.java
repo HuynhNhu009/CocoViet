@@ -91,4 +91,15 @@ public class OrderController {
                         .status("OK")
                         .build());
     }
+
+
+    @GetMapping("/revenue")
+    public ResponseEntity<ResponseData> getRevenue(@RequestParam String retailerId, @RequestParam String statusCode) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ResponseData.builder()
+                        .data(orderService.getRevenue(retailerId, statusCode))
+                        .msg("Get revenue successfully")
+                        .status("OK")
+                        .build());
+    }
 }

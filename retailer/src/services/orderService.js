@@ -11,6 +11,14 @@ export const orderAPI = {
     return response.data;
   },
 
+  getRevenue: async (retailerId, statusCode) => {
+    const response = await api.get("/orders/revenue", {
+      params: { 
+          retailerId: retailerId, 
+          statusCode: statusCode 
+      }
+  });    return response.data;
+  },
 
   
 };
