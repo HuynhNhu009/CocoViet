@@ -122,6 +122,7 @@ function OrderItem(orderStore) {
     }
   };
   
+console.log(order);
 
   return (
     <>
@@ -149,8 +150,8 @@ function OrderItem(orderStore) {
                   <td className="flex flex-row justify-center">
                     <div className="flex items-center justify-between h-28">
                       <img
-                        src="https://th.bing.com/th/id/R.21f948ddaf5ceb8af38722b6525f9576?rik=QXJDXfWA6c5bfw&riu=http%3a%2f%2fimua.com.vn%2fimages%2fAlbum%2fTrai-dua-tuoi-75.jpg&ehk=J0LhHGVtSH9w9QxAw%2fhxbidliOyBUiI6qjp8i2YcWJQ%3d&risl=&pid=ImgRaw&r=0"
-                        alt="H1"
+                        src={item.productImage}
+                        // alt="H1"
                         className="h-28 w-28 object-cover mr-2"
                       />
                       <span className="ml-2 w-38">{item.productName} - ({item.productVariants.value}{item.productVariants.unitName})</span>
