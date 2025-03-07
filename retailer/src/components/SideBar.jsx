@@ -45,7 +45,7 @@ const Sidebar = ({ activeTab, label, setLabel , setActiveTab, isOpen, setIsOpen 
         setLabel(item.label)
         if (closeOnClick) setIsOpen(false);
       }}
-      className={`flex items-center gap-2 py-2 px-4 rounded-md transition-colors duration-200 ${
+      className={`flex items-center gap-2 py-2 px-4 rounded-md transition-colors duration-200 cursor-pointer ${
         activeTab === item.id
           ? "bg-green-600 text-white"
           : "bg-gray-100 text-gray-600 hover:bg-gray-200"

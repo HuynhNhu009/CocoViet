@@ -329,22 +329,19 @@ public class ProductServiceImpl implements IProductService {
 
     @Override
     public List<ProductDTO> getProductListByRetailerId(String retailerId) {
-        // 1. Lấy danh sách ProductEntity từ repository dựa trên retailerId
         List<ProductEntity> productEntities = iProductRepository.findProductsByRetailerId(retailerId);
 
-        // 2. Kiểm tra nếu không có sản phẩm nào, trả về null
         if (productEntities.size() == 0) {
-            return null; // Có thể thay bằng Collections.emptyList() nếu muốn tránh null
+            return null;
         }
 
-        // 3. Chuyển đổi danh sách ProductEntity thành danh sách ProductDTO
         List<ProductDTO> productDTOS = productEntities.stream()
                 .map(productEntity -> {
                     // 3.1. Lấy danh sách ProductCategoryEntity liên quan đến productEntity
                     Set<ProductCategoryEntity> productCategoryEntities = iproductCategoryRepository.findByProduct(productEntity);
                     // 3.2. Trích xuất tên các danh mục (categoryName)
-                    Set<String> categoryName = productCategoryEntities.stream()
-                            .map(productCategory -> productCategory.getCategory().getCategoryName())
+                    Set<String> categoryId = productCategoryEntities.stream()
+                            .map(productCategory -> productCategory.getCategory().getCategoryId())
                             .collect(Collectors.toSet());
 
                     // 3.3. Chuyển đổi các ProductVariantEntity thành ProductVariantDTO
@@ -352,7 +349,7 @@ public class ProductServiceImpl implements IProductService {
 
                     // 3.4. Chuyển đổi ProductEntity thành ProductDTO và gán thêm thông tin
                     ProductDTO productDTO = iProductMapper.toProductDTO(productEntity);
-                    productDTO.setCategoryName(categoryName);
+                    productDTO.setCategoryName(categoryId);
                     productDTO.setVariants(productVariantDTOS);
 
                     return productDTO;

@@ -1,13 +1,13 @@
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
-import { PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
-import ProductItem from "./ProductItem";
 import ProductDetail from "./ProductDetail";
+import ProductItem from "./ProductItem";
 
-const ProductList = () => {
-  const products = useSelector((state) => state.RetailerStore.products);
+const ProductList = ({products, categories}) => {
+  // const products = useSelector((state) => state.RetailerStore.products);
+  // const categories = useSelector((state)=>state.RetailerStore.category);
+
   const [selectedProduct, setSelectedProduct] = useState(null);
-  console.log(products);
+  // console.log("CategoryID=====", categories);
 
   if (!products) {
     return (
@@ -24,10 +24,10 @@ const ProductList = () => {
   }
 
   return (
-    <div className="flex flex-col md:flex-row gap-4">
+    <div className="flex flex-col sm:pt-4 md:flex-row gap-4">
       {/* Left side - Product List - Hidden on mobile when product is selected */}
       {(!selectedProduct || window.innerWidth >= 768) && (
-        <div className={selectedProduct ? "w-full md:w-1/2 lg:w-1/3" : "w-full"}>
+        <div className={selectedProduct ? "w-full md:w-1/2 lg:w-2/5" : "w-full"}>
           <div
             className={
               selectedProduct
@@ -46,7 +46,7 @@ const ProductList = () => {
 
       {/* Right side - Product Detail */}
       {selectedProduct && (
-        <div className="w-full md:w-1/2 lg:w-2/3">
+        <div className="w-full md:w-1/2 lg:w-3/5">
           <ProductDetail 
             product={selectedProduct} 
             onBack={() => setSelectedProduct(null)}

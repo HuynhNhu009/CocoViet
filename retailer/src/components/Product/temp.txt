@@ -1,0 +1,433 @@
+import React, { useState } from "react";
+import { CheckIcon, PlusIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { productApi } from "../../services/productService";
+import { useSelector } from "react-redux";
+
+const ProductEdit = ({ product, onSave, onCancel }) => {
+  const [isAddingVariantInline, setIsAddingVariantInline] = useState(false);
+  const [newVariant, setNewVariant] = useState({
+    unitId: "",
+    value: "",
+    price: "",
+    initStock: "",
+  });
+  const [loading, setLoading] = useState(false);
+  const [variantErrors, setVariantErrors] = useState("");
+
+  const [editedProduct, setEditedProduct] = useState({
+    ...product,
+    categories: product.categories.map((c) =>
+      typeof c === "object" ? c.categoryId : c
+    ),
+  });
+
+  const categoryStore = useSelector((state) => state.RetailerStore.category);
+  const initialUnits = useSelector((state) => state.RetailerStore.units);
+
+  console.log("Category Edit", categoryStore);
+  console.log("Initunit", initialUnits);
+  console.log("Product Edit:", editedProduct);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setEditedProduct((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleVariantChange = (index, field, value) => {
+    const updatedVariants = [...editedProduct.variants];
+    updatedVariants[index][field] =
+      field === "unitId" ? value : parseInt(value) || 0;
+    if (field === "unitId") {
+      const unit = initialUnits.find((u) => u.unitId === value);
+      updatedVariants[index].unit = unit ? unit.unitName : "Unknown";
+    }
+    setEditedProduct((prev) => ({ ...prev, variants: updatedVariants }));
+  };
+
+  const handleNewVariantChange = (e) => {
+    const { name, value } = e.target;
+    setNewVariant((prev) => ({
+      ...prev,
+      [name]: name === "unitId" ? value : parseInt(value) || "",
+    }));
+  };
+
+  const handleCategoryToggle = (categoryId) => {
+    setEditedProduct((prev) => {
+      const updatedCategories = prev.categories.includes(categoryId)
+        ? prev.categories.filter((cat) => cat !== categoryId)
+        : [...prev.categories, categoryId];
+      return { ...prev, categories: updatedCategories };
+    });
+  };
+
+  const validateVariant = () => {
+    if (
+      !newVariant.unitId ||
+      !newVariant.value ||
+      !newVariant.price ||
+      !newVariant.initStock
+    ) {
+      setVariantErrors("Tất cả các trường phải được điền.");
+      return false;
+    }
+    const value = parseInt(newVariant.value);
+    const price = parseInt(newVariant.price);
+    const initStock = parseInt(newVariant.initStock);
+    if (
+      isNaN(value) ||
+      value <= 0 ||
+      isNaN(price) ||
+      price <= 0 ||
+      isNaN(initStock) ||
+      initStock < 0
+    ) {
+      setVariantErrors("Số lượng, giá phải > 0, tồn kho phải >= 0.");
+      return false;
+    }
+    return true;
+  };
+
+  const handleAddVariant = () => {
+    if (!validateVariant()) return;
+
+    const unit = initialUnits.find((u) => u.unitId === newVariant.unitId);
+    const variant = {
+      unitId: newVariant.unitId,
+      unit: unit ? unit.unitName : "Unknown",
+      value: parseInt(newVariant.value),
+      price: parseInt(newVariant.price),
+      initStock: parseInt(newVariant.initStock),
+    };
+
+    setEditedProduct((prev) => ({
+      ...prev,
+      variants: [...prev.variants, variant],
+    }));
+    setNewVariant({ unitId: "", value: "", price: "", initStock: "" });
+    setVariantErrors("");
+    setIsAddingVariantInline(false);
+  };
+
+  const getChangedData = () => {
+    const changedData = { productId: editedProduct.id };
+
+    // So sánh các trường cơ bản
+    if (editedProduct.productName !== product.productName) {
+      changedData.productName = editedProduct.productName;
+    }
+    if (editedProduct.productDesc !== product.productDesc) {
+      changedData.productDesc = editedProduct.productDesc;
+    }
+    if (editedProduct.productOrigin !== product.productOrigin) {
+      changedData.productOrigin = editedProduct.productOrigin;
+    }
+    if (editedProduct.productImage !== product.productImage) {
+      changedData.productImage = editedProduct.productImage;
+    }
+
+    // So sánh categories
+    const originalCategories = product.categories.map((c) =>
+      typeof c === "object" ? c.categoryId : c
+    );
+    if (
+      JSON.stringify(editedProduct.categories.sort()) !==
+      JSON.stringify(originalCategories.sort())
+    ) {
+      changedData.categoryId = editedProduct.categories;
+    }
+
+    // So sánh variants (chỉ lấy những variant thay đổi hoặc mới)
+    const changedVariants = [];
+    const originalVariants = product.variants;
+
+    editedProduct.variants.forEach((variant, index) => {
+      const original = originalVariants[index];
+      if (!original) {
+        // Variant mới
+        changedVariants.push({
+          unitId: variant.unitId,
+          unitName: variant.unit,
+          value: variant.value,
+          price: variant.price,
+          initStock: variant.initStock,
+        });
+      } else if (
+        variant.unitId !== original.unitId ||
+        variant.value !== original.value ||
+        variant.price !== original.price ||
+        variant.initStock !== original.initStock
+      ) {
+        // Variant thay đổi
+        changedVariants.push({
+          unitId: variant.unitId,
+          unitName: variant.unit,
+          value: variant.value,
+          price: variant.price,
+          initStock: variant.initStock,
+        });
+      }
+    });
+
+    if (changedVariants.length > 0) {
+      changedData.productVariants = changedVariants;
+    }
+
+    return changedData;
+  };
+
+  const handleSave = async () => {
+    setLoading(true);
+    try {
+      const changedData = getChangedData();
+      console.log("Changed Data to Save:", changedData);
+
+      if (Object.keys(changedData).length > 1) { // Có thay đổi ngoài productId
+        await productApi.updateProduct(changedData);
+        onSave();
+        alert("Cập nhật sản phẩm thành công!");
+      } else {
+        alert("Không có thay đổi để lưu!");
+      }
+    } catch (error) {
+      console.error("Lỗi khi cập nhật sản phẩm:", error);
+      alert("Cập nhật sản phẩm thất bại!");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="flex flex-col md:flex-row gap-6">
+      <div className="w-full md:w-1/3">
+        <img
+          src={editedProduct.productImage}
+          alt={editedProduct.productName}
+          className="w-full object-cover rounded-md border border-green-600"
+        />
+        <input
+          type="text"
+          name="productImage"
+          value={editedProduct.productImage}
+          onChange={handleInputChange}
+          className="mt-2 w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500"
+          placeholder="URL ảnh sản phẩm"
+          disabled={loading}
+        />
+      </div>
+      <div className="w-full md:w-2/3">
+        <input
+          type="text"
+          name="productName"
+          value={editedProduct.productName}
+          onChange={handleInputChange}
+          className="text-xl font-bold text-green-800 mb-2 w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500"
+          disabled={loading}
+        />
+        <div className="space-y-2">
+          <p className="text-green-600">
+            <span className="font-medium">Mô tả:</span>{" "}
+            <textarea
+              name="productDesc"
+              value={editedProduct.productDesc || ""}
+              onChange={handleInputChange}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500"
+              rows="3"
+              disabled={loading}
+            />
+          </p>
+          <p className="text-green-600">
+            <span className="font-medium">Nguồn gốc:</span>{" "}
+            <input
+              type="text"
+              name="productOrigin"
+              value={editedProduct.productOrigin || ""}
+              onChange={handleInputChange}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500"
+              disabled={loading}
+            />
+          </p>
+          <div className="text-green-600 space-y-2">
+            <span className="font-medium">Danh mục:</span>
+            <div className="min-h-40 overflow-y-auto border border-gray-300 rounded-md p-2">
+              {categoryStore.length === 0 ? (
+                <p className="text-gray-500 text-sm">Chưa có danh mục nào.</p>
+              ) : (
+                categoryStore.map((cat) => (
+                  <div
+                    key={cat.categoryId}
+                    className="flex items-center gap-2 py-1"
+                  >
+                    <input
+                      type="checkbox"
+                      checked={editedProduct.categories.includes(cat.categoryId)}
+                      onChange={() => handleCategoryToggle(cat.categoryId)}
+                      className="w-4 text-green-600 border-gray-300 rounded focus:ring-green-500"
+                      disabled={loading}
+                    />
+                    <span className="text-gray-700">{cat.categoryName}</span>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+          <div className="text-green-600 space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="font-medium">Loại:</span>
+              <button
+                type="button"
+                onClick={() => setIsAddingVariantInline(true)}
+                className={`${
+                  isAddingVariantInline ? "hidden" : ""
+                } p-2 bg-gray-100 rounded-md hover:bg-gray-200`}
+                disabled={loading}
+              >
+                <PlusIcon className="size-5 text-gray-600" />
+              </button>
+            </div>
+            {isAddingVariantInline && (
+              <div className="grid grid-cols-4 gap-2 mt-2">
+                <input
+                  type="number"
+                  name="value"
+                  value={newVariant.value}
+                  onChange={handleNewVariantChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  placeholder="Số lượng"
+                  disabled={loading}
+                />
+                <input
+                  type="number"
+                  name="price"
+                  value={newVariant.price}
+                  onChange={handleNewVariantChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  placeholder="Giá"
+                  disabled={loading}
+                />
+                <select
+                  name="unitId"
+                  value={newVariant.unitId}
+                  onChange={handleNewVariantChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  disabled={loading || initialUnits.length === 0}
+                >
+                  <option value="">Chọn đơn vị</option>
+                  {initialUnits.map((unit) => (
+                    <option key={unit.unitId} value={unit.unitId}>
+                      {unit.unitName}
+                    </option>
+                  ))}
+                </select>
+                <input
+                  type="number"
+                  name="initStock"
+                  value={newVariant.initStock}
+                  onChange={handleNewVariantChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  placeholder="Kho"
+                  disabled={loading}
+                />
+                <div className="col-span-4 flex items-center justify-between">
+                  {variantErrors && (
+                    <p className="text-red-600 text-sm">{variantErrors}</p>
+                  )}
+                  <div className="flex gap-2 ml-auto">
+                    <button
+                      type="button"
+                      onClick={handleAddVariant}
+                      className="p-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+                      disabled={loading}
+                    >
+                      Thêm
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setIsAddingVariantInline(false)}
+                      className="p-2 bg-gray-200 rounded-md hover:bg-gray-300"
+                      disabled={loading}
+                    >
+                      <XMarkIcon className="size-5 text-gray-600" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+            {editedProduct.variants && editedProduct.variants.length > 0 ? (
+              <ul className="list-disc pl-6 mt-1">
+                {editedProduct.variants.map((variant, index) => (
+                  <li key={index} className="flex gap-2 items-center">
+                    <input
+                      type="number"
+                      value={variant.value}
+                      onChange={(e) =>
+                        handleVariantChange(index, "value", e.target.value)
+                      }
+                      className="w-20 px-2 py-1 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500"
+                      disabled={loading}
+                    />
+                    <select
+                      value={variant.unitId}
+                      onChange={(e) =>
+                        handleVariantChange(index, "unitId", e.target.value)
+                      }
+                      className="w-24 px-2 py-1 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500"
+                      disabled={loading || initialUnits.length === 0}
+                    >
+                      <option value={variant.unitName}>{variant.unitName}</option>
+                      {initialUnits.map((unit) => (
+                        <option key={unit.unitId} value={unit.unitId}>
+                          {unit.unitName}
+                        </option>
+                      ))}
+                    </select>
+                    <input
+                      type="number"
+                      value={variant.price}
+                      onChange={(e) =>
+                        handleVariantChange(index, "price", e.target.value)
+                      }
+                      className="w-24 px-2 py-1 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500"
+                      disabled={loading}
+                    />
+                    <input
+                      type="number"
+                      value={variant.initStock}
+                      onChange={(e) =>
+                        handleVariantChange(index, "initStock", e.target.value)
+                      }
+                      className="w-20 px-2 py-1 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500"
+                      disabled={loading}
+                    />
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <span>Chưa có</span>
+            )}
+          </div>
+        </div>
+        <div className="flex gap-2 mt-4">
+          <button
+            onClick={handleSave}
+            className="flex items-center gap-1 px-3 py-1 bg-green-600 text-white rounded hover:bg-green-800"
+            disabled={loading}
+          >
+            <CheckIcon className="size-5" />
+            Lưu
+          </button>
+          <button
+            onClick={onCancel}
+            className="flex items-center gap-1 px-3 py-1 bg-gray-600 text-white rounded hover:bg-gray-800"
+            disabled={loading}
+          >
+            <XMarkIcon className="size-5" />
+            Hủy
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default ProductEdit;

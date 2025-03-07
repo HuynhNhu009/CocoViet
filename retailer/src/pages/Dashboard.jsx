@@ -8,7 +8,14 @@ import ProductList from "../components/Product/ProductList";
 import Profit from "../components/Profit";
 import Sidebar from "../components/SideBar";
 import UnitManager from "../components/UnitManager";
-import { setLoadOrder, setOrder, setProducts, setStatus } from "../redux/retailerSlice";
+import {
+  setLoadOrder,
+  setOrder,
+  setProducts,
+  setStatus,
+  setCategory,
+  setUnits,
+} from "../redux/retailerSlice";
 import { categoryApi } from "../services/categoryService";
 import { orderAPI } from "../services/orderService";
 import { productApi } from "../services/productService";
@@ -20,88 +27,56 @@ const Dashboard = () => {
   const retailer = useSelector((state) => state.RetailerStore.retailer);
   const products = useSelector((state) => state.RetailerStore.products);
   const loadingRedux = useSelector((state) => state.RetailerStore.loading);
-  // const statusActive = useSelector((state) => state.RetailerStore.statusActive);
   const loadOrder = useSelector((state) => state.RetailerStore.loadOrder);
   const orderStatus = useSelector((state) => state.RetailerStore.orderStatus);
+  const categoryStore = useSelector((state) => state.RetailerStore.category);
+  const units = useSelector((state) => state.RetailerStore.units);
 
   const [activeTab, setActiveTab] = useState("orders");
-  const [units, setUnits] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [loading, setLoading] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [label, setLable] = useState("Đơn hàng");
   const [getOrderStatus, setGetOrderStatus] = useState([]);
-
-  const fetchUnits = async () => {
-    try {
-      setLoading(true);
-      const responseData = await unitApi.getAllUnitsRetailerId(
-        retailer.retailerId
-      );
-      console.log("Units from API:", responseData);
-      setUnits(responseData.data);
-    } catch (error) {
-      console.error("Lỗi khi lấy đơn vị:", error);
-      setUnits([]);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const [isDataLoaded, setIsDataLoaded] = useState(false);
 
   const fetchCategory = async () => {
     try {
-      setLoading(true);
       const responseData = await categoryApi.getAllCategory();
       console.log("Categories from API:", responseData);
-      setCategories(responseData.data); // [{categoryId, categoryName}]
+      dispatch(setCategory(responseData.data));
+      return responseData.data; // Return categories directly
     } catch (error) {
-      console.log("Lỗi khi lấy danh mục (category):", error);
-      setCategories([]);
-    } finally {
-      setLoading(false);
+      console.error("Lỗi khi lấy danh mục (category):", error);
+      dispatch(setCategory([]));
+      return []; // Return empty array on error
     }
   };
 
-  // orderlist
-  const fetchOrder = async () => {
+  const fetchUnits = async () => {
     try {
-      // setLoading(true);
-      const responseData = await orderAPI.getAllOrdersByRetailerId(retailer.retailerId);
-      dispatch(setOrder(responseData.data))
+      const responseData = await unitApi.getAllUnitsRetailerId(retailer.retailerId);
+      console.log("Units from API:", responseData);
+      dispatch(setUnits(responseData.data));
     } catch (error) {
-      console.log("Lỗi khi lấy Order:", error);
-      dispatch(setOrder([]))
-
-    } 
-    finally {
-      setLoading(false);
+      console.error("Lỗi khi lấy đơn vị:", error);
+      dispatch(setUnits([]));
     }
   };
 
-  //status
   const fetchStatus = async () => {
     try {
-      setLoading(true);
       const responseData = await statusAPI.getAllStatus();
-      dispatch(setStatus(responseData.data))
-      console.log("status",responseData.data);
-      
+      console.log("Status from API:", responseData.data);
+      dispatch(setStatus(responseData.data));
     } catch (error) {
-      console.log("Lỗi khi lấy status:", error);
-      dispatch(setStatus([]))
-    } 
-    finally {
-      setLoading(false);
+      console.error("Lỗi khi lấy status:", error);
+      dispatch(setStatus([]));
     }
   };
 
-  const fetchProducts = async () => {
+  const fetchProducts = async (categories) => {
     try {
-      setLoading(true);
-      const responseData = await productApi.getProductByRetailerId(
-        retailer.retailerId
-      );
-      console.log("Products:", responseData);
+      const responseData = await productApi.getProductByRetailerId(retailer.retailerId);
+      console.log("Products===========:", responseData);
       if (responseData.data !== null) {
         const formattedProducts = responseData.data.map((product) => ({
           id: product.productId,
@@ -109,48 +84,94 @@ const Dashboard = () => {
           productDesc: product.productDesc,
           productOrigin: product.productOrigin,
           productImage: product.productImage,
-          categoryId: Array.isArray(product.categoryName)
-            ? product.categoryName
-            : [product.categoryName],
+          categories:
+            product.categoryName && Array.isArray(product.categoryName)
+              ? product.categoryName.map((name) => {
+                  const matchedCategory = categories.find(
+                    (cat) => cat.categoryId === name
+                  );
+                  console.log("fetchProduct:", matchedCategory);
+                  return matchedCategory?.categoryId && matchedCategory?.categoryName
+                    ? {
+                        categoryId: matchedCategory.categoryId,
+                        categoryName: matchedCategory.categoryName,
+                      }
+                    : "Default";
+                })
+              : ["Default"],
           variants: product.variants.map((v) => ({
             ...v,
-            unit: v.unit || "Default",
+            unitName: v.unitName || "Default",
           })),
           retailerName: product.retailerName,
           createdAt: product.createdAt,
         }));
         dispatch(setProducts(formattedProducts));
+        console.log("Products FFFF:", formattedProducts);
       }
     } catch (error) {
       console.error("Lỗi khi lấy sản phẩm:", error);
-    } finally {
-      setLoading(false);
+      dispatch(setProducts([]));
+    }
+  };
+
+  const fetchOrder = async () => {
+    try {
+      const responseData = await orderAPI.getAllOrdersByRetailerId(retailer.retailerId);
+      dispatch(setOrder(responseData.data));
+    } catch (error) {
+      console.error("Lỗi khi lấy Order:", error);
+      dispatch(setOrder([]));
     }
   };
 
   useEffect(() => {
-    if (retailer?.retailerId) {
-      fetchProducts();
-    }
-    fetchCategory();
-    fetchUnits();
-    fetchStatus();
+    const loadAllData = async () => {
+      if (!retailer?.retailerId) {
+        setIsDataLoaded(true);
+        return;
+      }
+
+      try {
+        const categories = await fetchCategory(); // Get categories first
+        await fetchUnits();                       // Then units
+        await fetchStatus();                      // Then status
+        await fetchProducts(categories);          // Pass categories to fetchProducts
+        await fetchOrder();                       // Finally orders
+      } catch (error) {
+        console.error("Error loading all data:", error);
+      } finally {
+        setIsDataLoaded(true);
+      }
+    };
+
+    loadAllData();
   }, [retailer, dispatch]);
 
   useEffect(() => {
+    if (!isDataLoaded) return;
+
     fetchOrder();
 
     const interval = setInterval(() => {
       fetchOrder();
-  }, 5000); // Lặp lại mỗi 5 giây
+    }, 5000);
 
-  return () => clearInterval(interval);
-  }, [loadOrder]);
+    return () => clearInterval(interval);
+  }, [loadOrder, isDataLoaded]);
+
+  useEffect(() => {
+    if (orderStatus.length > 0) {
+      setGetOrderStatus(orderStatus);
+    } else {
+      setGetOrderStatus([]);
+    }
+    dispatch(setLoadOrder(false));
+  }, [orderStatus, dispatch]);
 
   const addProduct = async () => {
     try {
-      // Gọi lại API để lấy danh sách sản phẩm mới nhất
-      await fetchProducts();
+      await fetchProducts(categoryStore); // Use current categoryStore after add
       setActiveTab("products");
       setIsSidebarOpen(false);
     } catch (error) {
@@ -162,26 +183,19 @@ const Dashboard = () => {
     fetchUnits();
   };
 
-  useEffect(() => {
-    if (orderStatus.length > 0) {       
-      setGetOrderStatus(orderStatus);
-    }else{
-      setGetOrderStatus([]);
-    }
-
-    dispatch(setLoadOrder(false));
-  }, [orderStatus]);  
- 
+  if (!isDataLoaded || loadingRedux) {
+    return <div className="text-center py-10">Đang tải...</div>;
+  }
 
   const tabContent = {
     orders: <OrderList orderStatus={getOrderStatus} />,
-    products: <ProductList />,
+    products: <ProductList products={products} categories={categoryStore} />,
     "add-product": (
       <AddProductForm
         onAddProduct={addProduct}
-        initialCategories={categories}
+        initialCategories={categoryStore}
         initialUnits={units}
-        retailerId={retailer?.retailerId} // Truyền retailerId từ Redux store
+        retailerId={retailer?.retailerId}
       />
     ),
     "unit-manager": (
@@ -194,14 +208,10 @@ const Dashboard = () => {
     profit: <Profit />,
   };
 
-  if (loading || loadingRedux) {
-    return <div className="text-center py-10">Đang tải...</div>;
-  }
-
   return (
-    <div className="relavive flex flex-col min-h-screen">
+    <div className="relative flex flex-col min-h-screen">
       <Navbar />
-      <div className=" bg-gray-200 min-h-[90vh] flex flex-col sm:px-4 lg:flex-row sm:gap-6 ">
+      <div className="bg-gray-200 min-h-[90vh] flex flex-col sm:px-4 lg:flex-row sm:gap-6">
         <Sidebar
           activeTab={activeTab}
           setActiveTab={setActiveTab}
@@ -211,14 +221,18 @@ const Dashboard = () => {
           setIsOpen={setIsSidebarOpen}
         />
         <div className="flex-1 sm:mt-8">
-          <div className="bg-white px-4 sm:p-6 sm:rounded-lg sm:shadow-md">
-            <div className="flex items-center py-4">
-              <button onClick={() => setIsSidebarOpen(true)} className="sm:hidden">
+          <div className="bg-white px-4 sm:px-6 sm:rounded-lg sm:shadow-md">
+            <div className="flex items-center pt-4 pb-2">
+              <button
+                onClick={() => setIsSidebarOpen(true)}
+                className="sm:hidden"
+              >
                 <Bars3Icon className="size-6 text-gray-700" />
               </button>
-              <h3 className="text-xl font-semibold ml-4 text-gray-700">
+              <h3 className="text-xl font-semibold uppercase ml-4 text-gray-700">
                 {label}
-              </h3> 
+                <hr className="mx-4 border-1" />
+              </h3>
             </div>
             {tabContent[activeTab]}
           </div>

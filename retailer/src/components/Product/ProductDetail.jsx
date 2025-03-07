@@ -1,16 +1,24 @@
-import React, { useState, useEffect } from "react";
-import { PencilIcon, TrashIcon, ArrowLeftIcon } from "@heroicons/react/24/outline";
+import {
+  ArrowLeftIcon,
+  PencilIcon,
+  TrashIcon,
+  XMarkIcon,
+} from "@heroicons/react/24/outline";
+import React, { useEffect, useState } from "react";
 import ProductEdit from "./ProductEdit";
 
 const ProductDetail = ({ product, onBack }) => {
   const [isEditing, setIsEditing] = useState(false);
+
+  // console.log("CategoryID :", product.categories);
+  console.log("Product Detail:", product);
 
   useEffect(() => {
     setIsEditing(false);
   }, [product]);
 
   return (
-    <div className="p-6 bg-white rounded-md shadow-sm min-h-80">
+    <div className="p-6 bg-white rounded-md shadow-sm min-h-80 border-2 border-green-100">
       {/* Back button - only visible on mobile */}
       <button
         onClick={onBack}
@@ -18,6 +26,14 @@ const ProductDetail = ({ product, onBack }) => {
       >
         <ArrowLeftIcon className="size-5" />
         Quay lại danh sách
+      </button>
+
+      <button
+        onClick={onBack}
+        className="hidden sm:flex items-center ml-auto 
+        rounded-sm text-green-600 cursor-pointer"
+      >
+        <XMarkIcon className="size-6" />
       </button>
 
       {isEditing ? (
@@ -36,47 +52,66 @@ const ProductDetail = ({ product, onBack }) => {
             />
           </div>
           <div className="w-full md:w-2/3">
-            <h2 className="text-xl font-bold text-green-800 mb-2 capitalize">
+            <h2 className="text-xl font-bold text-gray-900 mb-2 capitalize">
               {product.productName}
             </h2>
-            <div className="space-y-2">
-              <p className="text-green-600">
-                <span className="font-medium">Mô tả:</span>{" "}
-                {product.productDesc || "Chưa có"}
-              </p>
-              <p className="text-green-600">
-                <span className="font-medium">Nguồn gốc:</span>{" "}
-                {product.productOrigin || "Chưa có"}
-              </p>
-              <p className="text-green-600">
-                <span className="font-medium">Danh mục:</span>{" "}
-                {Array.isArray(product.categoryId) ? product.categoryId.join(", ") : product.categoryId || "Chưa có"}
-              </p>
-              <div className="text-green-600">
-                <span className="font-medium">Loại:</span>
+            <div className="space-y-2  font-medium">
+              <div>
+                <span>Mô tả:</span> {product.productDesc || "Chưa có"}
+              </div>
+              <div>
+                <span>Nguồn gốc:</span> {product.productOrigin || "Chưa có"}
+              </div>
+              <div className="flex items-start">
+                <span className="w-24 text-gray-700">Danh mục: </span>
+                <div className="flex flex-col space-y-1">
+                  {product.categories && product.categories.length > 0 ? (
+                    product.categories.map((c, index) => (
+                      <span key={index} className="text-gray-700">
+                        {typeof c === "object" ? c.categoryName : c}
+                      </span>
+                    ))
+                  ) : (
+                    <span className="text-gray-700">Chưa có</span>
+                  )}
+                </div>
+              </div>
+              <div>
+                <span>Loại:</span>
                 {!product.variants || product.variants.length === 0 ? (
                   <span> Chưa có</span>
                 ) : (
-                  <ul className="list-disc pl-6 mt-1">
-                    {product.variants.map((variant, index) => (
-                      <li key={index}>
-                        {variant.value} {variant.unit} - {variant.price}đ (Tồn:{" "}
+                  product.variants.map((variant, index) => (
+                    <div
+                      key={index}
+                      className="flex items-center rounded-sm shadow-sm my-2 justify-between p-2"
+                    >
+                      <span className="text-gray-700">
+                        {variant.value} {variant.unitName} - {variant.price}đ (Kho:{" "}
                         {variant.initStock})
-                      </li>
-                    ))}
-                  </ul>
+                      </span>
+                      <button
+                        type="button"
+                        // onClick={() => handleDeleteVariant(index)}
+                        className="p-1 text-red-600 hover:text-red-800"
+                        // disabled={loading}
+                      >
+                        <TrashIcon className="size-4" />
+                      </button>
+                    </div>
+                  ))
                 )}
               </div>
             </div>
-            <div className="flex gap-2 mt-4">
+            <div className="flex gap-2 mt-4 ">
               <button
                 onClick={() => setIsEditing(true)}
-                className="flex items-center gap-1 px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-800"
+                className="flex items-center gap-1 px-3 py-1 bg-blue-600 text-white cursor-pointer rounded hover:bg-blue-800"
               >
                 <PencilIcon className="size-5" />
                 Sửa
               </button>
-              <button className="flex items-center gap-1 px-3 py-1 bg-red-600 text-white rounded hover:bg-red-800">
+              <button className="flex items-center gap-1 px-3 py-1 bg-red-600 text-white cursor-pointer rounded hover:bg-red-800">
                 <TrashIcon className="size-5" />
                 Xóa
               </button>
