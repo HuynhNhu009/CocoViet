@@ -53,7 +53,7 @@ public class AdminServiceImpl implements IAdminService {
 
     @Autowired
     IRetailerRepository iRetailerRepository;
-    
+
     @Override
     public List<CustomerDTO> getAllCustomers() {
         return iCustomerMapper.toCustomerDTOList(icustomerRepository.findAll());
