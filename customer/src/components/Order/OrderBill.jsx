@@ -121,7 +121,7 @@ function OrderBill(orderStore) {
     } catch (error) {
       console.error("Lỗi cập nhật đơn hàng:", error);
     }
-  };
+  };  
 
   return (
     <div className="">
@@ -135,7 +135,9 @@ function OrderBill(orderStore) {
                 <th className="p-3 text-sm  ">Ngày đặt</th>
                 <th className="p-3 text-sm ">Tổng tiền</th>
                 <th className="p-3 text-sm ">Trạng thái</th>
-                <th className="p-3 text-sm ">Hành động</th>
+                {["SHIPPING"].includes(statusActive) && (  
+                  <th className="p-3 text-sm ">Hành động</th>
+                )}
               </tr>
             </thead>
 
@@ -172,11 +174,8 @@ function OrderBill(orderStore) {
                       </td>
                       <td className="p-3">{totalPrice[item.orderId]} VND</td>
                       <td className="p-3">{statusName}</td>
-                      {["SHIPPING"].includes(statusActive) && (
-                        <td className="p-3 text-center text-sm">
-                          <button className="bg-orange-500 shadow-2xl rounded-sm text-white mr-1 px-2 py-1 ">
-                            Đã Giao Hàng
-                          </button>
+                      {["SHIPPING"].includes(statusActive) && (  
+                        <td className="p-3 hidden text-center text-sm">
                         </td>
                       )}
 
