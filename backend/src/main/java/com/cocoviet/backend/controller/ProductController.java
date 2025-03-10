@@ -89,6 +89,16 @@ public class ProductController {
                         .build());
     }
 
+    @DeleteMapping("/{productId}/{variantId}")
+    ResponseEntity<ResponseData> deleteVariant(@PathVariable("productId") String productId, @PathVariable("variantId") String variantId){
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ResponseData.builder()
+                        .data(productService.deleteVariants(productId, variantId))
+                        .msg("Delete variant Id: "+ variantId +" successfully!")
+                        .status("OK")
+                        .build());
+    }
+
     @GetMapping("/get-all")
     ResponseEntity<ResponseData> getAllProduct(){
         return ResponseEntity.status(HttpStatus.OK)
