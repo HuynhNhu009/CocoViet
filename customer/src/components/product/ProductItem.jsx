@@ -8,14 +8,11 @@ const ProductItem = ({
   variants,
   productImage,
 }) => {
-  console.log(variants);
   const [price, setprice] = useState(0);
 
   useEffect(() => {
     if (variants.length > 0) {
       variants.map((variant) => setprice(variant.price));
-
-      console.log(price);
     }
   }, [variants]);
 
@@ -37,9 +34,9 @@ const ProductItem = ({
           />
         </li>
         <div className="py-2 text-center mt-2">
-        <li className="text-lg font-semibold truncate max-w-full px-2 overflow-hidden whitespace-nowrap text-ellipsis">
-  {productName}
-</li>
+          <li className="text-lg font-semibold truncate max-w-full px-2 overflow-hidden whitespace-nowrap text-ellipsis">
+            {productName}
+          </li>
           <li className="font-light text-sm ">{price} VND</li>
           <li className="font-extralight text-xs mt-2 text-right pr-5">{retailerName}</li>
         </div>

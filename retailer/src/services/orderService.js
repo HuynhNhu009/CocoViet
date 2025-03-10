@@ -18,7 +18,5 @@ export const orderAPI = {
           statusCode: statusCode 
       }
   });    return response.data;
-  },
-
-  
+  },  
 };

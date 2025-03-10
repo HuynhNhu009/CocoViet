@@ -15,6 +15,8 @@ import {
   setStatus,
   setCategory,
   setUnits,
+  setRevenue,
+  setLoading,
 } from "../redux/retailerSlice";
 import { categoryApi } from "../services/categoryService";
 import { orderAPI } from "../services/orderService";
@@ -127,6 +129,33 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
+    fetchOrder();
+    const interval = setInterval(() => {
+      fetchOrder();
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [loadOrder]);
+
+  const fetchRevenue = async () => {
+    try {
+      const responseData = await orderAPI.getRevenue(retailer.retailerId, "DELIVERED");
+      dispatch(setRevenue(responseData.data))            
+    } catch (error) {
+      console.log("Lỗi khi lấy Order:", error);
+      dispatch(setOrder([]))
+    } 
+    finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
+    if (retailer?.retailerId && statusStore) {
+      fetchRevenue();
+    }
+
+  }, [retailer, statusStore]);
+
+  useEffect(() => {
     const loadAllData = async () => {
       if (!retailer?.retailerId) {
         setIsDataLoaded(true);
@@ -138,7 +167,6 @@ const Dashboard = () => {
         await fetchUnits();                       // Then units
         await fetchStatus();                      // Then status
         await fetchProducts(categories);          // Pass categories to fetchProducts
-        await fetchOrder();                       // Finally orders
       } catch (error) {
         console.error("Error loading all data:", error);
       } finally {
@@ -149,17 +177,7 @@ const Dashboard = () => {
     loadAllData();
   }, [retailer, dispatch]);
 
-  useEffect(() => {
-    if (!isDataLoaded) return;
-
-    fetchOrder();
-
-    const interval = setInterval(() => {
-      fetchOrder();
-    }, 5000);
-
-    return () => clearInterval(interval);
-  }, [loadOrder, isDataLoaded]);
+ 
 
   useEffect(() => {
     if (orderStatus.length > 0) {
