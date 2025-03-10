@@ -63,7 +63,6 @@ const ProductList = () => {
       }    
   };
 
-  console.log(products);
   
   
 

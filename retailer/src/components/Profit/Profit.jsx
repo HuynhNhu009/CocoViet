@@ -39,7 +39,7 @@ const Profit = () => {
       setcountProduct(products.length);
     }
   }, [products]);
-
+  
   useEffect(() => {
     if (revenueStore && revenueStore.bestSellingProduct?.length > 0) {
       setRevenue(revenueStore);
@@ -105,6 +105,8 @@ const Profit = () => {
     }
   }, [orderStore, statusStore]);
 
+  console.log("order-----", orders);
+  
   const processData = (orders) => {
     const today = moment().format("YYYY-MM-DD");
     const yesterday = moment().subtract(1, "days").format("YYYY-MM-DD");
