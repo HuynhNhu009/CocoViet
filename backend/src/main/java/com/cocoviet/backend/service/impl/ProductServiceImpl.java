@@ -194,30 +194,25 @@ public class ProductServiceImpl implements IProductService {
             categoryName = productCategoryEntities.stream() //tra ve set<string>
                     .map(productCategory -> productCategory.getCategory().getCategoryName())//get tu productCategory
                     .collect(Collectors.toSet());
-
         }
-
-
         // UNIT
         if (productRequest.getProductVariants() != null) {
             //getVariants
             Map<String, ProductVariantEntity> existingVariantsMap = exsistProductVariants.stream()
-                    .collect(Collectors.toMap(variant -> variant.getUnit().getUnitId(), variant -> variant));
+                    .collect(Collectors.toMap(ProductVariantEntity::getVariantsId, variant -> variant));
 
             for (ProductVariantsRequest getProductVariants : productRequest.getProductVariants()) {
-                UnitEntity unitEntity = iUnitRepository.findById(getProductVariants.getUnitId())
-                        .orElseThrow(() -> new RuntimeException("Unit not found"));
-
                 ProductVariantEntity productVariantEntity;
 
-                if (existingVariantsMap.containsKey(getProductVariants.getUnitId())) {
-                    //if exist
-                    productVariantEntity = existingVariantsMap.get(getProductVariants.getUnitId());
+                if (getProductVariants.getVariantId() != null && existingVariantsMap.containsKey(getProductVariants.getVariantId())) {
+                    productVariantEntity = existingVariantsMap.get(getProductVariants.getVariantId());
                     productVariantEntity.setPrice(getProductVariants.getPrice());
                     productVariantEntity.setInitStock(getProductVariants.getInitStock());
                     productVariantEntity.setStock(getProductVariants.getInitStock());
                     productVariantEntity.setValue(getProductVariants.getValue());
                 } else {
+                    UnitEntity unitEntity = iUnitRepository.findById(getProductVariants.getUnitId())
+                            .orElseThrow(() -> new RuntimeException("Unit not found"));
 
                     productVariantEntity = ProductVariantEntity.builder()
                             .product(productEntity)
@@ -232,6 +227,7 @@ public class ProductServiceImpl implements IProductService {
             }
 
             iProducVariantRepository.saveAll(newProductVariantEntities);
+
 
             productVariantDTOS = productVariantMapper.toDTOSet(newProductVariantEntities);
             productEntity.setVariants(newProductVariantEntities);
@@ -268,6 +264,29 @@ public class ProductServiceImpl implements IProductService {
         productDTO.setVariants(productVariantDTOS);
 
         return productDTO;
+    }
+
+    @Override
+    public ProductDTO deleteVariants(String productId, String variantId) {
+        ProductEntity productEntity = iProductRepository.findById(productId).orElseThrow(() -> new RuntimeException("Product not found"));
+        ProductVariantEntity productVariantEntity = iProducVariantRepository.findById(variantId).orElseThrow(() -> new RuntimeException("Variant not found"));
+
+        iProducVariantRepository.deleteById(productVariantEntity.getVariantsId());
+        //relationship category
+        Set<ProductCategoryEntity> productCategoryEntities = iproductCategoryRepository.findByProduct(productEntity);
+        Set<String> categoryName = productCategoryEntities.stream() //tra ve set<string>
+                .map(productCategory -> productCategory.getCategory().getCategoryName())//get tu productCategory
+                .collect(Collectors.toSet());
+
+        //map productVariantEntity to productVariantDTO
+        Set<ProductVariantDTO> productVariantDTOS = productVariantMapper.toDTOSet(productEntity.getVariants());
+
+        ProductDTO productDTO = iProductMapper.toProductDTO(productEntity);
+        productDTO.setCategoryName(categoryName);
+        productDTO.setVariants(productVariantDTOS);
+
+        return productDTO;
+
     }
 
     @Override
