@@ -23,13 +23,27 @@ export const productApi = {
       });
       
       return response.data;
-    
   },
 
-  updateProduct: async (productData, imageFile) => {
+  updateProduct: async (productId ,productData, imageFile) => {
     const formData = new FormData()
-    
+     formData.append("product", JSON.stringify(productData));
 
-    return 
+     if(imageFile){
+      formData.append("image", imageFile);
+    }
+    const response = await api.patch(`/products/${productId}`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response.data ;
   }
 };
+
+
+// {
+//   variants: {
+//     new: [{ unitId, value, price, initStock }, ...], 
+//     changed: [{ variantId, unitId, ... }, ...] 
+// }
