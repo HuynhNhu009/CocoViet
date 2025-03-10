@@ -63,9 +63,6 @@ const ProductList = () => {
       }    
   };
 
-  
-  
-
   return (
     <>
       {products.length > 0 ? (

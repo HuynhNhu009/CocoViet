@@ -1,14 +1,13 @@
-import ProductSearch from "./ProductSearch";
-import ProductItem from "./ProductItem";
-import { useSelector, useDispatch } from "react-redux";
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { setProductDetail } from "../../redux/productSlice";
-import { useNavigate } from "react-router-dom";
 import { BuildingStorefrontIcon } from "@heroicons/react/24/outline";
-import { orderAPI } from "../../services/orderService";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
+import Swal from 'sweetalert2';
 import { setCreateOrder } from "../../redux/orderSlice";
-import Swal from 'sweetalert2'
+import { setProductDetail } from "../../redux/productSlice";
+import { orderAPI } from "../../services/orderService";
+import { productAPI } from "../../services/productService";
+import ProductItem from "./ProductItem";
 
 const ProductDetail = () => {
   //api
@@ -29,7 +28,7 @@ const ProductDetail = () => {
   const dispatch = useDispatch();
 
   const productDetail = useSelector(
-    (state) => state.ProductStore.productDetail || []
+    (state) => state.ProductStore.productDetail 
   );
   const productStore = useSelector(
     (state) => state.ProductStore.productStore || []
@@ -38,15 +37,30 @@ const ProductDetail = () => {
   const customer = useSelector(
     (state) => state.CustomerStore.customer || []
   );
-
+  
   useEffect(() => {
-    if (productDetail != {}) {
-      setProducts(productDetail);      
+    if (!productDetail || Object.keys(productDetail).length === 0) {
+      
+      const fetchProduct = async () => {
+        try {
+          const response = await productAPI.getByProductId(productId);          
+          setProducts(response.data);
+          dispatch(setProductDetail(response.data));
+        } catch (error) {
+          console.error("Lỗi khi lấy thông tin sản phẩm:", error);
+        }
+      };
+      fetchProduct();
+    } else {
+      setProducts(productDetail);
     }
   }, [productDetail]);
 
-  const [selectVariant, setSelectVariant] = useState(productDetail.variants[0]);
+  const [selectVariant, setSelectVariant] = useState();
 
+
+  console.log("productDetail", productDetail);
+  
   //quantity
   const [quantity, setQuantity] = useState(1); 
 
@@ -103,8 +117,6 @@ const ProductDetail = () => {
     }
   };
   
-
-
   return (
     <div className="  flex flex-col justify-center align-middle font-medium px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw] my-8">
       <div className="mb-5 text-sm ">
@@ -146,7 +158,7 @@ const ProductDetail = () => {
               </span>
             ))}
           </div>
-          <p className="text-green-600 font-bold text-4xl ">{selectVariant.price} VND</p>
+          <p className="text-green-600 font-bold text-4xl ">{selectVariant?.price} VND</p>
           <div>
             <span>Số lượng: </span>
             <input
