@@ -228,11 +228,11 @@ public class ProductServiceImpl implements IProductService {
 
             iProducVariantRepository.saveAll(newProductVariantEntities);
 
-
-            productVariantDTOS = productVariantMapper.toDTOSet(newProductVariantEntities);
             productEntity.setVariants(newProductVariantEntities);
-
             iProductRepository.save(productEntity);
+
+            productVariantDTOS = productVariantMapper.toDTOSet(productEntity.getVariants());
+
         } else {
             productVariantDTOS = productVariantMapper.toDTOSet(productEntity.getVariants());
         }
