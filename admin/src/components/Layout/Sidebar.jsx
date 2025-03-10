@@ -1,18 +1,27 @@
 import {
+  BuildingStorefrontIcon,
   CircleStackIcon,
   CubeIcon,
-  UsersIcon ,
-  BuildingStorefrontIcon,
-  DocumentTextIcon 
+  DocumentTextIcon,
+  UsersIcon
 } from "@heroicons/react/24/outline";
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const Sidebar = () => {
-  const navItems = [
 
+  const navigate = useNavigate();
+
+  const navItems = [
+    {
+      label: "Trang chủ",
+      icon: <CubeIcon className="size-5" />,
+      path:"/"
+    },
     {
       label: "Sản phẩm",
       icon: <CubeIcon className="size-5" />,
+      path:"/products"
     },
     {
       label: "Bài viết",
@@ -31,6 +40,12 @@ const Sidebar = () => {
       icon: <CircleStackIcon className="size-5" />,
     },
   ];
+
+  const handleNavigate = (path) => {
+    console.log(path);
+    
+    navigate(path);
+  }
 
   return (
     <>
@@ -53,7 +68,9 @@ const Sidebar = () => {
       <div className="sticky top-30 max-h-100 hidden lg:block lg:w-64 flex-shrink-0 bg-white p-5 rounded-lg shadow-md">
         <nav className="flex flex-col gap-3">
           {navItems.map((item, index) => (
-            <div key={index} className="flex items-center gap-2 py-2 px-4 bg-gray-100 rounded-md">
+            <div key={index} 
+            onClick={() => handleNavigate(item.path)}
+            className="flex items-center gap-2 py-2 px-4 bg-gray-100 rounded-md">
               {item.icon}
               <span>{item.label}</span>
             </div>

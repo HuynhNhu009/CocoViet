@@ -6,9 +6,8 @@ const Dashboard = () => {
   
 
   return (
-    <div className=" flex mt-6">
-      <Sidebar />
-      <DashboardContent />
+    <div className=" bg-amber-500">
+      {/* <DashboardContent /> */}
     </div>
   );
 };
