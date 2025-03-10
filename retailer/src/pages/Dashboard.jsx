@@ -1,4 +1,3 @@
-import { Bars3Icon } from "@heroicons/react/24/outline";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import AddProductForm from "../components/Product/AddProductForm";
@@ -21,6 +20,7 @@ import { orderAPI } from "../services/orderService";
 import { productApi } from "../services/productService";
 import { statusAPI } from "../services/statusService";
 import { unitApi } from "../services/unitService";
+import { Bars3Icon } from "@heroicons/react/24/outline";
 
 const Dashboard = () => {
   const dispatch = useDispatch();
@@ -35,7 +35,7 @@ const Dashboard = () => {
 
   const [activeTab, setActiveTab] = useState("orders");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [label, setLable] = useState("Đơn hàng");
+  const [label, setLabel] = useState("Đơn hàng");
   const [getOrderStatus, setGetOrderStatus] = useState([]);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
 
@@ -44,11 +44,11 @@ const Dashboard = () => {
       const responseData = await categoryApi.getAllCategory();
       console.log("Categories from API:", responseData);
       dispatch(setCategory(responseData.data));
-      return responseData.data; // Return categories directly
+      return responseData.data;
     } catch (error) {
       console.error("Lỗi khi lấy danh mục (category):", error);
       dispatch(setCategory([]));
-      return []; // Return empty array on error
+      return [];
     }
   };
 
@@ -74,42 +74,40 @@ const Dashboard = () => {
     }
   };
 
-  const fetchProducts = async (categories) => {
+  const fetchProducts = async (categories = categoryStore) => {
     try {
       const responseData = await productApi.getProductByRetailerId(retailer.retailerId);
       console.log("Products===========:", responseData);
-      if (responseData.data !== null) {
-        const formattedProducts = responseData.data.map((product) => ({
-          id: product.productId,
-          productName: product.productName,
-          productDesc: product.productDesc,
-          productOrigin: product.productOrigin,
-          productImage: product.productImage,
-          categories:
-            product.categoryName && Array.isArray(product.categoryName)
-              ? product.categoryName.map((name) => {
-                  const matchedCategory = categories.find(
-                    (cat) => cat.categoryId === name
-                  );
-                  console.log("fetchProduct:", matchedCategory);
-                  return matchedCategory?.categoryId && matchedCategory?.categoryName
-                    ? {
-                        categoryId: matchedCategory.categoryId,
-                        categoryName: matchedCategory.categoryName,
-                      }
-                    : "Default";
-                })
-              : ["Default"],
-          variants: product.variants.map((v) => ({
-            ...v,
-            unitName: v.unitName || "Default",
-          })),
-          retailerName: product.retailerName,
-          createdAt: product.createdAt,
-        }));
-        dispatch(setProducts(formattedProducts));
-        console.log("Products FFFF:", formattedProducts);
-      }
+      const productData = Array.isArray(responseData.data) ? responseData.data : [];
+      const formattedProducts = productData.map((product) => ({
+        id: product.productId,
+        productName: product.productName,
+        productDesc: product.productDesc,
+        productOrigin: product.productOrigin,
+        productImage: product.productImage,
+        categories:
+          product.categoryName && Array.isArray(product.categoryName)
+            ? product.categoryName.map((name) => {
+                const matchedCategory = categories.find(
+                  (cat) => cat.categoryId === name
+                );
+                return matchedCategory?.categoryId && matchedCategory?.categoryName
+                  ? {
+                      categoryId: matchedCategory.categoryId,
+                      categoryName: matchedCategory.categoryName,
+                    }
+                  : { categoryId: "default", categoryName: "Default" };
+              })
+            : [{ categoryId: "default", categoryName: "Default" }],
+        variants: product.variants.map((v) => ({
+          ...v,
+          unitName: v.unitName || "Default",
+        })),
+        retailerName: product.retailerName,
+        createdAt: product.createdAt,
+      }));
+      dispatch(setProducts(formattedProducts));
+      console.log("Products FFFF:", formattedProducts);
     } catch (error) {
       console.error("Lỗi khi lấy sản phẩm:", error);
       dispatch(setProducts([]));
@@ -134,11 +132,11 @@ const Dashboard = () => {
       }
 
       try {
-        const categories = await fetchCategory(); // Get categories first
-        await fetchUnits();                       // Then units
-        await fetchStatus();                      // Then status
-        await fetchProducts(categories);          // Pass categories to fetchProducts
-        await fetchOrder();                       // Finally orders
+        const categories = await fetchCategory();
+        await fetchUnits();
+        await fetchStatus();
+        await fetchProducts(categories); // Truyền categories mới nhất
+        await fetchOrder();
       } catch (error) {
         console.error("Error loading all data:", error);
       } finally {
@@ -172,7 +170,7 @@ const Dashboard = () => {
 
   const addProduct = async () => {
     try {
-      await fetchProducts(categoryStore); // Use current categoryStore after add
+      await fetchProducts(); // Tải lại sản phẩm sau khi thêm
       setActiveTab("products");
       setIsSidebarOpen(false);
     } catch (error) {
@@ -190,7 +188,13 @@ const Dashboard = () => {
 
   const tabContent = {
     orders: <OrderList orderStatus={getOrderStatus} />,
-    products: <ProductList products={products} categories={categoryStore} />,
+    products: (
+      <ProductList
+        products={products}
+        categories={categoryStore}
+        fetchProducts={fetchProducts}
+      />
+    ),
     "add-product": (
       <AddProductForm
         onAddProduct={addProduct}
@@ -217,12 +221,12 @@ const Dashboard = () => {
           activeTab={activeTab}
           setActiveTab={setActiveTab}
           label={label}
-          setLabel={setLable}
+          setLabel={setLabel}
           isOpen={isSidebarOpen}
           setIsOpen={setIsSidebarOpen}
         />
         <div className="flex-1 sm:mt-8">
-          <div className="bg-white px-4 sm:px-6 sm:rounded-lg sm:shadow-md">
+          <div className="bg-white px-4 mb-10 sm:px-6 sm:rounded-lg sm:shadow-md">
             <div className="flex items-center pt-4 pb-2">
               <button
                 onClick={() => setIsSidebarOpen(true)}

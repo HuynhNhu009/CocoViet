@@ -7,14 +7,11 @@ import {
 import React, { useEffect, useState } from "react";
 import ProductEdit from "./ProductEdit";
 
-const ProductDetail = ({ product, onBack }) => {
-  const [isEditing, setIsEditing] = useState(false);
+const ProductDetail = ({ product, onBack, onEdit }) => {
 
-  // console.log("CategoryID :", product.categories);
   console.log("Product Detail:", product);
 
   useEffect(() => {
-    setIsEditing(false);
   }, [product]);
 
   return (
@@ -36,7 +33,7 @@ const ProductDetail = ({ product, onBack }) => {
         <XMarkIcon className="size-6" />
       </button>
 
-      {isEditing ? (
+      {!onEdit ? (
         <ProductEdit
           product={product}
           onSave={() => setIsEditing(false)}
@@ -105,7 +102,7 @@ const ProductDetail = ({ product, onBack }) => {
             </div>
             <div className="flex gap-2 mt-4 ">
               <button
-                onClick={() => setIsEditing(true)}
+                onClick={onEdit}
                 className="flex items-center gap-1 px-3 py-1 bg-blue-600 text-white cursor-pointer rounded hover:bg-blue-800"
               >
                 <PencilIcon className="size-5" />

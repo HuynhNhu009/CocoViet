@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const UploadImage = ({ onImageChange, disabled }) => {
+const UploadImage = ({className, onImageChange, disabled }) => {
   const [preview, setPreview] = useState(null);
 
   const handleImageChange = (e) => {
@@ -18,10 +18,10 @@ const UploadImage = ({ onImageChange, disabled }) => {
   };
 
   return (
-    <div className="relative">
-      <label className="block text-sm font-medium text-gray-700">
+    <div className={`${className} relative`}>
+      {/* <label className="block text-sm font-medium text-gray-700">
         Hình ảnh sản phẩm
-      </label>
+      </label> */}
       <input
         type="file"
         accept="image/*"
