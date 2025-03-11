@@ -5,7 +5,8 @@ const ProductItem = ({ products }) => {
 
   const handleRowClick = (productId) => {
     setSelectedProduct(productId === selectedProduct ? null : productId);
-  };
+  };  
+  
 
   return (
     <>

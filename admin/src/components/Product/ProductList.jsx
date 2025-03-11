@@ -9,14 +9,11 @@ const ProductList = () => {
   const productSearch = useSelector((state) => state.AdminStore.productSearch);
   const productCategory = useSelector((state) => state.AdminStore.productCategory);
   const [products, setproducts] = useState([]);
-  const dispatch = useDispatch();
-
-  console.log("product", productStore);
-  
+  const dispatch = useDispatch();  
 
   useEffect(() => {
     if (productStore.length > 0) {
-      setproducts(productStore);
+      setproducts(productStore);  
     }
   }, [productStore]);
 
@@ -47,7 +44,6 @@ const ProductList = () => {
             dispatchFunction={(data) => dispatch(setPoductSearch(data))}
             setActive={(value) => dispatch(setActive(value))}
             navigateTo="/products"
-
           />
         </div>
       </div>

@@ -53,6 +53,13 @@ const Retailer = ({ retailers }) => {
                     </button>
                   </td>
                 </tr>
+                {selectedretailer === retailer.retailerId && (
+                <tr className="bg-gray-100  mb-4">
+                  <td colSpan={5} className="p-3 text-gray-700 px-18">
+                    
+                  </td>
+                </tr>
+              )}
               </React.Fragment>
             ))
           ) : (

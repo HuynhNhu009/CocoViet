@@ -16,7 +16,11 @@ const Category = () => {
     if (categoryStore) {
       setCategories(categoryStore);
     }
-  }, [categoryStore]);
+    if (!categoryActive) {
+      dispatch(setCategoryActive("allProduct"));
+      dispatch(setPoductCategory(productStore));
+    }
+  }, [categoryStore, categoryActive, dispatch, productStore]);
 
   const handleClickCategory = async (categoryId) => {    
     try {
@@ -37,7 +41,7 @@ const Category = () => {
     <div className="ml-3 flex items-center gap-4">
       <select
         className="bg-white border-2  rounded-sm px-1 py-1.5 shadow-md text-gray-700"
-        value={categoryActive || ""}
+        value={categoryActive || "allProduct"}
         onChange={(e) => handleClickCategory(e.target.value)}
       >
         <option value="allProduct" default>Tất cả sản phẩm</option>

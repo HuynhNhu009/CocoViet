@@ -8,7 +8,7 @@ import {
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { setCustomer, setProduct, setRetailer } from "../../redux/adminSlice";
+import { setCategoryActive, setCustomer, setProduct, setRetailer } from "../../redux/adminSlice";
 import { productAPI } from "../../services/productService";
 import { customerApi } from "../../services/customerService";
 import { retailerAPI } from "../../services/retailerService";
@@ -32,7 +32,7 @@ const Sidebar = () => {
       }
     };
     products();
-  },[dispatch]);
+  },[dispatch, sideBarActive]);
 
   useEffect(()=>{
     const customers = async () => {
@@ -95,6 +95,9 @@ const Sidebar = () => {
   ];
 
   const handleNavigate = (path) => {    
+    if(path === "/products"){
+      dispatch(setCategoryActive("allProduct"));
+    }
     navigate(path);
   }
 

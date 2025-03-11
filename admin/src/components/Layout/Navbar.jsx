@@ -24,7 +24,8 @@ const Navbar = () => {
         >
           <Link to="/profile">
             <p className="flex items-center cursor-pointer">
-              Xin chào <span className="pl-1 inline-block w-[50px] sm:w-auto truncate">User</span>
+              {/* Xin chào <span className="pl-1 inline-block w-[50px] sm:w-auto truncate">User</span> */}
+              Admin
             </p>
           </Link>
           {isHovered && (
