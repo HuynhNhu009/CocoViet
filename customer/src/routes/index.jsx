@@ -9,6 +9,7 @@ import Profile from "../pages/Profile";
 import About from "../pages/About";
 import Order from "../pages/Order";
 import Posts from "../pages/Posts";
+import PostDetail from "../components/Post/PostDetail";
 
 export const routes = [
   {
@@ -51,6 +52,10 @@ export const routes = [
       {
         path: "blog",
         element: <Posts/>
+      },
+      {
+        path: "blog/:blogId",
+        element: <PostDetail/>
       },
       
     ],

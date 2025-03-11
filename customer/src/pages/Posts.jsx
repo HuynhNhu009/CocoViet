@@ -5,7 +5,7 @@ import PostList from '../components/Post/PostList';
 const Posts = () => {
     return (
         <div>
-            <LatestPost></LatestPost>
+            {/* <LatestPost></LatestPost> */}
             <PostList></PostList>
         </div>
     );

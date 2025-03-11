@@ -1,53 +1,51 @@
-//import React from 'react';
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 
 const PostDetail = () => {
-   
-    const { id } = useParams(); // Lấy id từ URL
+  const { postId } = useParams();
+  const postDetail = useSelector((state) => state.PostStore.postDetail);
 
-    const posts = useSelector((state) => state.PostStore.post);
-
-    const post = posts.find((b) => b.id === parseInt(id));
-
-    const formatDate = (dateString) => {
-        const date = new Date(dateString);
-        return date.toLocaleDateString("vi-VN", {
-          year: "numeric",
-          month: "long",
-          day: "numeric",
-        });
-    };
-
-    if (!post) {
-        return (
-            <div className="text-3xl font-bold opacity">
-                Bài viết không tồn tại!
-            </div>
-        )
-    
-    }
-
-
+  if (!postDetail) {
     return (
-        <div >
-            <div className='lg:w-[80%] w-[90%] md:my-[30px] md:py-[30px] my-[30px] mx-[20px] px-[20px] bg-white border border-gray-300 shadow rounded'>
-                <h2 className='flex flex-col lg:text-4xl md:text-3xl text-2xl font-bold mb-[10px]'>{post.postTitle}</h2>
-                <div className='flex flex-row mb-[10px] opacity-70'>
-                    <h3 className='lg:text-xl md:text-lg text-sm text-left  w-1/2 font-bold opacity-70'>Tác giả: {post.authorPost}</h3>
-                    <h3 className='lg:text-xl md:text-lg text-sm text-right w-1/2 mr-[5px] opacity-50'>{formatDate(post.publishTime)}</h3>
-                </div>
-                <img
-                    src= {post.postImageUrl}
-                    alt="Hình minh hoạ cho bài viết"
-                    className = "lg:w-full rounded aspect-video mb-[20px] shadow"
-                ></img>
-                <p className='whitespace-pre-line break-word lg:text-lg md:text-base text-sm mb-[10px]'>
-                    {post.postContent}
-                </p>
-            </div>
-        </div>
+      <div className="flex items-center justify-center min-h-screen">
+        <p className="text-xl text-gray-600">Bài viết không tồn tại!</p>
+      </div>
     );
+  }
+
+  return (
+    <div className="flex flex-col items-center bg-gray-50 py-10 min-h-screen">
+      <div className="lg:w-[70%] w-[90%] bg-white p-6 shadow-lg rounded-lg">
+        {/* Tiêu đề */}
+        <h2 className="text-3xl text-center font-extrabold text-gray-800 mb-4">
+          {postDetail.postTitle} 
+        </h2>
+
+        <div className="flex justify-between text-gray-600 text-sm mb-4">
+          <span className="font-semibold">
+            Tác giả: {postDetail.authorPost}
+          </span>
+          <span>
+            {postDetail.publishTime
+              ?.split("T")[0]
+              .split("-")
+              .reverse()
+              .join("/") || "N/A"}
+          </span>
+        </div>
+
+        <img
+          src="https://th.bing.com/th/id/R.21f948ddaf5ceb8af38722b6525f9576?rik=QXJDXfWA6c5bfw&riu=http%3a%2f%2fimua.com.vn%2fimages%2fAlbum%2fTrai-dua-tuoi-75.jpg&ehk=J0LhHGVtSH9w9QxAw%2fhxbidliOyBUiI6qjp8i2YcWJQ%3d&risl=&pid=ImgRaw&r=0"
+          alt="Hình minh họa cho bài viết"
+          className="w-full h-[400px] object-contain rounded-lg shadow-md"
+        />
+
+        <p className="text-lg text-gray-700 mt-6 leading-relaxed">
+          {postDetail.postContent}
+        </p>
+      </div>
+    </div>
+  );
 };
 
 export default PostDetail;

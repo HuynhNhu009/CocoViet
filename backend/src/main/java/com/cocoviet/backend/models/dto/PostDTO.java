@@ -18,7 +18,9 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class PostDTO {
-    
+
+    private String postId;
+
     String postTitle;
 
     String postContent;

@@ -5,6 +5,7 @@ import SearchBar from "../SearchBar";
 import Retailer from "./Retailer";
 const RetailerList = () => {
   const retailerStore = useSelector((state) => state.AdminStore.retailerStore);
+  const retailerSearch = useSelector((state) => state.AdminStore.retailerSearch);
 
   const [retailers, setRetailers] = useState([]);
   const dispatch = useDispatch();
@@ -15,18 +16,24 @@ const RetailerList = () => {
     }
   }, [retailerStore]);
 
+  useEffect(() => {
+    if (retailerSearch.length > 0) {
+      setRetailers(retailerSearch);
+    }
+  }, [retailerSearch]);
+
   return (
     <>
       <div className="flex items-center justify-between gap-4">
-        <div className="flex-1 mr-3">
+        <div className="flex-1 mx-3">
           <SearchBar
-            placeholder="Search for customer..."
+            placeholder="Search for retailer..."
             dataList={retailerStore}
             parameter1={"retailerName"}
             parameter2={"retailerAddress"}
             dispatchFunction={(data) => dispatch(setRetailerSearch(data))}
             setActive={(value) => dispatch(setActive(value))}
-            navigateTo="/products"
+            navigateTo="/retailers"
           />
         </div>
       </div>

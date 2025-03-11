@@ -6,7 +6,7 @@ const Blog = () => {
   
   return (
     <div className="w-full px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw] mb-8">
-      <PostList />
+      {/* <PostList /> */}
     </div>
   );
 };

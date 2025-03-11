@@ -5,6 +5,7 @@ import { setActive, setCustomerSearch } from "../../redux/adminSlice";
 import SearchBar from "../SearchBar";
 const CustomerList = () => {
   const customerStore = useSelector((state) => state.AdminStore.customerStore);
+  const customerSearch = useSelector((state) => state.AdminStore.customerSearch);
 
   const [customers, setCustomers] = useState([]);
   const dispatch = useDispatch();
@@ -15,10 +16,17 @@ const CustomerList = () => {
     }
   }, [customerStore]);
 
+  useEffect(() => {
+    if (customerSearch.length > 0) {
+      setCustomers(customerSearch);
+    }
+  }, [customerSearch]);
+
+
   return (
     <>
       <div className="flex items-center justify-between gap-4">
-        <div className="flex-1 mr-3">
+        <div className="flex-1 mx-3">
           <SearchBar
             placeholder="Search for customer..."
             dataList={customerStore}
@@ -26,7 +34,7 @@ const CustomerList = () => {
             parameter2={"customerAddress"}
             dispatchFunction={(data) => dispatch(setCustomerSearch(data))}
             setActive={(value) => dispatch(setActive(value))}
-            navigateTo="/products"
+            navigateTo="/customers"
           />
         </div>
       </div>

@@ -46,7 +46,7 @@ const Sidebar = () => {
       }
     };
     customers();
-  },[dispatch]);
+  },[dispatch, sideBarActive]);
 
   useEffect(()=>{
     const retailers = async () => {
@@ -60,7 +60,7 @@ const Sidebar = () => {
       }
     };
     retailers();
-  },[dispatch]);
+  },[dispatch, sideBarActive]);
 
   const navItems = [
     {
