@@ -13,7 +13,7 @@ const Retailer = ({ retailers }) => {
         <thead>
           <tr className="text-center bg-black text-white uppercase">
             <th className="p-3 text-sm">STT</th>
-            <th className="p-3 text-sm">Tên khách hàng</th>
+            <th className="p-3 text-sm">Tên cửa hàng</th>
             <th className="p-3 text-sm">Email</th>
             <th className="p-3 text-sm">Địa chỉ</th>
             <th className="p-3 text-sm">Số điện thoại</th>
@@ -57,7 +57,7 @@ const Retailer = ({ retailers }) => {
             ))
           ) : (
             <tr>
-              <td colSpan={5} className="p-3 text-center text-gray-500">
+              <td colSpan={7} className="p-3 text-center text-gray-500">
                 Không có khách hàng nào.
               </td>
             </tr>

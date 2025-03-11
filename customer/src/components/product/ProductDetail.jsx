@@ -56,7 +56,7 @@ const ProductDetail = () => {
     }
   }, [productDetail]);
 
-  const [selectVariant, setSelectVariant] = useState();
+  const [selectVariant, setSelectVariant] = useState(productDetail.variants[0]);
   
   //quantity
   const [quantity, setQuantity] = useState(1); 

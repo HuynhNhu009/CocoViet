@@ -135,7 +135,7 @@ function OrderBill(orderStore) {
                 <th className="p-3 text-sm  ">Ngày đặt</th>
                 <th className="p-3 text-sm ">Tổng tiền</th>
                 <th className="p-3 text-sm ">Trạng thái</th>
-                {["SHIPPING"].includes(statusActive) && (  
+                {!["SHIPPING"].includes(statusActive) && (  
                   <th className="p-3 text-sm ">Hành động</th>
                 )}
               </tr>

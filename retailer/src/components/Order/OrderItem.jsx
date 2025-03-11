@@ -222,7 +222,7 @@ const OrderItem = ({ orderStatus }) => {
                         </button>
                       </td>
                     )}
-                    {["CANCELLED"].includes(statusActive) && (
+                    {["CANCELLED", "DELIVERED"].includes(statusActive) && (
                       <td className="p-3 text-center text-sm">
                         <button
                           // onClick={() => handleDelivered(item.orderId)}

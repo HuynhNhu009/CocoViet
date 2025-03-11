@@ -57,7 +57,7 @@ const Customer = ({ customers }) => {
             ))
           ) : (
             <tr>
-              <td colSpan={5} className="p-3 text-center text-gray-500">
+              <td colSpan={7} className="p-3 text-center text-gray-500">
                 Không có khách hàng nào.
               </td>
             </tr>
