@@ -1,7 +1,9 @@
 import { Navigate } from "react-router-dom";
 import Layout from "../components/Layout/Layout";
 import Dashboard from "../page/Dashboard";
-import ProductList from "../components/Product/ProductList";
+import Products from "../page/Products";
+import Customers from "../page/Customers";
+import Retailers from "../page/Retailers";
 export const routes = [
   {
     path: "/",
@@ -16,7 +18,19 @@ export const routes = [
       {
         path:"products",
         element: (
-         <ProductList />
+         <Products />
+        ),
+      },
+      {
+        path:"customers",
+        element: (
+         <Customers />
+        ),
+      },
+      {
+        path:"retailers",
+        element: (
+         <Retailers />
         ),
       },
      

@@ -1,30 +1,9 @@
 import { BellIcon } from "@heroicons/react/24/outline";
 import React, { useState } from "react";
-import { useEffect } from "react";
 import { Link } from "react-router-dom";
-import { productAPI } from "../../services/productService";
-import { useDispatch, useSelector } from "react-redux";
-import { setProduct } from "../../redux/adminSlice";
-
 
 const Navbar = () => {
   const [isHovered, setIsHovered] = useState(false);
-  const dispatch = useDispatch();
-
-
-  useEffect(()=>{
-    const products = async () => {
-      try {
-        const response = await productAPI.getAllProducts();
-        if (response.data) {
-         dispatch(setProduct(response.data));
-        }
-      } catch (error) {
-        console.error("Error fetching status:", error);
-      }
-    };
-    products();
-  },[dispatch]);
 
   return (
     <div className="sticky top-0 z-50 bg-white flex justify-between items-center py-5 px-4 sm:px-[5vw] lg:px-[7vw] shadow-md">

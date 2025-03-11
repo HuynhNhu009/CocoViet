@@ -27,7 +27,5 @@ export const removeDiacritics = (str) => {
       console.log("not found");
       
     }
-  
-      
   };
   
