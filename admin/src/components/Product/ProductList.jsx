@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import Category from "./Category";
+import FilterProductByCategory from "./FilterProductByCategory";
+import FilterProductByRetailer from "./FilterProductByRetailer";
 import SearchBar from "./../SearchBar";
 import { useDispatch, useSelector } from "react-redux";
 import ProductItem from "./ProductItem";
@@ -34,7 +35,8 @@ const ProductList = () => {
   return (
     <>
       <div className="flex items-center justify-between gap-4">
-        <Category />
+        <FilterProductByCategory />
+        <FilterProductByRetailer />
         <div className="flex-1 mr-3">
           <SearchBar 
             placeholder="Search for products..."

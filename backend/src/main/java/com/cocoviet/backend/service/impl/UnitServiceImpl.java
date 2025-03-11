@@ -34,33 +34,38 @@ public class UnitServiceImpl implements IUnitService {
 
     @Override
     public UnitDTO addUnit(UnitRequest unitRequest, String retailerId) {
-        // Kiểm tra xem unit name đã tồn tại chưa
-        if (iUnitRepository.existsByUnitName(unitRequest.getUnitName())) {
-            throw new IllegalArgumentException("Unit name '" + unitRequest.getUnitName() + "' already exists");
-        }
 
-        // Tìm retailer dựa trên retailerId
         RetailerEntity retailer = iRetailerRepository.findById(retailerId)
                 .orElseThrow(() -> new IllegalArgumentException("Retailer not found with ID: " + retailerId));
+        //exist Unit
+        if (iUnitRepository.existsByUnitName(unitRequest.getUnitName())) {
+            //exist Retailer in Unit
+            if(iUnitRepository.existsByUnitNameAndRetailers_RetailerId(unitRequest.getUnitName(),retailer.getRetailerId())) {
+                throw new IllegalArgumentException("Unit name '" + unitRequest.getUnitName() + "' already exists");
+            }else {
+                UnitEntity existUnit = iUnitRepository.findByUnitName(unitRequest.getUnitName());
+                existUnit.getRetailers().add(retailer);
+                retailer.getUnits().add(existUnit);
+                iRetailerRepository.save(retailer);
+                iUnitRepository.save(existUnit);
+                return iUnitMapper.toUnitDTO(existUnit);
+            }
+            //not exist Unit
+        }else{
+            UnitEntity unitEntity = UnitEntity.builder()
+                    .unitName(unitRequest.getUnitName())
+                    .retailers(new HashSet<>())
+                    .build();
 
-        // Tạo UnitEntity từ UnitRequest
-        UnitEntity unitEntity = UnitEntity.builder()
-                .unitName(unitRequest.getUnitName())
-                .retailers(new HashSet<>()) // Khởi tạo Set<RetailerEntity>
-                .build();
+            unitEntity.getRetailers().add(retailer);
 
-        // Thiết lập mối quan hệ: thêm retailer vào unit
-        unitEntity.getRetailers().add(retailer);
+            retailer.getUnits().add(unitEntity);
 
-        // Cập nhật phía retailer (vì RetailerEntity là phía sở hữu @ManyToMany)
-        retailer.getUnits().add(unitEntity);
+            UnitEntity savedUnit = iUnitRepository.save(unitEntity);
+            iRetailerRepository.save(retailer);
 
-        // Lưu unit (và retailer sẽ được cập nhật thông qua cascade hoặc save riêng)
-        UnitEntity savedUnit = iUnitRepository.save(unitEntity);
-        iRetailerRepository.save(retailer); // Lưu retailer để cập nhật bảng trung gian
-
-        // Chuyển sang UnitDTO và trả về
-        return iUnitMapper.toUnitDTO(savedUnit);
+            return iUnitMapper.toUnitDTO(savedUnit);
+        }
     }
 
     @Override

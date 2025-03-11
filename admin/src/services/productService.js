@@ -19,4 +19,8 @@ export const productAPI = {
     const response = await api.get(`/products/${productId}`);
     return response.data;
   },
+  getProductByRetailerId: async (retialerID) => {
+    const response = await api.get(`/products/retailer/${retialerID}`);
+    return response.data;
+  },
 };

@@ -3,7 +3,7 @@ import { productAPI } from "../../services/productService";
 import { useDispatch, useSelector } from "react-redux";
 import { setcategory, setCategoryActive, setPoductCategory } from "../../redux/adminSlice";
 
-const Category = () => {
+const FilterProductByCategory  = () => {
   const [categories, setCategories] = useState([]);
   const dispatch = useDispatch();
   const categoryActive = useSelector(
@@ -55,4 +55,4 @@ const Category = () => {
   );
 };
 
-export default Category;
+export default FilterProductByCategory;
