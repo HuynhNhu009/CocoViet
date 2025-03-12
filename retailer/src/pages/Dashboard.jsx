@@ -18,6 +18,7 @@ import {
   setUnits,
   setRevenue,
   setLoading,
+  setPosts,
 } from "../redux/retailerSlice";
 import { categoryApi } from "../services/categoryService";
 import { orderAPI } from "../services/orderService";
@@ -25,6 +26,7 @@ import { productApi } from "../services/productService";
 import { statusAPI } from "../services/statusService";
 import { unitApi } from "../services/unitService";
 import { Bars3Icon } from "@heroicons/react/24/outline";
+import { postApi } from "../services/PostService";
 
 const Dashboard = () => {
   const dispatch = useDispatch();
@@ -133,9 +135,12 @@ const Dashboard = () => {
 
   const fetchPosts = async () => {
     try{  
-      // const responseData = await 
+      const responseData = await postApi.getPostByRetailerId(retailer.retailerId);
+     dispatch(setPosts(responseData.data))
+      console.log("Post===========",responseData.data, retailer.retailerId)
     }catch(error){
       console.error("Lỗi khi lấy Posts:", error);
+      dispatch(setPosts([]))
     }
   }
 
@@ -180,6 +185,7 @@ const Dashboard = () => {
         await fetchStatus();
         await fetchProducts(categories); // Truyền categories mới nhất
         await fetchOrder();
+        await fetchPosts();
       } catch (error) {
         console.error("Error loading all data:", error);
       } finally {
@@ -242,7 +248,7 @@ const Dashboard = () => {
       />
     ),
     profit: <Profit />,
-    post: <PostList retailer={retailer}/>,
+    post: <PostList retailer={retailer} posts={posts}/>,
   };
 
   return (

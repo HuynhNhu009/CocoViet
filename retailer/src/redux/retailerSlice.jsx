@@ -81,9 +81,8 @@ const retailerSlice = createSlice({
     },
 
     setPosts: (state, action)=>{
-      state.units = action.payload;
+      state.posts = action.payload;
     }
-
   },
 });
 

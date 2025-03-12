@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import CreatePost from "./CreatePost";
+import PostItem from "./PostItem";
 
-const PostList = ({retailer}) => {
+const PostList = ({ retailer, posts }) => {
   const [isAddPost, setIsAddPost] = useState(false);
 
   const handleAddPosts = () => {
@@ -12,17 +13,29 @@ const PostList = ({retailer}) => {
     setIsAddPost(false);
   };
 
+  console.log("Post List", posts);
+
   return (
-    <div>
-      {!isAddPost ? (
+    <div className="min-h-screen p-6"> {/* Adjusted min-h and added padding */}
+      {!isAddPost && (
         <button
           onClick={handleAddPosts}
-          className="px-3 py-1 bg-amber-300 rounded-2xl cursor-pointer hover:bg-amber-400 transition-colors"
+          className="px-3 py-1 bg-amber-300 rounded-2xl cursor-pointer hover:bg-amber-400 transition-colors mb-6"
         >
           Add
         </button>
+      )}
+      {!isAddPost ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6"> {/* 2-column grid */}
+          {posts.map((post) => (
+            <PostItem key={post.postId} post={post} /> // Used postId as key
+          ))}
+        </div>
       ) : (
-        <CreatePost retailerId={retailer?.retailerId} onCancel={handleCancelPosts} />
+        <CreatePost
+          retailerId={retailer?.retailerId}
+          onCancel={handleCancelPosts}
+        />
       )}
     </div>
   );
