@@ -15,6 +15,7 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -38,15 +39,14 @@ public class PostServiceImpl implements IPostService {
     IFileUpload iFileUpload;
 
     @Override
-    public PostDTO createPost(PostRequest postRequest)  {
+    public PostDTO createPost(PostRequest postRequest, MultipartFile imageFile) throws IOException {
 
         RetailerEntity retailerEntity = iretailerrepository.findById(postRequest.getRetailerId())
                 .orElseThrow(()-> new RuntimeException("Retailer not found."));
-
         PostEntity postEntity = PostEntity.builder()
                 .postTitle(postRequest.getPostTitle())
                 .postContent(postRequest.getPostContent())
-                .postImageUrl(postRequest.getPostImageFile())
+                .postImageUrl(iFileUpload.uploadFile(imageFile, "post"))
                 .retailer(retailerEntity)
                 .publishTime(LocalDateTime.now())
                 .build();

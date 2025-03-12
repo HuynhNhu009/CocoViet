@@ -1,13 +1,20 @@
 package com.cocoviet.backend.controller;
 
+import com.cocoviet.backend.models.dto.PostDTO;
+import com.cocoviet.backend.models.dto.ProductDTO;
 import com.cocoviet.backend.models.reponse.ResponseData;
 import com.cocoviet.backend.models.request.PostRequest;
+import com.cocoviet.backend.models.request.ProductRequest;
 import com.cocoviet.backend.service.IPostService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
@@ -18,15 +25,18 @@ public class PostController {
     @Autowired
     IPostService iPostService;
 
-    @PostMapping()
-    ResponseEntity<ResponseData> createPost(
-            @RequestBody @Valid PostRequest postRequest
+    @Autowired
+    private ObjectMapper objectMapper;
 
-        ) {
+    @PostMapping(value = "", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    ResponseEntity<ResponseData> createPost( @RequestPart("post") String postJson,@RequestPart("image") MultipartFile imageFile) throws IOException {
+
+        PostRequest postRequest = objectMapper.readValue(postJson, PostRequest.class);
+        PostDTO postDTO = iPostService.createPost(postRequest, imageFile);
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ResponseData.builder()
-                        .data(iPostService.createPost(postRequest))
+                        .data(postDTO)
                         .msg("Create post " + postRequest.getPostTitle() + "successfully.")
                         .status("OK")
                         .build());

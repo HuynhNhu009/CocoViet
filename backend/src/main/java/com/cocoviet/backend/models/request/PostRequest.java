@@ -30,8 +30,6 @@ public class PostRequest {
     @Size(min = 20, max = 5000, message = "Post content must be between 20 and 500 characters.")
     String postContent;
 
-    String postImageFile; // Nullable
-
     String retailerId; //
 
 }

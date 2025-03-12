@@ -3,7 +3,6 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import PropTypes from 'prop-types';
 
-//This component is used to display the latest post on the homepage
 const LatestPost = () => {
     const posts = useSelector((state) => state.PostStore.post);
     const navigate = useNavigate();
@@ -32,9 +31,9 @@ const LatestPost = () => {
                 className="relative w-full h-[350px] lg:h-[450px] rounded-lg overflow-hidden shadow-lg">
                 <div className="block w-full h-full">
                     <img 
-                        src={latestPost.imageUrl} 
+                        src="https://thumbs.dreamstime.com/b/coconuts-white-background-25912266.jpg"
                         alt={latestPost.title} 
-                        className="w-full h-full object-cover brightness-75"
+                        className="w-full h-full object-contain brightness-75"
                     />
                     <div className="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-b from-transparent to-black"></div>
                     <div className="absolute bottom-5 left-5 text-white">
