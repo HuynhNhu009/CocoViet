@@ -35,7 +35,7 @@ const PostDetail = () => {
         </div>
 
         <img
-          src="https://th.bing.com/th/id/R.21f948ddaf5ceb8af38722b6525f9576?rik=QXJDXfWA6c5bfw&riu=http%3a%2f%2fimua.com.vn%2fimages%2fAlbum%2fTrai-dua-tuoi-75.jpg&ehk=J0LhHGVtSH9w9QxAw%2fhxbidliOyBUiI6qjp8i2YcWJQ%3d&risl=&pid=ImgRaw&r=0"
+          src={postDetail.postImageUrl}
           alt="Hình minh họa cho bài viết"
           className="w-full h-[400px] object-contain rounded-lg shadow-md"
         />
