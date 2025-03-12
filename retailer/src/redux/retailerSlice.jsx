@@ -16,6 +16,7 @@ const initialState = {
   countOrder:0,
   loadOrder: false,
   loading: false,
+  posts: [],
 };
 
 const retailerSlice = createSlice({
@@ -34,7 +35,6 @@ const retailerSlice = createSlice({
     setRevenue: (state, action) => {
       state.revenueStore = action.payload;
     },
-
 
     setOrder: (state, action) => {
       state.orderStore = action.payload;
@@ -78,7 +78,12 @@ const retailerSlice = createSlice({
 
     setUnits: (state, action) =>{
       state.units = action.payload;
+    },
+
+    setPosts: (state, action)=>{
+      state.units = action.payload;
     }
+
   },
 });
 
@@ -97,5 +102,6 @@ export const {
   setStatusName,
   setLoading,
   setUnits,
+  setPosts,
 } = retailerSlice.actions;
 export default retailerSlice.reducer;

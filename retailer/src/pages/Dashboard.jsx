@@ -7,6 +7,8 @@ import ProductList from "../components/Product/ProductList";
 import Profit from "../components/Profit/Profit";
 import Sidebar from "../components/SideBar";
 import UnitManager from "../components/UnitManager";
+import CreatePost from "../components/Post/CreatePost";
+import PostList from "../components/Post/PostList";
 import {
   setLoadOrder,
   setOrder,
@@ -26,6 +28,7 @@ import { Bars3Icon } from "@heroicons/react/24/outline";
 
 const Dashboard = () => {
   const dispatch = useDispatch();
+
   const retailer = useSelector((state) => state.RetailerStore.retailer);
   const products = useSelector((state) => state.RetailerStore.products);
   const loadingRedux = useSelector((state) => state.RetailerStore.loading);
@@ -34,6 +37,8 @@ const Dashboard = () => {
   const orderStatus = useSelector((state) => state.RetailerStore.orderStatus);
   const categoryStore = useSelector((state) => state.RetailerStore.category);
   const units = useSelector((state) => state.RetailerStore.units);
+  const posts = useSelector((state) => state.RetailerStore.posts);
+
 
   const [activeTab, setActiveTab] = useState("orders");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -126,11 +131,19 @@ const Dashboard = () => {
     }
   };
 
+  const fetchPosts = async () => {
+    try{  
+      // const responseData = await 
+    }catch(error){
+      console.error("Lỗi khi lấy Posts:", error);
+    }
+  }
+
   useEffect(() => {
     fetchOrder();
-    const interval = setInterval(() => {
-      fetchOrder();
-    }, 5000);
+    // const interval = setInterval(() => {
+    //   fetchOrder();
+    // }, 5000);
     return () => clearInterval(interval);
   }, [loadOrder]);
 
@@ -146,6 +159,7 @@ const Dashboard = () => {
       setLoading(false);
     }
   };
+
   useEffect(() => {
     if (retailer?.retailerId && statusStore) {
       fetchRevenue();
@@ -175,8 +189,6 @@ const Dashboard = () => {
 
     loadAllData();
   }, [retailer, dispatch]);
-
- 
 
   useEffect(() => {
     if (orderStatus.length > 0) {
@@ -230,6 +242,7 @@ const Dashboard = () => {
       />
     ),
     profit: <Profit />,
+    post: <PostList retailer={retailer}/>,
   };
 
   return (

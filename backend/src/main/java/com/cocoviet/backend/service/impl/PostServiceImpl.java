@@ -84,6 +84,12 @@ public class PostServiceImpl implements IPostService {
     }
 
     @Override
+    public List<PostDTO> getPostByRetailerId(String retailerId){
+        List<PostEntity> post = iPostRepository.findByRetailerId(retailerId);
+        return iPostMapper.toPostDTOList(post);
+    }
+
+    @Override
     public List<PostDTO> getAllPosts(){
         return iPostMapper.toPostDTOList(iPostRepository.findAll());
     }

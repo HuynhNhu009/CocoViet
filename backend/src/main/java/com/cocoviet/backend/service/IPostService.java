@@ -12,4 +12,5 @@ public interface IPostService {
     PostDTO updatePost(String postId, PostRequest postRequest, MultipartFile imageFile) throws IOException;
     PostDTO getPostById(String  postId);
     List<PostDTO> getAllPosts();
+    List<PostDTO> getPostByRetailerId(String retailerId);
 }

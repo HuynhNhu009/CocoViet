@@ -70,6 +70,7 @@ public class PostController {
                         .status("OK")
                         .build());
     }
+
     @GetMapping("/get-all-posts")
     ResponseEntity<ResponseData> getAllPost(){
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -79,4 +80,15 @@ public class PostController {
                         .status("OK")
                         .build());
     }
+
+    @GetMapping()
+    ResponseEntity<ResponseData> getPostsByRetailerId(@RequestParam("retailerId") String retailerId) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ResponseData.builder()
+                        .data(iPostService.getPostByRetailerId(retailerId))
+                        .msg("Get all post by retailerId: " + retailerId)
+                        .status("OK")
+                        .build());
+    }
+
 }

@@ -6,6 +6,7 @@ import {
   XMarkIcon,
   TagIcon,
   CircleStackIcon,
+  NewspaperIcon,
 } from "@heroicons/react/24/outline";
 
 const Sidebar = ({ activeTab, label, setLabel , setActiveTab, isOpen, setIsOpen }) => {
@@ -34,7 +35,12 @@ const Sidebar = ({ activeTab, label, setLabel , setActiveTab, isOpen, setIsOpen 
       id: "profit",
       label: "Quản lý lợi nhuận",
       icon: <CircleStackIcon className="size-5"/>
-    }
+    },
+{
+  id: "post",
+  label: "Quản lý bài đăng",
+  icon: <NewspaperIcon className="size-5"/>
+},
   ];
 
   const renderNavItem = (item, closeOnClick = false) => (
