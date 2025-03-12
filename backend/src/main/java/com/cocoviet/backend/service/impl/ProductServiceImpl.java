@@ -139,7 +139,6 @@ public class ProductServiceImpl implements IProductService {
                 .orElseThrow(() -> new RuntimeException("Product not found!"));
         if(imageFile != null && !imageFile.isEmpty()){
             productEntity.setProductImage(iFileUpload.uploadFile(imageFile, "product"));
-
         }
         //update productEntity
         if(productRequest.getProductName() != null) {

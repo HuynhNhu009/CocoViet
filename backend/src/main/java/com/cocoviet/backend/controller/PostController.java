@@ -42,6 +42,24 @@ public class PostController {
                         .build());
     }
 
+    @PatchMapping(value = "/{postId}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    ResponseEntity<ResponseData> updatePost(@PathVariable("postId") String postId,
+                                            @RequestPart(value = "post", required = false) String postJson,
+                                @RequestPart(value = "image", required = false) MultipartFile imageFile) throws IOException {
+
+        PostRequest postRequest = (postJson != null) ?
+                objectMapper.readValue(postJson, PostRequest.class)
+                : new PostRequest();
+        PostDTO postDTO = iPostService.updatePost(postId,postRequest, imageFile);
+
+    return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ResponseData.builder()
+                        .data(postDTO)
+                        .msg("Update post " + postRequest.getPostTitle() + "successfully.")
+                        .status("OK")
+                        .build());
+    }
+
     @GetMapping("/{postId}")
     ResponseEntity<ResponseData> getPost(@PathVariable("postId") String postId){
 

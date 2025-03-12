@@ -57,6 +57,26 @@ public class PostServiceImpl implements IPostService {
     }
 
     @Override
+    public PostDTO updatePost(String postId, PostRequest postRequest, MultipartFile imageFile) throws IOException {
+        PostEntity postEntity  = iPostRepository.findById(postId).orElseThrow(()-> new RuntimeException("Post not found."));
+
+        if(postRequest.getPostTitle() != null) {
+            postEntity.setPostTitle(postRequest.getPostTitle());
+        }
+
+        if(postRequest.getPostContent() != null) {
+            postEntity.setPostContent(postRequest.getPostContent());
+        }
+
+        if(imageFile != null && !imageFile.isEmpty()){
+            postEntity.setPostImageUrl(iFileUpload.uploadFile(imageFile, "post"));
+        }
+
+        iPostRepository.save(postEntity);
+        return iPostMapper.toPostDTO(postEntity);
+    }
+
+    @Override
     public PostDTO getPostById(String postId){
         PostEntity post = iPostRepository.findById(postId)
                 .orElseThrow(()-> new RuntimeException("Post not found."));

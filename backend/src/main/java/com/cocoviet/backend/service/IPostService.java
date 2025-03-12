@@ -9,6 +9,7 @@ import java.util.List;
 
 public interface IPostService {
     PostDTO createPost(PostRequest postRequest, MultipartFile imageFile) throws IOException;
+    PostDTO updatePost(String postId, PostRequest postRequest, MultipartFile imageFile) throws IOException;
     PostDTO getPostById(String  postId);
     List<PostDTO> getAllPosts();
 }
