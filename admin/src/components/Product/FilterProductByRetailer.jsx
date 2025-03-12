@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { productAPI } from "../../services/productService";
 import { useDispatch, useSelector } from "react-redux";
-import { setcategory, setCategoryActive, setPoductCategory } from "../../redux/adminSlice";
+import {  setCategoryActive, setPoductCategory } from "../../redux/adminSlice";
 
 const FilterProductByRetailer = () => {
   const [retailer, setretailer] = useState([]);

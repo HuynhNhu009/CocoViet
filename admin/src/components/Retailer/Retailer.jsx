@@ -106,10 +106,10 @@ const Retailer = ({ retailers }) => {
                         .filter((revenue) => revenue.retailerId === selectedretailer) 
                         .map((revenue) => (
                           <tr key={revenue.retailerId}>
-                            <td className="border-1">{}</td>
+                            <td className="border-1">{55}</td>
                             {/* <td className="border-1">{revenue.bestSellingProduct[0].productVariant.unitName}</td> */}
                             <td className="border-1">{revenue.countOrder}</td>
-                            <td className="border-1">{revenue.totalRevenue}</td>
+                            <td className="border-1">{revenue.totalRevenue} VND</td>
                           </tr>
                         ))) : (
                           <tr>
@@ -126,7 +126,7 @@ const Retailer = ({ retailers }) => {
           ) : (
             <tr>
               <td colSpan={7} className="p-3 text-center text-gray-500">
-                Không có khách hàng nào.
+                Không có cửa hàng nào.
               </td>
             </tr>
           )}

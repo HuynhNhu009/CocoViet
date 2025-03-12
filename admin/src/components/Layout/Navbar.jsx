@@ -8,7 +8,7 @@ const Navbar = () => {
   return (
     <div className="sticky top-0 z-50 bg-white flex justify-between items-center py-5 px-4 sm:px-[5vw] lg:px-[7vw] shadow-md">
       <div className="relative">
-        <Link to={"/"}>
+        <Link to={"/products"}>
           <p className="relative uppercase text-black lg:text-4xl font-bold">
             CocoViet
           </p>
