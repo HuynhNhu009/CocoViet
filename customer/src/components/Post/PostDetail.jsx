@@ -33,12 +33,14 @@ const PostDetail = () => {
               .join("/") || "N/A"}
           </span>
         </div>
-
-        <img
+        <div className="flex items-center justify-center">
+          <img
           src={postDetail.postImageUrl}
           alt="Hình minh họa cho bài viết"
-          className="w-full h-[400px] object-contain rounded-lg shadow-md"
+          className="w-fit h-120 aspect-video items-center self-center object-cover rounded-lg shadow-md"
         />
+        </div>
+        
 
         <p className="text-lg text-gray-700 mt-6 leading-relaxed">
           {postDetail.postContent}
