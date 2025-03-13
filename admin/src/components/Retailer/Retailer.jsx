@@ -1,27 +1,65 @@
 import React, { useEffect, useState } from "react";
 import { orderAPI } from "../../services/orderService";
+import { useSelector } from "react-redux";
+import { productAPI } from "../../services/productService";
 
 const Retailer = ({ retailers }) => {
   const [selectedretailer, setSelectedretailer] = useState(null);
+  const productStore = useSelector((state) => state.AdminStore.productStore);
+  console.log(productStore);
 
-  console.log(retailers);
   const [revenueList, setRevenueList] = useState([]);
+  const [retailerProduct, setRetailerProduct] = useState([]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      if (productStore.length < 0) {
+        console.log("Product not found");
+        return;
+      }
+
+      if (retailers.length < 0) {
+        console.log("Product not found");
+        return;
+      }
+
+      try {
+        const productPromises = retailers.map((retailer) =>
+          productAPI
+            .getProductByRetailerId(retailer.retailerId)
+            .then((response) => ({
+              retailerId: retailer.retailerId,
+              products: response.data,
+            }))
+        );
+
+        const productsByRetailer = await Promise.all(productPromises);
+        await setRetailerProduct(productsByRetailer);
+
+      } catch (error) {
+        console.error("Error fetching products by retailers:", error);
+      }
+    };
+
+    fetchProducts();
+  }, [productStore, selectedretailer]);
 
   useEffect(() => {
     const fetchAllRevenue = async () => {
       if (!retailers || retailers.length === 0) return;
 
       try {
-        const revenuePromises = retailers.map(retailer =>
-          orderAPI.getRevenue(retailer.retailerId, "DELIVERED").then(response => ({
-            retailerId: retailer.retailerId, 
-            countOrder: response.data.countOrder,
-            totalRevenue: response.data.totalRevenue,
-            bestSellingProduct: response.data.bestSellingProduct,
-          }))
+        const revenuePromises = retailers.map((retailer) =>
+          orderAPI
+            .getRevenue(retailer.retailerId, "DELIVERED")
+            .then((response) => ({
+              retailerId: retailer.retailerId,
+              countOrder: response.data.countOrder,
+              totalRevenue: response.data.totalRevenue,
+              bestSellingProduct: response.data.bestSellingProduct,
+            }))
         );
         const revenues = await Promise.all(revenuePromises);
-        
         setRevenueList(revenues);
       } catch (error) {
         console.error("Error fetching revenue:", error);
@@ -31,17 +69,9 @@ const Retailer = ({ retailers }) => {
     fetchAllRevenue();
   }, [retailers]);
 
-  console.log(revenueList);
-  
-
-  
-  
-  const handleRowClick = async(retailerId) => {
+  const handleRowClick = async (retailerId) => {
     setSelectedretailer(retailerId === selectedretailer ? null : retailerId);
-    
   };
-
-
 
   return (
     <>
@@ -91,34 +121,70 @@ const Retailer = ({ retailers }) => {
                 </tr>
                 {selectedretailer === retailer.retailerId && (
                   <tr className="bg-gray-100  mb-4">
-                  <td colSpan={7} className="py-3 text-gray-700 px-18">
-                   <table className="border-1 border-gray-400 w-full text-center">
+                    <td colSpan={7} className="py-3 text-gray-700 px-18">
+                      <table className="border-1 border-gray-400 w-full text-center">
                         <thead className="text-center  ">
                           <tr>
-                            <th className="border-1">Tổng sản phẩm</th>
                             <th className="border-1">Sản phẩm bán chạy nhất</th>
+
+                            <th className="border-1">Tổng sản phẩm</th>
                             <th className="border-1">Tổng đơn hàng</th>
                             <th className="border-1">Tổng lợi nhuận</th>
                           </tr>
                         </thead>
                         <tbody className="text-center">
-                        {revenueList ? (  revenueList
-                        .filter((revenue) => revenue.retailerId === selectedretailer) 
-                        .map((revenue) => (
-                          <tr key={revenue.retailerId}>
-                            <td className="border-1">{55}</td>
-                            {/* <td className="border-1">{revenue.bestSellingProduct[0].productVariant.unitName}</td> */}
-                            <td className="border-1">{revenue.countOrder}</td>
-                            <td className="border-1">{revenue.totalRevenue} VND</td>
-                          </tr>
-                        ))) : (
-                          <tr>
-                            <td>khong</td>
-                          </tr>
-                        )}
+                          {revenueList ? (
+                            revenueList
+                              .filter(
+                                (revenue) =>
+                                  revenue.retailerId === selectedretailer
+                              )
+                              .map((revenue) => (
+                                <tr key={revenue.retailerId}>
+                                  {revenue.bestSellingProduct.length > 0 ? (
+                                    <td className="border-1">
+                                      {productStore.find((product) =>
+                                        product.variants.some(
+                                          (variant) =>
+                                            variant.variantId ===
+                                            revenue.bestSellingProduct[0]
+                                              .productVariant.variantId
+                                        )
+                                      )?.productName ||
+                                        "Không tìm thấy sản phẩm"}
+                                    </td>
+                                  ) : (
+                                    <td>Không có</td>
+                                  )}
+                                  {retailerProduct &&
+                                  retailerProduct.length > 0 ? (
+                                    <td className="border-1">
+                                      {retailerProduct.find(
+                                        (product) =>
+                                          product.retailerId ===
+                                          selectedretailer
+                                      )?.products.length || "0"}
+                                    </td>
+                                  ) : (
+                                    <td className="border-1">0</td>
+                                  )}
+
+                                  <td className="border-1">
+                                    {revenue.countOrder}
+                                  </td>
+                                  <td className="border-1">
+                                    {revenue.totalRevenue} VND
+                                  </td>
+                                </tr>
+                              ))
+                          ) : (
+                            <tr>
+                              <td>khong</td>
+                            </tr>
+                          )}
                         </tbody>
                       </table>
-                      </td>
+                    </td>
                   </tr>
                 )}
               </React.Fragment>

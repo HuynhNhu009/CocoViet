@@ -6,7 +6,7 @@ import {
   UsersIcon
 } from "@heroicons/react/24/outline";
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setCategoryActive, setCustomer, setPost, setPostFilter, setPostRetailerActive, setProduct, setRetailer } from "../../redux/adminSlice";
 import { productAPI } from "../../services/productService";
@@ -71,6 +71,8 @@ const Sidebar = () => {
     retailers();
   },[dispatch, sideBarActive]);
 
+
+
   const navItems = [
 
     {
@@ -110,6 +112,14 @@ const Sidebar = () => {
     }
     navigate(path);
   }
+
+  const location = useLocation();
+
+useEffect(() => {
+  if (location.pathname === "/") {
+    navigate("/products");
+  }
+}, [location, navigate]);
 
   return (
     <>
