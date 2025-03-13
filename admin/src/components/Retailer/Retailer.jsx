@@ -6,68 +6,24 @@ import { productAPI } from "../../services/productService";
 const Retailer = ({ retailers }) => {
   const [selectedretailer, setSelectedretailer] = useState(null);
   const productStore = useSelector((state) => state.AdminStore.productStore);
-  console.log(productStore);
-
+  const retailerProductStore = useSelector((state) => state.AdminStore.retailerProduct);
+  const revenueListStore = useSelector((state) => state.AdminStore.revenueList);
   const [revenueList, setRevenueList] = useState([]);
   const [retailerProduct, setRetailerProduct] = useState([]);
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      if (productStore.length < 0) {
-        console.log("Product not found");
-        return;
-      }
-
-      if (retailers.length < 0) {
-        console.log("Product not found");
-        return;
-      }
-
-      try {
-        const productPromises = retailers.map((retailer) =>
-          productAPI
-            .getProductByRetailerId(retailer.retailerId)
-            .then((response) => ({
-              retailerId: retailer.retailerId,
-              products: response.data,
-            }))
-        );
-
-        const productsByRetailer = await Promise.all(productPromises);
-        await setRetailerProduct(productsByRetailer);
-
-      } catch (error) {
-        console.error("Error fetching products by retailers:", error);
-      }
-    };
-
-    fetchProducts();
-  }, [productStore, selectedretailer]);
+    if(retailerProductStore.length > 0){
+      setRetailerProduct(retailerProductStore);
+    }
+  }, [ selectedretailer, retailerProductStore]);
 
   useEffect(() => {
-    const fetchAllRevenue = async () => {
-      if (!retailers || retailers.length === 0) return;
+    if(revenueListStore.length > 0){
+      setRevenueList(revenueListStore);
+    }      
 
-      try {
-        const revenuePromises = retailers.map((retailer) =>
-          orderAPI
-            .getRevenue(retailer.retailerId, "DELIVERED")
-            .then((response) => ({
-              retailerId: retailer.retailerId,
-              countOrder: response.data.countOrder,
-              totalRevenue: response.data.totalRevenue,
-              bestSellingProduct: response.data.bestSellingProduct,
-            }))
-        );
-        const revenues = await Promise.all(revenuePromises);
-        setRevenueList(revenues);
-      } catch (error) {
-        console.error("Error fetching revenue:", error);
-      }
-    };
+  }, [retailers, revenueListStore]);
 
-    fetchAllRevenue();
-  }, [retailers]);
 
   const handleRowClick = async (retailerId) => {
     setSelectedretailer(retailerId === selectedretailer ? null : retailerId);

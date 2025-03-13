@@ -48,4 +48,13 @@ export const orderAPI = {
     return response.data;
   },
 
+  getAllRevenue: async () => {
+    const response = await api.get("/orders/all-revenue", {
+      params: {
+        statusCode: "DELIVERED",
+      },
+    });
+    return response.data;
+  },
+
 };

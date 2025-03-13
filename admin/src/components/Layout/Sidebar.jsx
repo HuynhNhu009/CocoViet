@@ -8,11 +8,13 @@ import {
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { setCategoryActive, setCustomer, setPost, setPostFilter, setPostRetailerActive, setProduct, setRetailer } from "../../redux/adminSlice";
+import { setCategoryActive, setCustomer, setOrder, setPost, setPostFilter, setPostRetailerActive, setProduct, setRetailer, setRetailerProduct, setRevenueList, setStatus } from "../../redux/adminSlice";
 import { productAPI } from "../../services/productService";
 import { customerApi } from "../../services/customerService";
 import { retailerAPI } from "../../services/retailerService";
 import { postApi } from "../../services/postService";
+import { orderAPI } from "../../services/orderService";
+import { statusAPI } from "../../services/statusService";
 
 
 const Sidebar = () => {
@@ -20,6 +22,9 @@ const Sidebar = () => {
   const navigate = useNavigate();
   const [sideBarActive, setsideBarActive] = useState();
   const dispatch = useDispatch();
+  const productStore = useSelector((state) => state.AdminStore.productStore);
+  const retailerStore = useSelector((state) => state.AdminStore.retailerStore);
+  const orderStore = useSelector((state) => state.AdminStore.orderStore);
 
   const customers = async () => {
     try {
@@ -64,11 +69,48 @@ const Sidebar = () => {
     }
   };
 
+  const orders = async () => {
+    try {
+      const response = await orderAPI.getAllOrders();
+      if (response.data) {      
+       dispatch(setOrder(response.data));
+      }
+    } catch (error) {
+      console.error("Error fetching post:", error);
+    }
+  };
+
+  const status = async () => {
+    try {
+      const response = await statusAPI.getAllStatus();
+      if (response.data) {      
+       dispatch(setStatus(response.data));
+      }
+    } catch (error) {
+      console.error("Error fetching post:", error);
+    }
+  };
+
+  const getAllRevenue = async () => {
+    try {
+      const response = await orderAPI.getAllRevenue();
+      if (response.data) {                      
+        dispatch(setRevenueList(response.data[0]));
+      }
+    } catch (error) {
+      console.error("Error fetching post:", error);
+    }
+  };
+
   useEffect(()=>{
+    orders();
+    status();
+    getAllRevenue();
     posts();
     products();
     customers();
     retailers();
+    
   },[dispatch, sideBarActive]);
 
 
@@ -115,11 +157,48 @@ const Sidebar = () => {
 
   const location = useLocation();
 
+  useEffect(() => {
+    if (location.pathname === "/") {
+      navigate("/products");
+    }
+  }, [location, navigate]);
+
+
 useEffect(() => {
-  if (location.pathname === "/") {
-    navigate("/products");
-  }
-}, [location, navigate]);
+      const fetchProducts = async () => {
+        if (productStore.length < 0) {
+          console.log("Product not found");
+          return;
+        }
+  
+        if (retailerStore.length < 0) {
+          console.log("Product not found");
+          return;
+        }
+  
+        try {
+          const productPromises = retailerStore.map((retailer) =>
+            productAPI
+              .getProductByRetailerId(retailer.retailerId)
+              .then((response) => ({
+                retailerId: retailer.retailerId,
+                products: response.data,
+              }))
+          );
+  
+          const productsByRetailer = await Promise.all(productPromises);
+          dispatch(setRetailerProduct(productsByRetailer));
+  
+        } catch (error) {
+          console.error("Error fetching products by retailers:", error);
+        }
+      };
+  
+      fetchProducts();
+    }, [productStore]);
+  
+
+
 
   return (
     <>

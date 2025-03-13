@@ -3,10 +3,7 @@ import { useSelector } from "react-redux";
 import Status from "./Status";
 import OrderItem from "./OrderItem";
 
-const OrderList = ({ orderStatus }, label) => {
-
-  console.log(orderStatus);
-  
+const OrderList = ({ orderStatus }, label) => {  
 
   return (
     <div>

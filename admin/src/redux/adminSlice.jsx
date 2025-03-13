@@ -17,6 +17,13 @@ const initialState = {
   postStore: [],
   postRetailerActive:null,
 
+  orderStore: [],
+  retailerProduct:[],
+  revenueList:[],
+
+  statusStore:[],
+  
+
 };
 
 const adminSlice = createSlice({
@@ -29,7 +36,19 @@ const adminSlice = createSlice({
     setCustomer:(state, action) => {
       state.customerStore = action.payload;
     },
+    setOrder:(state, action) => {
+      state.orderStore = action.payload;
+    },
 
+    setStatus:(state, action) => {
+      state.statusStore = action.payload;
+    },
+    setRevenueList:(state, action) => {
+      state.revenueList = action.payload;
+    },
+    setRetailerProduct:(state, action) => {
+      state.retailerProduct = action.payload;
+    },
     setPostRetailerActive:(state, action) => {
       state.postRetailerActive = action.payload;
     },
@@ -74,5 +93,5 @@ const adminSlice = createSlice({
     },
   },
 });
-export const { setAdmin, setPostRetailerActive, setActive, setPostFilter, setPostSearch, setPost, setRetailerSearch, setRetailer, setCustomerSearch, setCustomer, setPoductCategory, setPoductSearch, setcategory,setProduct, setCategoryActive } = adminSlice.actions;
+export const { setAdmin, setStatus, setRetailerProduct,setRevenueList, setOrder, setPostRetailerActive, setActive, setPostFilter, setPostSearch, setPost, setRetailerSearch, setRetailer, setCustomerSearch, setCustomer, setPoductCategory, setPoductSearch, setcategory,setProduct, setCategoryActive } = adminSlice.actions;
 export default adminSlice.reducer;
