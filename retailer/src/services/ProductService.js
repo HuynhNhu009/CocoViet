@@ -7,29 +7,28 @@ export const productApi = {
   },
 
   addProduct: async (productData, imageFile) => {
-    
-      const formData = new FormData();
-      
-      formData.append("product", JSON.stringify(productData));
-  
-      if (imageFile) {
-        formData.append("image", imageFile);
-      }
-  
-      const response = await api.post("/products/add", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-      
-      return response.data;
+    const formData = new FormData();
+
+    formData.append("product", JSON.stringify(productData));
+
+    if (imageFile) {
+      formData.append("image", imageFile);
+    }
+
+    const response = await api.post("/products/add", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    return response.data;
   },
 
-  updateProduct: async (productId ,productData, imageFile) => {
-    const formData = new FormData()
-     formData.append("product", JSON.stringify(productData));
+  updateProduct: async (productId, productData, imageFile) => {
+    const formData = new FormData();
+    formData.append("product", JSON.stringify(productData));
 
-     if(imageFile){
+    if (imageFile) {
       formData.append("image", imageFile);
     }
     const response = await api.patch(`/products/${productId}`, formData, {
@@ -37,13 +36,12 @@ export const productApi = {
         "Content-Type": "multipart/form-data",
       },
     });
-    return response.data ;
-  }
+    return response.data;
+  },
 };
-
 
 // {
 //   variants: {
-//     new: [{ unitId, value, price, initStock }, ...], 
-//     changed: [{ variantId, unitId, ... }, ...] 
+//     new: [{ unitId, value, price, initStock }, ...],
+//     changed: [{ variantId, unitId, ... }, ...]
 // }

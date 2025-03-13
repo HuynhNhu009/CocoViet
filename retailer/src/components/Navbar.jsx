@@ -71,7 +71,7 @@ const Navbar = () => {
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
           >
-            <Link to="/profile">
+            <Link to={`/profile?id=${retailer.retailerId}`}>
               <p className="flex items-center cursor-pointer">
                 Xin chào{" "}
                 <span className="pl-1 inline-block w-[50px] sm:w-auto truncate">

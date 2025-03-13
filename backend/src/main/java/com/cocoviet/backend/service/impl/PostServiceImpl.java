@@ -93,4 +93,14 @@ public class PostServiceImpl implements IPostService {
     public List<PostDTO> getAllPosts(){
         return iPostMapper.toPostDTOList(iPostRepository.findAll());
     }
+
+
+    @Override
+    public String deletePostById(String postId) {
+        PostEntity postEntity = iPostRepository.findById(postId)
+                .orElseThrow(()-> new RuntimeException("Post not found."));
+        if(postEntity == null) throw new RuntimeException("Post not found");
+        iPostRepository.deleteById(postId);
+        return "Delete post successfully";
+    }
 }

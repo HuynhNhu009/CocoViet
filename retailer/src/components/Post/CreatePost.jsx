@@ -25,7 +25,6 @@ const CreatePost = ({retailerId, onCancel }) => {
 
   const handleSubmit =async (e) => {
     e.preventDefault();
-    // Add your submit logic here
     console.log("New post:", newPost);
     const response = await postApi.createPosts(newPost, file);
 
@@ -36,7 +35,7 @@ const CreatePost = ({retailerId, onCancel }) => {
   };
 
   return (
-    <div className="flex flex-col min-h-[100px] m-10 pb-10 rounded-sm justify-center">
+    <div className="flex flex-col min-h-[100px] mt-10 pb-10 rounded-sm justify-center">
       <form onSubmit={handleSubmit} className="space-y-4">
         <input
           type="text"

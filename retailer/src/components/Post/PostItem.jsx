@@ -1,9 +1,9 @@
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
 import React from "react";
 
-const PostItem = ({ post }) => {
+const PostItem = ({ post , isEdit, setPost}) => {
   return (
-    <div className="min-h-50 w-full p-5 flex flex-row gap-2 border border-gray-200 rounded-sm shadow-lg hover:shadow-2xl transition-all cursor-pointer">
+    <div className="min-h-50 w-full p-5 mt-2 mb-5 flex flex-row gap-2 border border-gray-200 rounded-sm shadow-md hover:shadow-lg transition-all ">
       <img
         className="w-40 h-40 rounded-l-sm object-cover"
         src={post.postImageUrl}
@@ -17,15 +17,15 @@ const PostItem = ({ post }) => {
         </div>
         <div className="flex justify-end mt-auto gap-4">
           <button
-            className="p-1 text-green-600 hover:text-green-800 transition-colors"
-            onClick={() => console.log(`Editing post: ${post.postId}`)}
+            className="p-1 text-green-600 hover:text-green-800 transition-colors cursor-pointer"
+            onClick={() => isEdit(post)} 
             aria-label={`Edit ${post.postTitle}`}
           >
             <PencilSquareIcon className="size-5" />
           </button>
           <button
-            className="p-1 text-red-600 hover:text-red-800 transition-colors"
-            onClick={() => console.log(`Deleting post: ${post.postId}`)}
+            className="p-1 text-red-600 hover:text-red-800 transition-colors cursor-pointer"
+            onClick={() => isEdit(post)} 
             aria-label={`Delete ${post.postTitle}`}
           >
             <TrashIcon className="size-5" />

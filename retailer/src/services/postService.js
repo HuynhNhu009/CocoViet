@@ -27,5 +27,18 @@ export const postApi = {
   getPostByRetailerId: async(retailerId) => {
     const response = await api.get(`/posts?retailerId=${retailerId}`)
     return response.data
+  },
+
+  updatePostById: async(postId, postData, file) =>{
+    const formData = new FormData();
+    formData.append("post", JSON.stringify(postData));
+
+    if(file) formData.append("image", file);
+    const response = await api.patch(`/posts?postId=${postId}`, formData, {
+      headers:{
+        "Content-Type": "multipart/form-data",
+      }
+    })
+    return response.data;
   }
 };
