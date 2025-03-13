@@ -29,10 +29,11 @@ const Navbar = () => {
   const handleLogout = async () => {
     try {
       const response = await retailerApi.logout();
-      // console.log(response);
+      console.log("Logout response:", response);
       if (response.status === "OK") {
-        dispatch(logout()); // Cập nhật state Redux
+        dispatch(logout());
         navigate("/login");
+        console.log("Navigated to /login");
       }
     } catch (error) {
       console.error(
@@ -41,6 +42,7 @@ const Navbar = () => {
       );
     }
   };
+
   return (
     <div className="sticky top-0 z-50 bg-white flex justify-between items-center py-5 px-4 sm:px-[5vw] lg:px-[7vw] shadow-md">
       <div className="relative">
@@ -69,7 +71,7 @@ const Navbar = () => {
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
           >
-            <Link to="/profile">
+            <Link to={`/profile?id=${retailer.retailerId}`}>
               <p className="flex items-center cursor-pointer">
                 Xin chào{" "}
                 <span className="pl-1 inline-block w-[50px] sm:w-auto truncate">

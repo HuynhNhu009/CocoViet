@@ -589,3 +589,4 @@ const ProductEdit = ({ product, onSave, onCancel }) => {
 };
 
 export default ProductEdit;
+

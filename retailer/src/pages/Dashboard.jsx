@@ -150,6 +150,7 @@ const Dashboard = () => {
       fetchOrder();
     }, 5000);
     return () => clearInterval(interval);
+
   }, [loadOrder]);
 
   const fetchRevenue = async () => {
@@ -264,7 +265,7 @@ const Dashboard = () => {
           setIsOpen={setIsSidebarOpen}
         />
         <div className="flex-1 sm:mt-8">
-          <div className="bg-white px-4 mb-10 sm:px-6 sm:rounded-lg sm:shadow-md">
+          <div className="bg-white px-4 pb-10 mb-10 sm:px-6 sm:rounded-lg sm:shadow-md">
             <div className="flex items-center pt-4 pb-2">
               <button
                 onClick={() => setIsSidebarOpen(true)}

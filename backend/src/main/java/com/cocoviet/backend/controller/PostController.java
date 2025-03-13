@@ -9,6 +9,7 @@ import com.cocoviet.backend.service.IPostService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.Valid;
+import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -42,8 +43,8 @@ public class PostController {
                         .build());
     }
 
-    @PatchMapping(value = "/{postId}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    ResponseEntity<ResponseData> updatePost(@PathVariable("postId") String postId,
+    @PatchMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    ResponseEntity<ResponseData> updatePost(@PathParam("postId") String postId,
                                             @RequestPart(value = "post", required = false) String postJson,
                                 @RequestPart(value = "image", required = false) MultipartFile imageFile) throws IOException {
 
@@ -91,4 +92,13 @@ public class PostController {
                         .build());
     }
 
+    @DeleteMapping()
+    ResponseEntity<?> deletePost(@RequestParam("postId") String postId){
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ResponseData.builder()
+                        .data(iPostService.deletePostById(postId))
+                        .msg("Delete post successfully")
+                        .status("OK")
+                        .build());
+    }
 }
