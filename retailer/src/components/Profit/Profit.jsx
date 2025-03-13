@@ -43,9 +43,6 @@ const Profit = () => {
   useEffect(() => {
     if (revenueStore && revenueStore.bestSellingProduct?.length > 0) {
       setRevenue(revenueStore);
-
-      console.log("Chưa lọc ---", revenueStore.bestSellingProduct);
-
       const matchingProducts = revenueStore.bestSellingProduct
         .map((item) => {
           const variantId = item.productVariant?.variantId;
@@ -72,10 +69,7 @@ const Profit = () => {
       }else{
         setProductName(matchingProducts[0].productName);        
       }
-           
-
-      console.log("productName", matchingProducts);
-      
+             
       setOrderStats(orderTop); 
     } else {
       console.log("Không có sản phẩm bán chạy.");

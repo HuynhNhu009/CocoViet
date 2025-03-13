@@ -4,18 +4,21 @@ import Dashboard from "../page/Dashboard";
 import Products from "../page/Products";
 import Customers from "../page/Customers";
 import Retailers from "../page/Retailers";
+import Post from "../page/Post";
+import Statistic from "../page/Statistic";
 export const routes = [
   {
     path: "/",
     element: <Layout />,
     children: [
+      // {
+      //   index: true,
+      //   element: (
+      //    <Dashboard />
+      //   ),
+      // },
       {
         index: true,
-        element: (
-         <Dashboard />
-        ),
-      },
-      {
         path:"products",
         element: (
          <Products />
@@ -33,7 +36,19 @@ export const routes = [
          <Retailers />
         ),
       },
-     
+      {
+        path:"posts",
+        element: (
+         <Post />
+        ),
+      },
+
+      {
+        path:"statistic",
+        element: (
+         <Statistic />
+        ),
+      },
     ],
   },
   
