@@ -149,7 +149,7 @@ const Dashboard = () => {
     // const interval = setInterval(() => {
     //   fetchOrder();
     // }, 5000);
-    return () => clearInterval(interval);
+    // return () => clearInterval(interval);
   }, [loadOrder]);
 
   const fetchRevenue = async () => {

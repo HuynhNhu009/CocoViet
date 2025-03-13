@@ -26,7 +26,7 @@ const PostList = ({ retailer, posts }) => {
         </button>
       )}
       {!isAddPost ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6"> {/* 2-column grid */}
+        <div className=""> {/* 2-column grid */}
           {posts.map((post) => (
             <PostItem key={post.postId} post={post} /> // Used postId as key
           ))}

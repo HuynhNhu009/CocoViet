@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { retailerApi } from "../services/RetailerService"; // Thay bằng đường dẫn thực tế
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -8,6 +9,13 @@ const Login = () => {
   });
   const [errors, setErrors] = useState({});
   const [step, setStep] = useState("form"); // "form", "preparing", "success"
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    setStep("form");
+    setFormData({ email: "", password: "" });
+    setErrors({});
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -50,7 +58,7 @@ const Login = () => {
         email: formData.email,
         password: formData.password,
       });
-      console.log("API response:", responseData);
+      // console.log("API response:", responseData);
       setStep("success");
       setFormData({
         email: "",
@@ -66,7 +74,7 @@ const Login = () => {
   };
 
   const renderForm = () => (
-    <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md  mb-50">
+    <div className=" h-vh bg-white opacity-90 p-6 rounded-lg shadow-sm shadow-gray-700 w-full max-w-md m-auto">
       <h2 className="text-2xl uppercase font-bold text-center text-gray-800 mb-6 oswald-font">
         Đăng nhập
       </h2>
@@ -89,7 +97,7 @@ const Login = () => {
             name="email"
             value={formData.email}
             onChange={handleChange}
-            className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+            className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-0 focus:border-green-500"
             placeholder="Nhập email"
             required
           />
@@ -111,7 +119,7 @@ const Login = () => {
             name="password"
             value={formData.password}
             onChange={handleChange}
-            className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+            className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-0 focus:border-green-500"
             placeholder="Nhập mật khẩu"
             required
           />
@@ -149,23 +157,26 @@ const Login = () => {
     </div>
   );
 
-  const renderSuccess = () => (
-    <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md text-center">
-      <h2 className="text-2xl font-bold text-green-600 mb-4 oswald-font">
-        Đăng nhập thành công!
-      </h2>
-      <p className="text-gray-600 mb-4">Chào mừng bạn trở lại hệ thống!</p>
-      <a
-        href="/dashboard"
-        className="inline-block bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
-      >
-        Vào trang chính
-      </a>
-    </div>
-  );
+  const renderSuccess = () => {
+    setTimeout(() => navigate("/dashboard"), 1500);
+    return (
+      <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md text-center">
+        <h2 className="text-2xl font-bold text-green-600">
+          Đăng nhập thành công!
+        </h2>
+        <p className="text-gray-600">Đang chuyển hướng...</p>
+      </div>
+    );
+  };
 
   return (
-    <div className="h-[90vh] flex items-center justify-center bg-gray-100">
+    <div className="h-[100vh] flex items-center justify-center bg-gray-100"
+    style={{
+      backgroundImage: `url('https://images.unsplash.com/photo-1537191072641-5e19cc173c6a?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')`, // Thay bằng URL hình ảnh của bạn
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+      backgroundRepeat: "no-repeat",
+    }}>
       {step === "form" && renderForm()}
       {step === "preparing" && renderPreparing()}
       {step === "success" && renderSuccess()}
