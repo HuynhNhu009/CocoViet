@@ -22,4 +22,6 @@ public interface IOrderService {
     String deleteOrderById(String orderId);
 
     RevenueDTO getRevenue(String retailerId, String statusCode);
+
+    List<RevenueDTO> getAllRevenue(String statusCode);
 }

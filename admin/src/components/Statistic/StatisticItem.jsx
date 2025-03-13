@@ -1,52 +1,47 @@
-import React, { useEffect, useState } from "react";
 import {
-  PieChart,
-  Pie,
-  Cell,
-  Tooltip,
-  ResponsiveContainer,
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Legend,
-} from "recharts";
-import { useSelector } from "react-redux";
-import moment from "moment";
-import {
-  ShoppingCartIcon,
+  ChartBarIcon,
   CubeIcon,
   CurrencyDollarIcon,
-  ChartBarIcon,
+  ShoppingCartIcon,
 } from "@heroicons/react/24/outline";
+import moment from "moment";
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import {
+  CartesianGrid,
+  Cell,
+  Legend,
+  Line,
+  LineChart,
+  Pie,
+  PieChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
 
-const Profit = () => {
-  const products = useSelector((state) => state.RetailerStore.products);
-  const orderStore = useSelector((state) => state.RetailerStore.orderStore);
-  const statusStore = useSelector((state) => state.RetailerStore.statusStore);
-  const revenueStore = useSelector((state) => state.RetailerStore.revenueStore);
-  const [countProduct, setcountProduct] = useState();
+const StatisticItem = () => {
+  const productStore = useSelector((state) => state.AdminStore.productStore);
+  const retailerStore = useSelector((state) => state.AdminStore.retailerStore);
+  const orderStore = useSelector((state) => state.AdminStore.orderStore);
+  const retailerProductStore = useSelector((state) => state.AdminStore.retailerProduct);
+  const revenueListStore = useSelector((state) => state.AdminStore.revenueList);
+  const statusStore = useSelector((state) => state.AdminStore.statusStore);
   const [productName, setProductName] = useState("");
   const [orderStats, setOrderStats] = useState([]);
   const [orders, setOrders] = useState();
-  const [revenue, setRevenue] = useState();
 
-  const ordersChart = [{ orderDate: "", totalQuantity: null }];
+  const [revenue, setRevenue] = useState([]);
 
-  useEffect(() => {
-    if (products != []) {
-      setcountProduct(products.length);
-    }
-  }, [products]);
 
   useEffect(() => {
-    if (revenueStore && revenueStore.bestSellingProduct?.length > 0) {
-      setRevenue(revenueStore);
-      const matchingProducts = revenueStore.bestSellingProduct
+    if (revenueListStore && revenueListStore.bestSellingProduct?.length > 0) {
+      setRevenue(revenueListStore);
+      const matchingProducts = revenueListStore.bestSellingProduct
         .map((item) => {
           const variantId = item.productVariant?.variantId;
-          return products.find((product) =>
+          return productStore.find((product) =>
             product.variants.some((variant) => variant.variantId === variantId)
           );
         })
@@ -56,7 +51,7 @@ const Profit = () => {
 
       const orderTop = top3.map((order, index) => ({
         productName: order?.productName || "Chưa có",
-        totalSold: revenueStore.bestSellingProduct[index]?.totalSold || 0,
+        totalSold: revenueListStore.bestSellingProduct[index]?.totalSold || 0,
       }));
 
       if (matchingProducts.length > 1) {
@@ -72,7 +67,7 @@ const Profit = () => {
     } else {
       console.log("Không có sản phẩm bán chạy.");
     }
-  }, [revenueStore, products]);
+  }, [revenueListStore, productStore]);
 
   useEffect(() => {
     if (orderStore && statusStore) {
@@ -130,13 +125,13 @@ const Profit = () => {
   const orderData = processData(orders);
 
   return (
-    <div className="px-6 grid grid-cols-4 gap-4 ">
+    <div className="px-6 grid grid-cols-4 gap-4">
       <div className="col-span-1 flex items-center items-center p-4 border-gray-400 rounded-lg shadow-md  ">
         <ShoppingCartIcon className="text-blue-600 size-12" />
         <div className="ml-8">
           <p className="text-lg font-bold">Tổng đơn hàng</p>
           <p className="text-xl font-semibold text-blue-600">
-            {revenue ? revenue.countOrder : 0}
+            {revenueListStore?.countOrder}
           </p>
         </div>
       </div>
@@ -145,8 +140,17 @@ const Profit = () => {
         <div className="ml-8">
           <p className="text-lg font-bold ">Tổng lợi nhuận</p>
           <p className="text-xl font-semibold  text-yellow-500">
-            {revenue ? revenue.totalRevenue : 0} VND
+          {revenueListStore?.totalRevenue}
+          VND
           </p>
+        </div>
+      </div>
+      
+      <div className="col-span-1 flex items-center p-4 border-gray-400 rounded-lg shadow-md">
+        <CubeIcon className="text-green-600 size-12" />
+        <div className="ml-8">
+          <p className="text-lg font-bold ">Tổng sản phẩm</p>
+          <p className="text-xl font-semibold text-green-600">{productStore.length}</p>
         </div>
       </div>
       <div className="col-span-1 flex items-center p-4 border-gray-400 rounded-lg shadow-md">
@@ -154,15 +158,7 @@ const Profit = () => {
         <div className="ml-8">
           <p className="text-lg font-bold ">Bán chạy nhất</p>
           <p className="font-semibold text-xl text-red-500 font-bold">
-            {productName}
           </p>
-        </div>
-      </div>
-      <div className="col-span-1 flex items-center p-4 border-gray-400 rounded-lg shadow-md">
-        <CubeIcon className="text-green-600 size-12" />
-        <div className="ml-8">
-          <p className="text-lg font-bold ">Tổng sản phẩm</p>
-          <p className="text-xl font-semibold text-green-600">{countProduct}</p>
         </div>
       </div>
 
@@ -244,4 +240,4 @@ const Profit = () => {
   );
 };
 
-export default Profit;
+export default StatisticItem;

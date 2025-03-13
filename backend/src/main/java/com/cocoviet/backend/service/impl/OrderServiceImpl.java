@@ -428,13 +428,10 @@ public class OrderServiceImpl implements IOrderService {
 
         List<OrderEntity> listOrder = iOrderRepository.findDeliveredOrdersByRetailerId(retailerId, statusCode);
 
-        System.out.println("Size-------------------: " + listOrder.size());
         List<Object[]> bestSelling = new ArrayList<>();
         for (OrderEntity orderEntity : listOrder) {
             for (ReceiptDetailEntity receiptDetailEntity : orderEntity.getReceiptDetails()) {
                 count += 1;
-                System.out.println("Price: " + receiptDetailEntity.getProductVariant().getPrice());
-
                 totalPrice = totalPrice.add(
                         receiptDetailEntity.getProductVariant().getPrice()
                                 .multiply(BigDecimal.valueOf(receiptDetailEntity.getQuantity()))
@@ -443,13 +440,7 @@ public class OrderServiceImpl implements IOrderService {
                 bestSelling = iReceiptDetailRepository.getBestSellingProducts(statusCode);
             }
         }
-//        if (bestSelling.isEmpty()) {
-//            revenueDTO.setBestSellingProduct(null);
-//        }
-//        long maxSold = (long) bestSelling.get(0)[1];
-
         List<BestSellingProductDTO> bestSellingProducts = bestSelling.stream()
-//                .filter(p -> (long) p[1] == maxSold)
                 .map(row -> {
                     ProductVariantEntity productVariantEntity = (ProductVariantEntity) row[0];
                     Long totalSold = (Long) row[1];
@@ -472,6 +463,57 @@ public class OrderServiceImpl implements IOrderService {
         return revenueDTO;
     }
 
+    @Override
+    public List<RevenueDTO> getAllRevenue(String statusCode) {
+        List<RevenueDTO> revenueDTOList = new ArrayList<>();
+
+        if (iStatusRepository.findByStatusCode(statusCode) == null) {
+            throw new RuntimeException("Status not found");
+        }
+
+        List<OrderEntity> listOrder = iOrderRepository.findDeliveredOrders(statusCode);
+
+        int count = 0;
+        BigDecimal totalPrice = BigDecimal.ZERO;
+        List<Object[]> bestSelling = new ArrayList<>();
+
+        for (OrderEntity orderEntity : listOrder) {
+            for (ReceiptDetailEntity receiptDetailEntity : orderEntity.getReceiptDetails()) {
+                count += 1;
+                totalPrice = totalPrice.add(
+                        receiptDetailEntity.getProductVariant().getPrice()
+                                .multiply(BigDecimal.valueOf(receiptDetailEntity.getQuantity()))
+                );
+
+                bestSelling = iReceiptDetailRepository.getBestSellingProducts(statusCode);
+            }
+        }
+
+        List<BestSellingProductDTO> bestSellingProducts = bestSelling.stream()
+                .map(row -> {
+                    ProductVariantEntity productVariantEntity = (ProductVariantEntity) row[0];
+                    Long totalSold = (Long) row[1];
+
+                    ProductVariantDTO productVariantDTO = ProductVariantDTO.builder()
+                            .variantId(productVariantEntity.getVariantsId())
+                            .value(productVariantEntity.getValue())
+                            .unitName(productVariantEntity.getUnit().getUnitName())
+                            .price(productVariantEntity.getPrice())
+                            .build();
+
+                    return new BestSellingProductDTO(productVariantDTO, totalSold);
+                })
+                .collect(Collectors.toList());
+
+        RevenueDTO revenueDTO = new RevenueDTO();
+        revenueDTO.setTotalRevenue(totalPrice);
+        revenueDTO.setCountOrder(count);
+        revenueDTO.setBestSellingProduct(bestSellingProducts);
+
+        revenueDTOList.add(revenueDTO);
+
+        return revenueDTOList;
+    }
 
 
 }

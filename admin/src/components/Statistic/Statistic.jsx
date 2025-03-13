@@ -1,11 +1,18 @@
 import React from "react";
+import FilterRevenueByRetailer from "./FilterRevenueByRetailer";
+import StatisticItem from "./StatisticItem";
+
 const Statistic = () => {
+
   return (
-    <>
-      <div className=" ">
-hello
+    <div className="">
+      <div className="col-span-4 text-center flex justify-center font-bold bg-black text-white">
+      <FilterRevenueByRetailer />
       </div>
-    </>
+      <div className="mt-3">
+        <StatisticItem />
+      </div>
+    </div>
   );
 };
 

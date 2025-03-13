@@ -102,4 +102,14 @@ public class OrderController {
                         .status("OK")
                         .build());
     }
+
+    @GetMapping("/all-revenue")
+    public ResponseEntity<ResponseData> getAllRevenue( @RequestParam String statusCode) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ResponseData.builder()
+                        .data(orderService.getAllRevenue( statusCode))
+                        .msg("Get revenue successfully")
+                        .status("OK")
+                        .build());
+    }
 }
