@@ -1,27 +1,26 @@
 import React, { useState } from "react";
 
-const UploadImage = ({className, onImageChange, disabled }) => {
+const UploadImage = ({ className, onImageChange, disabled, isDisplay = true, setImagePreview }) => {
   const [preview, setPreview] = useState(null);
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     
     if (file) {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          setPreview(reader.result);
-        };
-        reader.readAsDataURL(file);
-  
-        onImageChange(file);
-      }
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreview(reader.result);
+        if (setImagePreview) {
+          setImagePreview(reader.result); // Update external preview state
+        }
+      };
+      reader.readAsDataURL(file);
+      onImageChange(file); // Pass the file to parent
+    }
   };
 
   return (
     <div className={`${className} relative`}>
-      {/* <label className="block text-sm font-medium text-gray-700">
-        Hình ảnh sản phẩm
-      </label> */}
       <input
         type="file"
         accept="image/*"
@@ -36,7 +35,7 @@ const UploadImage = ({className, onImageChange, disabled }) => {
       >
         Chọn ảnh
       </label>
-      {preview && (
+      {preview && isDisplay && (
         <img
           src={preview}
           alt="Preview"

@@ -248,7 +248,7 @@ const Dashboard = () => {
       />
     ),
     profit: <Profit />,
-    post: <PostList retailer={retailer} posts={posts}/>,
+    post: <PostList retailer={retailer} posts={posts} fetchPosts={fetchPosts}/>,
   };
 
   return (

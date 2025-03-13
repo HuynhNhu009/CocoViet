@@ -6,12 +6,13 @@ import React, { useState } from "react";
 import UploadImage from "../UpLoadImage";
 import { postApi } from "../../services/PostService";
 
-const PostEdit = ({ post }) => {
+const PostEdit = ({ post, onSave, onCancel }) => {
   console.log("Post edit", post);
 
   const [postData, setPostData] = useState({});
   const [image, setImage] = useState();
-
+  const [isLoading, setIsLoading] = useState(false); // Added loading state
+  const [preview, setPreview] = useState(null);
   const handleEditPost = (e) => {
     const { name, value } = e.target;
     setPostData((prev) => ({ ...prev, [name]: value }));
@@ -23,69 +24,82 @@ const PostEdit = ({ post }) => {
   };
 
   const handleImageUpload = (selectedFile) => {
-    setImage(selectedFile);
+    setImage(selectedFile); // Store the file for submission
   };
 
-  const  submitEditPost = async (e)=>{
+  const submitEditPost = async (e) => {
     e.preventDefault();
-    try{
-        console.log(postData)
-        const response = await postApi.updatePostById(post.postId, postData, image);
-        console.log("Update Post----", response.data);
-    }catch(error){
-        console.log(error);
+    setIsLoading(true); // Start loading
+    try {
+      console.log(postData);
+      const response = await postApi.updatePostById(post.postId, postData, image);
+      onSave(response.data);
+      console.log("Update Post----", response.data);
+    } catch (error) {
+      console.log(error);
+      onSave(post); // Revert to original post on error
+    } finally {
+      setIsLoading(false); // Stop loading
     }
-  }
+  };
 
   return (
     <div className="flex flex-col mt-5">
+      <p className="text-lg uppercase font-semibold underline text-gray-700">Sửa bài viết</p>
       <div className="flex flex-row">
-        <div>
+        <div className="w-[800px] mr-5">
           <img
-            className="w-fit h-[80%] object-cover mt-5"
-            src={post.postImageUrl}
+            className="w-full h-fit object-contain mt-2"
+            src={preview || post.postImageUrl}
             alt=""
           />
-
-          <UploadImage className={"mt-5"} onImageChange={handleImageUpload} />
+          <UploadImage className={"mt-5"} onImageChange={handleImageUpload} setImagePreview={setPreview} isDisplay={false}/>
         </div>
 
-        <div className="flex flex-col w-full ml-10 gap-4">
+        <div className="flex flex-col w-full gap-4">
           <div className="flex flex-col">
-            <label htmlFor="postTitle">Post Title</label>
-            <input
+            <label className="text-lg">Tiêu đề:</label>
+            <textarea
               name="postTitle"
               value={getDisplayValue("postTitle")}
               onChange={handleEditPost}
               type="text"
-              className="p-2 text-xl focus:ring-0 border-1 rounded-sm focus:outline-none focus:border-green-300 "
+              className="p-2 text-xl focus:ring-0 border-1 rounded-sm focus:outline-none focus:border-green-300"
+              disabled={isLoading}
+              
             />
           </div>
           <div className="flex flex-col">
-            <label htmlFor="postTitle">Post Content</label>
+            <label className="text-lg">Nội dung:</label>
             <textarea
               name="postContent"
               value={getDisplayValue("postContent")}
               onChange={handleEditPost}
               type="text"
-              className="min-h-80 p-2 text-xl focus:ring-0 border-1 rounded-sm focus:outline-none focus:border-green-300 "
+              className="min-h-80 p-2 text-xl focus:ring-0 border-1 rounded-sm focus:outline-none focus:border-green-300"
+              disabled={isLoading}
             />
           </div>
         </div>
       </div>
 
       <div className="flex gap-2 mx-auto mt-5">
-        <button>
-          <p className="w-25 flex items-center justify-center px-4 py-2 text-white bg-gray-600 hover:bg-gray-700 rounded-md cursor-pointer">
+        <button onClick={onCancel} disabled={isLoading}>
+          <p className="w-25 flex items-center justify-center px-4 py-2 text-white bg-gray-600 hover:bg-gray-700 rounded-md cursor-pointer disabled:opacity-50">
             <XMarkIcon className="size-5 mr-2" />
             Hủy
           </p>
         </button>
-        <button onClick={submitEditPost}>
-          <p
-           className=" w-25 flex items-center justify-center px-4 py-2 text-white bg-green-600 hover:bg-green-700 rounded-md cursor-pointer">
-            <ArchiveBoxArrowDownIcon className="size-5 mr-2" />
-            Lưu
+        <button onClick={submitEditPost} disabled={isLoading}>
+          <p className="w-25 flex items-center justify-center px-4 py-2 text-white bg-green-600 hover:bg-green-700 rounded-md cursor-pointer disabled:opacity-50">
+            {isLoading ? (
+              <span className="animate-pulse">Đang lưu...</span>
+            ) : (
+              <>
+                <ArchiveBoxArrowDownIcon className="size-5 mr-2" />
+                Lưu
+              </>
+            )}
           </p>
         </button>
       </div>

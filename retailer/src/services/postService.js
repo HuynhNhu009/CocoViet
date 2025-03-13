@@ -40,5 +40,10 @@ export const postApi = {
       }
     })
     return response.data;
+  },
+
+  deletePostById: async (postId) => {
+    const response = await api.delete(`/posts?postId=${postId}`);
+    return response.data;
   }
 };
