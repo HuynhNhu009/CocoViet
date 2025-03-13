@@ -377,4 +377,15 @@ public class ProductServiceImpl implements IProductService {
         // 4. Trả về danh sách ProductDTO
         return productDTOS;
     }
+
+    @Override
+    public List<ProductDTO> deleteProductById(String productId) {
+        ProductEntity productEntity = iProductRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+        if(productEntity == null) throw new RuntimeException("Product not found");
+        iProductRepository.deleteById(productId);
+
+        List<ProductEntity> productEntityFetch = iProductRepository.findAll();
+        return iProductMapper.toProductDTOList(productEntityFetch);
+    }
 }

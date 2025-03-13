@@ -5,6 +5,7 @@ import com.cocoviet.backend.models.reponse.ResponseData;
 import com.cocoviet.backend.models.request.ProductRequest;
 import com.cocoviet.backend.service.IProductService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -124,5 +125,15 @@ public class ProductController {
                         .data(productService.getProductListByRetailerId(retailerId))
                         .msg("Get all product by retailer successfully!")
                         .status("OK").build());
+    }
+
+    @DeleteMapping()
+    ResponseEntity<ResponseData> deleteProductById(@PathParam("productId") String productId){
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ResponseData.builder()
+                        .data(productService.deleteProductById(productId))
+                        .msg("Delete product " + productId + "successfully")
+                        .status("OK")
+                        .build());
     }
 }

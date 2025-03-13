@@ -4,16 +4,30 @@ import {
   TrashIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import ProductEdit from "./ProductEdit";
 
-const ProductDetail = ({ product, onBack, onEdit }) => {
+const ProductDetail = ({ product, onBack, onEdit, onDelete, onProductSave }) => {
+  console.log("Product Detail:", product.id || product.productId);
+  const [productID, setProductID] = useState(product.id || product.productId);
+  console.log("Product productID:", productID);
 
-  console.log("Product Detail:", product);
+  const [productDetail, setProdctDetail] = useState(product);
+  const handleEditSave = (data)=>{
+    setProdctDetail(data);
+    setIsEditing(false);
+    onProductSave(productDetail)
+    setProductID(data.id || data.productId)
 
-  useEffect(() => {
-  }, [product]);
-
+  }
+  
+  const handleDelete = (product)=>{
+    console.log(product.id);
+    console.log(productID);
+    
+    // setProductID(productId.id || productId.productId)
+    onDelete(productID)
+  }
   return (
     <div className="p-6 bg-white rounded-md shadow-sm min-h-80 border-2 border-green-100">
       {/* Back button - only visible on mobile */}
@@ -35,8 +49,9 @@ const ProductDetail = ({ product, onBack, onEdit }) => {
 
       {!onEdit ? (
         <ProductEdit
-          product={product}
-          onSave={() => setIsEditing(false)}
+          product={productDetail}
+          productId={product.id || product.productId}
+          onSave={handleEditSave}
           onCancel={() => setIsEditing(false)}
         />
       ) : (
@@ -84,17 +99,9 @@ const ProductDetail = ({ product, onBack, onEdit }) => {
                       className="flex items-center rounded-sm shadow-sm my-2 justify-between p-2"
                     >
                       <span className="text-gray-700">
-                        {variant.value} {variant.unitName} - {variant.price}đ (Kho:{" "}
-                        {variant.initStock})
+                        {variant.value} {variant.unitName} - {variant.price}đ
+                        (Kho: {variant.initStock})
                       </span>
-                      <button
-                        type="button"
-                        // onClick={() => handleDeleteVariant(index)}
-                        className="p-1 text-red-600 hover:text-red-800"
-                        // disabled={loading}
-                      >
-                        <TrashIcon className="size-4" />
-                      </button>
                     </div>
                   ))
                 )}
@@ -108,7 +115,9 @@ const ProductDetail = ({ product, onBack, onEdit }) => {
                 <PencilIcon className="size-5" />
                 Sửa
               </button>
-              <button className="flex items-center gap-1 px-3 py-1 bg-red-600 text-white cursor-pointer rounded hover:bg-red-800">
+              <button
+                onClick={()=>handleDelete(product)}
+              className="flex items-center gap-1 px-3 py-1 bg-red-600 text-white cursor-pointer rounded hover:bg-red-800">
                 <TrashIcon className="size-5" />
                 Xóa
               </button>

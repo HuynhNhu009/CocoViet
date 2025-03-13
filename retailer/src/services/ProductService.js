@@ -38,6 +38,25 @@ export const productApi = {
     });
     return response.data;
   },
+
+  deleteVariantProduct: async (productId, variantId) => {
+    const response = await api.delete(`/products/${productId}/${variantId}`);
+    console.log(response.data);
+    return response.data;
+  },
+
+  getProductById: async (productId) =>{
+    const response = await api.get(`/products/${productId}`);
+    console.log("get product by Id", response);
+    return response.data;
+  }
+,
+  deleteProductById: async(productId) =>{
+    const response = await api.delete(`/products?productId=${productId}`)
+    console.log("Delete product => data",response.data)
+    return response.data;
+  }
+  
 };
 
 // {

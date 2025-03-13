@@ -5,17 +5,20 @@ import { IoIosSave } from "react-icons/io";
 import { productApi } from "../../services/productService";
 import UploadImage from "../UpLoadImage";
 
-const ProductEdit = ({ product, onSave, onCancel }) => {
+const ProductEdit = ({ product, productId, onSave, onCancel }) => {
   const [dataEdited, setDataEdited] = useState({});
-  const [isAddingVariantInline, setIsAddingVariantInline] = useState(false);
+  const [variantErrors, setVariantErrors] = useState("");
+  const [deletedVariants, setDeletedVariants] = useState([]);
   const [newVariant, setNewVariant] = useState({
     unitId: "",
     value: "",
     price: "",
     initStock: "",
   });
-  const [variantErrors, setVariantErrors] = useState("");
-  const textareaRef = useRef(null);
+
+  // const productID = productId;
+  // console.log(product.id, product.productName);
+  const [isAddingVariantInline, setIsAddingVariantInline] = useState(false);
 
   const categories = useSelector((state) => state.RetailerStore.category);
   const units = useSelector((state) => state.RetailerStore.units);
@@ -95,23 +98,19 @@ const ProductEdit = ({ product, onSave, onCancel }) => {
   };
 
   const handleDeleteVariant = (variantId) => {
+    console.log("dele", variantId);
+    // const response = await productApi.deleteVariantProduct(product.id, variantId);
+    // console.log("Delel----edit", response.data);
+    setDeletedVariants((prev) => [...prev, variantId]);
     setDataEdited((prev) => ({
       ...prev,
       variants: (prev.variants || product.variants || []).filter(
         (variant) => variant.variantId !== variantId
       ),
     }));
-  };
 
-  // Tự động điều chỉnh chiều cao của textarea khi giá trị productDesc thay đổi
-  useEffect(() => {
-    const textarea = textareaRef.current;
-    if (textarea) {
-      textarea.style.height = "auto"; // Reset chiều cao để tính toán lại
-      const newHeight = Math.min(textarea.scrollHeight, 230); // Giới hạn chiều cao tối đa 230px
-      textarea.style.height = `${newHeight}px`; // Đặt chiều cao bằng chiều cao nội dung hoặc tối đa 230px
-    }
-  }, [dataEdited.productDesc]);
+    console.log("Delll---edit", deletedVariants);
+  };
 
   const handleCategoryToggle = (categoryId) => {
     setDataEdited((prev) => {
@@ -143,8 +142,9 @@ const ProductEdit = ({ product, onSave, onCancel }) => {
   };
 
   // Hàm xử lý lưu sản phẩm
-  const handleSaveProduct = async () => {
+  const handleSaveProduct = async (productId) => {
     const updatedData = {};
+    // console.log("====product id", productId)
 
     // Chỉ gửi các trường được thay đổi
     ["productName", "productOrigin", "productDesc"].forEach((field) => {
@@ -224,26 +224,47 @@ const ProductEdit = ({ product, onSave, onCancel }) => {
       }
     }
 
-    // Nếu có dữ liệu thay đổi, gửi request lên server
-    if (Object.keys(updatedData).length > 0) {
-      try {
+    try {
+      if (deletedVariants.length > 0) {
+        console.log("Deleting variants:", deletedVariants);
+        console.log("Product Id:", productId);
+        
+        for (const variantId of deletedVariants) {
+          const response = await productApi.deleteVariantProduct(
+            product.id,
+            variantId
+          );
+          console.log("Deleted variant response:", response.data);
+        }
+      }
+      // Nếu có dữ liệu thay đổi, gửi request lên server
+      if (Object.keys(updatedData).length > 0) {
         console.log("Updated data:", JSON.stringify(updatedData, null, 2));
         const response = await productApi.updateProduct(
-          product.id,
+          productId,
           updatedData,
           null
         );
         console.log("Update response:", response);
-        const updatedProduct = response.data;
-        onSave(updatedProduct);
-      } catch (error) {
-        console.error("Error updating product:", error);
-        onSave(product);
+        const responseProduct = await productApi.getProductById(
+          productId,
+        );
+        onSave(responseProduct.data);
+        // const updatedProduct = response.data;
+      } else {
+        console.log("No changes detected.");
+        // onSave(product); // Thoát chế độ chỉnh sửa nếu không có thay đổi
       }
-    } else {
-      console.log("No changes detected.");
-      onSave(product); // Thoát chế độ chỉnh sửa nếu không có thay đổi
+      
+    } catch (error) {
+      console.error("Error updating product:", error);
+      onSave(product);
     }
+  };
+
+  const handleCancelProduct = () => {
+    setDeletedVariants([]); // Clear deleted variants without processing
+    onCancel();
   };
 
   return (
@@ -251,14 +272,14 @@ const ProductEdit = ({ product, onSave, onCancel }) => {
       {/* Nút Lưu và Hủy */}
       <div className="flex justify-end space-x-2 mb-6">
         <button
-          onClick={handleSaveProduct}
+          onClick={()=>handleSaveProduct(product.id)}
           className="flex items-center space-x-2 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
         >
           <IoIosSave className="size-5" />
           <span>Lưu</span>
         </button>
         <button
-          onClick={onCancel}
+          onClick={handleCancelProduct}
           className="flex items-center space-x-2 px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700"
         >
           <XMarkIcon className="size-5" />
@@ -342,7 +363,6 @@ const ProductEdit = ({ product, onSave, onCancel }) => {
                 Mô tả:
               </label>
               <textarea
-                ref={textareaRef}
                 className="w-full min-h-[230px] px-3 py-2 border border-gray-300 rounded-sm focus:ring-0 focus:border-green-500 focus:outline-none overflow-y-auto"
                 name="productDesc"
                 value={getDisplayValue("productDesc")}
@@ -589,4 +609,3 @@ const ProductEdit = ({ product, onSave, onCancel }) => {
 };
 
 export default ProductEdit;
-
