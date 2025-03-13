@@ -4,22 +4,32 @@ const initialState = {
   admin: "",
   categoryStore: [],
   categoryActive: null,
+
   productStore:[],
   productSearch:[],
-  postSearch:[],
-  customerSearch:[],
-  retailerSearch:[],
   productCategory:[],
+
   postFilter:[],
-  activeSearch: null,
-  customerStore: [],
-  retailerStore: [],
+  postSearch:[],
   postStore: [],
   postRetailerActive:null,
 
-  orderStore: [],
+  customerSearch:[],
+  customerStore: [],
+
+  retailerSearch:[],
+  retailerStore: [],
   retailerProduct:[],
+  
+  activeSearch: null,
+
+  orderStore: [],
+  orderChart:[],
+  orderByRetailer:[],
+
   revenueList:[],
+  revenueListRetailer:{},
+  revenueRetailerActive:null,
 
   statusStore:[],
   
@@ -33,11 +43,25 @@ const adminSlice = createSlice({
     setAdmin: (state, action) => {
       state.admin = action.payload;
     },
+
+    setRevenueRetailerActive: (state, action) => {
+      state.revenueRetailerActive = action.payload;
+    },
+
+    setOrderByRetailer: (state, action) => {
+      state.orderByRetailer = action.payload;
+    },
+    setOrderChart: (state, action) => {
+      state.orderChart = action.payload;
+    },
     setCustomer:(state, action) => {
       state.customerStore = action.payload;
     },
     setOrder:(state, action) => {
       state.orderStore = action.payload;
+    },
+    setRevenueListRetailer:(state, action) => {
+      state.revenueListRetailer = action.payload;
     },
 
     setStatus:(state, action) => {
@@ -93,5 +117,5 @@ const adminSlice = createSlice({
     },
   },
 });
-export const { setAdmin, setStatus, setRetailerProduct,setRevenueList, setOrder, setPostRetailerActive, setActive, setPostFilter, setPostSearch, setPost, setRetailerSearch, setRetailer, setCustomerSearch, setCustomer, setPoductCategory, setPoductSearch, setcategory,setProduct, setCategoryActive } = adminSlice.actions;
+export const { setAdmin, setOrderChart,setOrderByRetailer, setRevenueRetailerActive, setRevenueListRetailer, setStatus, setRetailerProduct,setRevenueList, setOrder, setPostRetailerActive, setActive, setPostFilter, setPostSearch, setPost, setRetailerSearch, setRetailer, setCustomerSearch, setCustomer, setPoductCategory, setPoductSearch, setcategory,setProduct, setCategoryActive } = adminSlice.actions;
 export default adminSlice.reducer;

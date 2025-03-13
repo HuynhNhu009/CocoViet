@@ -1,36 +1,37 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setPostFilter, setPostRetailerActive } from "../../redux/adminSlice";
-import { postApi } from "../../services/postService";
+import {  setRevenueListRetailer, setRevenueRetailerActive } from "../../redux/adminSlice";
+import { orderAPI } from "../../services/orderService";
 
 const FilterRevenueByRetailer = () => {
   const [retailer, setretailer] = useState([]);
   const dispatch = useDispatch();
 
   const retailerStore = useSelector((state) => state.AdminStore.retailerStore);
-  const postStore = useSelector((state) => state.AdminStore.postStore);
-  const retailerActive = useSelector((state) => state.AdminStore.postRetailerActive
-  );  
+  const retailerActive = useSelector((state) => state.AdminStore.revenueRetailerActive);
+    const revenueStore = useSelector((state) => state.AdminStore.revenueList);
+
 
   useEffect(() => {
     if (retailerStore) {
       setretailer(retailerStore);
-    }
+    }    
+    console.log("retailerActive", retailerActive);
+    
     if (!retailerActive) {
-      dispatch(setPostRetailerActive("allPost"));
+      dispatch(setRevenueRetailerActive("allStatistic"));
     }
-  }, [retailerStore, retailerActive, dispatch, postStore]);
+  }, [retailerStore, retailerActive, dispatch, revenueStore]);
 
   const handleClickCategory = async (retailerId) => {
     try {
-      dispatch(setPostRetailerActive(retailerId));
-      if (retailerId === "allPost") {
-        dispatch(setPostFilter(postStore));
+      dispatch(setRevenueRetailerActive(retailerId));
+      
+      if (retailerId === "allStatistic") {        
+        await dispatch(setRevenueListRetailer(revenueStore));
       } else {
-        const findByRetailerId = postStore.filter(
-          (item) => (item.authorId).includes(retailerId)
-        );        
-        dispatch(setPostFilter(findByRetailerId.data));
+        const findByRetailerId = await orderAPI.getRevenue(retailerId, "DELIVERED");        
+        await dispatch(setRevenueListRetailer(findByRetailerId.data));
       }
     } catch (error) {
       console.error("Error fetching products by retailer:", error);
@@ -43,10 +44,10 @@ const FilterRevenueByRetailer = () => {
     <div className="ml-3 flex items-center gap-4">
       <select
         className="  bg-black px-1 py-1.5 shadow-md text-white"
-        value={retailerActive || "allPost"}
+        value={retailerActive || "allStatistic"}
         onChange={(e) => handleClickCategory(e.target.value)}
       >
-        <option value="allPost" default>
+        <option value="allStatistic" default>
           Tất cả cửa hàng
         </option>
         {retailer.map((item) => (

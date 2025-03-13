@@ -3,12 +3,27 @@ import {
   CircleStackIcon,
   CubeIcon,
   DocumentTextIcon,
-  UsersIcon
+  TagIcon,
+  UsersIcon,
 } from "@heroicons/react/24/outline";
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { setCategoryActive, setCustomer, setOrder, setPost, setPostFilter, setPostRetailerActive, setProduct, setRetailer, setRetailerProduct, setRevenueList, setStatus } from "../../redux/adminSlice";
+import {
+  setCategoryActive,
+  setCustomer,
+  setOrder,
+  setOrderByRetailer,
+  setOrderChart,
+  setPost,
+  setPostFilter,
+  setPostRetailerActive,
+  setProduct,
+  setRetailer,
+  setRetailerProduct,
+  setRevenueList,
+  setStatus,
+} from "../../redux/adminSlice";
 import { productAPI } from "../../services/productService";
 import { customerApi } from "../../services/customerService";
 import { retailerAPI } from "../../services/retailerService";
@@ -16,21 +31,21 @@ import { postApi } from "../../services/postService";
 import { orderAPI } from "../../services/orderService";
 import { statusAPI } from "../../services/statusService";
 
-
 const Sidebar = () => {
-
   const navigate = useNavigate();
   const [sideBarActive, setsideBarActive] = useState();
   const dispatch = useDispatch();
   const productStore = useSelector((state) => state.AdminStore.productStore);
   const retailerStore = useSelector((state) => state.AdminStore.retailerStore);
   const orderStore = useSelector((state) => state.AdminStore.orderStore);
+  const statusStore = useSelector((state) => state.AdminStore.statusStore);
+  const revenueRetailerActive = useSelector((state) => state.AdminStore.revenueRetailerActive);
 
   const customers = async () => {
     try {
       const response = await customerApi.getAllCustomers();
-      if (response.data) {          
-       dispatch(setCustomer(response.data));
+      if (response.data) {
+        dispatch(setCustomer(response.data));
       }
     } catch (error) {
       console.error("Error fetching customer:", error);
@@ -40,7 +55,7 @@ const Sidebar = () => {
     try {
       const response = await productAPI.getAllProducts();
       if (response.data) {
-       dispatch(setProduct(response.data));
+        dispatch(setProduct(response.data));
       }
     } catch (error) {
       console.error("Error fetching products:", error);
@@ -50,8 +65,8 @@ const Sidebar = () => {
   const retailers = async () => {
     try {
       const response = await retailerAPI.getAllRetailer();
-      if (response.data) {                    
-       dispatch(setRetailer(response.data));
+      if (response.data) {
+        dispatch(setRetailer(response.data));
       }
     } catch (error) {
       console.error("Error fetching retailer:", error);
@@ -61,8 +76,8 @@ const Sidebar = () => {
   const posts = async () => {
     try {
       const response = await postApi.getAllPosts();
-      if (response.data) {                    
-       dispatch(setPost(response.data));
+      if (response.data) {
+        dispatch(setPost(response.data));
       }
     } catch (error) {
       console.error("Error fetching post:", error);
@@ -72,8 +87,8 @@ const Sidebar = () => {
   const orders = async () => {
     try {
       const response = await orderAPI.getAllOrders();
-      if (response.data) {      
-       dispatch(setOrder(response.data));
+      if (response.data) {
+        dispatch(setOrder(response.data));
       }
     } catch (error) {
       console.error("Error fetching post:", error);
@@ -83,8 +98,8 @@ const Sidebar = () => {
   const status = async () => {
     try {
       const response = await statusAPI.getAllStatus();
-      if (response.data) {      
-       dispatch(setStatus(response.data));
+      if (response.data) {
+        dispatch(setStatus(response.data));
       }
     } catch (error) {
       console.error("Error fetching post:", error);
@@ -94,7 +109,7 @@ const Sidebar = () => {
   const getAllRevenue = async () => {
     try {
       const response = await orderAPI.getAllRevenue();
-      if (response.data) {                      
+      if (response.data) {
         dispatch(setRevenueList(response.data[0]));
       }
     } catch (error) {
@@ -102,7 +117,7 @@ const Sidebar = () => {
     }
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     orders();
     status();
     getAllRevenue();
@@ -110,50 +125,48 @@ const Sidebar = () => {
     products();
     customers();
     retailers();
-    
-  },[dispatch, sideBarActive]);
-
-
+  }, [dispatch, sideBarActive]);
 
   const navItems = [
-
     {
       label: "Sản phẩm",
       icon: <CubeIcon className="size-5" />,
-      path:"/products"
+      path: "/products",
+    },
+    {
+      label: "Danh mục sản phẩm",
+      icon: <TagIcon className="size-5" />,
+      path: "/products",
     },
     {
       label: "Bài viết",
-      icon: <DocumentTextIcon  className="size-5" />,
-      path:"/posts"
-
+      icon: <DocumentTextIcon className="size-5" />,
+      path: "/posts",
     },
     {
       label: "Khách hàng",
-      icon: <UsersIcon  className="size-5" />,
-      path:"/customers"
+      icon: <UsersIcon className="size-5" />,
+      path: "/customers",
     },
     {
       label: "Cửa hàng",
-      icon: <BuildingStorefrontIcon  className="size-5" />,
-      path:"/retailers"
-
+      icon: <BuildingStorefrontIcon className="size-5" />,
+      path: "/retailers",
     },
     {
       label: "Thống kê",
       icon: <CircleStackIcon className="size-5" />,
-      path:"/statistic"
-
+      path: "/statistic",
     },
   ];
 
-  const handleNavigate = (path) => {    
-    if(path === "/products" || path === "/posts"){
+  const handleNavigate = (path) => {
+    if (path === "/products" || path === "/posts") {
       dispatch(setCategoryActive("allProduct"));
       dispatch(setPostRetailerActive("allPost"));
     }
     navigate(path);
-  }
+  };
 
   const location = useLocation();
 
@@ -163,42 +176,100 @@ const Sidebar = () => {
     }
   }, [location, navigate]);
 
+  //filter product, order by retailerId
+  useEffect(() => {
+    const fetchProducts = async () => {
+      if (productStore.length < 0) {
+        console.log("Product not found");
+        return;
+      }
 
-useEffect(() => {
-      const fetchProducts = async () => {
-        if (productStore.length < 0) {
-          console.log("Product not found");
-          return;
-        }
-  
-        if (retailerStore.length < 0) {
-          console.log("Product not found");
-          return;
-        }
-  
-        try {
-          const productPromises = retailerStore.map((retailer) =>
-            productAPI
-              .getProductByRetailerId(retailer.retailerId)
-              .then((response) => ({
-                retailerId: retailer.retailerId,
-                products: response.data,
-              }))
-          );
-  
-          const productsByRetailer = await Promise.all(productPromises);
-          dispatch(setRetailerProduct(productsByRetailer));
-  
-        } catch (error) {
-          console.error("Error fetching products by retailers:", error);
-        }
-      };
-  
-      fetchProducts();
-    }, [productStore]);
+      if (retailerStore.length < 0) {
+        console.log("retailer not found");
+        return;
+      }
+      if (orderStore.length < 0) {
+        console.log("Order not found");
+        return;
+      }
+
+      try {
+        const productPromises = retailerStore.map((retailer) =>
+          productAPI
+            .getProductByRetailerId(retailer.retailerId)
+            .then((response) => ({
+              retailerId: retailer.retailerId,
+              products: response.data,
+            }))
+        );
+
+        const productsByRetailer = await Promise.all(productPromises);
+        dispatch(setRetailerProduct(productsByRetailer));
+
+        // console.log(orderStore);
+        
+        //order
+        const orderPromises = retailerStore.map((retailer) =>
+          orderAPI
+            .getAllOrdersByRetailerId(retailer.retailerId)
+            .then((response) => ({
+              retailerId: retailer.retailerId,
+              orders: response.data
+                .flatMap((order) =>
+                  order.receiptDetails
+                    ?.filter((detail) => detail.statusName === "Đã Giao")
+                    .map(() => ({
+                      retailerId: retailer.retailerId,
+                      orderDate: order.orderDate,
+                      totalQuantity: order.receiptDetails.reduce(
+                        (sum, detail) => sum + (detail.totalQuantity || 0),
+                        0
+                      ),
+                    }))
+                ),
+            }))
+        );
+
+        const OrderByRetailer = await Promise.all(orderPromises);
+        console.log("OrderByRetailer", OrderByRetailer);
+        
+        // dispatch(setRetailerProduct(productsByRetailer));
+
+      } catch (error) {
+        console.error("Error fetching products by retailers:", error);
+      }
+    };
+    fetchProducts();    
+  }, [retailerStore, revenueRetailerActive]);
   
 
-
+  //chart in StatisticPage
+  useEffect(() => {
+    if (!orderStore || !statusStore) return;
+  
+    const getStatus = statusStore.find(
+      (item) => item.statusCode === "DELIVERED"
+    );
+  
+    if (!getStatus) return; 
+  
+    const filteredResults = orderStore.filter((item) =>
+      item.receiptDetails?.some(
+        (detail) => detail.statusName === getStatus.statusName
+      )
+    );
+  
+    const ordersChart = filteredResults.map((order) => ({
+      orderDate: order.orderDate,
+      totalQuantity: order.receiptDetails?.reduce(
+        (sum, detail) => sum + (detail.totalQuantity || 0),
+        0
+      ),
+    }));
+  
+    dispatch(setOrderChart(ordersChart));
+  }, [orderStore, statusStore]);
+  
 
   return (
     <>
@@ -218,21 +289,27 @@ useEffect(() => {
       </div> */}
 
       {/* Sidebar cho desktop */}
-      <div className="sticky ml-3 h-80 hidden lg:block lg:w-64 flex-shrink-0 bg-white p-5 rounded-lg shadow-md">
-        <nav className="flex flex-col gap-3">
+      <div className="sticky ml-3 h-[680px] hidden lg:block lg:w-64 flex-shrink-0 bg-white p-5 rounded-lg shadow-md">
+        <nav className="flex flex-col gap-3 flex-grow">
           {navItems.map((item, index) => (
-            <div key={index} 
-            onClick={() => {
-              handleNavigate(item.path),
-              setsideBarActive(item.label)
-            }}
-            className={`flex items-center gap-2 py-2 px-4 bg-gray-100 
-            rounded-md cursor-pointer ${sideBarActive === item.label ? "bg-gray-300" : ""}`}>
+            <div
+              key={index}
+              onClick={() => {
+                handleNavigate(item.path), setsideBarActive(item.label);
+              }}
+              className={`flex items-center gap-2 py-3 px-4 bg-gray-100 
+                rounded-md cursor-pointer ${
+                  sideBarActive === item.label ? "bg-gray-950 text-white" : ""
+                }`}
+            >
               {item.icon}
               <span>{item.label}</span>
             </div>
           ))}
         </nav>
+        <div className="text-gray-500 text-xs text-center py-2 border-t mt-60">
+          Phiên bản: <span className="font-semibold">1.0.3</span>
+        </div>
       </div>
     </>
   );
