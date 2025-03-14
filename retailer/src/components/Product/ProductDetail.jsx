@@ -6,28 +6,48 @@ import {
 } from "@heroicons/react/24/outline";
 import React, { useState } from "react";
 import ProductEdit from "./ProductEdit";
+import { productApi } from "../../services/productService";
 
-const ProductDetail = ({ product, onBack, onEdit, onDelete, onProductSave }) => {
-  console.log("Product Detail:", product.id || product.productId);
+const ProductDetail = ({
+  product,
+  onBack,
+  onEdit,
+  onDelete,
+  onProductSave,
+}) => {
+  console.log("Product Detail - edit:", product);
   const [productID, setProductID] = useState(product.id || product.productId);
   console.log("Product productID:", productID);
 
   const [productDetail, setProdctDetail] = useState(product);
-  const handleEditSave = (data)=>{
+
+
+
+
+
+  const handleEditSave = (data) => {
     setProdctDetail(data);
     setIsEditing(false);
-    onProductSave(productDetail)
-    setProductID(data.id || data.productId)
+    onProductSave(productDetail);
+    setProductID(data.id || data.productId);
+  };
 
+  const handleEdit = (productId) =>{
+    setIsEditing(true);
   }
-  
-  const handleDelete = (product)=>{
+
+  const getProductById = async (id) => {
+    console.log("Product id selected", id);
+    const response = await productApi.getProductById(id);
+    setProdctDetail(response.data);
+    console.log("Product selected", response.data);
+  };
+
+  const handleDelete = (product) => {
     console.log(product.id);
     console.log(productID);
-    
-    // setProductID(productId.id || productId.productId)
-    onDelete(productID)
-  }
+    onDelete(productID);
+  };
   return (
     <div className="p-6 bg-white rounded-md shadow-sm min-h-80 border-2 border-green-100">
       {/* Back button - only visible on mobile */}
@@ -109,15 +129,16 @@ const ProductDetail = ({ product, onBack, onEdit, onDelete, onProductSave }) => 
             </div>
             <div className="flex gap-2 mt-4 ">
               <button
-                onClick={onEdit}
+                onClick={() => onEdit()}
                 className="flex items-center gap-1 px-3 py-1 bg-blue-600 text-white cursor-pointer rounded hover:bg-blue-800"
               >
                 <PencilIcon className="size-5" />
                 Sửa
               </button>
               <button
-                onClick={()=>handleDelete(product)}
-              className="flex items-center gap-1 px-3 py-1 bg-red-600 text-white cursor-pointer rounded hover:bg-red-800">
+                onClick={() => handleDelete(product)}
+                className="flex items-center gap-1 px-3 py-1 bg-red-600 text-white cursor-pointer rounded hover:bg-red-800"
+              >
                 <TrashIcon className="size-5" />
                 Xóa
               </button>

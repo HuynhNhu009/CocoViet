@@ -4,8 +4,12 @@ import Navbar from "./Navbar";
 
 function Layout() {
   const location = useLocation();
-  const isAuth = location.pathname === "/";
+  const isAuth =
+    location.pathname === "/" ||
+    location.pathname === "/login" ||
+    location.pathname === "/register";
   // const order = location.pathname ==="/order"
+  // console.log(isAuth)
 
   return (
     <>

@@ -41,7 +41,6 @@ const Dashboard = () => {
   const units = useSelector((state) => state.RetailerStore.units);
   const posts = useSelector((state) => state.RetailerStore.posts);
 
-
   const [activeTab, setActiveTab] = useState("orders");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [label, setLabel] = useState("Đơn hàng");
@@ -63,7 +62,9 @@ const Dashboard = () => {
 
   const fetchUnits = async () => {
     try {
-      const responseData = await unitApi.getAllUnitsRetailerId(retailer.retailerId);
+      const responseData = await unitApi.getAllUnitsRetailerId(
+        retailer.retailerId
+      );
       console.log("Units from API:", responseData);
       dispatch(setUnits(responseData.data));
     } catch (error) {
@@ -85,9 +86,13 @@ const Dashboard = () => {
 
   const fetchProducts = async (categories = categoryStore) => {
     try {
-      const responseData = await productApi.getProductByRetailerId(retailer.retailerId);
+      const responseData = await productApi.getProductByRetailerId(
+        retailer.retailerId
+      );
       console.log("Products===========:", responseData);
-      const productData = Array.isArray(responseData.data) ? responseData.data : [];
+      const productData = Array.isArray(responseData.data)
+        ? responseData.data
+        : [];
       const formattedProducts = productData.map((product) => ({
         id: product.productId,
         productName: product.productName,
@@ -100,7 +105,8 @@ const Dashboard = () => {
                 const matchedCategory = categories.find(
                   (cat) => cat.categoryId === name
                 );
-                return matchedCategory?.categoryId && matchedCategory?.categoryName
+                return matchedCategory?.categoryId &&
+                  matchedCategory?.categoryName
                   ? {
                       categoryId: matchedCategory.categoryId,
                       categoryName: matchedCategory.categoryName,
@@ -125,7 +131,9 @@ const Dashboard = () => {
 
   const fetchOrder = async () => {
     try {
-      const responseData = await orderAPI.getAllOrdersByRetailerId(retailer.retailerId);
+      const responseData = await orderAPI.getAllOrdersByRetailerId(
+        retailer.retailerId
+      );
       dispatch(setOrder(responseData.data));
     } catch (error) {
       console.error("Lỗi khi lấy Order:", error);
@@ -134,34 +142,37 @@ const Dashboard = () => {
   };
 
   const fetchPosts = async () => {
-    try{  
-      const responseData = await postApi.getPostByRetailerId(retailer.retailerId);
-     dispatch(setPosts(responseData.data))
-      console.log("Post===========",responseData.data, retailer.retailerId)
-    }catch(error){
+    try {
+      const responseData = await postApi.getPostByRetailerId(
+        retailer.retailerId
+      );
+      dispatch(setPosts(responseData.data));
+      console.log("Post===========", responseData.data, retailer.retailerId);
+    } catch (error) {
       console.error("Lỗi khi lấy Posts:", error);
-      dispatch(setPosts([]))
+      dispatch(setPosts([]));
     }
-  }
+  };
 
   useEffect(() => {
     fetchOrder();
-    const interval = setInterval(() => {
-      fetchOrder();
-    }, 5000);
-    return () => clearInterval(interval);
-
+    // const interval = setInterval(() => {
+    //   fetchOrder();
+    // }, 5000);
+    // return () => clearInterval(interval);
   }, [loadOrder]);
 
   const fetchRevenue = async () => {
     try {
-      const responseData = await orderAPI.getRevenue(retailer.retailerId, "DELIVERED");
-      dispatch(setRevenue(responseData.data))            
+      const responseData = await orderAPI.getRevenue(
+        retailer.retailerId,
+        "DELIVERED"
+      );
+      dispatch(setRevenue(responseData.data));
     } catch (error) {
       console.log("Lỗi khi lấy Order:", error);
-      dispatch(setOrder([]))
-    } 
-    finally {
+      dispatch(setOrder([]));
+    } finally {
       setLoading(false);
     }
   };
@@ -170,7 +181,6 @@ const Dashboard = () => {
     if (retailer?.retailerId && statusStore) {
       fetchRevenue();
     }
-
   }, [retailer, statusStore]);
 
   useEffect(() => {
@@ -249,7 +259,9 @@ const Dashboard = () => {
       />
     ),
     profit: <Profit />,
-    post: <PostList retailer={retailer} posts={posts} fetchPosts={fetchPosts}/>,
+    post: (
+      <PostList retailer={retailer} posts={posts} fetchPosts={fetchPosts} />
+    ),
   };
 
   return (
