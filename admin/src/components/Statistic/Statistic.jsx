@@ -6,7 +6,7 @@ const Statistic = () => {
 
   return (
     <div className="">
-      <div className="col-span-4 text-center flex justify-center font-bold bg-black text-white">
+      <div className="col-span-4 py-2 text-center flex justify-center font-bold bg-black text-white">
       <FilterRevenueByRetailer />
       </div>
       <div className="mt-3">

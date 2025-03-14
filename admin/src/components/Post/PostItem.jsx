@@ -8,7 +8,7 @@ const PostItem = ({ posts }) => {
 
   return (
     <>
-      <table className="w-full border-collapse ">
+      <table title="Xem chi tiết" className="w-full border-collapse ">
         <thead>
           <tr className="text-center bg-black text-white uppercase">
             <th className="p-3 text-sm">STT</th>
@@ -30,7 +30,7 @@ const PostItem = ({ posts }) => {
                   onClick={() => handleRowClick(post.postId)}
                 >
                   <td className="p-1 text-center">{index + 1}</td>
-                  <td className="flex items-center gap-2">
+                  <td className="flex pl-5 items-center gap-2">
                     <img
                       src={post.postImageUrl}
                       alt={post.postTitle}

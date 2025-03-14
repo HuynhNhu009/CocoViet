@@ -56,5 +56,9 @@ export const orderAPI = {
     });
     return response.data;
   },
+  getAllOrdersByRetailerId: async (retailerId) => {
+    const response = await api.get(`/orders/by/${retailerId}`);
+    return response.data;
+  },
 
 };

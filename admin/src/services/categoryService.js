@@ -6,5 +6,10 @@ export const categoryAPI = {
     return response.data;
   },
 
+  addCategory: async (category) => {
+    const response = await api.post("/categories/add",category);
+    return response.data;
+  },
+
 
 };

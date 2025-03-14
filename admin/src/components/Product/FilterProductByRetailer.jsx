@@ -6,9 +6,7 @@ import {  setCategoryActive, setPoductCategory } from "../../redux/adminSlice";
 const FilterProductByRetailer = () => {
   const [retailer, setretailer] = useState([]);
   const dispatch = useDispatch();
-  const categoryActive = useSelector(
-    (state) => state.AdminStore.categoryActive
-  );
+  const categoryActive = useSelector((state) => state.AdminStore.categoryActive);
   const retailerStore = useSelector((state) => state.AdminStore.retailerStore);
   const productStore = useSelector((state) => state.AdminStore.productStore);
 

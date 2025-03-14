@@ -6,17 +6,13 @@ import Customers from "../page/Customers";
 import Retailers from "../page/Retailers";
 import Post from "../page/Post";
 import Statistic from "../page/Statistic";
+import Category from "../page/Category";
 export const routes = [
   {
     path: "/",
     element: <Layout />,
     children: [
-      // {
-      //   index: true,
-      //   element: (
-      //    <Dashboard />
-      //   ),
-      // },
+
       {
         index: true,
         path:"products",
@@ -47,6 +43,12 @@ export const routes = [
         path:"statistic",
         element: (
          <Statistic />
+        ),
+      },
+      {
+        path:"categories",
+        element: (
+         <Category />
         ),
       },
     ],

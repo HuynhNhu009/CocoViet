@@ -10,13 +10,14 @@ const ProductItem = ({ products }) => {
 
   return (
     <>
-      <table className="w-full border-collapse ">
+      <table title="Xem chi tiết" className="w-full border-collapse ">
         <thead>
           <tr className="text-center bg-black text-white uppercase">
             <th className="p-3 text-sm">STT</th>
             <th className="p-3 text-sm">Sản phẩm</th>
             <th className="p-3 text-sm">Cửa hàng</th>
             <th className="p-3 text-sm">Mô tả</th>
+            <th className="p-3 text-sm">Ngày đăng</th>
             <th className="p-3 text-sm">Hành động</th>
           </tr>
         </thead>
@@ -29,7 +30,7 @@ const ProductItem = ({ products }) => {
                 onClick={() => handleRowClick(product.productId)}
               >
                 <td className="p-1 text-center">{index + 1}</td>
-                <td className="flex items-center gap-2">
+                <td className="flex pl-5 items-center text-center gap-2">
                   <img
                     src={product.productImage}
                     alt={product.productName}
@@ -43,6 +44,14 @@ const ProductItem = ({ products }) => {
                 <td className="p-3 truncate max-w-xs overflow-hidden ">
                   {product.productDesc}
                 </td>
+                <td className="text-center">
+                  {product.createdAt
+                      ?.split("T")[0]
+                      .split("-")
+                      .reverse()
+                      .join("/") || "N/A"}
+                </td>
+                
                 <td className="p-3 text-center">
                   <button className="bg-red-500 text-white px-3 py-1 ml-2 rounded-md">
                     Xóa

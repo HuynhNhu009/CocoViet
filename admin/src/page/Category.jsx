@@ -1,8 +1,8 @@
 import React from "react";
-import RetailerList from "../components/Retailer/RetailerList";
+import CategoryCompo from "../components/Category/Category"
 import { motion } from "framer-motion";
 
-const Retailers = () => {
+const Category = () => {
   return (
     <>
       <motion.div
@@ -11,10 +11,10 @@ const Retailers = () => {
         transition={{ duration: 0.8 }}
         className="p-4"
       >
-        <RetailerList />
+        <CategoryCompo />
       </motion.div>
     </>
   );
 };
 
-export default Retailers;
+export default Category;
