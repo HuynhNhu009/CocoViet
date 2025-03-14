@@ -30,6 +30,10 @@ public class ProductEntity {
     @Column
     String productImage;
 
+
+    @Column
+    Boolean deleted;
+
     @Column
     String productOrigin;
 
