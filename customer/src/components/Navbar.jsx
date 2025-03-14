@@ -13,7 +13,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { customerApi } from "../services/customerService";
 import { setActive, setIsNav } from "../redux/productSlice";
 
-const Navbar = () => {
+const Navbar = ({className}) => {
   const [visible, setVisible] = useState(false);
   const sidebarRef = useRef(null);
   const location = useLocation();
@@ -71,7 +71,7 @@ const Navbar = () => {
   };
 
   return (
-    <div className="relative flex justify-between items-center py-5 font-medium px-4 sm:px-[5vw] lg:px-[7vw]">
+    <div className={`${className} relative  flex justify-between items-center py-5 font-medium px-4 sm:px-[5vw] lg:px-[7vw]`}>
       <Link to={"/"}>
         <p className={`${text_Color} text-3xl lg:text-5xl sigmar-font`}>
           CocoViet
@@ -239,3 +239,189 @@ const Navbar = () => {
 };
 
 export default Navbar;
+
+
+// import React, { useState, useEffect, useRef } from "react";
+// import { Link, NavLink, useLocation } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
+// import { logout } from "../redux/customerSlice";
+// import {
+//   Bars3Icon,
+//   UserCircleIcon,
+//   ShoppingBagIcon,
+// } from "@heroicons/react/24/outline";
+// import { useDispatch, useSelector } from "react-redux";
+// import { customerApi } from "../services/customerService";
+
+// const Navbar = ({ className }) => {
+//   const [visible, setVisible] = useState(false);
+//   const [isOpen, setIsOpen] = useState(false);
+//   const sidebarRef = useRef(null);
+//   const location = useLocation();
+//   const navigate = useNavigate();
+//   const dispatch = useDispatch();
+
+//   const isLoggedIn = useSelector((state) => !!state.CustomerStore.isLogin);
+//   const customerInfo = useSelector((state) => state.CustomerStore.customer);
+//   const cartCount = useSelector((state) => state.OrderStore.cartCount);
+
+//   // Xử lý click ngoài sidebar để đóng
+//   useEffect(() => {
+//     const handleClickOutside = (event) => {
+//       if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
+//         setVisible(false);
+//       }
+//     };
+//     document.addEventListener("mousedown", handleClickOutside);
+//     return () => document.removeEventListener("mousedown", handleClickOutside);
+//   }, []);
+
+//   // Đóng sidebar khi resize lên desktop
+//   useEffect(() => {
+//     const handleResize = () => {
+//       if (window.innerWidth >= 768) setVisible(false);
+//     };
+//     window.addEventListener("resize", handleResize);
+//     return () => window.removeEventListener("resize", handleResize);
+//   }, []);
+
+//   const isAuthPage = location.pathname === "/login" || location.pathname === "/register";
+//   const textColor = isAuthPage ? "text-green-600" : "text-white";
+//   const hoverColor = isAuthPage ? "hover:text-green-800" : "hover:text-green-400";
+
+//   const handleLogout = async () => {
+//     try {
+//       const response = await customerApi.logout();
+//       if (response.status === "OK") {
+//         dispatch(logout());
+//         navigate("/login");
+//       }
+//     } catch (error) {
+//       console.error("Đăng xuất thất bại:", error.response?.data || error.message);
+//     }
+//   };
+
+//   return (
+//     <nav
+//       // className={`${className} fixed top-0 left-0 w-full z-20 bg-white backdrop-blur-md shadow-sm py-4 px-4 sm:px-8 lg:px-12 flex justify-between items-center`}
+//     >
+//       {/* Logo */}
+//       <Link to="/">
+//         <p className={`${textColor} text-3xl lg:text-4xl font-bold sigmar-font`}>
+//           CocoViet
+//         </p>
+//       </Link>
+
+//       {/* Chỉ hiển thị trên trang đăng nhập/đăng ký */}
+//       {isAuthPage && (
+//         <Link
+//           to={location.pathname === "/login" ? "/register" : "/login"}
+//           className={`${textColor} ${hoverColor} font-semibold text-lg uppercase transition-colors duration-300`}
+//         >
+//           {location.pathname === "/login" ? "Đăng ký" : "Đăng nhập"}
+//         </Link>
+//       )}
+
+//       {/* Menu cho các trang khác */}
+//       {!isAuthPage && (
+//         <>
+//           {/* Menu Desktop */}
+//           <ul className="hidden md:flex items-center gap-8 text-lg font-medium text-gray-700">
+//             <NavLink to="/" className={`${textColor} ${hoverColor} uppercase transition-colors duration-300`}>
+//               Trang chủ
+//             </NavLink>
+//             <NavLink to="/products" className={`${textColor} ${hoverColor} uppercase transition-colors duration-300`}>
+//               Sản phẩm
+//             </NavLink>
+//             <NavLink to="/about" className={`${textColor} ${hoverColor} uppercase transition-colors duration-300`}>
+//               Giới thiệu
+//             </NavLink>
+//             <NavLink to="/blog" className={`${textColor} ${hoverColor} uppercase transition-colors duration-300`}>
+//               Bài viết
+//             </NavLink>
+//           </ul>
+
+//           {/* Icons */}
+//           <div className="flex items-center gap-6">
+//             <div
+//               className="relative"
+//               onMouseEnter={() => setIsOpen(true)}
+//               onMouseLeave={() => setIsOpen(false)}
+//             >
+//               <Link to={!isLoggedIn ? "/login" : `/profile/${customerInfo?.customerId}`}>
+//                 <UserCircleIcon
+//                   className={`size-7 ${textColor} ${hoverColor} transition-colors duration-300`}
+//                 />
+//               </Link>
+//               {isOpen && isLoggedIn && (
+//                 <div className="absolute right-0 top-10 w-40 bg-white shadow-lg rounded-lg py-2 z-30">
+//                   <p
+//                     onClick={() => navigate(`/profile/${customerInfo.customerId}`)}
+//                     className="px-4 py-2 text-gray-700 hover:text-green-600 cursor-pointer"
+//                   >
+//                     Hồ sơ
+//                   </p>
+//                   <p className="px-4 py-2 text-gray-700 hover:text-green-600 cursor-pointer">
+//                     Đơn hàng
+//                   </p>
+//                   <p
+//                     onClick={handleLogout}
+//                     className="px-4 py-2 text-gray-700 hover:text-green-600 cursor-pointer"
+//                   >
+//                     Đăng xuất
+//                   </p>
+//                 </div>
+//               )}
+//             </div>
+
+//             {isLoggedIn && (
+//               <Link to="/order" className="relative">
+//                 <ShoppingBagIcon className={`size-7 ${textColor} ${hoverColor}`} />
+//                 <span className="absolute -top-1 -right-1 w-5 h-5 flex items-center justify-center bg-green-600 text-white text-xs rounded-full">
+//                   {cartCount}
+//                 </span>
+//               </Link>
+//             )}
+
+//             {/* Hamburger Menu */}
+//             <Bars3Icon
+//               className={`size-7 md:hidden ${textColor} ${hoverColor} cursor-pointer`}
+//               onClick={() => setVisible(true)}
+//             />
+//           </div>
+
+//           {/* Sidebar Mobile */}
+//           <div
+//             ref={sidebarRef}
+//             className={`fixed top-0 right-0 h-full bg-white shadow-lg transition-all duration-300 ${
+//               visible ? "w-64" : "w-0"
+//             } overflow-hidden z-30`}
+//           >
+//             <div className="flex flex-col p-4 text-gray-700">
+//               <button
+//                 onClick={() => setVisible(false)}
+//                 className="self-end text-green-600 mb-4"
+//               >
+//                 ✕
+//               </button>
+//               <NavLink to="/" onClick={() => setVisible(false)} className="py-2 uppercase hover:text-green-600">
+//                 Trang chủ
+//               </NavLink>
+//               <NavLink to="/products" onClick={() => setVisible(false)} className="py-2 uppercase hover:text-green-600">
+//                 Sản phẩm
+//               </NavLink>
+//               <NavLink to="/about" onClick={() => setVisible(false)} className="py-2 uppercase hover:text-green-600">
+//                 Giới thiệu
+//               </NavLink>
+//               <NavLink to="/blog" onClick={() => setVisible(false)} className="py-2 uppercase hover:text-green-600">
+//                 Bài viết
+//               </NavLink>
+//             </div>
+//           </div>
+//         </>
+//       )}
+//     </nav>
+//   );
+// };
+
+// export default Navbar;

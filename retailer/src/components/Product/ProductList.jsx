@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import ProductDetail from "./ProductDetail";
-import ProductItem from "./ProductItem";
-import ProductEdit from "./ProductEdit";
+import { setProducts } from "../../redux/retailerSlice";
 import { productApi } from "../../services/productService";
+import ProductDetail from "./ProductDetail";
+import ProductEdit from "./ProductEdit";
+import ProductItem from "./ProductItem";
 
-const ProductList = ({ products, categories, fetchProducts }) => {
+const ProductList = ({ products, fetchProducts }) => {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [productData, setProductData] = useState(products);
@@ -23,27 +24,33 @@ const ProductList = ({ products, categories, fetchProducts }) => {
     );
   }
 
+  const getProductById = async (id) => {
+    console.log("Product id selected", id);
+    const response = await productApi.getProductById(id);
+    setSelectedProduct(response.data);
+    console.log("Product selected", response.data);
+  };
+
   const handleEdit = () => {
     setIsEditing(true);
   };
 
-  const handleDelete = async(productId) => {
+  const handleDelete = async (productId) => {
     setSelectedProduct(null);
-    console.log("dele pproductid", productId)
+    console.log("dele pproductid", productId);
     const response = await productApi.deleteProductById(productId);
-    console.log("Data dele pproductid", response.data)
+    console.log("Data dele pproductid", response.data);
 
-    setProductData(response.data)
-    fetchProducts(); 
-    // setProductData(products) 
-  }
+    setProductData(response.data);
+    fetchProducts();
+    // setProductData(products)
+  };
 
-  const handleSaveOrCancel = (updatedProduct) => {
+  const handleSaveOrCancel = async (updatedProduct) => {
     setIsEditing(false);
-    if (updatedProduct) {
-      setSelectedProduct(updatedProduct); // Cập nhật selectedProduct với dữ liệu mới
-      fetchProducts(); // Gọi lại danh sách sản phẩm nếu cần
-    }
+    console.log(updatedProduct);
+    const response = await productApi.getProductById(selectedProduct.id);
+    setSelectedProduct(response.data);
   };
 
   return (
@@ -75,7 +82,7 @@ const ProductList = ({ products, categories, fetchProducts }) => {
                 {productData.map((product) => (
                   <div
                     key={product.id || product.productId}
-                    onClick={() => setSelectedProduct(product)}
+                    onClick={() => getProductById(product.id)}
                   >
                     <ProductItem product={product} />
                   </div>
