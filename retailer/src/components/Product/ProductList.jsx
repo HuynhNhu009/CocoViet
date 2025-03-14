@@ -1,22 +1,20 @@
 import React, { useState } from "react";
-import { setProducts } from "../../redux/retailerSlice";
-import { productApi } from "../../services/productService";
 import ProductDetail from "./ProductDetail";
-import ProductEdit from "./ProductEdit";
 import ProductItem from "./ProductItem";
+import ProductEdit from "./ProductEdit";
+import { productApi } from "../../services/productService";
 
-const ProductList = ({ products, fetchProducts }) => {
+const ProductList = ({ products, categories, fetchProducts }) => {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
-  const [productData, setProductData] = useState(products);
 
-  if (!productData) {
+  if (products == null) {
     return (
       <div className="text-center py-4 text-gray-600">Đang tải sản phẩm...</div>
     );
   }
 
-  if (!productData.length) {
+  if (!products.length) {
     return (
       <div className="text-center py-4 text-gray-600">
         Chưa có sản phẩm nào.
@@ -24,48 +22,65 @@ const ProductList = ({ products, fetchProducts }) => {
     );
   }
 
-  const getProductById = async (id) => {
-    console.log("Product id selected", id);
-    const response = await productApi.getProductById(id);
-    setSelectedProduct(response.data);
-    console.log("Product selected", response.data);
+  // Khi nhấn vào ProductItem, gọi API để lấy chi tiết sản phẩm
+  const handleSelectProduct = async (productId) => {
+    try {
+      const response = await productApi.getProductById(productId);
+      setSelectedProduct(response.data);
+    } catch (error) {
+      console.error("Lỗi khi lấy chi tiết sản phẩm:", error);
+      alert("Không thể tải chi tiết sản phẩm!");
+    }
   };
 
+  // Chuyển sang chế độ chỉnh sửa
   const handleEdit = () => {
     setIsEditing(true);
   };
 
+  // Xóa sản phẩm
   const handleDelete = async (productId) => {
-    setSelectedProduct(null);
-    console.log("dele pproductid", productId);
-    const response = await productApi.deleteProductById(productId);
-    console.log("Data dele pproductid", response.data);
-
-    setProductData(response.data);
-    fetchProducts();
-    // setProductData(products)
+    try {
+      await productApi.deleteProductById(productId);
+      setSelectedProduct(null);
+      if (typeof fetchProducts === "function") fetchProducts();
+    } catch (error) {
+      console.error("Lỗi khi xóa sản phẩm:", error);
+      alert("Xóa sản phẩm thất bại!");
+    }
   };
 
+  // Xử lý sau khi lưu hoặc hủy chỉnh sửa
   const handleSaveOrCancel = async (updatedProduct) => {
     setIsEditing(false);
-    console.log(updatedProduct);
-    const response = await productApi.getProductById(selectedProduct.id);
-    setSelectedProduct(response.data);
+    if (updatedProduct) {
+      try {
+        const response = await productApi.getProductById(
+          updatedProduct.id || updatedProduct.productId
+        );
+        setSelectedProduct(response.data); // Cập nhật sản phẩm đã chỉnh sửa
+        if (typeof fetchProducts === "function") fetchProducts();
+      } catch (error) {
+        console.error("Lỗi khi lấy sản phẩm sau khi lưu:", error);
+        alert("Không thể tải sản phẩm đã chỉnh sửa!");
+      }
+    }
   };
 
   return (
     <div className="flex flex-col gap-4 pb-2">
       {isEditing ? (
+        // Khi chỉnh sửa, chỉ hiển thị ProductEdit
         <div className="w-full">
           <ProductEdit
             product={selectedProduct}
-            onSave={handleSaveOrCancel} // Truyền hàm mới
-            onCancel={() => handleSaveOrCancel(null)} // Không cập nhật nếu hủy
+            onSave={handleSaveOrCancel}
+            onCancel={() => handleSaveOrCancel(null)}
           />
         </div>
       ) : (
         <div className="flex flex-col md:flex-row gap-4">
-          {/* Left side - Product List - Hidden on mobile when product is selected */}
+          {/* Danh sách sản phẩm - Ẩn trên mobile khi có selectedProduct */}
           {(!selectedProduct || window.innerWidth >= 768) && (
             <div
               className={
@@ -79,10 +94,12 @@ const ProductList = ({ products, fetchProducts }) => {
                     : "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-3 xl:grid-cols-5 gap-2"
                 }
               >
-                {productData.map((product) => (
+                {products.map((product) => (
                   <div
                     key={product.id || product.productId}
-                    onClick={() => getProductById(product.id)}
+                    onClick={() =>
+                      handleSelectProduct(product.id || product.productId)
+                    }
                   >
                     <ProductItem product={product} />
                   </div>
@@ -90,15 +107,15 @@ const ProductList = ({ products, fetchProducts }) => {
               </div>
             </div>
           )}
-          {/* Right side - Product Detail */}
+          {/* Hiển thị ProductDetail khi có sản phẩm được chọn */}
           {selectedProduct && (
             <div className="w-full md:w-1/2 lg:w-3/5">
               <ProductDetail
                 product={selectedProduct}
-                onProductSave={setSelectedProduct}
                 onBack={() => setSelectedProduct(null)}
                 onEdit={handleEdit}
                 onDelete={handleDelete}
+                fetchProducts={fetchProducts}
               />
             </div>
           )}

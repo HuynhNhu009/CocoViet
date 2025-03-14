@@ -1,12 +1,12 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { PlusIcon, XMarkIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { IoIosSave } from "react-icons/io";
 import { productApi } from "../../services/productService";
 import UploadImage from "../UpLoadImage";
 
-const ProductEdit = ({ product, productId, onSave, onCancel }) => {
-  const [dataEdited, setDataEdited] = useState({});
+const ProductEdit = ({ product, onSave, onCancel }) => {
+  const [dataEdited, setDataEdited] = useState({ ...product }); // Khởi tạo với dữ liệu sản phẩm gốc
   const [variantErrors, setVariantErrors] = useState("");
   const [deletedVariants, setDeletedVariants] = useState([]);
   const [newVariant, setNewVariant] = useState({
@@ -15,9 +15,6 @@ const ProductEdit = ({ product, productId, onSave, onCancel }) => {
     price: "",
     initStock: "",
   });
-
-  // const productID = productId;
-  // console.log(product.id, product.productName);
   const [isAddingVariantInline, setIsAddingVariantInline] = useState(false);
 
   const categories = useSelector((state) => state.RetailerStore.category);
@@ -32,8 +29,7 @@ const ProductEdit = ({ product, productId, onSave, onCancel }) => {
   // Hàm xử lý khi giá trị của một variant thay đổi
   const handleVariantChange = (variantId, field, value) => {
     setDataEdited((prev) => {
-      const currentVariants = prev.variants || product.variants || [];
-      const updatedVariants = currentVariants.map((variant) =>
+      const updatedVariants = prev.variants.map((variant) =>
         variant.variantId === variantId
           ? {
               ...variant,
@@ -90,7 +86,7 @@ const ProductEdit = ({ product, productId, onSave, onCancel }) => {
 
     setDataEdited((prev) => ({
       ...prev,
-      variants: [...(prev.variants || product.variants || []), variant],
+      variants: [...prev.variants, variant],
     }));
     setNewVariant({ unitId: "", value: "", price: "", initStock: "" });
     setVariantErrors("");
@@ -98,23 +94,19 @@ const ProductEdit = ({ product, productId, onSave, onCancel }) => {
   };
 
   const handleDeleteVariant = (variantId) => {
-    console.log("dele", variantId);
-    // const response = await productApi.deleteVariantProduct(product.id, variantId);
-    // console.log("Delel----edit", response.data);
     setDeletedVariants((prev) => [...prev, variantId]);
     setDataEdited((prev) => ({
       ...prev,
-      variants: (prev.variants || product.variants || []).filter(
+      variants: prev.variants.filter(
         (variant) => variant.variantId !== variantId
       ),
     }));
-
-    console.log("Delll---edit", deletedVariants);
   };
 
+  // Sửa: Toggle dựa trên categoryId
   const handleCategoryToggle = (categoryId) => {
     setDataEdited((prev) => {
-      const currentCategories = prev.categories || product.categories || [];
+      const currentCategories = prev.categories || [];
       const updatedCategories = currentCategories.some(
         (cat) => cat.categoryId === categoryId
       )
@@ -124,27 +116,17 @@ const ProductEdit = ({ product, productId, onSave, onCancel }) => {
     });
   };
 
+  // Sửa: Kiểm tra dựa trên categoryId
   const isCategoryChecked = (categoryId) => {
-    const currentCategories = dataEdited.categories || product.categories || [];
-    return currentCategories.some((cat) => cat.categoryId === categoryId);
-  };
-
-  const getDisplayValue = (field) => {
-    return dataEdited[field] !== undefined
-      ? dataEdited[field]
-      : product[field] || "";
-  };
-
-  const getVariantDisplayValue = (variantId, field) => {
-    const currentVariants = dataEdited.variants || product.variants || [];
-    const variant = currentVariants.find((v) => v.variantId === variantId);
-    return variant ? variant[field] || "" : "";
+    return (dataEdited.categories || []).some(
+      (cat) => cat.categoryId === categoryId
+    );
   };
 
   // Hàm xử lý lưu sản phẩm
-  const handleSaveProduct = async (productId) => {
+  const handleSaveProduct = async () => {
     const updatedData = {};
-    // console.log("====product id", productId)
+    const productId = product.id || product.productId;
 
     // Chỉ gửi các trường được thay đổi
     ["productName", "productOrigin", "productDesc"].forEach((field) => {
@@ -156,7 +138,7 @@ const ProductEdit = ({ product, productId, onSave, onCancel }) => {
       }
     });
 
-    // Xử lý categoryId (chuyển từ mảng đối tượng thành mảng chuỗi)
+    // Xử lý categoryId
     if (dataEdited.categories !== undefined) {
       const originalCategoryIds = (product.categories || []).map(
         (c) => c.categoryId
@@ -168,7 +150,7 @@ const ProductEdit = ({ product, productId, onSave, onCancel }) => {
         JSON.stringify(originalCategoryIds) !==
         JSON.stringify(updatedCategoryIds)
       ) {
-        updatedData.categoryId = updatedCategoryIds; // Gửi mảng các chuỗi categoryId
+        updatedData.categoryId = updatedCategoryIds; // Gửi mảng categoryId
       }
     }
 
@@ -177,7 +159,6 @@ const ProductEdit = ({ product, productId, onSave, onCancel }) => {
       const originalVariants = product.variants || [];
       const editedVariants = dataEdited.variants || [];
 
-      // Tạo mảng productVariants gửi lên server (bao gồm cả mới và cũ được thay đổi)
       const productVariantsToSend = [];
 
       // Thêm các variants mới
@@ -210,60 +191,51 @@ const ProductEdit = ({ product, productId, onSave, onCancel }) => {
                 variantId: ev.variantId,
                 unitId: ev.unitId,
                 value: ev.value,
-                price: ev.price,
-                initStock: ev.initStock,
+                price: ev.price, // Sửa lỗi: dùng ev.price thay vì v.price
+                initStock: ev.initStock, // Sửa lỗi: dùng ev.initStock thay vì v.initStock
               }
             : null;
         })
         .filter((v) => v !== null);
       productVariantsToSend.push(...changedVariants);
 
-      // Nếu có productVariants cần gửi, thêm vào updatedData
       if (productVariantsToSend.length > 0) {
         updatedData.productVariants = productVariantsToSend;
       }
     }
 
     try {
+      // Xử lý xóa variant với soft delete hoặc kiểm tra trước
       if (deletedVariants.length > 0) {
-        console.log("Deleting variants:", deletedVariants);
-        console.log("Product Id:", productId);
-        
         for (const variantId of deletedVariants) {
-          const response = await productApi.deleteVariantProduct(
-            product.id,
-            variantId
-          );
-          console.log("Deleted variant response:", response.data);
+          try {
+            await productApi.deleteVariantProduct(productId, variantId);
+          } catch (deleteError) {
+            console.error(`Không thể xóa variant ${variantId}:`, deleteError);
+            alert(
+              `Không thể xóa variant ${variantId} vì nó đã được sử dụng trong hóa đơn!`
+            );
+          }
         }
       }
-      // Nếu có dữ liệu thay đổi, gửi request lên server
+
+      // Nếu có dữ liệu thay đổi, gửi request cập nhật
       if (Object.keys(updatedData).length > 0) {
-        console.log("Updated data:", JSON.stringify(updatedData, null, 2));
-        const response = await productApi.updateProduct(
-          productId,
-          updatedData,
-          null
-        );
-        console.log("Update response:", response);
-        const responseProduct = await productApi.getProductById(
-          productId,
-        );
-        onSave(responseProduct.data);
-        // const updatedProduct = response.data;
-      } else {
-        console.log("No changes detected.");
-        // onSave(product); // Thoát chế độ chỉnh sửa nếu không có thay đổi
+        await productApi.updateProduct(productId, updatedData);
       }
-      
+
+      // Lấy lại dữ liệu sản phẩm mới từ server
+      const response = await productApi.getProductById(productId);
+      onSave(response.data); // Truyền dữ liệu mới qua onSave
     } catch (error) {
-      console.error("Error updating product:", error);
-      onSave(product);
+      console.error("Lỗi khi cập nhật sản phẩm:", error);
+      alert("Cập nhật sản phẩm thất bại!");
+      onSave(product); // Trả lại dữ liệu cũ nếu lỗi
     }
   };
 
   const handleCancelProduct = () => {
-    setDeletedVariants([]); // Clear deleted variants without processing
+    setDeletedVariants([]);
     onCancel();
   };
 
@@ -272,7 +244,7 @@ const ProductEdit = ({ product, productId, onSave, onCancel }) => {
       {/* Nút Lưu và Hủy */}
       <div className="flex justify-end space-x-2 mb-6">
         <button
-          onClick={()=>handleSaveProduct(product.id)}
+          onClick={handleSaveProduct}
           className="flex items-center space-x-2 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
         >
           <IoIosSave className="size-5" />
@@ -298,8 +270,8 @@ const ProductEdit = ({ product, productId, onSave, onCancel }) => {
                 Hình ảnh sản phẩm:
               </label>
               <img
-                src={product.productImage}
-                alt={product.productName}
+                src={dataEdited.productImage || product.productImage}
+                alt={dataEdited.productName || product.productName}
                 className="w-fit max-w-xs h-40 object-cover rounded-md border border-gray-300"
               />
               <UploadImage className={"w-full"} />
@@ -334,7 +306,7 @@ const ProductEdit = ({ product, productId, onSave, onCancel }) => {
 
           {/* Thông tin sản phẩm */}
           <div className="space-y-4 mr-6">
-            <div className="">
+            <div>
               <label className="block text-sm font-medium text-gray-700">
                 Tên sản phẩm:
               </label>
@@ -342,7 +314,7 @@ const ProductEdit = ({ product, productId, onSave, onCancel }) => {
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-0 focus:border-green-500 focus:outline-none"
                 type="text"
                 name="productName"
-                value={getDisplayValue("productName")}
+                value={dataEdited.productName || ""}
                 onChange={handleInputChange}
               />
             </div>
@@ -354,7 +326,7 @@ const ProductEdit = ({ product, productId, onSave, onCancel }) => {
                 className="w-full px-3 py-2 border border-gray-300 rounded-sm focus:ring-0 focus:border-green-500 focus:outline-none"
                 type="text"
                 name="productOrigin"
-                value={getDisplayValue("productOrigin")}
+                value={dataEdited.productOrigin || ""}
                 onChange={handleInputChange}
               />
             </div>
@@ -365,7 +337,7 @@ const ProductEdit = ({ product, productId, onSave, onCancel }) => {
               <textarea
                 className="w-full min-h-[230px] px-3 py-2 border border-gray-300 rounded-sm focus:ring-0 focus:border-green-500 focus:outline-none overflow-y-auto"
                 name="productDesc"
-                value={getDisplayValue("productDesc")}
+                value={dataEdited.productDesc || ""}
                 onChange={handleInputChange}
               />
             </div>
@@ -479,127 +451,105 @@ const ProductEdit = ({ product, productId, onSave, onCancel }) => {
 
           {/* Danh sách thể loại */}
           <div className="min-h-40 overflow-y-auto border border-gray-300 rounded-md p-4">
-            {(dataEdited.variants || product.variants || []).length === 0 ? (
+            {(dataEdited.variants || []).length === 0 ? (
               <p className="text-gray-500 text-sm text-center">
                 Chưa có thể loại nào được thêm.
               </p>
             ) : (
-              (dataEdited.variants || product.variants || []).map(
-                (variant, index) => (
-                  <div
-                    key={index}
-                    className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 items-center py-2 border-b border-gray-200 last:border-b-0"
-                  >
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">
-                        Số lượng
-                      </label>
-                      <input
-                        type="number"
-                        value={getVariantDisplayValue(
+              dataEdited.variants.map((variant, index) => (
+                <div
+                  key={index}
+                  className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 items-center py-2 border-b border-gray-200 last:border-b-0"
+                >
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">
+                      Số lượng
+                    </label>
+                    <input
+                      type="number"
+                      value={variant.value || ""}
+                      onChange={(e) =>
+                        handleVariantChange(
                           variant.variantId,
-                          "value"
-                        )}
-                        onChange={(e) =>
-                          handleVariantChange(
-                            variant.variantId,
-                            "value",
-                            e.target.value
-                          )
-                        }
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                        placeholder="Số lượng"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">
-                        Giá
-                      </label>
-                      <input
-                        type="number"
-                        value={getVariantDisplayValue(
-                          variant.variantId,
-                          "price"
-                        )}
-                        onChange={(e) =>
-                          handleVariantChange(
-                            variant.variantId,
-                            "price",
-                            e.target.value
-                          )
-                        }
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                        placeholder="Giá"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">
-                        Đơn vị
-                      </label>
-                      <select
-                        value={getVariantDisplayValue(
-                          variant.variantId,
-                          "unitId"
-                        )}
-                        onChange={(e) =>
-                          handleVariantChange(
-                            variant.variantId,
-                            "unitId",
-                            e.target.value
-                          )
-                        }
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                        disabled={units.length === 0}
-                      >
-                        {/* <option value>Chọn đơn vị</option> */}
-                        <option
-                          value={getVariantDisplayValue(
-                            variant.unitId,
-                            "unitId"
-                          )}
-                        >
-                          {variant.unitName}
-                        </option>
-                        {units.map((unit) => (
-                          <option key={unit.unitId} value={unit.unitId}>
-                            {unit.unitName}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">
-                        Tồn kho
-                      </label>
-                      <input
-                        type="number"
-                        value={getVariantDisplayValue(
-                          variant.variantId,
-                          "initStock"
-                        )}
-                        onChange={(e) =>
-                          handleVariantChange(
-                            variant.variantId,
-                            "initStock",
-                            e.target.value
-                          )
-                        }
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                        placeholder="Tồn kho"
-                      />
-                    </div>
-                    <div className="flex items-center justify-end">
-                      <button
-                        type="button"
-                        onClick={() => handleDeleteVariant(variant.variantId)}
-                        className="p-2 text-red-600 hover:text-red-800"
-                      >
-                        <TrashIcon className="size-5" />
-                      </button>
-                    </div>
+                          "value",
+                          e.target.value
+                        )
+                      }
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                      placeholder="Số lượng"
+                    />
                   </div>
-                )
-              )
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">
+                      Giá
+                    </label>
+                    <input
+                      type="number"
+                      value={variant.price || ""}
+                      onChange={(e) =>
+                        handleVariantChange(
+                          variant.variantId,
+                          "price",
+                          e.target.value
+                        )
+                      }
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                      placeholder="Giá"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">
+                      Đơn vị
+                    </label>
+                    <select
+                      value={variant.unitId || ""}
+                      onChange={(e) =>
+                        handleVariantChange(
+                          variant.variantId,
+                          "unitId",
+                          e.target.value
+                        )
+                      }
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                      disabled={units.length === 0}
+                    >
+                      <option value="">Chọn đơn vị</option>
+                      {units.map((unit) => (
+                        <option key={unit.unitId} value={unit.unitId}>
+                          {unit.unitName}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">
+                      Tồn kho
+                    </label>
+                    <input
+                      type="number"
+                      value={variant.initStock || ""}
+                      onChange={(e) =>
+                        handleVariantChange(
+                          variant.variantId,
+                          "initStock",
+                          e.target.value
+                        )
+                      }
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                      placeholder="Tồn kho"
+                    />
+                  </div>
+                  <div className="flex items-center justify-end">
+                    <button
+                      type="button"
+                      onClick={() => handleDeleteVariant(variant.variantId)}
+                      className="p-2 text-red-600 hover:text-red-800"
+                    >
+                      <TrashIcon className="size-5" />
+                    </button>
+                  </div>
+                </div>
+              ))
             )}
           </div>
         </div>
