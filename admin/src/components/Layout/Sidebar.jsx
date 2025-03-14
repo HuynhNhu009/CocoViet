@@ -219,7 +219,6 @@ const Sidebar = () => {
                   order.receiptDetails
                     ?.filter((detail) => detail.statusName === "Đã Giao")
                     .map(() => ({
-                      retailerId: retailer.retailerId,
                       orderDate: order.orderDate,
                       totalQuantity: order.receiptDetails.reduce(
                         (sum, detail) => sum + (detail.totalQuantity || 0),
@@ -231,9 +230,7 @@ const Sidebar = () => {
         );
 
         const OrderByRetailer = await Promise.all(orderPromises);
-        console.log("OrderByRetailer", OrderByRetailer);
-        
-        // dispatch(setRetailerProduct(productsByRetailer));
+        dispatch(setOrderByRetailer(OrderByRetailer));
 
       } catch (error) {
         console.error("Error fetching products by retailers:", error);

@@ -16,7 +16,6 @@ const FilterRevenueByRetailer = () => {
     if (retailerStore) {
       setretailer(retailerStore);
     }    
-    console.log("retailerActive", retailerActive);
     
     if (!retailerActive) {
       dispatch(setRevenueRetailerActive("allStatistic"));
