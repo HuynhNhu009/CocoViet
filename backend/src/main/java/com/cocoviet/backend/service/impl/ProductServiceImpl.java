@@ -1,5 +1,6 @@
 package com.cocoviet.backend.service.impl;
 
+import com.cocoviet.backend.Enum.ProductStatus;
 import com.cocoviet.backend.mapper.IProductMapper;
 import com.cocoviet.backend.mapper.ProductVariantMapper;
 import com.cocoviet.backend.models.dto.ProductDTO;
@@ -69,7 +70,7 @@ public class ProductServiceImpl implements IProductService {
             .productImage(iFileUpload.uploadFile(imageFile, "product"))
             .productOrigin(productRequest.getProductOrigin())
             .retailer(retailerEntity)
-            .deleted(false)
+            .status(ProductStatus.ENABLE.name())
             .createdAt(LocalDateTime.now())
             .build();
 
@@ -293,7 +294,35 @@ public class ProductServiceImpl implements IProductService {
 
     @Override
     public List<ProductDTO> getAllProduct() {
-        List<ProductEntity> productEntities = iProductRepository.findProductsEntitiesByDeleted(false);
+        List<ProductEntity> productEntities = iProductRepository.findAll();
+
+        List<ProductDTO> productDTOS = productEntities.stream() //tra ve set<string>
+                .map(productEntity -> {
+
+                    //su dung lai getProductById
+                    //Category
+                    Set<ProductCategoryEntity> productCategoryEntities = iproductCategoryRepository.findByProduct(productEntity);
+                    Set<String> categoryName = productCategoryEntities.stream() //tra ve set<string>
+                            .map(productCategory -> productCategory.getCategory().getCategoryName())//get tu productCategory
+                            .collect(Collectors.toSet());
+
+                    //Unit
+                    Set<ProductVariantDTO> productVariantDTOS = productVariantMapper.toDTOSet(productEntity.getVariants());
+
+                    ProductDTO productDTO = iProductMapper.toProductDTO(productEntity);
+                    productDTO.setCategoryName(categoryName);
+                    productDTO.setVariants(productVariantDTOS);
+
+                    return productDTO;
+                }).collect(Collectors.toList());
+
+        return productDTOS;
+
+    }
+
+    @Override
+    public List<ProductDTO> getAllProductEnable() {
+        List<ProductEntity> productEntities = iProductRepository.findProductsEntitiesByStatus(ProductStatus.ENABLE.name());
 
         List<ProductDTO> productDTOS = productEntities.stream() //tra ve set<string>
                 .map(productEntity -> {

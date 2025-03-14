@@ -16,8 +16,7 @@ public class ProductDTO {
      String productDesc;
      String productImage;
      String productOrigin;
-     Boolean deleted;
-
+     String status;
      Set<String> categoryName;
      String retailerName;
      LocalDateTime createdAt;
