@@ -32,6 +32,7 @@ const initialState = {
   revenueRetailerActive:null,
 
   statusStore:[],
+
   
 
 };

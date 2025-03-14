@@ -30,11 +30,12 @@ const PostList = () => {
         ))
       ) : (
         <p className="lg:w-[80%] w-full mx-auto ">
-          <img
+          {/* <img
             src="https://img.freepik.com/premium-vector/error-404-page-found-banner-linear-style-vector-icon_399089-17761.jpg"
             alt="Không tìm thấy bất kỳ bài viết nào"
             className="w-full aspect-video"
-          />
+          /> */}
+          Chưa có bài viết nào.
         </p>
       )}
     </div>

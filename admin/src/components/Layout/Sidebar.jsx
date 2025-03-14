@@ -10,6 +10,7 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  setcategory,
   setCategoryActive,
   setCustomer,
   setOrder,
@@ -30,6 +31,7 @@ import { retailerAPI } from "../../services/retailerService";
 import { postApi } from "../../services/postService";
 import { orderAPI } from "../../services/orderService";
 import { statusAPI } from "../../services/statusService";
+import { categoryAPI } from "../../services/categoryService";
 
 const Sidebar = () => {
   const navigate = useNavigate();
@@ -116,7 +118,18 @@ const Sidebar = () => {
       console.error("Error fetching post:", error);
     }
   };
+  const getAllCategories = async () => {
+    try {
+      const response = await categoryAPI.getAllCategories();
+      if (response.data) {
+        dispatch(setcategory(response.data));
+      }
+    } catch (error) {
+      console.error("Error fetching post:", error);
+    }
+  };
 
+  //fetch
   useEffect(() => {
     orders();
     status();
@@ -125,6 +138,7 @@ const Sidebar = () => {
     products();
     customers();
     retailers();
+    getAllCategories();
   }, [dispatch, sideBarActive]);
 
   const navItems = [
@@ -136,7 +150,7 @@ const Sidebar = () => {
     {
       label: "Danh mục sản phẩm",
       icon: <TagIcon className="size-5" />,
-      path: "/products",
+      path: "/categories",
     },
     {
       label: "Bài viết",
@@ -205,8 +219,6 @@ const Sidebar = () => {
 
         const productsByRetailer = await Promise.all(productPromises);
         dispatch(setRetailerProduct(productsByRetailer));
-
-        // console.log(orderStore);
         
         //order
         const orderPromises = retailerStore.map((retailer) =>

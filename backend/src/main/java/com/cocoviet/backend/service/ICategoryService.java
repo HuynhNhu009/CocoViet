@@ -10,4 +10,5 @@ public interface ICategoryService {
     CategoryDTO updateCategory(String categoryId, CategoryRequest categoryRequest);
     CategoryDTO getCategoryById(String categoryId);
     List<CategoryDTO> getAllCategories();
+    
 }
