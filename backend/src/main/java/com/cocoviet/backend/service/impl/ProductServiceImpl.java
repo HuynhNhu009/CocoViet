@@ -69,6 +69,7 @@ public class ProductServiceImpl implements IProductService {
             .productImage(iFileUpload.uploadFile(imageFile, "product"))
             .productOrigin(productRequest.getProductOrigin())
             .retailer(retailerEntity)
+            .deleted(false)
             .createdAt(LocalDateTime.now())
             .build();
 
@@ -235,6 +236,8 @@ public class ProductServiceImpl implements IProductService {
         } else {
             productVariantDTOS = productVariantMapper.toDTOSet(productEntity.getVariants());
         }
+//        productEntity.setDeleted(false);
+//        iProductRepository.save(productEntity);
 
         ProductDTO  productDTO = iProductMapper.toProductDTO(productEntity);
         productDTO.setCategoryName(categoryName);
@@ -290,7 +293,7 @@ public class ProductServiceImpl implements IProductService {
 
     @Override
     public List<ProductDTO> getAllProduct() {
-        List<ProductEntity> productEntities = iProductRepository.findAll();
+        List<ProductEntity> productEntities = iProductRepository.findProductsEntitiesByDeleted(false);
 
         List<ProductDTO> productDTOS = productEntities.stream() //tra ve set<string>
                 .map(productEntity -> {

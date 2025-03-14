@@ -18,4 +18,6 @@ public interface IProductRepository extends JpaRepository<ProductEntity, String>
     // Thêm phương thức mới để tìm sản phẩm theo retailerId
     @Query("SELECT p FROM ProductEntity p WHERE p.retailer.retailerId = :retailerId")
     List<ProductEntity> findProductsByRetailerId(@Param("retailerId") String retailerId);
+
+    List<ProductEntity> findProductsEntitiesByDeleted(boolean deleted);
 }
