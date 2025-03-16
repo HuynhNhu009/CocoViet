@@ -24,6 +24,7 @@ import {
   setRetailerProduct,
   setRevenueList,
   setStatus,
+  setUpdate,
 } from "../../redux/adminSlice";
 import { productAPI } from "../../services/productService";
 import { customerApi } from "../../services/customerService";
@@ -42,6 +43,7 @@ const Sidebar = () => {
   const orderStore = useSelector((state) => state.AdminStore.orderStore);
   const statusStore = useSelector((state) => state.AdminStore.statusStore);
   const revenueRetailerActive = useSelector((state) => state.AdminStore.revenueRetailerActive);
+  const update = useSelector((state) => state.AdminStore.update);
 
   const customers = async () => {
     try {
@@ -138,8 +140,12 @@ const Sidebar = () => {
     products();
     customers();
     retailers();
-    getAllCategories();
   }, [dispatch, sideBarActive]);
+
+  useEffect(() => {
+    getAllCategories();    
+    dispatch(setUpdate(true));
+  }, [dispatch, sideBarActive,update ]);
 
   const navItems = [
     {

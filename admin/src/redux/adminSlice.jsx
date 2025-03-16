@@ -1,3 +1,4 @@
+import { FlagIcon } from "@heroicons/react/24/outline";
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
@@ -33,7 +34,7 @@ const initialState = {
 
   statusStore:[],
 
-  
+  update: false,
 
 };
 
@@ -47,6 +48,10 @@ const adminSlice = createSlice({
 
     setRevenueRetailerActive: (state, action) => {
       state.revenueRetailerActive = action.payload;
+    },
+
+    setUpdate: (state, action) => {
+      state.update = action.payload;
     },
 
     setOrderByRetailer: (state, action) => {
@@ -118,5 +123,5 @@ const adminSlice = createSlice({
     },
   },
 });
-export const { setAdmin, setOrderChart,setOrderByRetailer, setRevenueRetailerActive, setRevenueListRetailer, setStatus, setRetailerProduct,setRevenueList, setOrder, setPostRetailerActive, setActive, setPostFilter, setPostSearch, setPost, setRetailerSearch, setRetailer, setCustomerSearch, setCustomer, setPoductCategory, setPoductSearch, setcategory,setProduct, setCategoryActive } = adminSlice.actions;
+export const { setAdmin,setUpdate, setOrderChart,setOrderByRetailer, setRevenueRetailerActive, setRevenueListRetailer, setStatus, setRetailerProduct,setRevenueList, setOrder, setPostRetailerActive, setActive, setPostFilter, setPostSearch, setPost, setRetailerSearch, setRetailer, setCustomerSearch, setCustomer, setPoductCategory, setPoductSearch, setcategory,setProduct, setCategoryActive } = adminSlice.actions;
 export default adminSlice.reducer;
