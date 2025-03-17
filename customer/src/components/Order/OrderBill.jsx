@@ -40,7 +40,7 @@ function OrderBill(orderStore) {
         order?.receiptDetails?.forEach((item) => {
           orderTotal += item.productVariants.price * item.totalQuantity;
         });
-        prices[order.orderId] = orderTotal + 30;
+        prices[order.orderId] = orderTotal + 30000;
       });
 
       setTotalPrice(prices);
@@ -172,7 +172,7 @@ function OrderBill(orderStore) {
                           .reverse()
                           .join("/") || "N/A"}
                       </td>
-                      <td className="p-3">{(new Intl.NumberFormat("vi-VN").format(totalPrice[item.orderId]))} VND</td>
+                      <td className="p-3">₫{(new Intl.NumberFormat("vi-VN").format(totalPrice[item.orderId]))}</td>
                       <td className="p-3">{statusName}</td>
                       {["SHIPPING"].includes(statusActive) && (  
                         <td className="p-3 hidden text-center text-sm">
@@ -258,7 +258,7 @@ function OrderBill(orderStore) {
                             </div>
                           ))}
 
-                          <div className="payment my-5 ">
+                          <div className="payment mt-5 ">
                             <p className="text-green-600 font-bold">
                               Phương thức
                             </p>
@@ -293,14 +293,17 @@ function OrderBill(orderStore) {
                             )}
                           </div>
                           <div className="font-light">
-                            *Phí ship toàn quốc 30.000 VNĐ
+                            *Phí ship toàn quốc ₫30.000 
                           </div>
 
-                          <p className="mt-2 font-medium text-right">
-                            Tổng: {totalPrice[item.orderId] - 30} VND
+                          <p className="mt-2 font-extralight text-right">
+                            Tổng tiền hàng:  ₫{(new Intl.NumberFormat("vi-VN").format(totalPrice[item.orderId] - 30000))} 
                           </p>
-                          <p className="mt-2 font-medium text-right">
-                            Phí vận chuyển: 30 VND
+                          <p className=" font-extralight text-right">
+                            Phí vận chuyển: ₫30.000 
+                          </p>
+                          <p className=" font-medium text-right">
+                            Tổng cộng: ₫{(new Intl.NumberFormat("vi-VN").format(totalPrice[item.orderId]))} 
                           </p>
                         </td>
                       </tr>

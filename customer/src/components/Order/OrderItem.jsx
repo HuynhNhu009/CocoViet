@@ -27,17 +27,19 @@ function OrderItem(orderStore) {
 
       const initialQuantities = {};
       let price = 0;
-      orderStore?.orderStore?.receiptDetails?.filter((item) => item.productStatus === "ENABLE")
-      .forEach((item) => {
-        price += item.productVariants.price * item.totalQuantity;
-        initialQuantities[item.productVariants.variantId] = item.totalQuantity;
-      });
+      orderStore?.orderStore?.receiptDetails
+        ?.filter((item) => item.productStatus === "ENABLE")
+        .forEach((item) => {
+          price += item.productVariants.price * item.totalQuantity;
+          initialQuantities[item.productVariants.variantId] =
+            item.totalQuantity;
+        });
       setTotalPrice(price);
       setQuantity(initialQuantities);
       setLoading(false);
     }
   }, [orderStore]);
-  
+
   if (loading) {
     return <p className="text-center text-gray-500">Đang tải đơn hàng...</p>;
   }
@@ -97,13 +99,13 @@ function OrderItem(orderStore) {
     }
 
     try {
-
-      const deleteReceipt = order.receiptDetails
-      .filter((item) => item.productStatus === "DISABLE")
+      const deleteReceipt = order.receiptDetails.filter(
+        (item) => item.productStatus === "DISABLE"
+      );
 
       console.log("dele", deleteReceipt);
-      
-      if(deleteReceipt.length > 0){
+
+      if (deleteReceipt.length > 0) {
         Swal.fire({
           title: "Chưa thể đặt hàng!",
           text: "Vui lòng xóa các sản phẩm đã hết hàng trước khi đặt hàng!",
@@ -111,22 +113,22 @@ function OrderItem(orderStore) {
           showConfirmButton: false,
           timer: 1500,
         });
-      }else{
+      } else {
         const receiptDetailRequests = order.receiptDetails
-        .filter((item) => item.productStatus === "ENABLE")
-        .map((item) => ({
-          productVariantId: item.productVariants.variantId,
-          statusCode: "PROCESSING",
-        }));
-  
+          .filter((item) => item.productStatus === "ENABLE")
+          .map((item) => ({
+            productVariantId: item.productVariants.variantId,
+            statusCode: "PROCESSING",
+          }));
+
         const orderRequest = {
           receiptDetailRequests: receiptDetailRequests,
         };
-  
+
         console.log("order", orderRequest);
         await orderAPI.updateOrder(order.orderId, orderRequest);
         await dispatch(setCreateOrder(true));
-  
+
         Swal.fire({
           title: "Đặt hàng thành công!",
           text: "Vui lòng xem chi tiết tại trạng thái Đang xử lý",
@@ -135,8 +137,6 @@ function OrderItem(orderStore) {
           timer: 1000,
         });
       }
-    
-      
     } catch (error) {
       console.error("Lỗi cập nhật đơn hàng:", error);
       Swal.fire(
@@ -183,11 +183,15 @@ function OrderItem(orderStore) {
                             {item.productName} - ({item.productVariants.value}
                             {item.productVariants.unitName})
                           </span>
-
                         </span>
                       </div>
                     </td>
-                    <td className="px-4 py-2">{(new Intl.NumberFormat("vi-VN").format(item.productVariants.price))}</td>
+                    <td className="px-4 py-2">
+                      ₫
+                      {new Intl.NumberFormat("vi-VN").format(
+                        item.productVariants.price
+                      )}
+                    </td>
 
                     <td className={`px-4 py-2`}>
                       {item.productStatus !== "DISABLE" ? (
@@ -219,8 +223,10 @@ function OrderItem(orderStore) {
 
                     {item.productStatus !== "DISABLE" ? (
                       <td className="px-4 py-2">
-                      
-                        {(new Intl.NumberFormat("vi-VN").format(item.productVariants.price * item.totalQuantity))}
+                        ₫
+                        {new Intl.NumberFormat("vi-VN").format(
+                          item.productVariants.price * item.totalQuantity
+                        )}
                       </td>
                     ) : (
                       <p></p>
@@ -255,8 +261,10 @@ function OrderItem(orderStore) {
               {order?.receiptDetails?.length} sản phẩm
             </div>
             <div>
-              <p className="mb-2">Tổng Cộng : {(new Intl.NumberFormat("vi-VN").format(totalPrice))}
-               VND</p>
+              <p className="mb-2">
+                Tổng tiền hàng : ₫
+                {new Intl.NumberFormat("vi-VN").format(totalPrice)}
+              </p>
               <button
                 onClick={() => handleNextProcess()}
                 className="bg-green-600 cursor-pointer text-white py-1 px-3 rounded-tl-2xl rounded-br-2xl shadow-md transition-transform hover:scale-105 duration-400 ease-in-out"
