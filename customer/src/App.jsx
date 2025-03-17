@@ -68,7 +68,7 @@ function App() {
 
     const fetchData = async () => {
       try {
-        const productResponse = await productAPI.getAllProducts();
+        const productResponse = await productAPI.getAllProductEnable();
         if (productResponse && productResponse.data) {
           dispatch(setProductStore(productResponse.data));
         }

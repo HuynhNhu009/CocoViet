@@ -28,11 +28,11 @@ public class StatusController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<ResponseData> addStatus(@RequestBody @Valid StatusRequest statusRequest){
+    public ResponseEntity<ResponseData> addStatus(){
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ResponseData.builder()
-                        .data(iStatusService.addStatus(statusRequest))
-                        .msg("Create Status: "+ statusRequest.getStatusName() +" successfully!")
+                        .data(iStatusService.addStatus())
+                        .msg("Create Status: successfully!")
                         .status("OK")
                         .build());
     }

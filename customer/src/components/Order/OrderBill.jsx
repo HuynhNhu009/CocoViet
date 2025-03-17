@@ -135,7 +135,7 @@ function OrderBill(orderStore) {
                 <th className="p-3 text-sm  ">Ngày đặt</th>
                 <th className="p-3 text-sm ">Tổng tiền</th>
                 <th className="p-3 text-sm ">Trạng thái</th>
-                {!["SHIPPING"].includes(statusActive) && (  
+                {!["SHIPPING", "DELIVERED"].includes(statusActive) && (  
                   <th className="p-3 text-sm ">Hành động</th>
                 )}
               </tr>
@@ -179,13 +179,13 @@ function OrderBill(orderStore) {
                         </td>
                       )}
 
-                      {["DELIVERED"].includes(statusActive) && (
+                      {/* {["DELIVERED"].includes(statusActive) && (
                         <td className="p-3 text-center text-sm">
                           <button className="bg-red-600 shadow-2xl rounded-sm text-white mr-1 px-2 py-1 ">
                             Xóa
                           </button>
                         </td>
-                      )}
+                      )} */}
 
                       {["CANCELLED"].includes(statusActive) && (
                         <td className="p-3 text-center text-sm">

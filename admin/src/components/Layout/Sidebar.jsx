@@ -45,6 +45,49 @@ const Sidebar = () => {
   const revenueRetailerActive = useSelector((state) => state.AdminStore.revenueRetailerActive);
   const update = useSelector((state) => state.AdminStore.update);
 
+  const navItems = [
+    {
+      label: "Sản phẩm",
+      icon: <CubeIcon className="size-5" />,
+      path: "/products",
+    },
+    {
+      label: "Bài viết",
+      icon: <DocumentTextIcon className="size-5" />,
+      path: "/posts",
+    },
+    {
+      label: "Khách hàng",
+      icon: <UsersIcon className="size-5" />,
+      path: "/customers",
+    },
+    {
+      label: "Cửa hàng",
+      icon: <BuildingStorefrontIcon className="size-5" />,
+      path: "/retailers",
+    },
+    {
+      label: "Thống kê",
+      icon: <CircleStackIcon className="size-5" />,
+      path: "/statistic",
+    },
+    {
+      label: "Danh mục sản phẩm",
+      icon: <TagIcon className="size-5" />,
+      path: "/categories",
+    },
+    {
+      label: "Trạng thái đơn hàng",
+      icon: <TagIcon className="size-5" />,
+      path: "/status",
+    },
+    {
+      label: "Thanh toán",
+      icon: <TagIcon className="size-5" />,
+      path: "/categories",
+    },
+  ];
+
   const customers = async () => {
     try {
       const response = await customerApi.getAllCustomers();
@@ -146,39 +189,6 @@ const Sidebar = () => {
     getAllCategories();    
     dispatch(setUpdate(true));
   }, [dispatch, sideBarActive,update ]);
-
-  const navItems = [
-    {
-      label: "Sản phẩm",
-      icon: <CubeIcon className="size-5" />,
-      path: "/products",
-    },
-    {
-      label: "Danh mục sản phẩm",
-      icon: <TagIcon className="size-5" />,
-      path: "/categories",
-    },
-    {
-      label: "Bài viết",
-      icon: <DocumentTextIcon className="size-5" />,
-      path: "/posts",
-    },
-    {
-      label: "Khách hàng",
-      icon: <UsersIcon className="size-5" />,
-      path: "/customers",
-    },
-    {
-      label: "Cửa hàng",
-      icon: <BuildingStorefrontIcon className="size-5" />,
-      path: "/retailers",
-    },
-    {
-      label: "Thống kê",
-      icon: <CircleStackIcon className="size-5" />,
-      path: "/statistic",
-    },
-  ];
 
   const handleNavigate = (path) => {
     if (path === "/products" || path === "/posts") {

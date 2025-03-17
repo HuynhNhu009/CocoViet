@@ -7,6 +7,7 @@ import Retailers from "../page/Retailers";
 import Post from "../page/Post";
 import Statistic from "../page/Statistic";
 import Category from "../page/Category";
+import Status from "../page/Status";
 export const routes = [
   {
     path: "/",
@@ -49,6 +50,12 @@ export const routes = [
         path:"categories",
         element: (
          <Category />
+        ),
+      },
+      {
+        path:"status",
+        element: (
+         <Status />
         ),
       },
     ],
