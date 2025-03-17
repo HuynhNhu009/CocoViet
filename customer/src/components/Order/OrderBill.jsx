@@ -179,14 +179,6 @@ function OrderBill(orderStore) {
                         </td>
                       )}
 
-                      {/* {["DELIVERED"].includes(statusActive) && (
-                        <td className="p-3 text-center text-sm">
-                          <button className="bg-red-600 shadow-2xl rounded-sm text-white mr-1 px-2 py-1 ">
-                            Xóa
-                          </button>
-                        </td>
-                      )} */}
-
                       {["CANCELLED"].includes(statusActive) && (
                         <td className="p-3 text-center text-sm">
                           <button
@@ -195,9 +187,7 @@ function OrderBill(orderStore) {
                           >
                             Mua lại
                           </button>
-                          <button className="bg-red-600 shadow-2xl rounded-sm cursor-pointer text-white mr-1 px-2 py-1 ">
-                            Xóa
-                          </button>
+                         
                         </td>
                       )}
                       {["PROCESSING"].includes(statusActive) && (

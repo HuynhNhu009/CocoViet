@@ -1,11 +1,9 @@
 package com.cocoviet.backend.service.impl;
 
 import com.cocoviet.backend.Enum.OrderPayment;
-import com.cocoviet.backend.Enum.OrderStatus;
 import com.cocoviet.backend.mapper.IPaymentMapper;
 import com.cocoviet.backend.models.dto.PaymentDTO;
 import com.cocoviet.backend.models.entity.PaymentEntity;
-import com.cocoviet.backend.models.entity.StatusEntity;
 import com.cocoviet.backend.models.request.PaymentRequest;
 import com.cocoviet.backend.repository.IPaymentRepository;
 import com.cocoviet.backend.service.IPaymentService;
@@ -30,13 +28,13 @@ public class PaymentServiceImpl implements IPaymentService {
     IPaymentRepository iPaymentRepository;
 
     @Override
-    public PaymentDTO addPaymentMethod(PaymentRequest paymentRequest) {
+    public PaymentDTO addPaymentMethod() {
         PaymentEntity paymentEntity = new PaymentEntity();
         for (OrderPayment orderPayment : OrderPayment.values()) {
             if (!iPaymentRepository.existsByPaymentMethod(orderPayment.getpaymentMethod())) {
                 paymentEntity = PaymentEntity.builder()
-                    .paymentMethod(paymentRequest.getPaymentMethod())
-                    .paymentCode(paymentRequest.getPaymentCode())
+                    .paymentMethod(orderPayment.getpaymentMethod())
+                    .paymentCode(orderPayment.getPaymentCode())
                     .build();
                 iPaymentRepository.save(paymentEntity);
             }

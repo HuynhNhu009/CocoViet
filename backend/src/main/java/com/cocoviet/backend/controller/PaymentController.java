@@ -23,12 +23,11 @@ public class PaymentController {
         IPaymentService iPaymentService;
 
         @PostMapping("/add")
-        public ResponseEntity<ResponseData> addPaymemt(@RequestBody @Valid PaymentRequest paymentRequest) {
+        public ResponseEntity<ResponseData> addPaymemt() {
                 return ResponseEntity.status(HttpStatus.CREATED)
                                 .body(ResponseData.builder()
-                                                .data(iPaymentService.addPaymentMethod(paymentRequest))
-                                                .msg("Create Status: " + paymentRequest.getPaymentMethod()
-                                                                + " successfully!")
+                                                .data(iPaymentService.addPaymentMethod())
+                                                .msg("Create Status successfully!")
                                                 .status("OK")
                                                 .build());
         }

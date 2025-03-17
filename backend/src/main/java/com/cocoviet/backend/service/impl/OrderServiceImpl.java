@@ -185,6 +185,7 @@ public class OrderServiceImpl implements IOrderService {
                         //update quantity
                         if(receiptDetailRequest.getStatusCode().equals(OrderStatus.SHIPPING.getStatusCode())){
                             productVariantEntity.setStock(productVariantEntity.getStock() - existReceiptDetailEntity.getQuantity());
+                            
                         }else if(receiptDetailRequest.getStatusCode().equals(OrderStatus.CANCELLED.getStatusCode())){
                             productVariantEntity.setStock(productVariantEntity.getStock() + existReceiptDetailEntity.getQuantity());
                         }

@@ -37,7 +37,7 @@ function OrderItem(orderStore) {
       setLoading(false);
     }
   }, [orderStore]);
-
+  
   if (loading) {
     return <p className="text-center text-gray-500">Đang tải đơn hàng...</p>;
   }
@@ -97,30 +97,46 @@ function OrderItem(orderStore) {
     }
 
     try {
-      const receiptDetailRequests = order.receiptDetails
-      .filter((item) => item.productStatus === "ENABLE")
-      .map((item) => ({
-        productVariantId: item.productVariants.variantId,
-        statusCode: "PROCESSING",
-      }));
 
-      const orderRequest = {
-        receiptDetailRequests: receiptDetailRequests,
-      };
+      const deleteReceipt = order.receiptDetails
+      .filter((item) => item.productStatus === "DISABLE")
 
-      console.log("order", orderRequest);
+      console.log("dele", deleteReceipt);
       
-
-      await orderAPI.updateOrder(order.orderId, orderRequest);
-      await dispatch(setCreateOrder(true));
-
-      Swal.fire({
-        title: "Đặt hàng thành công!",
-        text: "Vui lòng xem chi tiết tại trạng thái Đang xử lý",
-        icon: "success",
-        showConfirmButton: false,
-        timer: 1000,
-      });
+      if(deleteReceipt.length > 0){
+        Swal.fire({
+          title: "Chưa thể đặt hàng!",
+          text: "Vui lòng xóa các sản phẩm đã hết hàng trước khi đặt hàng!",
+          icon: "error",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      }else{
+        const receiptDetailRequests = order.receiptDetails
+        .filter((item) => item.productStatus === "ENABLE")
+        .map((item) => ({
+          productVariantId: item.productVariants.variantId,
+          statusCode: "PROCESSING",
+        }));
+  
+        const orderRequest = {
+          receiptDetailRequests: receiptDetailRequests,
+        };
+  
+        console.log("order", orderRequest);
+        await orderAPI.updateOrder(order.orderId, orderRequest);
+        await dispatch(setCreateOrder(true));
+  
+        Swal.fire({
+          title: "Đặt hàng thành công!",
+          text: "Vui lòng xem chi tiết tại trạng thái Đang xử lý",
+          icon: "success",
+          showConfirmButton: false,
+          timer: 1000,
+        });
+      }
+    
+      
     } catch (error) {
       console.error("Lỗi cập nhật đơn hàng:", error);
       Swal.fire(
