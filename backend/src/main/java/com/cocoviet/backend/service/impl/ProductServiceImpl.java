@@ -70,7 +70,7 @@ public class ProductServiceImpl implements IProductService {
             .productImage(iFileUpload.uploadFile(imageFile, "product"))
             .productOrigin(productRequest.getProductOrigin())
             .retailer(retailerEntity)
-            .status(ProductStatus.ENABLE.name())
+            .status(ProductStatus.DISABLE.name())
             .createdAt(LocalDateTime.now())
             .build();
 

@@ -4,7 +4,6 @@ import com.cocoviet.backend.Enum.OrderPayment;
 import com.cocoviet.backend.mapper.IPaymentMapper;
 import com.cocoviet.backend.models.dto.PaymentDTO;
 import com.cocoviet.backend.models.entity.PaymentEntity;
-import com.cocoviet.backend.models.request.PaymentRequest;
 import com.cocoviet.backend.repository.IPaymentRepository;
 import com.cocoviet.backend.service.IPaymentService;
 import lombok.AccessLevel;
@@ -31,9 +30,9 @@ public class PaymentServiceImpl implements IPaymentService {
     public PaymentDTO addPaymentMethod() {
         PaymentEntity paymentEntity = new PaymentEntity();
         for (OrderPayment orderPayment : OrderPayment.values()) {
-            if (!iPaymentRepository.existsByPaymentMethod(orderPayment.getpaymentMethod())) {
+            if (!iPaymentRepository.existsByPaymentMethod(orderPayment.getPaymentMethod())) {
                 paymentEntity = PaymentEntity.builder()
-                    .paymentMethod(orderPayment.getpaymentMethod())
+                    .paymentMethod(orderPayment.getPaymentMethod())
                     .paymentCode(orderPayment.getPaymentCode())
                     .build();
                 iPaymentRepository.save(paymentEntity);

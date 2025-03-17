@@ -1,12 +1,17 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import { PlusIcon, XMarkIcon, TrashIcon } from "@heroicons/react/24/outline";
+import {
+  PlusIcon,
+  XMarkIcon,
+  TrashIcon,
+  LockClosedIcon,
+} from "@heroicons/react/24/outline";
 import { IoIosSave } from "react-icons/io";
 import { productApi } from "../../services/productService";
 import UploadImage from "../UpLoadImage";
 
 const ProductEdit = ({ product, onSave, onCancel }) => {
-  const [dataEdited, setDataEdited] = useState({ ...product }); // Khởi tạo với dữ liệu sản phẩm gốc
+  const [dataEdited, setDataEdited] = useState({ ...product });
   const [variantErrors, setVariantErrors] = useState("");
   const [deletedVariants, setDeletedVariants] = useState([]);
   const [newVariant, setNewVariant] = useState({
@@ -20,13 +25,11 @@ const ProductEdit = ({ product, onSave, onCancel }) => {
   const categories = useSelector((state) => state.RetailerStore.category);
   const units = useSelector((state) => state.RetailerStore.units);
 
-  // Hàm xử lý khi giá trị input/textarea thay đổi
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setDataEdited((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Hàm xử lý khi giá trị của một variant thay đổi
   const handleVariantChange = (variantId, field, value) => {
     setDataEdited((prev) => {
       const updatedVariants = prev.variants.map((variant) =>
@@ -41,7 +44,6 @@ const ProductEdit = ({ product, onSave, onCancel }) => {
     });
   };
 
-  // Hàm xử lý khi thêm một variant mới
   const handleNewVariantChange = (e) => {
     const { name, value } = e.target;
     setNewVariant((prev) => ({ ...prev, [name]: value }));
@@ -54,7 +56,7 @@ const ProductEdit = ({ product, onSave, onCancel }) => {
       !newVariant.price ||
       !newVariant.initStock
     ) {
-      setVariantErrors("Tất cả các trường phải được điền.");
+      setVariantErrors("Vui lòng điền đầy đủ thông tin.");
       return false;
     }
     const value = parseInt(newVariant.value);
@@ -103,7 +105,6 @@ const ProductEdit = ({ product, onSave, onCancel }) => {
     }));
   };
 
-  // Sửa: Toggle dựa trên categoryId
   const handleCategoryToggle = (categoryId) => {
     setDataEdited((prev) => {
       const currentCategories = prev.categories || [];
@@ -116,19 +117,16 @@ const ProductEdit = ({ product, onSave, onCancel }) => {
     });
   };
 
-  // Sửa: Kiểm tra dựa trên categoryId
   const isCategoryChecked = (categoryId) => {
     return (dataEdited.categories || []).some(
       (cat) => cat.categoryId === categoryId
     );
   };
 
-  // Hàm xử lý lưu sản phẩm
   const handleSaveProduct = async () => {
     const updatedData = {};
     const productId = product.id || product.productId;
 
-    // Chỉ gửi các trường được thay đổi
     ["productName", "productOrigin", "productDesc"].forEach((field) => {
       if (
         dataEdited[field] !== undefined &&
@@ -138,7 +136,6 @@ const ProductEdit = ({ product, onSave, onCancel }) => {
       }
     });
 
-    // Xử lý categoryId
     if (dataEdited.categories !== undefined) {
       const originalCategoryIds = (product.categories || []).map(
         (c) => c.categoryId
@@ -150,18 +147,16 @@ const ProductEdit = ({ product, onSave, onCancel }) => {
         JSON.stringify(originalCategoryIds) !==
         JSON.stringify(updatedCategoryIds)
       ) {
-        updatedData.categoryId = updatedCategoryIds; // Gửi mảng categoryId
+        updatedData.categoryId = updatedCategoryIds;
       }
     }
 
-    // Xử lý productVariants
     if (dataEdited.variants !== undefined) {
       const originalVariants = product.variants || [];
       const editedVariants = dataEdited.variants || [];
 
       const productVariantsToSend = [];
 
-      // Thêm các variants mới
       const newVariants = editedVariants
         .filter(
           (ev) => !originalVariants.some((ov) => ov.variantId === ev.variantId)
@@ -174,7 +169,6 @@ const ProductEdit = ({ product, onSave, onCancel }) => {
         }));
       productVariantsToSend.push(...newVariants);
 
-      // Thêm các variants cũ được thay đổi
       const changedVariants = editedVariants
         .filter((ev) =>
           originalVariants.some((ov) => ov.variantId === ev.variantId)
@@ -191,8 +185,8 @@ const ProductEdit = ({ product, onSave, onCancel }) => {
                 variantId: ev.variantId,
                 unitId: ev.unitId,
                 value: ev.value,
-                price: ev.price, // Sửa lỗi: dùng ev.price thay vì v.price
-                initStock: ev.initStock, // Sửa lỗi: dùng ev.initStock thay vì v.initStock
+                price: ev.price,
+                initStock: ev.initStock,
               }
             : null;
         })
@@ -205,32 +199,22 @@ const ProductEdit = ({ product, onSave, onCancel }) => {
     }
 
     try {
-      // Xử lý xóa variant với soft delete hoặc kiểm tra trước
       if (deletedVariants.length > 0) {
         for (const variantId of deletedVariants) {
-          try {
-            await productApi.deleteVariantProduct(productId, variantId);
-          } catch (deleteError) {
-            console.error(`Không thể xóa variant ${variantId}:`, deleteError);
-            alert(
-              `Không thể xóa variant ${variantId} vì nó đã được sử dụng trong hóa đơn!`
-            );
-          }
+          await productApi.deleteVariantProduct(productId, variantId);
         }
       }
 
-      // Nếu có dữ liệu thay đổi, gửi request cập nhật
       if (Object.keys(updatedData).length > 0) {
         await productApi.updateProduct(productId, updatedData);
       }
 
-      // Lấy lại dữ liệu sản phẩm mới từ server
       const response = await productApi.getProductById(productId);
-      onSave(response.data); // Truyền dữ liệu mới qua onSave
+      onSave(response.data);
     } catch (error) {
       console.error("Lỗi khi cập nhật sản phẩm:", error);
       alert("Cập nhật sản phẩm thất bại!");
-      onSave(product); // Trả lại dữ liệu cũ nếu lỗi
+      onSave(product);
     }
   };
 
@@ -240,48 +224,74 @@ const ProductEdit = ({ product, onSave, onCancel }) => {
   };
 
   return (
-    <div className="px-6 py-2 bg-white rounded-md shadow-sm border border-gray-200">
-      {/* Nút Lưu và Hủy */}
-      <div className="flex justify-end space-x-2 mb-6">
+    <div className="p-4 sm:p-6 bg-white rounded-md shadow-sm border border-gray-200">
+      {/* Header Buttons */}
+      <div className="flex flex-col sm:flex-row justify-end gap-4 mb-6">
         <button
-          onClick={handleSaveProduct}
-          className="flex items-center space-x-2 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+          className={`flex items-center justify-center gap-2 px-4 py-2 rounded-md text-white ${
+            product.status === "PAUSE"
+              ? "bg-green-600 hover:bg-green-700"
+              : product.status === "DISABLE"
+              ? "bg-gray-600 hover:bg-gray-700"
+              : product.status === "BLOCK"
+              ? "bg-red-600 hover:bg-red-700 cursor-not-allowed opacity-50"
+              : "bg-red-600 hover:bg-red-700" // Default case (ENABLE)
+          }`}
+          disabled={product.status === "BLOCK" || product.status === "DISABLE"} // Disable button for BLOCK status
         >
-          <IoIosSave className="size-5" />
-          <span>Lưu</span>
+          <LockClosedIcon className="size-5" />
+          <span>
+            {product.status === "PAUSE"
+              ? "Mở bán"
+              : product.status === "DISABLE"
+              ? "Tạm khóa hoặc đang chờ duyệt"
+              : product.status === "BLOCK"
+              ? "Đã khóa"
+              : "Dừng bán"}{" "}
+            {/* Default case (ENABLE) */}
+          </span>
         </button>
-        <button
-          onClick={handleCancelProduct}
-          className="flex items-center space-x-2 px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700"
-        >
-          <XMarkIcon className="size-5" />
-          <span>Hủy</span>
-        </button>
+        <div className="flex gap-2 justify-end">
+          <button
+            onClick={handleSaveProduct}
+            className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+          >
+            <IoIosSave className="size-5" />
+            <span>Lưu</span>
+          </button>
+          <button
+            onClick={handleCancelProduct}
+            className="flex items-center gap-2 px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700"
+          >
+            <XMarkIcon className="size-5" />
+            <span>Hủy</span>
+          </button>
+        </div>
       </div>
 
-      {/* Bố cục chính */}
+      {/* Main Content */}
       <div className="space-y-6">
-        {/* Thông tin cơ bản */}
-        <div className="grid grid-cols-1 md:grid-cols-[35%_65%] gap-6">
-          {/* Hình ảnh sản phẩm và Danh mục */}
-          <div className="space-y-6">
-            <div className="relative flex flex-col items-center mx-auto w-[50%] gap-2">
-              <label className="block text-sm font-medium text-gray-700">
+        {/* Basic Info */}
+        <div className="flex flex-col md:flex-row gap-6">
+          {/* Image and Categories */}
+          <div className="w-full md:w-1/3 space-y-6">
+            <div className="flex flex-col items-center gap-2">
+              <label className="text-sm font-medium text-gray-700">
                 Hình ảnh sản phẩm:
               </label>
               <img
                 src={dataEdited.productImage || product.productImage}
                 alt={dataEdited.productName || product.productName}
-                className="w-fit max-w-xs h-40 object-cover rounded-md border border-gray-300"
+                className="w-full max-w-xs h-40 object-cover rounded-md border border-gray-300"
               />
-              <UploadImage className={"w-full"} />
+              <UploadImage className="w-full" />
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Danh mục sản phẩm:
               </label>
-              <div className="min-h-40 mr-4 overflow-y-auto border border-gray-300 rounded-md p-4">
+              <div className="max-h-40 overflow-y-auto border border-gray-300 rounded-md p-4">
                 {categories.length === 0 ? (
                   <p className="text-gray-500 text-sm">Chưa có danh mục nào.</p>
                 ) : (
@@ -304,14 +314,14 @@ const ProductEdit = ({ product, onSave, onCancel }) => {
             </div>
           </div>
 
-          {/* Thông tin sản phẩm */}
-          <div className="space-y-4 mr-6">
+          {/* Product Details */}
+          <div className="w-full md:w-2/3 space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700">
                 Tên sản phẩm:
               </label>
               <input
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-0 focus:border-green-500 focus:outline-none"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-0 focus:border-green-500"
                 type="text"
                 name="productName"
                 value={dataEdited.productName || ""}
@@ -323,7 +333,7 @@ const ProductEdit = ({ product, onSave, onCancel }) => {
                 Nguồn gốc:
               </label>
               <input
-                className="w-full px-3 py-2 border border-gray-300 rounded-sm focus:ring-0 focus:border-green-500 focus:outline-none"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-0 focus:border-green-500"
                 type="text"
                 name="productOrigin"
                 value={dataEdited.productOrigin || ""}
@@ -335,7 +345,7 @@ const ProductEdit = ({ product, onSave, onCancel }) => {
                 Mô tả:
               </label>
               <textarea
-                className="w-full min-h-[230px] px-3 py-2 border border-gray-300 rounded-sm focus:ring-0 focus:border-green-500 focus:outline-none overflow-y-auto"
+                className="w-full min-h-[120px] sm:min-h-[230px] px-3 py-2 border border-gray-300 rounded-md focus:ring-0 focus:border-green-500 resize-y"
                 name="productDesc"
                 value={dataEdited.productDesc || ""}
                 onChange={handleInputChange}
@@ -344,11 +354,11 @@ const ProductEdit = ({ product, onSave, onCancel }) => {
           </div>
         </div>
 
-        {/* Loại sản phẩm */}
+        {/* Variants */}
         <div>
           <div className="flex items-center justify-between mb-2">
             <label className="block text-sm font-medium text-gray-700">
-              Thể loại
+              Loại sản phẩm
             </label>
             <button
               type="button"
@@ -356,16 +366,15 @@ const ProductEdit = ({ product, onSave, onCancel }) => {
               className={`${
                 isAddingVariantInline ? "hidden" : ""
               } p-2 bg-gray-100 rounded-md hover:bg-gray-200`}
-              aria-label="Thêm biến thể mới"
             >
               <PlusIcon className="size-5 text-gray-600" />
             </button>
           </div>
 
-          {/* Form thêm Loại mới */}
+          {/* New Variant Form */}
           {isAddingVariantInline && (
             <div className="border border-gray-300 rounded-md p-4 mb-4">
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700">
                     Số lượng
@@ -375,7 +384,7 @@ const ProductEdit = ({ product, onSave, onCancel }) => {
                     name="value"
                     value={newVariant.value}
                     onChange={handleNewVariantChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500"
                     placeholder="Số lượng"
                   />
                 </div>
@@ -388,7 +397,7 @@ const ProductEdit = ({ product, onSave, onCancel }) => {
                     name="price"
                     value={newVariant.price}
                     onChange={handleNewVariantChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500"
                     placeholder="Giá"
                   />
                 </div>
@@ -400,7 +409,7 @@ const ProductEdit = ({ product, onSave, onCancel }) => {
                     name="unitId"
                     value={newVariant.unitId}
                     onChange={handleNewVariantChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500"
                     disabled={units.length === 0}
                   >
                     <option value="">Chọn đơn vị</option>
@@ -420,7 +429,7 @@ const ProductEdit = ({ product, onSave, onCancel }) => {
                     name="initStock"
                     value={newVariant.initStock}
                     onChange={handleNewVariantChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500"
                     placeholder="Tồn kho"
                   />
                 </div>
@@ -430,7 +439,7 @@ const ProductEdit = ({ product, onSave, onCancel }) => {
                   {variantErrors}
                 </p>
               )}
-              <div className="flex justify-end space-x-2 mt-4">
+              <div className="flex justify-end gap-2 mt-4">
                 <button
                   type="button"
                   onClick={handleAddVariant}
@@ -449,17 +458,17 @@ const ProductEdit = ({ product, onSave, onCancel }) => {
             </div>
           )}
 
-          {/* Danh sách thể loại */}
-          <div className="min-h-40 overflow-y-auto border border-gray-300 rounded-md p-4">
+          {/* Variant List */}
+          <div className="max-h-60 overflow-y-auto border border-gray-300 rounded-md p-4">
             {(dataEdited.variants || []).length === 0 ? (
               <p className="text-gray-500 text-sm text-center">
-                Chưa có thể loại nào được thêm.
+                Chưa có loại sản phẩm nào được thêm.
               </p>
             ) : (
               dataEdited.variants.map((variant, index) => (
                 <div
                   key={index}
-                  className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 items-center py-2 border-b border-gray-200 last:border-b-0"
+                  className="grid grid-cols-2 sm:grid-cols-5 gap-4 items-center py-2 border-b border-gray-200 last:border-b-0"
                 >
                   <div>
                     <label className="block text-sm font-medium text-gray-700">
@@ -475,8 +484,7 @@ const ProductEdit = ({ product, onSave, onCancel }) => {
                           e.target.value
                         )
                       }
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                      placeholder="Số lượng"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500"
                     />
                   </div>
                   <div>
@@ -493,8 +501,7 @@ const ProductEdit = ({ product, onSave, onCancel }) => {
                           e.target.value
                         )
                       }
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                      placeholder="Giá"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500"
                     />
                   </div>
                   <div>
@@ -510,7 +517,7 @@ const ProductEdit = ({ product, onSave, onCancel }) => {
                           e.target.value
                         )
                       }
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500"
                       disabled={units.length === 0}
                     >
                       <option value="">Chọn đơn vị</option>
@@ -535,8 +542,7 @@ const ProductEdit = ({ product, onSave, onCancel }) => {
                           e.target.value
                         )
                       }
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                      placeholder="Tồn kho"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500"
                     />
                   </div>
                   <div className="flex items-center justify-end">

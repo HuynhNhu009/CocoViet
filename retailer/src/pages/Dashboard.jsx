@@ -119,6 +119,7 @@ const Dashboard = () => {
           unitName: v.unitName || "Default",
         })),
         retailerName: product.retailerName,
+        status: product.status,
         createdAt: product.createdAt,
       }));
       dispatch(setProducts(formattedProducts));

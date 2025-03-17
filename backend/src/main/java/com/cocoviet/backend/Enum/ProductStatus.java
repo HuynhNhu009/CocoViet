@@ -1,5 +1,5 @@
 package com.cocoviet.backend.Enum;
 
 public enum ProductStatus {
-    ENABLE, DISABLE,BLOCK
+    ENABLE, DISABLE, PAUSE, BLOCK
 }

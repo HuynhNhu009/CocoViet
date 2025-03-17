@@ -1,8 +1,5 @@
 package com.cocoviet.backend.Enum;
 
-import lombok.Getter;
-
-@Getter
 public enum OrderPayment {
 
     CASH("CASH", "Thanh toán khi nhận hàng"),
@@ -14,6 +11,14 @@ public enum OrderPayment {
     OrderPayment(String paymentCode, String paymentMethod) {
         this.paymentCode = paymentCode;
         this.paymentMethod = paymentMethod;
+    }
+
+    public String getPaymentCode() {
+        return paymentCode;
+    }
+
+    public String getPaymentMethod() {
+        return paymentMethod;
     }
 
     public static OrderPayment fromPaymentCode(String paymentCode) {
