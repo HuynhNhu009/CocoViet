@@ -183,9 +183,9 @@ public class OrderServiceImpl implements IOrderService {
                         StatusEntity statusEntity = iStatusRepository.findByStatusCode(receiptDetailRequest.getStatusCode());
                         existReceiptDetailEntity.setStatus(statusEntity);
                         //update quantity
-                        if(receiptDetailRequest.getStatusCode().equals(OrderStatus.SHIPPING.getStatusCode())){
+                        if(receiptDetailRequest.getStatusCode().equals(OrderStatus.PROCESSING.getStatusCode())){
                             productVariantEntity.setStock(productVariantEntity.getStock() - existReceiptDetailEntity.getQuantity());
-                            
+
                         }else if(receiptDetailRequest.getStatusCode().equals(OrderStatus.CANCELLED.getStatusCode())){
                             productVariantEntity.setStock(productVariantEntity.getStock() + existReceiptDetailEntity.getQuantity());
                         }

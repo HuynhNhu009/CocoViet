@@ -179,17 +179,20 @@ function OrderBill(orderStore) {
                         </td>
                       )}
 
-                      {["CANCELLED"].includes(statusActive) && (
-                        <td className="p-3 text-center text-sm">
-                          <button
-                            onClick={() => buyAgain(item)}
-                            className="bg-green-600 shadow-2xl rounded-sm cursor-pointer text-white mr-1 px-2 py-1 "
-                          >
-                            Mua lại
-                          </button>
-                         
-                        </td>
-                      )}
+                      {["CANCELLED"].includes(statusActive) &&
+                        (item.receiptDetails?.every((detail) => detail.productStatus !== "DISABLE") ? (
+                          <td className="p-3 text-center text-sm">
+                            <button
+                              onClick={() => buyAgain(item)}
+                              className="bg-green-600 shadow-2xl rounded-sm cursor-pointer text-white mr-1 px-2 py-1 "
+                            >
+                              Mua lại
+                            </button>
+                          </td>
+                        ) : (
+                          <td className="p-3 text-center text-sm"></td>
+                        ))}
+
                       {["PROCESSING"].includes(statusActive) && (
                         <td className="p-3 text-center text-sm">
                           <button
@@ -237,7 +240,10 @@ function OrderBill(orderStore) {
                                       <td className="border px-2 py-2 w-1/2">
                                         {item.productName} -{" "}
                                         {item.productVariants.value}
-                                        {item.productVariants.unitName}
+                                        {item.productVariants.unitName } 
+                                        <span className="text-red-600 ml-2">
+                                        {(item.productStatus === "DISABLE") ? "(Hết hàng)" : ""}
+                                        </span>
                                       </td>
                                       <td className="border px-2 py-2 w-1/4 text-center">
                                         x{item.totalQuantity}
