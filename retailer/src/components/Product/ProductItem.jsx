@@ -59,7 +59,7 @@ const ProductItem = ({ product }) => {
         {product.status === "ENABLE"
           ? "Đang bán"
           : product.status === "DISABLE"
-          ? "Tạm khóa"
+          ? "Chờ duyệt"
           : product.status === "PAUSE"
           ? "Tạm ngừng"
           : "Vi phạm"}

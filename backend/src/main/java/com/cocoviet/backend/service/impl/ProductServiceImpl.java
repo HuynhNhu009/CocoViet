@@ -420,4 +420,36 @@ public class ProductServiceImpl implements IProductService {
         List<ProductEntity> productEntityFetch = iProductRepository.findAll();
         return iProductMapper.toProductDTOList(productEntityFetch);
     }
+
+    @Override
+    public ProductDTO setStatusProduct(String productId, String statusName) {
+        // Find the product entity or throw exception if not found
+        ProductEntity productEntity = iProductRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+
+        // Validate statusName against ProductStatus enum
+        try {
+            ProductStatus.valueOf(statusName.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new RuntimeException("Invalid status name: " + statusName);
+        }
+
+        // Set the status and save
+        productEntity.setStatus(statusName);
+        productEntity = iProductRepository.save(productEntity);
+
+        // Convert to DTO with category and variant information (consistent with other methods)
+        Set<ProductCategoryEntity> productCategoryEntities = iproductCategoryRepository.findByProduct(productEntity);
+        Set<String> categoryNames = productCategoryEntities.stream()
+                .map(productCategory -> productCategory.getCategory().getCategoryName())
+                .collect(Collectors.toSet());
+
+        Set<ProductVariantDTO> productVariantDTOS = productVariantMapper.toDTOSet(productEntity.getVariants());
+
+        ProductDTO productDTO = iProductMapper.toProductDTO(productEntity);
+        productDTO.setCategoryName(categoryNames);
+        productDTO.setVariants(productVariantDTOS);
+
+        return productDTO;
+    }
 }

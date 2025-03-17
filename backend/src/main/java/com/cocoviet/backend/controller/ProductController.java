@@ -146,4 +146,26 @@ public class ProductController {
                         .status("OK")
                         .build());
     }
+
+    @PostMapping("/set-status")
+    public ResponseEntity<ResponseData> setStatusProduct(
+            @RequestParam("productId") String productId,
+            @RequestParam("status") String statusName) {
+        try {
+            ProductDTO productDTO = productService.setStatusProduct(productId, statusName);
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(ResponseData.builder()
+                            .data(productDTO)
+                            .msg("Change status product successfully")
+                            .status("OK")
+                            .build());
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(ResponseData.builder()
+                            .data(null)
+                            .msg(e.getMessage())
+                            .status("500")
+                            .build());
+        }
+    }
 }

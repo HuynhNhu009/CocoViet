@@ -22,16 +22,16 @@ const ProductDetail = ({
     onEdit();
   };
 
-  const handleDelete = async () => {
-    try {
-      await productApi.deleteProductById(product?.id || product?.productId);
-      if (typeof fetchProducts === "function") fetchProducts();
-      if (typeof onBack === "function") onBack();
-    } catch (error) {
-      console.error("Lỗi khi xóa sản phẩm:", error);
-      alert("Xóa sản phẩm thất bại!");
-    }
-  };
+  // const handleDelete = async () => {
+  //   try {
+  //     await productApi.deleteProductById(product?.id || product?.productId);
+  //     if (typeof fetchProducts === "function") fetchProducts();
+  //     if (typeof onBack === "function") onBack();
+  //   } catch (error) {
+  //     console.error("Lỗi khi xóa sản phẩm:", error);
+  //     alert("Xóa sản phẩm thất bại!");
+  //   }
+  // };
 
   const handleSave = async (updatedProduct) => {
     setIsEditing(false);
@@ -136,7 +136,8 @@ const ProductDetail = ({
                       >
                         {typeof c === "object" ? c.categoryName : c}
                         {index < product.categoryName.length - 1 &&
-                          window.innerWidth >= 768 && ", "}
+                          window.innerWidth >= 768 &&
+                          ", "}
                       </span>
                     ))
                   ) : (
@@ -160,7 +161,8 @@ const ProductDetail = ({
                           {variant.value} {variant.unitName}
                         </span>
                         <span className="text-gray-700">
-                          ₫{new Intl.NumberFormat("vi-VN").format(variant.price)}{" "}
+                          ₫
+                          {new Intl.NumberFormat("vi-VN").format(variant.price)}{" "}
                           (Kho: {variant.initStock})
                         </span>
                       </div>
@@ -169,20 +171,13 @@ const ProductDetail = ({
                 )}
               </div>
             </div>
-            <div className="flex gap-2 mt-4">
+            <div className="flex gap-2 mt-4 justify-end">
               <button
                 onClick={handleEdit}
-                className="flex items-center gap-1 px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-800"
+                className="flex items-center gap-1 px-3 py-1 text-green-600 rounded cursor-pointer hover:text-green-800"
               >
                 <PencilIcon className="size-5" />
                 Sửa
-              </button>
-              <button
-                onClick={handleDelete}
-                className="flex items-center gap-1 px-3 py-1 bg-red-600 text-white rounded hover:bg-red-800"
-              >
-                <TrashIcon className="size-5" />
-                Xóa
               </button>
             </div>
           </div>

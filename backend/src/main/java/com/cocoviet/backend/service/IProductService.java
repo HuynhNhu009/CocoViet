@@ -17,4 +17,6 @@ public interface IProductService {
     List<ProductDTO> getProductListByRetailerId(String retailerId);
     List<ProductDTO> deleteProductById(String productId);
     List<ProductDTO> getAllProductEnable();
+    ProductDTO setStatusProduct(String productId, String statusName);
+
 }

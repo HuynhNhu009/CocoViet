@@ -45,22 +45,22 @@ export const productApi = {
     return response.data;
   },
 
-  getProductById: async (productId) =>{
+  getProductById: async (productId) => {
     const response = await api.get(`/products/${productId}`);
     console.log("get product by Id", response);
     return response.data;
-  }
-,
-  deleteProductById: async(productId) =>{
-    const response = await api.delete(`/products?productId=${productId}`)
-    console.log("Delete product => data",response.data)
+  },
+  deleteProductById: async (productId) => {
+    const response = await api.delete(`/products?productId=${productId}`);
+    console.log("Delete product => data", response.data);
     return response.data;
-  }
-  
-};
+  },
 
-// {
-//   variants: {
-//     new: [{ unitId, value, price, initStock }, ...],
-//     changed: [{ variantId, unitId, ... }, ...]
-// }
+  setStatusProduct: async (productId, statusName) => {
+    const response = await api.post(
+      `/products/set-status?productId=${productId}&status=${statusName}`
+    );
+    console.log("Set status product => ", response.data);
+    return response.data;
+  },
+};

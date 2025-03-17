@@ -5,6 +5,7 @@ import {
   XMarkIcon,
   TrashIcon,
   LockClosedIcon,
+  PauseCircleIcon,
 } from "@heroicons/react/24/outline";
 import { IoIosSave } from "react-icons/io";
 import { productApi } from "../../services/productService";
@@ -223,6 +224,27 @@ const ProductEdit = ({ product, onSave, onCancel }) => {
     onCancel();
   };
 
+  const handleSetAccessProduct = async (productId, currentStatus) => {
+    let newStatus;
+    if (currentStatus === "PAUSE") {
+      newStatus = "ENABLE"; // Mở bán -> Enable the product
+    } else if (currentStatus === "ENABLE") {
+      newStatus = "PAUSE"; // Dừng bán -> Pause the product
+    } else {
+      console.warn("Cannot change status for: " + currentStatus);
+      return; // Don't proceed if status is DISABLE or BLOCK
+    }
+
+    try {
+      const response = await productApi.setStatusProduct(productId, newStatus);
+      onSave(response.data);
+      console.log("Status updated:", response.data);
+    } catch (error) {
+      console.error("Error updating status:", error);
+      alert("Cập nhật trạng thái thất bại!");
+    }
+  };
+
   return (
     <div className="p-4 sm:p-6 bg-white rounded-md shadow-sm border border-gray-200">
       {/* Header Buttons */}
@@ -232,23 +254,29 @@ const ProductEdit = ({ product, onSave, onCancel }) => {
             product.status === "PAUSE"
               ? "bg-green-600 hover:bg-green-700"
               : product.status === "DISABLE"
-              ? "bg-gray-600 hover:bg-gray-700"
+              ? "bg-gray-400 cursor-not-allowed"
               : product.status === "BLOCK"
-              ? "bg-red-600 hover:bg-red-700 cursor-not-allowed opacity-50"
-              : "bg-red-600 hover:bg-red-700" // Default case (ENABLE)
+              ? "bg-red-400 cursor-not-allowed opacity-50"
+              : "bg-red-600 hover:bg-red-700"
           }`}
-          disabled={product.status === "BLOCK" || product.status === "DISABLE"} // Disable button for BLOCK status
+          disabled={product.status === "BLOCK" || product.status === "DISABLE"}
+          onClick={() =>
+            handleSetAccessProduct(product.productId, product.status)
+          }
         >
-          <LockClosedIcon className="size-5" />
+          {product.status === "PAUSE" ? (
+            <PauseCircleIcon className="size-5" />
+          ) : (
+            <LockClosedIcon className="size-5" />
+          )}
           <span>
             {product.status === "PAUSE"
               ? "Mở bán"
               : product.status === "DISABLE"
-              ? "Tạm khóa hoặc đang chờ duyệt"
+              ? "Đang chờ duyệt"
               : product.status === "BLOCK"
               ? "Đã khóa"
-              : "Dừng bán"}{" "}
-            {/* Default case (ENABLE) */}
+              : "Dừng bán"}
           </span>
         </button>
         <div className="flex gap-2 justify-end">
@@ -291,7 +319,7 @@ const ProductEdit = ({ product, onSave, onCancel }) => {
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Danh mục sản phẩm:
               </label>
-              <div className="max-h-40 overflow-y-auto border border-gray-300 rounded-md p-4">
+              <div className="min-h-40 overflow-y-auto border border-gray-300 rounded-md p-4">
                 {categories.length === 0 ? (
                   <p className="text-gray-500 text-sm">Chưa có danh mục nào.</p>
                 ) : (
@@ -355,7 +383,7 @@ const ProductEdit = ({ product, onSave, onCancel }) => {
         </div>
 
         {/* Variants */}
-        <div>
+        <div className="min-h-50">
           <div className="flex items-center justify-between mb-2">
             <label className="block text-sm font-medium text-gray-700">
               Loại sản phẩm
@@ -459,7 +487,7 @@ const ProductEdit = ({ product, onSave, onCancel }) => {
           )}
 
           {/* Variant List */}
-          <div className="max-h-60 overflow-y-auto border border-gray-300 rounded-md p-4">
+          <div className="min-h-60 overflow-y-auto border border-gray-300 rounded-md p-4">
             {(dataEdited.variants || []).length === 0 ? (
               <p className="text-gray-500 text-sm text-center">
                 Chưa có loại sản phẩm nào được thêm.
@@ -468,8 +496,9 @@ const ProductEdit = ({ product, onSave, onCancel }) => {
               dataEdited.variants.map((variant, index) => (
                 <div
                   key={index}
-                  className="grid grid-cols-2 sm:grid-cols-5 gap-4 items-center py-2 border-b border-gray-200 last:border-b-0"
+                  className="flex flex-col sm:grid sm:grid-cols-5 gap-4 py-4 border-b border-gray-200 last:border-b-0"
                 >
+                  {/* Số lượng */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700">
                       Số lượng
@@ -487,6 +516,8 @@ const ProductEdit = ({ product, onSave, onCancel }) => {
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500"
                     />
                   </div>
+
+                  {/* Giá */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700">
                       Giá
@@ -504,6 +535,8 @@ const ProductEdit = ({ product, onSave, onCancel }) => {
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500"
                     />
                   </div>
+
+                  {/* Đơn vị */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700">
                       Đơn vị
@@ -528,6 +561,8 @@ const ProductEdit = ({ product, onSave, onCancel }) => {
                       ))}
                     </select>
                   </div>
+
+                  {/* Tồn kho */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700">
                       Tồn kho
@@ -545,6 +580,8 @@ const ProductEdit = ({ product, onSave, onCancel }) => {
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500"
                     />
                   </div>
+
+                  {/* Delete Button */}
                   <div className="flex items-center justify-end">
                     <button
                       type="button"
