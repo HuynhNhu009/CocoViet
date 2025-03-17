@@ -76,16 +76,6 @@ const Sidebar = () => {
       icon: <TagIcon className="size-5" />,
       path: "/categories",
     },
-    {
-      label: "Trạng thái đơn hàng",
-      icon: <TagIcon className="size-5" />,
-      path: "/status",
-    },
-    {
-      label: "Thanh toán",
-      icon: <TagIcon className="size-5" />,
-      path: "/categories",
-    },
   ];
 
   const customers = async () => {

@@ -1,13 +1,11 @@
 import { Navigate } from "react-router-dom";
 import Layout from "../components/Layout/Layout";
-import Dashboard from "../page/Dashboard";
-import Products from "../page/Products";
-import Customers from "../page/Customers";
-import Retailers from "../page/Retailers";
-import Post from "../page/Post";
-import Statistic from "../page/Statistic";
 import Category from "../page/Category";
-import Status from "../page/Status";
+import Customers from "../page/Customers";
+import Post from "../page/Post";
+import Products from "../page/Products";
+import Retailers from "../page/Retailers";
+import Statistic from "../page/Statistic";
 export const routes = [
   {
     path: "/",
@@ -52,12 +50,7 @@ export const routes = [
          <Category />
         ),
       },
-      {
-        path:"status",
-        element: (
-         <Status />
-        ),
-      },
+      
     ],
   },
   

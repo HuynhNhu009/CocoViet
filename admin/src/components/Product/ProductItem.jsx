@@ -59,8 +59,8 @@ const ProductItem = ({ products }) => {
                 </td>
               </tr>
               {selectedProduct === product.productId && (
-                <tr className="bg-gray-100  mb-4">
-                  <td colSpan={5} className="p-3 text-gray-700 px-18">
+                <tr className="bg-gray-100 w-full  mb-4">
+                  <td colSpan={6} className="p-3 text-gray-700 px-18">
                     <p className="bg-gray-200 font-bold text-center">Chi tiết sản phẩm:</p>
                     {/* <hr className="pb-2" ></hr> */}
                     <div>
@@ -90,7 +90,7 @@ const ProductItem = ({ products }) => {
                           className={`cursor-pointer pl-2 font-light`}
                         >
                           - {variant.value}
-                          {variant.unitName}: {variant.price} VND
+                          {variant.unitName}: ₫{(new Intl.NumberFormat("vi-VN").format(variant.price))}
                         </p>                        
                       ))}
                     </div>
