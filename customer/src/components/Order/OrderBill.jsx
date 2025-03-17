@@ -172,7 +172,7 @@ function OrderBill(orderStore) {
                           .reverse()
                           .join("/") || "N/A"}
                       </td>
-                      <td className="p-3">{totalPrice[item.orderId]} VND</td>
+                      <td className="p-3">{(new Intl.NumberFormat("vi-VN").format(totalPrice[item.orderId]))} VND</td>
                       <td className="p-3">{statusName}</td>
                       {["SHIPPING"].includes(statusActive) && (  
                         <td className="p-3 hidden text-center text-sm">
@@ -249,7 +249,7 @@ function OrderBill(orderStore) {
                                         x{item.totalQuantity}
                                       </td>
                                       <td className="border px-2 py-2 w-1/4 text-center">
-                                        {item.productVariants.price} VND
+                                      {(new Intl.NumberFormat("vi-VN").format(item.productVariants.price))} VND
                                       </td>
                                     </tr>
                                   ))}

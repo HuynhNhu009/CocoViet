@@ -183,15 +183,11 @@ function OrderItem(orderStore) {
                             {item.productName} - ({item.productVariants.value}
                             {item.productVariants.unitName})
                           </span>
-                          {/* {item.productStatus === "DISABLE" && (
-                            <p className="text-red-500 m-0 text-sm">
-                              Sản phẩm đã hết hàng
-                            </p>
-                          )} */}
+
                         </span>
                       </div>
                     </td>
-                    <td className="px-4 py-2">{item.productVariants.price}</td>
+                    <td className="px-4 py-2">{(new Intl.NumberFormat("vi-VN").format(item.productVariants.price))}</td>
 
                     <td className={`px-4 py-2`}>
                       {item.productStatus !== "DISABLE" ? (
@@ -223,7 +219,8 @@ function OrderItem(orderStore) {
 
                     {item.productStatus !== "DISABLE" ? (
                       <td className="px-4 py-2">
-                        {item.productVariants.price * item.totalQuantity}
+                      
+                        {(new Intl.NumberFormat("vi-VN").format(item.productVariants.price * item.totalQuantity))}
                       </td>
                     ) : (
                       <p></p>
@@ -258,7 +255,8 @@ function OrderItem(orderStore) {
               {order?.receiptDetails?.length} sản phẩm
             </div>
             <div>
-              <p className="mb-2">Tổng Cộng : {totalPrice} VND</p>
+              <p className="mb-2">Tổng Cộng : {(new Intl.NumberFormat("vi-VN").format(totalPrice))}
+               VND</p>
               <button
                 onClick={() => handleNextProcess()}
                 className="bg-green-600 cursor-pointer text-white py-1 px-3 rounded-tl-2xl rounded-br-2xl shadow-md transition-transform hover:scale-105 duration-400 ease-in-out"

@@ -157,7 +157,7 @@ const ProductDetail = () => {
               </span>
             ))}
           </div>
-          <p className="text-green-600 font-bold text-4xl ">{selectVariant?.price} VND </p>
+          <p className="text-green-600 font-bold text-4xl "> {(new Intl.NumberFormat("vi-VN").format(selectVariant?.price))} VND </p>
           <span className="font-extralight">Kho: {selectVariant?.stock}</span>
           <div>
             <span>Số lượng: </span>
