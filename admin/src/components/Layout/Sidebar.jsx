@@ -24,6 +24,7 @@ import {
   setRetailerProduct,
   setRevenueList,
   setStatus,
+  setUpdate,
 } from "../../redux/adminSlice";
 import { productAPI } from "../../services/productService";
 import { customerApi } from "../../services/customerService";
@@ -42,6 +43,40 @@ const Sidebar = () => {
   const orderStore = useSelector((state) => state.AdminStore.orderStore);
   const statusStore = useSelector((state) => state.AdminStore.statusStore);
   const revenueRetailerActive = useSelector((state) => state.AdminStore.revenueRetailerActive);
+  const update = useSelector((state) => state.AdminStore.update);
+
+  const navItems = [
+    {
+      label: "Sản phẩm",
+      icon: <CubeIcon className="size-5" />,
+      path: "/products",
+    },
+    {
+      label: "Bài viết",
+      icon: <DocumentTextIcon className="size-5" />,
+      path: "/posts",
+    },
+    {
+      label: "Khách hàng",
+      icon: <UsersIcon className="size-5" />,
+      path: "/customers",
+    },
+    {
+      label: "Cửa hàng",
+      icon: <BuildingStorefrontIcon className="size-5" />,
+      path: "/retailers",
+    },
+    {
+      label: "Thống kê",
+      icon: <CircleStackIcon className="size-5" />,
+      path: "/statistic",
+    },
+    {
+      label: "Danh mục sản phẩm",
+      icon: <TagIcon className="size-5" />,
+      path: "/categories",
+    },
+  ];
 
   const customers = async () => {
     try {
@@ -138,41 +173,12 @@ const Sidebar = () => {
     products();
     customers();
     retailers();
-    getAllCategories();
   }, [dispatch, sideBarActive]);
 
-  const navItems = [
-    {
-      label: "Sản phẩm",
-      icon: <CubeIcon className="size-5" />,
-      path: "/products",
-    },
-    {
-      label: "Danh mục sản phẩm",
-      icon: <TagIcon className="size-5" />,
-      path: "/categories",
-    },
-    {
-      label: "Bài viết",
-      icon: <DocumentTextIcon className="size-5" />,
-      path: "/posts",
-    },
-    {
-      label: "Khách hàng",
-      icon: <UsersIcon className="size-5" />,
-      path: "/customers",
-    },
-    {
-      label: "Cửa hàng",
-      icon: <BuildingStorefrontIcon className="size-5" />,
-      path: "/retailers",
-    },
-    {
-      label: "Thống kê",
-      icon: <CircleStackIcon className="size-5" />,
-      path: "/statistic",
-    },
-  ];
+  useEffect(() => {
+    getAllCategories();    
+    dispatch(setUpdate(true));
+  }, [dispatch, sideBarActive,update ]);
 
   const handleNavigate = (path) => {
     if (path === "/products" || path === "/posts") {

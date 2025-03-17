@@ -6,7 +6,7 @@ import com.cocoviet.backend.models.request.StatusRequest;
 import java.util.Set;
 
 public interface IStatusService {
-    StatusDTO addStatus(StatusRequest statusRequest);
+    StatusDTO addStatus();
     StatusDTO getStatus(String statusName);
     Set<StatusDTO> getAllStatus();
     String deleteStatus(String statusId);

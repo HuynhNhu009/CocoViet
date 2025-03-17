@@ -6,7 +6,7 @@ import com.cocoviet.backend.models.request.PaymentRequest;
 import java.util.List;
 
 public interface IPaymentService {
-    PaymentDTO addPaymentMethod(PaymentRequest paymentRequest);
+    PaymentDTO addPaymentMethod();
     PaymentDTO getPaymentMethodById(String paymentMethodId);
     List<PaymentDTO> getAllPaymentMethod();
 }

@@ -1,5 +1,6 @@
 package com.cocoviet.backend.service.impl;
 
+import com.cocoviet.backend.Enum.OrderStatus;
 import com.cocoviet.backend.mapper.ProductVariantMapper;
 import com.cocoviet.backend.models.dto.*;
 import com.cocoviet.backend.models.entity.*;
@@ -124,6 +125,7 @@ public class OrderServiceImpl implements IOrderService {
                                 .multiply(BigDecimal.valueOf(response.getQuantity())))
                         .statusName(response.getStatus().getStatusName())
                         .productImage(response.getProductVariant().getProduct().getProductImage())
+                        .productStatus(response.getProductVariant().getProduct().getStatus())
                         .productVariants(productVariantMapper.toDTO(response.getProductVariant()))
                         .productName(response.getProductVariant().getProduct().getProductName())
                         .retailerName(iretailerRepository.findRetailerNameByProductId(response.getProductVariant().getProduct().getProductId()))
@@ -171,18 +173,25 @@ public class OrderServiceImpl implements IOrderService {
                 if(existRecieptDetailByVariants.isPresent()){
                     ReceiptDetailEntity existReceiptDetailEntity = existRecieptDetailByVariants.get();
 
-                    //update quantity
+                   //update quantity
                     if(receiptDetailRequest.getQuantity() != 0){
                         existReceiptDetailEntity.setQuantity(receiptDetailRequest.getQuantity() );
                     }
                     //update status
                     if(receiptDetailRequest.getStatusCode() != null){
+
                         StatusEntity statusEntity = iStatusRepository.findByStatusCode(receiptDetailRequest.getStatusCode());
                         existReceiptDetailEntity.setStatus(statusEntity);
+                        //update quantity
+                        if(receiptDetailRequest.getStatusCode().equals(OrderStatus.PROCESSING.getStatusCode())){
+                            productVariantEntity.setStock(productVariantEntity.getStock() - existReceiptDetailEntity.getQuantity());
+
+                        }else if(receiptDetailRequest.getStatusCode().equals(OrderStatus.CANCELLED.getStatusCode())){
+                            productVariantEntity.setStock(productVariantEntity.getStock() + existReceiptDetailEntity.getQuantity());
+                        }
                     }
 
                     newReceiptDetailEntity.add(existReceiptDetailEntity);
-                    //productVariantEntity.setStock(productVariantEntity.getStock() - receiptDetailRequest.getQuantity());
                     iProducVariantRepository.save(productVariantEntity);
                     newReceiptDetailEntity.add(existReceiptDetailEntity);
                 }
@@ -197,6 +206,7 @@ public class OrderServiceImpl implements IOrderService {
                             .productVariants(productVariantMapper.toDTO(response.getProductVariant()))
                             .statusName(response.getStatus().getStatusName())
                             .productName(response.getProductVariant().getProduct().getProductName())
+                            .productStatus(response.getProductVariant().getProduct().getStatus())
                             .retailerName(iretailerRepository.findRetailerNameByProductId(response.getProductVariant().getProduct().getProductId()))
                             .build())
                     .collect(Collectors.toSet());
@@ -213,6 +223,7 @@ public class OrderServiceImpl implements IOrderService {
                             .totalQuantity(response.getQuantity())
                             .productVariants(productVariantMapper.toDTO(response.getProductVariant()))
                             .productName(response.getProductVariant().getProduct().getProductName())
+                            .productStatus(response.getProductVariant().getProduct().getStatus())
                             .statusName(response.getStatus().getStatusName())
                             .retailerName(iretailerRepository.findRetailerNameByProductId(response.getProductVariant().getProduct().getProductId()))
                             .build())
@@ -226,23 +237,6 @@ public class OrderServiceImpl implements IOrderService {
             orderEntity.setPayment(paymentEntity);
         }
 
-        //change customerInfor
-//        if(orderRequest.getCustomerNumber() != null){
-//            orderDTO.setCustomerNumber(orderRequest.getCustomerNumber());
-//        }else{
-//            orderDTO.setCustomerNumber(customerEntity.getPhoneNumbers());
-//        }
-//
-//        if(orderRequest.getCustomerName() != null){
-//            orderDTO.setCustomerName(orderRequest.getCustomerName());
-//        }else {
-//            orderDTO.setCustomerName(customerEntity.getCustomerName());
-//        }
-//        if(orderRequest.getCustomerAddress() != null){
-//            orderDTO.setCustomerAddress(orderRequest.getCustomerAddress());
-//        }else {
-//            orderDTO.setCustomerAddress(customerEntity.getCustomerAddress());
-//        }
         iOrderRepository.save(orderEntity);
         orderDTO.setOrderId(orderEntity.getOrderId());
         orderDTO.setOrderDate(orderEntity.getOrderDate());
@@ -265,6 +259,7 @@ public class OrderServiceImpl implements IOrderService {
                                 .totalQuantity(response.getQuantity())
                                 .productVariants(productVariantMapper.toDTO(response.getProductVariant()))
                                 .productImage(response.getProductVariant().getProduct().getProductImage())
+                                .productStatus(response.getProductVariant().getProduct().getStatus())
                                 .productName(response.getProductVariant().getProduct().getProductName())
                                 .statusName(response.getStatus().getStatusName())
                                 .retailerName(iretailerRepository.findRetailerNameByProductId(response.getProductVariant().getProduct().getProductId()))
@@ -310,6 +305,7 @@ public class OrderServiceImpl implements IOrderService {
                                 .totalQuantity(response.getQuantity())
                                 .productVariants(productVariantMapper.toDTO(response.getProductVariant()))
                                 .productName(response.getProductVariant().getProduct().getProductName())
+                                .productStatus(response.getProductVariant().getProduct().getStatus())
                                 .productImage(response.getProductVariant().getProduct().getProductImage())
                                 .statusName(response.getStatus().getStatusName())
                                 .retailerName(iretailerRepository.findRetailerNameByProductId(response.getProductVariant().getProduct().getProductId()))
@@ -345,6 +341,7 @@ public class OrderServiceImpl implements IOrderService {
                             .totalQuantity(response.getQuantity())
                             .productVariants(productVariantMapper.toDTO(response.getProductVariant()))
                             .productName(response.getProductVariant().getProduct().getProductName())
+                                .productStatus(response.getProductVariant().getProduct().getStatus())
                                 .productImage(response.getProductVariant().getProduct().getProductImage())
                                 .statusName(response.getStatus().getStatusName())
                             .retailerName(iretailerRepository.findRetailerNameByProductId(response.getProductVariant().getProduct().getProductId()))
@@ -387,7 +384,8 @@ public class OrderServiceImpl implements IOrderService {
                     .receiptDetailId(response.getReceiptDetailId())
                     .totalQuantity(response.getQuantity())
                     .productVariants(productVariantMapper.toDTO(response.getProductVariant()))
-                    .productName(response.getProductVariant().getProduct().getProductName())
+                        .productStatus(response.getProductVariant().getProduct().getStatus())
+                        .productName(response.getProductVariant().getProduct().getProductName())
                     .statusName(response.getStatus().getStatusName())
                     .retailerName(iretailerRepository.findRetailerNameByProductId(response.getProductVariant().getProduct().getProductId()))
                     .build())

@@ -7,6 +7,12 @@ export const productAPI = {
     });
     return response.data;
   },
+  getAllProductEnable: async () => {
+    const response = await api.get("/products/", {
+      withCredentials: true,
+    });
+    return response.data;
+  },
 
   getByCategoryId: async (categoryId) => {
     const response = await api.get(`/products/category/${categoryId}`, {
@@ -19,4 +25,5 @@ export const productAPI = {
     const response = await api.get(`/products/${productId}`);
     return response.data;
   },
+
 };

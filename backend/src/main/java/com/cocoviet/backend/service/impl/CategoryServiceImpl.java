@@ -57,4 +57,13 @@ public class CategoryServiceImpl implements ICategoryService {
     public List<CategoryDTO> getAllCategories() {
         return iCategoryMapper.toListCategoryDTO(iCategoryRepository.findAll());
     }
+
+    @Override
+    public void deleteCategory(String categoryId) {
+        CategoryEntity categoryEntity = iCategoryRepository.findCategoryEntityByCategoryId(categoryId);
+        if(categoryEntity == null) {
+            throw new RuntimeException("Category not found");
+        }
+        iCategoryRepository.delete(categoryEntity);
+    }
 }

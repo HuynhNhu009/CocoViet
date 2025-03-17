@@ -37,7 +37,7 @@ const ProductItem = ({
           <li className="text-lg font-semibold truncate max-w-full px-2 overflow-hidden whitespace-nowrap text-ellipsis">
             {productName}
           </li>
-          <li className="font-light text-sm ">{price} VND</li>
+          <li className="font-light text-sm ">₫{(new Intl.NumberFormat("vi-VN").format(price))}</li>
           <li className="font-extralight text-xs mt-2 text-right pr-5">{retailerName}</li>
         </div>
       </ul>

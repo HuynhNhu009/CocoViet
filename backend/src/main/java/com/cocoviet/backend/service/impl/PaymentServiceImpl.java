@@ -1,5 +1,6 @@
 package com.cocoviet.backend.service.impl;
 
+import com.cocoviet.backend.Enum.OrderPayment;
 import com.cocoviet.backend.mapper.IPaymentMapper;
 import com.cocoviet.backend.models.dto.PaymentDTO;
 import com.cocoviet.backend.models.entity.PaymentEntity;
@@ -27,15 +28,17 @@ public class PaymentServiceImpl implements IPaymentService {
     IPaymentRepository iPaymentRepository;
 
     @Override
-    public PaymentDTO addPaymentMethod(PaymentRequest paymentRequest) {
-        if(iPaymentRepository.existsByPaymentMethod(paymentRequest.getPaymentMethod()))
-            throw new RuntimeException("Payment method already exists");
-
-        PaymentEntity paymentEntity = PaymentEntity.builder()
-                .paymentMethod(paymentRequest.getPaymentMethod())
-                .paymentCode(paymentRequest.getPaymentCode())
-                .build();
-
+    public PaymentDTO addPaymentMethod() {
+        PaymentEntity paymentEntity = new PaymentEntity();
+        for (OrderPayment orderPayment : OrderPayment.values()) {
+            if (!iPaymentRepository.existsByPaymentMethod(orderPayment.getpaymentMethod())) {
+                paymentEntity = PaymentEntity.builder()
+                    .paymentMethod(orderPayment.getpaymentMethod())
+                    .paymentCode(orderPayment.getPaymentCode())
+                    .build();
+                iPaymentRepository.save(paymentEntity);
+            }
+        }
         return iPaymentMapper.toPaymentDTO(iPaymentRepository.save(paymentEntity));
     }
 

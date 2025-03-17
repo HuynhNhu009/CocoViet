@@ -19,5 +19,5 @@ public interface IProductRepository extends JpaRepository<ProductEntity, String>
     @Query("SELECT p FROM ProductEntity p WHERE p.retailer.retailerId = :retailerId")
     List<ProductEntity> findProductsByRetailerId(@Param("retailerId") String retailerId);
 
-    List<ProductEntity> findProductsEntitiesByDeleted(boolean deleted);
+    List<ProductEntity> findProductsEntitiesByStatus(String status);
 }

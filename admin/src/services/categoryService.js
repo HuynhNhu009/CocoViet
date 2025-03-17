@@ -6,10 +6,16 @@ export const categoryAPI = {
     return response.data;
   },
 
-  addCategory: async (category) => {
-    const response = await api.post("/categories/add",category);
+  addCategory: async (categoryName) => {
+    const response = await api.post("/categories/add",categoryName);
     return response.data;
   },
-
-
+  deleteCategoryById: async (categoryId) => {
+    const response = await api.delete("/categories/",{
+      params: {
+        categoryId: categoryId
+      },
+    });
+    return response.data;
+  },
 };

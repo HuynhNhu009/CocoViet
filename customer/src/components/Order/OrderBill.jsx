@@ -40,7 +40,7 @@ function OrderBill(orderStore) {
         order?.receiptDetails?.forEach((item) => {
           orderTotal += item.productVariants.price * item.totalQuantity;
         });
-        prices[order.orderId] = orderTotal + 30;
+        prices[order.orderId] = orderTotal + 30000;
       });
 
       setTotalPrice(prices);
@@ -135,7 +135,7 @@ function OrderBill(orderStore) {
                 <th className="p-3 text-sm  ">Ngày đặt</th>
                 <th className="p-3 text-sm ">Tổng tiền</th>
                 <th className="p-3 text-sm ">Trạng thái</th>
-                {!["SHIPPING"].includes(statusActive) && (  
+                {!["SHIPPING", "DELIVERED"].includes(statusActive) && (  
                   <th className="p-3 text-sm ">Hành động</th>
                 )}
               </tr>
@@ -172,34 +172,27 @@ function OrderBill(orderStore) {
                           .reverse()
                           .join("/") || "N/A"}
                       </td>
-                      <td className="p-3">{totalPrice[item.orderId]} VND</td>
+                      <td className="p-3">₫{(new Intl.NumberFormat("vi-VN").format(totalPrice[item.orderId]))}</td>
                       <td className="p-3">{statusName}</td>
                       {["SHIPPING"].includes(statusActive) && (  
                         <td className="p-3 hidden text-center text-sm">
                         </td>
                       )}
 
-                      {["DELIVERED"].includes(statusActive) && (
-                        <td className="p-3 text-center text-sm">
-                          <button className="bg-red-600 shadow-2xl rounded-sm text-white mr-1 px-2 py-1 ">
-                            Xóa
-                          </button>
-                        </td>
-                      )}
+                      {["CANCELLED"].includes(statusActive) &&
+                        (item.receiptDetails?.every((detail) => detail.productStatus !== "DISABLE") ? (
+                          <td className="p-3 text-center text-sm">
+                            <button
+                              onClick={() => buyAgain(item)}
+                              className="bg-green-600 shadow-2xl rounded-sm cursor-pointer text-white mr-1 px-2 py-1 "
+                            >
+                              Mua lại
+                            </button>
+                          </td>
+                        ) : (
+                          <td className="p-3 text-center text-sm"></td>
+                        ))}
 
-                      {["CANCELLED"].includes(statusActive) && (
-                        <td className="p-3 text-center text-sm">
-                          <button
-                            onClick={() => buyAgain(item)}
-                            className="bg-green-600 shadow-2xl rounded-sm cursor-pointer text-white mr-1 px-2 py-1 "
-                          >
-                            Mua lại
-                          </button>
-                          <button className="bg-red-600 shadow-2xl rounded-sm cursor-pointer text-white mr-1 px-2 py-1 ">
-                            Xóa
-                          </button>
-                        </td>
-                      )}
                       {["PROCESSING"].includes(statusActive) && (
                         <td className="p-3 text-center text-sm">
                           <button
@@ -247,13 +240,16 @@ function OrderBill(orderStore) {
                                       <td className="border px-2 py-2 w-1/2">
                                         {item.productName} -{" "}
                                         {item.productVariants.value}
-                                        {item.productVariants.unitName}
+                                        {item.productVariants.unitName } 
+                                        <span className="text-red-600 ml-2">
+                                        {(item.productStatus === "DISABLE") ? "(Hết hàng)" : ""}
+                                        </span>
                                       </td>
                                       <td className="border px-2 py-2 w-1/4 text-center">
                                         x{item.totalQuantity}
                                       </td>
                                       <td className="border px-2 py-2 w-1/4 text-center">
-                                        {item.productVariants.price} VND
+                                      {(new Intl.NumberFormat("vi-VN").format(item.productVariants.price))} VND
                                       </td>
                                     </tr>
                                   ))}
@@ -262,7 +258,7 @@ function OrderBill(orderStore) {
                             </div>
                           ))}
 
-                          <div className="payment my-5 ">
+                          <div className="payment mt-5 ">
                             <p className="text-green-600 font-bold">
                               Phương thức
                             </p>
@@ -297,14 +293,17 @@ function OrderBill(orderStore) {
                             )}
                           </div>
                           <div className="font-light">
-                            *Phí ship toàn quốc 30.000 VNĐ
+                            *Phí ship toàn quốc ₫30.000 
                           </div>
 
-                          <p className="mt-2 font-medium text-right">
-                            Tổng: {totalPrice[item.orderId] - 30} VND
+                          <p className="mt-2 font-extralight text-right">
+                            Tổng tiền hàng:  ₫{(new Intl.NumberFormat("vi-VN").format(totalPrice[item.orderId] - 30000))} 
                           </p>
-                          <p className="mt-2 font-medium text-right">
-                            Phí vận chuyển: 30 VND
+                          <p className=" font-extralight text-right">
+                            Phí vận chuyển: ₫30.000 
+                          </p>
+                          <p className=" font-medium text-right">
+                            Tổng cộng: ₫{(new Intl.NumberFormat("vi-VN").format(totalPrice[item.orderId]))} 
                           </p>
                         </td>
                       </tr>

@@ -29,7 +29,7 @@ function LoginForm() {
 
     try {
       console.log(formData);
-      const response = dispatch(customerApi.loginUser(formData));
+      const response = await dispatch(customerApi.loginUser(formData));
       console.log(response);
       if (response.status === "OK") {
         navigate("/");

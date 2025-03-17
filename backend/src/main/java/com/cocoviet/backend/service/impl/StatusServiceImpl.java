@@ -1,5 +1,6 @@
 package com.cocoviet.backend.service.impl;
 
+import com.cocoviet.backend.Enum.OrderStatus;
 import com.cocoviet.backend.mapper.IStatusMapper;
 import com.cocoviet.backend.models.dto.StatusDTO;
 import com.cocoviet.backend.models.entity.StatusEntity;
@@ -28,15 +29,17 @@ public class StatusServiceImpl implements IStatusService {
     IStatusRepository iStatusRepository;
 
     @Override
-    public StatusDTO addStatus(StatusRequest statusRequest){
-        if(iStatusRepository.existsByStatusName(statusRequest.getStatusName())){
-            throw new RuntimeException("Status already exists");
+    public StatusDTO addStatus(){
+        StatusEntity statusEntity = new StatusEntity();
+        for (OrderStatus orderStatus : OrderStatus.values()) {
+            if (!iStatusRepository.existsByStatusName(orderStatus.getStatusName())) {
+                 statusEntity = StatusEntity.builder()
+                        .statusCode(orderStatus.getStatusCode())
+                        .statusName(orderStatus.getStatusName())
+                        .build();
+                iStatusRepository.save(statusEntity);
+            }
         }
-
-        StatusEntity statusEntity = StatusEntity.builder()
-                .statusName(statusRequest.getStatusName())
-                .statusCode(statusRequest.getStatusCode())
-                .build();
         return iStatusMapper.toStatusDTO(iStatusRepository.save(statusEntity));
     }
 

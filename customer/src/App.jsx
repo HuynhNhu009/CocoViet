@@ -23,6 +23,7 @@ function App() {
   const dispatch = useDispatch();
   const customer = useSelector((state) => state.CustomerStore.customer);
   const isLogin = useSelector((state) => state.CustomerStore.isLogin);
+  const isNav = useSelector((state) => state.ProductStore.isNav);
   const createOrder = useSelector((state) => state.OrderStore.createOrder);
   const location = useLocation();
   // const posts = useSelector((state)=> state.PostStore.post)
@@ -64,21 +65,24 @@ function App() {
       }
     };
     payment();
-
-
-    const fetchData = async () => {
-      try {
-        const productResponse = await productAPI.getAllProducts();
-        if (productResponse && productResponse.data) {
-          dispatch(setProductStore(productResponse.data));
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchData();
     checkAuth();
   }, [dispatch]);
+
+  const products = async () => {
+    try {
+      const productResponse = await productAPI.getAllProductEnable();
+      if (productResponse && productResponse.data) {
+        dispatch(setProductStore(productResponse.data));
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  
+
+  useEffect(() => {
+    products();
+  }, [dispatch, isNav]);
 
   useEffect(() => {
     const fetchOrders = async () => {

@@ -181,7 +181,7 @@ const StatisticItem = () => {
         <div className="ml-8">
           <p className="text-lg font-bold ">Tổng lợi nhuận</p>
           <p className="text-xl font-semibold  text-yellow-500">
-            {new Intl.NumberFormat("vi-VN").format(revenue?.totalRevenue)} VND
+            {(revenue?.totalRevenue) && (new Intl.NumberFormat("vi-VN").format(revenue?.totalRevenue))} VND
           </p>
         </div>
       </div>

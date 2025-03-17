@@ -14,6 +14,7 @@ const ProductDetail = () => {
   const { productId } = useParams();
   const navigate = useNavigate();
   const isLoggedIn = useSelector((state) => !!state.CustomerStore.isLogin);
+  const [selectVariant, setSelectVariant] = useState([]);
 
   const [product, setProducts] = useState([]);
   const orderRequest = {
@@ -53,10 +54,11 @@ const ProductDetail = () => {
       fetchProduct();
     } else {
       setProducts(productDetail);
+      setSelectVariant(productDetail.variants[0]);
     }
   }, [productDetail]);
 
-  const [selectVariant, setSelectVariant] = useState(productDetail.variants[0]);
+  // const [selectVariant, setSelectVariant] = useState(productDetail.variants[0]);
   
   //quantity
   const [quantity, setQuantity] = useState(1); 
@@ -138,11 +140,11 @@ const ProductDetail = () => {
           </p>
           <p className="font-extralight">Xuất xứ: {product.productOrigin}</p>
           <div>
-            <p className=" mb-1 text-green-600 font-bold">Thông tin sản phẩm</p>
+            <p className=" mb-1 text-green-600 font-bold uppercase">Thông tin sản phẩm</p>
             <hr className="mb-2 text-green-600"></hr>
           </div>
           <div className="">
-            <span className="pr-3">Thể tích: </span>
+            <span className="pr-3">Loại: </span>
             {product.variants?.map((variant, vIndex) => (
               <span
                 onClick={() => setSelectVariant(variant)}
@@ -155,7 +157,8 @@ const ProductDetail = () => {
               </span>
             ))}
           </div>
-          <p className="text-green-600 font-bold text-4xl ">{selectVariant?.price} VND</p>
+          <p className="text-green-600 font-bold text-4xl ">₫{(new Intl.NumberFormat("vi-VN").format(selectVariant?.price))} </p>
+          <span className="font-extralight">Kho: {selectVariant?.stock}</span>
           <div>
             <span>Số lượng: </span>
             <input

@@ -145,7 +145,7 @@ const Profit = () => {
         <div className="ml-8">
           <p className="text-lg font-bold ">Tổng lợi nhuận</p>
           <p className="text-xl font-semibold  text-yellow-500">
-            {revenue ? revenue.totalRevenue : 0} VND
+          ₫{(new Intl.NumberFormat("vi-VN").format(revenue ? revenue.totalRevenue : 0))}
           </p>
         </div>
       </div>

@@ -32,7 +32,7 @@ public class ProductEntity {
 
 
     @Column
-    Boolean deleted;
+    String status;
 
     @Column
     String productOrigin;

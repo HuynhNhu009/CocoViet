@@ -63,4 +63,14 @@ public class CategoryController {
                         .status("OK")
                         .build());
     }
+
+    @DeleteMapping("/")
+    ResponseEntity<ResponseData> deleteCategory(@RequestParam String categoryId){
+        categoryService.deleteCategory(categoryId);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ResponseData.builder()
+                        .msg("Get categories success")
+                        .status("OK")
+                        .build());
+    }
 }

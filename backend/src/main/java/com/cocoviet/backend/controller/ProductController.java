@@ -118,6 +118,16 @@ public class ProductController {
                         .build());
     }
 
+    @GetMapping("/")
+    ResponseEntity<ResponseData> getAllProductEnable(){
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ResponseData.builder()
+                        .data(productService.getAllProductEnable())
+                        .msg("Get all product 'deleted false' successfully!")
+                        .status("OK")
+                        .build());
+    }
+
     @GetMapping("/retailer/{retailerId}")
     ResponseEntity<ResponseData> getAllProductByRetailerId(@PathVariable String retailerId){
         return ResponseEntity.status(HttpStatus.OK)

@@ -1,6 +1,5 @@
 package com.cocoviet.backend.service;
 
-import com.cocoviet.backend.models.dto.OrderDTO;
 import com.cocoviet.backend.models.dto.ProductDTO;
 import com.cocoviet.backend.models.request.ProductRequest;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,4 +16,5 @@ public interface IProductService {
     List<ProductDTO> getProductByCategory(String categoryId);
     List<ProductDTO> getProductListByRetailerId(String retailerId);
     List<ProductDTO> deleteProductById(String productId);
+    List<ProductDTO> getAllProductEnable();
 }

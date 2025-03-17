@@ -12,4 +12,5 @@ public interface ICategoryRepository extends JpaRepository<CategoryEntity, Strin
     boolean existsByCategoryName(String categoryName);
     Set<CategoryEntity> findByCategoryIdIn(Collection<String> categoryIds);
 
+    CategoryEntity findCategoryEntityByCategoryId(String categoryId);
 }
