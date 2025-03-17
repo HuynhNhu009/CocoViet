@@ -119,7 +119,7 @@ const ProductDetail = ({
                       className="flex items-center rounded-sm shadow-sm my-2 justify-between p-2"
                     >
                       <span className="text-gray-700">
-                        {variant.value} {variant.unitName} - {variant.price}đ
+                        {variant.value} {variant.unitName} - ₫{(new Intl.NumberFormat("vi-VN").format(variant.price))}
                         (Kho: {variant.initStock})
                       </span>
                     </div>
