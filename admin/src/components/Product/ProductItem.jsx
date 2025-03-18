@@ -103,8 +103,8 @@ const ProductItem = ({ products }) => {
                           <option value="DISABLE" className="bg-yellow-500">
                             Chờ duyệt
                           </option>
-                          <option value="ENABLE" className="bg-green-500">
-                            Được bán
+                          <option value="PAUSE" className="bg-gray-500">
+                            Tạm ngừng
                           </option>
                           <option value="BLOCK" className="bg-red-500">
                             Vi phạm
@@ -126,7 +126,6 @@ const ProductItem = ({ products }) => {
                       )}
                       {product.status === "PAUSE" && (
                         <>
-                          {" "}
                           <option value="PAUSE" className="bg-gray-500">
                             Tạm ngừng
                           </option>

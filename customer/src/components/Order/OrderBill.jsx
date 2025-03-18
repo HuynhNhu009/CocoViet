@@ -180,7 +180,7 @@ function OrderBill(orderStore) {
                       )}
 
                       {["CANCELLED"].includes(statusActive) &&
-                        (item.receiptDetails?.every((detail) => detail.productStatus !== "DISABLE") ? (
+                        (item.receiptDetails?.every((detail) => detail.productStatus !== "PAUSE") ? (
                           <td className="p-3 text-center text-sm">
                             <button
                               onClick={() => buyAgain(item)}
@@ -242,7 +242,7 @@ function OrderBill(orderStore) {
                                         {item.productVariants.value}
                                         {item.productVariants.unitName } 
                                         <span className="text-red-600 ml-2">
-                                        {(item.productStatus === "DISABLE") ? "(Hết hàng)" : ""}
+                                        {(item.productStatus === "PAUSE") ? "(Hết hàng)" : ""}
                                         </span>
                                       </td>
                                       <td className="border px-2 py-2 w-1/4 text-center">
