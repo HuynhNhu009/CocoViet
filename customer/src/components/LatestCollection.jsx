@@ -1,8 +1,10 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import ProductItem from "./Product/ProductItem";
+// import ProductItem from "./Product/ProductItem";
 import { setProductDetail } from "../redux/productSlice";
 import { useNavigate } from "react-router-dom";
+import ProductHomeItem from "./product/ProductHomeItem";
+import Title from "./ui/Title";
 
 const LatestCollection = () => {
   const dispatch = useDispatch();
@@ -11,43 +13,53 @@ const LatestCollection = () => {
     (state) => state.ProductStore.productStore || []
   );
 
-
+  console.log(productStore);
   const handleNavigate = (productId) => {
-      const findByProductId = productStore.find(
-        (item) => item.productId === productId
-      );
-      navigate(`/product/${productId}`);
-  
-      if (findByProductId) {
-        dispatch(setProductDetail({}));
-        dispatch(setProductDetail(findByProductId));
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      } else {
-        console.log("Product not found!");
-      }
-    };
+    const findByProductId = productStore.find(
+      (item) => item.productId === productId
+    );
+    navigate(`/product/${productId}`);
+
+    if (findByProductId) {
+      dispatch(setProductDetail({}));
+      dispatch(setProductDetail(findByProductId));
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } else {
+      console.log("Product not found!");
+    }
+  };
   return (
-    <div className="h-150 sm:h-[830px] flex flex-col justify-evenly items-center text-4xl">
-      <p className="font-bold text-5xl text-green-700 " >
-      CÁC SẢN PHẨM MỚI
-      </p>
-      <div className=" productItem align-middle grid  sm:grid-cols-3 md:grid-cols-4 gap-6 m-0">
-      {productStore.slice(-4).map((item) => ( 
-            <div className="w-80"
-              key={item.productId}
-              onClick={() => handleNavigate(item.productId)}
-            >
-              <ProductItem
-                productId={item.productId}
-                productName={item.productName}
-                retailerName={item.retailerName}
-                variants={item.variants || []}
-                productImage={item.productImage || []}
-              />
-            </div>
+    <div
+      className="relative h-150 sm:h-[830px] flex justify-center items-center bg-fixed"
+      // style={{ backgroundImage: `url(${assets.coconutField})` }}
+    >
+    
+      <div className="relative flex flex-col items-center gap-4">
+        <Title text1={"Sản phẩm nổi bậc"} color1={"text-green-600"} className="text-3xl sm:text-4xl  lg:text-6xl" />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+          {productStore.slice(0, 3).map((product) => (
+            <ProductHomeItem
+              key={product.productId}
+              product={product}
+              onClick={() => handleNavigate(product.productId)}
+            />
           ))}
         </div>
+      </div>
     </div>
+
+    // <div className="px-50 h-150 sm:h-[830px] relative flex flex-col items-center gap-4">
+    //   <Title text1={"Sản phẩm nổi bậc"} color1={"text-black"} />
+    //   <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+    //     {productStore.slice(0,3).map((product) => (
+    //       <ProductHomeItem
+    //         key={product.productId}
+    //         product={product}
+    //         onClick={() => handleNavigate(product.productId)}
+    //       />
+    //     ))}
+    //   </div>
+    // </div>
   );
 };
 

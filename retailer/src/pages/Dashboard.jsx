@@ -157,11 +157,11 @@ const Dashboard = () => {
 
   useEffect(() => {
     fetchOrder();
-    const interval = setInterval(() => {
-      fetchOrder();
-      fetchProducts();
-    }, 6000);
-    return () => clearInterval(interval);
+    // const interval = setInterval(() => {
+    //   fetchOrder();
+    //   fetchProducts();
+    // }, 6000);
+    // return () => clearInterval(interval);
   }, [loadOrder]);
 
   const fetchRevenue = async () => {
@@ -269,7 +269,7 @@ const Dashboard = () => {
   return (
     <div className="relative flex flex-col min-h-screen">
       <Navbar />
-      <div className="bg-gray-200 min-h-[90vh] flex flex-col sm:px-4 lg:flex-row sm:gap-6">
+      <div className="bg-white min-h-[90vh] flex flex-col sm:px-4 lg:flex-row sm:gap-6">
         <Sidebar
           activeTab={activeTab}
           setActiveTab={setActiveTab}

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { retailerApi } from "../services/RetailerService"; // Thay bằng đường dẫn thực tế
 import { useNavigate } from "react-router-dom";
+import { assets } from "../assets/assets";
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -172,7 +173,7 @@ const Login = () => {
   return (
     <div className="h-[100vh] flex items-center justify-center bg-gray-100"
     style={{
-      backgroundImage: `url('https://images.unsplash.com/photo-1537191072641-5e19cc173c6a?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')`, // Thay bằng URL hình ảnh của bạn
+      backgroundImage: `url('${assets.ImageLogin}')`, // Thay bằng URL hình ảnh của bạn
       backgroundSize: "cover",
       backgroundPosition: "center",
       backgroundRepeat: "no-repeat",

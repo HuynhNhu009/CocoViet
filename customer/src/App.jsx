@@ -74,6 +74,8 @@ function App() {
       if (productResponse && productResponse.data) {
         dispatch(setProductStore(productResponse.data));
       }
+
+      console.log("Fetch product")
     } catch (error) {
       console.log(error);
     }
