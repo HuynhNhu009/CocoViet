@@ -123,7 +123,7 @@ const Dashboard = () => {
         createdAt: product.createdAt,
       }));
       dispatch(setProducts(formattedProducts));
-      console.log("Products FFFF:", formattedProducts);
+      // console.log("Products FFFF:", formattedProducts);
     } catch (error) {
       console.error("Lỗi khi lấy sản phẩm:", error);
       dispatch(setProducts([]));
@@ -148,7 +148,7 @@ const Dashboard = () => {
         retailer.retailerId
       );
       dispatch(setPosts(responseData.data));
-      console.log("Post===========", responseData.data, retailer.retailerId);
+      // console.log("Post===========", responseData.data, retailer.retailerId);
     } catch (error) {
       console.error("Lỗi khi lấy Posts:", error);
       dispatch(setPosts([]));
@@ -157,20 +157,21 @@ const Dashboard = () => {
 
   useEffect(() => {
     fetchOrder();
-    const interval = setInterval(() => {
-      fetchOrder();
-      fetchProducts();
-    }, 6000);
-    return () => clearInterval(interval);
+    // const interval = setInterval(() => {
+    //   fetchOrder();
+    //   fetchProducts();
+    // }, 6000);
+    // return () => clearInterval(interval);
   }, [loadOrder]);
 
   const fetchRevenue = async () => {
     try {
       const responseData = await orderAPI.getRevenue(
-        retailer.retailerId,
-        "DELIVERED"
-      );
+        retailer.retailerId );
       dispatch(setRevenue(responseData.data));
+
+      console.log("-----",responseData.data);
+      
     } catch (error) {
       console.log("Lỗi khi lấy Order:", error);
       dispatch(setOrder([]));

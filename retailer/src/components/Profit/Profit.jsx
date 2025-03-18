@@ -67,6 +67,10 @@ const Profit = () => {
       } else {
         setProductName(matchingProducts[0].productName);
       }
+      console.log("top3", top3);
+      console.log("matchingProducts", matchingProducts);
+      console.log("revenueStore.bestSellingProduct", revenueStore.bestSellingProduct);
+      
 
       setOrderStats(orderTop);
     } else {
@@ -127,6 +131,8 @@ const Profit = () => {
     }));
   };
 
+  console.log("ord", orderStats);
+  
   const orderData = processData(orders);
 
   return (
