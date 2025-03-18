@@ -474,8 +474,8 @@ public class OrderServiceImpl implements IOrderService {
         List<Object[]> bestSelling = new ArrayList<>();
 
         for (OrderEntity orderEntity : listOrder) {
+            count += 1;
             for (ReceiptDetailEntity receiptDetailEntity : orderEntity.getReceiptDetails()) {
-                count += 1;
                 totalPrice = totalPrice.add(
                         receiptDetailEntity.getProductVariant().getPrice()
                                 .multiply(BigDecimal.valueOf(receiptDetailEntity.getQuantity()))
