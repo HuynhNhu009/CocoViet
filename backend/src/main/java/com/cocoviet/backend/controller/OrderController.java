@@ -94,10 +94,10 @@ public class OrderController {
 
 
     @GetMapping("/revenue")
-    public ResponseEntity<ResponseData> getRevenue(@RequestParam String retailerId, @RequestParam String statusCode) {
+    public ResponseEntity<ResponseData> getRevenue(@RequestParam String retailerId) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ResponseData.builder()
-                        .data(orderService.getRevenue(retailerId, statusCode))
+                        .data(orderService.getRevenue(retailerId))
                         .msg("Get revenue successfully")
                         .status("OK")
                         .build());

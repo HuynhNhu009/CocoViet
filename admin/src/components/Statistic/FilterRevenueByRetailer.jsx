@@ -29,7 +29,7 @@ const FilterRevenueByRetailer = () => {
       if (retailerId === "allStatistic") {        
         await dispatch(setRevenueListRetailer(revenueStore));
       } else {
-        const findByRetailerId = await orderAPI.getRevenue(retailerId, "DELIVERED");        
+        const findByRetailerId = await orderAPI.getRevenue(retailerId);        
         await dispatch(setRevenueListRetailer(findByRetailerId.data));
       }
     } catch (error) {

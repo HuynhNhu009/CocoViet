@@ -13,6 +13,7 @@ import {
   setcategory,
   setCategoryActive,
   setCustomer,
+  setLoadingAPI,
   setOrder,
   setOrderByRetailer,
   setOrderChart,
@@ -44,6 +45,7 @@ const Sidebar = () => {
   const statusStore = useSelector((state) => state.AdminStore.statusStore);
   const revenueRetailerActive = useSelector((state) => state.AdminStore.revenueRetailerActive);
   const update = useSelector((state) => state.AdminStore.update);
+  const loadingAPI = useSelector((state) => state.AdminStore.loadingAPI);
 
   const navItems = [
     {
@@ -148,6 +150,7 @@ const Sidebar = () => {
       const response = await orderAPI.getAllRevenue();
       if (response.data) {
         dispatch(setRevenueList(response.data[0]));
+        
       }
     } catch (error) {
       console.error("Error fetching post:", error);
@@ -173,7 +176,8 @@ const Sidebar = () => {
     products();
     customers();
     retailers();
-  }, [dispatch, sideBarActive]);
+    dispatch(setLoadingAPI(false));
+  }, [dispatch, sideBarActive, loadingAPI ]);
 
   useEffect(() => {
     getAllCategories();    

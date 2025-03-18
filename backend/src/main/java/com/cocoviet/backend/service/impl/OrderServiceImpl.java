@@ -1,6 +1,7 @@
 package com.cocoviet.backend.service.impl;
 
 import com.cocoviet.backend.Enum.OrderStatus;
+import com.cocoviet.backend.Enum.ProductStatus;
 import com.cocoviet.backend.mapper.ProductVariantMapper;
 import com.cocoviet.backend.models.dto.*;
 import com.cocoviet.backend.models.entity.*;
@@ -414,28 +415,25 @@ public class OrderServiceImpl implements IOrderService {
     }
 
     @Override
-    public RevenueDTO getRevenue(String retailerId, String statusCode) {
+    public RevenueDTO getRevenue(String retailerId) {
         RevenueDTO revenueDTO = new RevenueDTO();
 
         int count = 0;
         BigDecimal totalPrice = BigDecimal.ZERO;
-
-        if (iStatusRepository.findByStatusCode(statusCode) == null) {
-            throw new RuntimeException("Status not found");
-        }
-
-        List<OrderEntity> listOrder = iOrderRepository.findDeliveredOrdersByRetailerId(retailerId, statusCode);
-
+        List<OrderEntity> listOrder = iOrderRepository.findDeliveredOrdersByRetailerId(retailerId, OrderStatus.DELIVERED.getStatusCode());
         List<Object[]> bestSelling = new ArrayList<>();
+
         for (OrderEntity orderEntity : listOrder) {
-            for (ReceiptDetailEntity receiptDetailEntity : orderEntity.getReceiptDetails()) {
+            Set<ReceiptDetailEntity> receiptDetailEntitiesByRetailerId =iReceiptDetailRepository.findReceiptDetailsByRetailerAndOrderId(retailerId, orderEntity.getOrderId());
+
+            for (ReceiptDetailEntity receiptDetailEntity : receiptDetailEntitiesByRetailerId) {
                 count += 1;
                 totalPrice = totalPrice.add(
                         receiptDetailEntity.getProductVariant().getPrice()
                                 .multiply(BigDecimal.valueOf(receiptDetailEntity.getQuantity()))
                 );
 
-                bestSelling = iReceiptDetailRepository.getBestSellingProducts(statusCode);
+                bestSelling = iReceiptDetailRepository.getBestSellingProductByRetailerId(OrderStatus.DELIVERED.getStatusCode(), retailerId);
             }
         }
         List<BestSellingProductDTO> bestSellingProducts = bestSelling.stream()
@@ -476,8 +474,8 @@ public class OrderServiceImpl implements IOrderService {
         List<Object[]> bestSelling = new ArrayList<>();
 
         for (OrderEntity orderEntity : listOrder) {
+            count += 1;
             for (ReceiptDetailEntity receiptDetailEntity : orderEntity.getReceiptDetails()) {
-                count += 1;
                 totalPrice = totalPrice.add(
                         receiptDetailEntity.getProductVariant().getPrice()
                                 .multiply(BigDecimal.valueOf(receiptDetailEntity.getQuantity()))

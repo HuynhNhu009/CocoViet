@@ -100,7 +100,7 @@ function OrderItem(orderStore) {
 
     try {
       const deleteReceipt = order.receiptDetails.filter(
-        (item) => item.productStatus === "DISABLE"
+        (item) => item.productStatus === "PAUSE"
       );
 
       console.log("dele", deleteReceipt);
@@ -168,7 +168,7 @@ function OrderItem(orderStore) {
                   <tr
                     key={index}
                     className={`text-center border-b-1 border-gray-400 ${
-                      item.productStatus == "DISABLE" ? "bg-gray-200" : ""
+                      item.productStatus == "PAUSE" ? "bg-gray-200" : ""
                     }`}
                   >
                     <td className="px-4 py-2">{index + 1}</td>
@@ -194,7 +194,7 @@ function OrderItem(orderStore) {
                     </td>
 
                     <td className={`px-4 py-2`}>
-                      {item.productStatus !== "DISABLE" ? (
+                      {item.productStatus !== "PAUSE" ? (
                         <input
                           type="number"
                           onChange={(e) =>
@@ -221,7 +221,7 @@ function OrderItem(orderStore) {
                       )}
                     </td>
 
-                    {item.productStatus !== "DISABLE" ? (
+                    {item.productStatus !== "PAUSE" ? (
                       <td className="px-4 py-2">
                         ₫
                         {new Intl.NumberFormat("vi-VN").format(
