@@ -36,7 +36,15 @@ public interface IReceiptDetailRepository extends JpaRepository<ReceiptDetailEnt
             "ORDER BY totalSold DESC")
     List<Object[]> getBestSellingProducts(@Param("statusCode") String statusCode);
 
-
+    @Query("SELECT r.productVariant, SUM(r.quantity) as totalSold " +
+            "FROM ReceiptDetailEntity r " +
+            "JOIN r.productVariant pv " +
+            "JOIN pv.product p " +
+            "WHERE r.status.statusCode = :statusCode " +
+            "AND p.retailer.retailerId = :retailerId " +
+            "GROUP BY r.productVariant " +
+            "ORDER BY totalSold DESC")
+    List<Object[]> getBestSellingProductByRetailerId(@Param("statusCode") String statusCode, @Param("retailerId") String retailerId);
 
 
 }
