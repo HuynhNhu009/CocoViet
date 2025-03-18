@@ -9,17 +9,24 @@ const ProductHomeItem = ({ product }) => {
         className="w-fit h-[250px] object-contain mb-2"
       />
       <div className="flex-1">
-        <p className="text-xl text-black capitalize font-medium">
-          {product.productName}
+        <div className="h-20">
+          <p className="text-xl text-black line-clamp-2 capitalize font-medium">
+            {product.productName}
+          </p>
+        </div>
+        <div className="h-20">
+
+        <p className="text-gray-600 line-clamp-4 text-sm">
+          {product.productDesc || "Chưa có"}
         </p>
-        <p className="text-gray-600 truncate text-sm">
-         {product.productDesc || "Chưa có"}
-        </p>
-        <p className="text-gray-600 text-sm truncate sm:block">
+        </div>
+
+        
+        {/* <p className="text-gray-600 text-sm truncate sm:block">
           Nguồn gốc: {product.productOrigin || "Chưa có"}
-        </p>
+        </p> */}
       </div>
-    </div>  
+    </div>
   );
 };
 

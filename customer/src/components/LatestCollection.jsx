@@ -36,7 +36,7 @@ const LatestCollection = () => {
     
       <div className="relative flex flex-col items-center gap-4">
         <Title text1={"Sản phẩm nổi bậc"} color1={"text-green-600"} className="text-3xl sm:text-4xl  lg:text-6xl" />
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 pt-20">
           {productStore.slice(0, 3).map((product) => (
             <ProductHomeItem
               key={product.productId}
