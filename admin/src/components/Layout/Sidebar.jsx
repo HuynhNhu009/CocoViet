@@ -150,6 +150,7 @@ const Sidebar = () => {
       const response = await orderAPI.getAllRevenue();
       if (response.data) {
         dispatch(setRevenueList(response.data[0]));
+        
       }
     } catch (error) {
       console.error("Error fetching post:", error);

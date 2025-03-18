@@ -111,7 +111,6 @@ const StatisticItem = () => {
         .filter(Boolean);
 
       const top3 = matchingProducts.slice(0, 3);
-
       const orderTop = top3.map((order, index) => ({
         productName: order?.productName || "Chưa có",
         totalSold: revenue.bestSellingProduct[index]?.totalSold || 0,
@@ -162,6 +161,7 @@ const StatisticItem = () => {
       yesterdayOrders: yesterdayOrders[i],
     }));
   };
+  
 
   const orderData = processData(orders);
 
