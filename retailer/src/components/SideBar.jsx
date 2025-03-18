@@ -41,7 +41,7 @@ const Sidebar = ({ activeTab, label, setLabel , setActiveTab, isOpen, setIsOpen 
   label: "Quản lý bài đăng",
   icon: <NewspaperIcon className="size-5"/>
 },
-  ];
+  ];  
 
   const renderNavItem = (item, closeOnClick = false) => (
     <button
@@ -62,6 +62,8 @@ const Sidebar = ({ activeTab, label, setLabel , setActiveTab, isOpen, setIsOpen 
       <span>{item.label}</span>
     </button>
   );
+
+
 
   return (
     <>

@@ -184,7 +184,7 @@ const Dashboard = () => {
     if (retailer?.retailerId && statusStore) {
       fetchRevenue();
     }
-  }, [retailer, statusStore]);
+  }, [retailer, statusStore, activeTab]);
 
   useEffect(() => {
     const loadAllData = async () => {
