@@ -44,6 +44,7 @@ const Sidebar = () => {
   const statusStore = useSelector((state) => state.AdminStore.statusStore);
   const revenueRetailerActive = useSelector((state) => state.AdminStore.revenueRetailerActive);
   const update = useSelector((state) => state.AdminStore.update);
+  const loadingAPI = useSelector((state) => state.AdminStore.loadingAPI);
 
   const navItems = [
     {
@@ -173,7 +174,7 @@ const Sidebar = () => {
     products();
     customers();
     retailers();
-  }, [dispatch, sideBarActive]);
+  }, [dispatch, sideBarActive, loadingAPI ]);
 
   useEffect(() => {
     getAllCategories();    

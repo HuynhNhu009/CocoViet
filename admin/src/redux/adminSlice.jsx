@@ -1,4 +1,3 @@
-import { FlagIcon } from "@heroicons/react/24/outline";
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
@@ -6,36 +5,39 @@ const initialState = {
   categoryStore: [],
   categoryActive: null,
 
-  productStore:[],
-  productSearch:[],
-  productCategory:[],
+  productStore: [],
+  productSearch: [],
+  productCategory: [],
+  productStatusActive: null,
+  productStatus:[],
 
-  postFilter:[],
-  postSearch:[],
+  postFilter: [],
+  postSearch: [],
   postStore: [],
-  postRetailerActive:null,
+  postRetailerActive: null,
 
-  customerSearch:[],
+  customerSearch: [],
   customerStore: [],
 
-  retailerSearch:[],
+  retailerSearch: [],
   retailerStore: [],
-  retailerProduct:[],
-  
+  retailerProduct: [],
+
   activeSearch: null,
 
   orderStore: [],
-  orderChart:[],
-  orderByRetailer:[],
+  orderChart: [],
+  orderByRetailer: [],
 
-  revenueList:[],
-  revenueListRetailer:{},
-  revenueRetailerActive:null,
+  revenueList: [],
+  revenueListRetailer: {},
+  revenueRetailerActive: null,
 
-  statusStore:[],
+  statusStore: [],
 
   update: false,
 
+  loadingAPI:false,
 };
 
 const adminSlice = createSlice({
@@ -49,6 +51,13 @@ const adminSlice = createSlice({
     setRevenueRetailerActive: (state, action) => {
       state.revenueRetailerActive = action.payload;
     },
+    setProductStatusActive: (state, action) => {
+      state.productStatusActive = action.payload;
+    },
+
+    setLoadingAPI: (state, action) => {
+      state.loadingAPI = action.payload;
+    },
 
     setUpdate: (state, action) => {
       state.update = action.payload;
@@ -57,47 +66,50 @@ const adminSlice = createSlice({
     setOrderByRetailer: (state, action) => {
       state.orderByRetailer = action.payload;
     },
+    setProductStatus: (state, action) => {
+      state.productStatus = action.payload;
+    },
     setOrderChart: (state, action) => {
       state.orderChart = action.payload;
     },
-    setCustomer:(state, action) => {
+    setCustomer: (state, action) => {
       state.customerStore = action.payload;
     },
-    setOrder:(state, action) => {
+    setOrder: (state, action) => {
       state.orderStore = action.payload;
     },
-    setRevenueListRetailer:(state, action) => {
+    setRevenueListRetailer: (state, action) => {
       state.revenueListRetailer = action.payload;
     },
 
-    setStatus:(state, action) => {
+    setStatus: (state, action) => {
       state.statusStore = action.payload;
     },
-    setRevenueList:(state, action) => {
+    setRevenueList: (state, action) => {
       state.revenueList = action.payload;
     },
-    setRetailerProduct:(state, action) => {
+    setRetailerProduct: (state, action) => {
       state.retailerProduct = action.payload;
     },
-    setPostRetailerActive:(state, action) => {
+    setPostRetailerActive: (state, action) => {
       state.postRetailerActive = action.payload;
     },
-    setPostSearch:(state, action) => {
+    setPostSearch: (state, action) => {
       state.postSearch = action.payload;
     },
-    setPostFilter:(state, action) => {
+    setPostFilter: (state, action) => {
       state.postFilter = action.payload;
     },
-    setRetailer:(state, action) => {
+    setRetailer: (state, action) => {
       state.retailerStore = action.payload;
     },
-    setCustomerSearch:(state, action) => {
+    setCustomerSearch: (state, action) => {
       state.customerSearch = action.payload;
     },
-    setRetailerSearch:(state, action) => {
+    setRetailerSearch: (state, action) => {
       state.retailerSearch = action.payload;
     },
-    setPost:(state, action) => {
+    setPost: (state, action) => {
       state.postStore = action.payload;
     },
     setPoductSearch: (state, action) => {
@@ -123,5 +135,33 @@ const adminSlice = createSlice({
     },
   },
 });
-export const { setAdmin,setUpdate, setOrderChart,setOrderByRetailer, setRevenueRetailerActive, setRevenueListRetailer, setStatus, setRetailerProduct,setRevenueList, setOrder, setPostRetailerActive, setActive, setPostFilter, setPostSearch, setPost, setRetailerSearch, setRetailer, setCustomerSearch, setCustomer, setPoductCategory, setPoductSearch, setcategory,setProduct, setCategoryActive } = adminSlice.actions;
+export const {
+  setAdmin,
+  setUpdate,
+  setLoadingAPI,
+  setProductStatusActive,
+  setOrderChart,
+  setOrderByRetailer,
+  setRevenueRetailerActive,
+  setRevenueListRetailer,
+  setStatus,
+  setProductStatus,
+  setRetailerProduct,
+  setRevenueList,
+  setOrder,
+  setPostRetailerActive,
+  setActive,
+  setPostFilter,
+  setPostSearch,
+  setPost,
+  setRetailerSearch,
+  setRetailer,
+  setCustomerSearch,
+  setCustomer,
+  setPoductCategory,
+  setPoductSearch,
+  setcategory,
+  setProduct,
+  setCategoryActive,
+} = adminSlice.actions;
 export default adminSlice.reducer;

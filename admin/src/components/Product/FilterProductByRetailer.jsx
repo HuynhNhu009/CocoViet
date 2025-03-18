@@ -35,7 +35,7 @@ const FilterProductByRetailer = () => {
   };
 
   return (
-    <div className="ml-3 flex items-center gap-4">
+    <div className=" flex items-center gap-4">
       <select
         className="bg-white border-2  rounded-sm px-1 py-1.5 shadow-md text-gray-700"
         value={categoryActive || "allProduct"}

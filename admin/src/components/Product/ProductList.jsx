@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import FilterProductByCategory from "./FilterProductByCategory";
 import FilterProductByRetailer from "./FilterProductByRetailer";
+import FilterProductByStatus from "./FilterProductByStatus";
 import SearchBar from "./../SearchBar";
 import { useDispatch, useSelector } from "react-redux";
 import ProductItem from "./ProductItem";
@@ -8,6 +9,7 @@ import { setActive, setPoductSearch } from "../../redux/adminSlice";
 const ProductList = () => {
   const productStore = useSelector((state) => state.AdminStore.productStore);
   const productSearch = useSelector((state) => state.AdminStore.productSearch);
+  const productStatus = useSelector((state) => state.AdminStore.productStatus);
   const productCategory = useSelector((state) => state.AdminStore.productCategory);
   const [products, setproducts] = useState([]);
   const dispatch = useDispatch();  
@@ -23,6 +25,12 @@ const ProductList = () => {
       setproducts(productSearch);
     }
   }, [productSearch]);
+
+  useEffect(() => {
+    if (productStatus.length > 0) {
+      setproducts(productStatus);
+    }
+  }, [productStatus]);
   
   useEffect(() => {
     if (productCategory) {
@@ -36,8 +44,9 @@ const ProductList = () => {
     <>
       <div className="flex items-center justify-between gap-4">
         <FilterProductByCategory />
+        <FilterProductByStatus />
         <FilterProductByRetailer />
-        <div className="flex-1 mr-3">
+        <div className="flex-1">
           <SearchBar 
             placeholder="Search for products..."
             dataList={productStore}

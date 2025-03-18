@@ -23,4 +23,12 @@ export const productAPI = {
     const response = await api.get(`/products/retailer/${retialerID}`);
     return response.data;
   },
+
+  setStatusProduct: async (productId, statusName) => {
+    const response = await api.post(
+      `/products/set-status?productId=${productId}&status=${statusName}`
+    );
+    console.log("Set status product => ", response.data);
+    return response.data;
+  },
 };
