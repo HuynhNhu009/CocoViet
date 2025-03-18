@@ -1,27 +1,35 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { productAPI } from "../../services/productService";
 import { useDispatch } from "react-redux";
 import { setLoadingAPI } from "../../redux/adminSlice";
 
 const ProductItem = ({ products }) => {
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [saveProduct,setSaveProduct] = useState([]);
   const dispatch = useDispatch();
 
   const handleRowClick = (productId) => {
     setSelectedProduct(productId === selectedProduct ? null : productId);
   };
 
-  const handleChangeStatus = async(productId, newStatus) => {
-    console.log("id", productId);
-    console.log("status", newStatus);
-    if(productId && newStatus){
+  const handleChangeStatus = async (productId, newStatus) => {
+    if (productId && newStatus) {
       await productAPI.setStatusProduct(productId, newStatus);
       await dispatch(setLoadingAPI(true));
     }
-
-    
   };
 
+  useEffect(() => {
+    if (products) {
+      const timeout = setTimeout(() => {
+        setSaveProduct(products);
+      }, 200); 
+  
+      return () => clearTimeout(timeout); 
+    }
+  }, [products]);
+  
+  
   return (
     <>
       <table
@@ -39,8 +47,8 @@ const ProductItem = ({ products }) => {
           </tr>
         </thead>
         <tbody>
-          {products.length > 0 ? (
-            products?.map((product, index) => (
+          {saveProduct?.length > 0 ? (
+            saveProduct?.map((product, index) => (
               <React.Fragment key={product.productId}>
                 <tr
                   className={`cursor-pointer hover:bg-gray-100 mb-4 ${
@@ -76,7 +84,7 @@ const ProductItem = ({ products }) => {
                       onChange={(e) =>
                         handleChangeStatus(product.productId, e.target.value)
                       }
-                      onClick={(e) => e.stopPropagation()} 
+                      onClick={(e) => e.stopPropagation()}
                       className={`py-1 w-24 rounded-md shadow-md text-white text-center cursor-pointer ${
                         product.status === "ENABLE"
                           ? "bg-green-500"
@@ -89,8 +97,17 @@ const ProductItem = ({ products }) => {
                     >
                       {product.status === "ENABLE" && (
                         <>
-                        <option value="ENABLE" className="bg-green-500">
+                          <option value="ENABLE" className="bg-green-500">
                             Được bán
+                          </option>
+                          <option value="DISABLE" className="bg-yellow-500">
+                            Chờ duyệt
+                          </option>
+                          <option value="ENABLE" className="bg-green-500">
+                            Được bán
+                          </option>
+                          <option value="BLOCK" className="bg-red-500">
+                            Vi phạm
                           </option>
                         </>
                       )}
@@ -108,12 +125,21 @@ const ProductItem = ({ products }) => {
                         </>
                       )}
                       {product.status === "PAUSE" && (
-
-                        <>                          <option value="PAUSE" className="bg-gray-500">
-                          Tạm ngừng
-                        </option>
+                        <>
+                          {" "}
+                          <option value="PAUSE" className="bg-gray-500">
+                            Tạm ngừng
+                          </option>
+                          <option value="DISABLE" className="bg-yellow-500">
+                            Chờ duyệt
+                          </option>
+                          <option value="ENABLE" className="bg-green-500">
+                            Được bán
+                          </option>
+                          <option value="BLOCK" className="bg-red-500">
+                            Vi phạm
+                          </option>
                         </>
-                        
                       )}
                       {product.status === "BLOCK" && (
                         <option value="BLOCK" className="bg-red-500">
@@ -172,7 +198,7 @@ const ProductItem = ({ products }) => {
             ))
           ) : (
             <tr>
-              <td colSpan={5} className="p-3 text-center text-gray-500">
+              <td colSpan={6} className="p-3 text-center text-gray-500">
                 Không có sản phẩm nào.
               </td>
             </tr>

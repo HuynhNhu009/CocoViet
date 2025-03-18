@@ -21,15 +21,18 @@ const ProductList = () => {
   }, [productStore]);
 
   useEffect(() => {
-    if (productSearch.length > 0) {
+    if (productSearch) {
       setproducts(productSearch);
     }
   }, [productSearch]);
 
   useEffect(() => {
-    if (productStatus.length > 0) {
+    if (productStatus) {
       setproducts(productStatus);
     }
+
+    console.log("run-------------");
+    
   }, [productStatus]);
   
   useEffect(() => {

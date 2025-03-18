@@ -13,6 +13,7 @@ import {
   setcategory,
   setCategoryActive,
   setCustomer,
+  setLoadingAPI,
   setOrder,
   setOrderByRetailer,
   setOrderChart,
@@ -174,6 +175,7 @@ const Sidebar = () => {
     products();
     customers();
     retailers();
+    dispatch(setLoadingAPI(false));
   }, [dispatch, sideBarActive, loadingAPI ]);
 
   useEffect(() => {
