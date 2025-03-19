@@ -16,17 +16,11 @@ const ProductHomeItem = ({ product }) => {
             {product.productName}
           </p>
         </div>
-        <div className="h-20">
-
-        <p className="text-gray-600 line-clamp-4 text-sm">
-          {product.productDesc || "Chưa có"}
-        </p>
+        <div className="h-16 sm:h-20">
+          <p className="text-gray-600 line-clamp-4 text-justify text-xs sm:text-sm">
+            {product.productDesc || "Chưa có"}
+          </p>
         </div>
-
-        
-        {/* <p className="text-gray-600 text-sm truncate sm:block">
-          Nguồn gốc: {product.productOrigin || "Chưa có"}
-        </p> */}
       </div>
     </div>
   );
