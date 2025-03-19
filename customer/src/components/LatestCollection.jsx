@@ -34,6 +34,7 @@ const LatestCollection = () => {
       <div className="flex flex-col items-center gap-4 w-full">
         <Title
           text1={"Sản phẩm nổi bật"}
+          
           color1={"text-green-600"}
           className="text-2xl sm:text-3xl md:text-4xl lg:text-6xl"
         />
