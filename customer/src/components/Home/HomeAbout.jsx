@@ -9,11 +9,6 @@ const HomeAbout = () => {
       className="relative h-150 sm:h-[830px] flex justify-center items-center bg-fixed"
       style={{ backgroundImage: `url(${assets.coconutField})` }}
     >
-      {/* <img
-        src={assets.coconutField}
-        alt="coconutField"
-        className="absolute  w-full h-full -z-10 object-cover bg-fixed"
-      /> */}
       <div className="relative flex flex-col items-center gap-4">
         <Title text1={"Về chúng tôi"} color1={"text-white"} />
         <p className="w-[50vw]  xl:w-[30vw] h-[4px] lg:h-[10px] bg-white"></p>

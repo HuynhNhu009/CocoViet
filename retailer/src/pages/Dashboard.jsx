@@ -166,12 +166,10 @@ const Dashboard = () => {
 
   const fetchRevenue = async () => {
     try {
-      const responseData = await orderAPI.getRevenue(
-        retailer.retailerId );
+      const responseData = await orderAPI.getRevenue(retailer.retailerId);
       dispatch(setRevenue(responseData.data));
 
-      console.log("-----",responseData.data);
-      
+      console.log("-----", responseData.data);
     } catch (error) {
       console.log("Lỗi khi lấy Order:", error);
       dispatch(setOrder([]));
@@ -288,10 +286,6 @@ const Dashboard = () => {
               >
                 <Bars3Icon className="size-6 text-gray-700" />
               </button>
-              <h3 className="text-xl font-semibold uppercase ml-4 text-gray-700">
-                {label}
-                <hr className="mx-4 border-1" />
-              </h3>
             </div>
             {tabContent[activeTab]}
           </div>

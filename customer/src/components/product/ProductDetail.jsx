@@ -253,7 +253,7 @@ const ProductDetail = () => {
       <div className="section-5 ">
         <h2>XEM THÊM</h2>
         <hr className="mb-5"></hr>
-        <div className=" productItem flex align-middle grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6 m-0">
+        <div className="productItem align-middle grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6 m-0">
           {productStore.slice(0, 4).map((item) => (
             <div
               key={item.productId}
