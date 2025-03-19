@@ -57,25 +57,23 @@ const ProductDetail = () => {
       setSelectVariant(productDetail.variants[0]);
     }
   }, [productDetail]);
-
-  // const [selectVariant, setSelectVariant] = useState(productDetail.variants[0]);
   
   //quantity
   const [quantity, setQuantity] = useState(1); 
 
   const handleChangeQuantity = (e) => {
     let value = e.target.value.trim(); 
-  
+      
     if (value === "") {
       setQuantity(""); 
       return;
     }
   
     let num = parseInt(value, 10);
-    if (!isNaN(num) && num >= 1) {
+    if (!isNaN(num) && num >= 1 && num <= (selectVariant.stock)) {
       setQuantity(num);
     }
-  };
+  };  
 
   //buy product
   const buyProduct = async() => {
@@ -147,7 +145,10 @@ const ProductDetail = () => {
             <span className="pr-3">Loại: </span>
             {product.variants?.map((variant, vIndex) => (
               <span
-                onClick={() => setSelectVariant(variant)}
+                onClick={() =>{
+                  setSelectVariant(variant);
+                  setQuantity(1);
+                }}
                 key={vIndex}
                 className={`cursor-pointer mr-2 px-2 py-1 rounded-sm border 
                   ${selectVariant === variant ? "bg-green-500 text-white" : "hover:bg-green-500"}`}
@@ -169,6 +170,9 @@ const ProductDetail = () => {
             onBlur={() => quantity === "" && setQuantity(1)}
             value={quantity}
           />
+          {quantity === selectVariant.stock && (
+            <span className="text-red-600 text-sm font-extralight"> Số lượng tối đa!</span>
+          )}
           </div>
           <button onClick={buyProduct} className=" cursor-pointer bg-green-600 shadow-sm shadow-gray-400 p-3 rounded-2xl text-white text-base">
             ĐẶT HÀNG

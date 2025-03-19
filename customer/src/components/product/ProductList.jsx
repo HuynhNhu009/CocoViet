@@ -7,7 +7,6 @@ import ProductItem from "./ProductItem";
 
 const ProductList = () => {
   const [products, setProducts] = useState([]);
-
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -29,7 +28,7 @@ const ProductList = () => {
     if (ProductStore.length > 0) {
       setProducts(ProductStore);      
     }
-  }, [ProductStore]);
+  }, [ProductStore]);  
 
   useEffect(() => {
       setProducts(ProductStore);
