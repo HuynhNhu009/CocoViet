@@ -41,19 +41,25 @@ const ProductDetail = () => {
   };
 
   useEffect(() => {
-    if (sellingProduct) {
-      console.log(productDetail?.variants[0].variantId);
-      const count = sellingProduct.filter(
-        (item) =>
-          item.productVariant.variantId === productDetail?.variants[0].variantId
-      );      
-      if (count.length > 0) {
-        setCountSellingProduct(count[0].totalSold);
-      }else{
-        setCountSellingProduct(0);
+    if (
+      sellingProduct.length > 0 &&
+      productDetail &&
+      productDetail.variants?.length > 0
+    ) {
+      let variantId = selectVariant.variantId;
+      
+      if (variantId) {
+        const count = sellingProduct.filter(
+          (item) => item.productVariant.variantId === variantId
+        );
+        if (count.length > 0) {
+          setCountSellingProduct(count[0].totalSold);
+        } else {
+          setCountSellingProduct(0);
+        }
       }
     }
-  }, [sellingProduct]);
+  }, [sellingProduct, productDetail, selectVariant]);
 
   useEffect(() => {
     if (!productDetail || Object.keys(productDetail).length === 0) {
@@ -83,7 +89,6 @@ const ProductDetail = () => {
       setQuantity("");
       return;
     }
-
     let num = parseInt(value, 10);
     if (selectVariant.stock === 0) {
       setQuantity(0);
@@ -155,20 +160,15 @@ const ProductDetail = () => {
         </div>
 
         <div className="box-content flex flex-col justify-between w-[52%]">
-          <div className="flex mt-5 justify-between items-center">
-            <h2 className="font-bold text-3xl mb-0">
-            {/* Dầu dừa thủ công nguyên chất Dầu dừa thủ công nguyên chất */}
-            {product.productName}
-            </h2>
-            <p className="font-light mt-2">Đã bán: {countSellingProduct}</p>
-          </div>
+          <h2 className="font-bold text-3xl mb-0">{product.productName}</h2>
+          <p className="font-light">Đã bán: {countSellingProduct}</p>
           {/* <div className="flex justify-between items-center"> */}
           <p className="text-xl flex font-bold">
             <BuildingStorefrontIcon class="h-7 w-7 mr-2" />
             {product.retailerName}
           </p>
           <p className="font-extralight">Xuất xứ: {product.productOrigin}</p>
-          
+
           {/* </div> */}
           <div>
             <p className=" mb-1  text-green-600 font-bold uppercase">
@@ -223,13 +223,13 @@ const ProductDetail = () => {
               </div>
               <button
                 onClick={buyProduct}
-                className=" cursor-pointer bg-green-600 mb-5 shadow-sm shadow-gray-400 p-3 rounded-2xl text-white text-base"
+                className=" cursor-pointer bg-green-600 shadow-sm shadow-gray-400 p-3 rounded-2xl text-white text-base"
               >
                 ĐẶT HÀNG
               </button>
             </>
           ) : (
-            <button className=" bg-red-600 shadow-sm mb-5 shadow-gray-400 p-2  text-white text-base">
+            <button className=" bg-red-600 shadow-sm shadow-gray-400 p-2  text-white text-base">
               HIỆN TẠI HẾT HÀNG
             </button>
           )}
