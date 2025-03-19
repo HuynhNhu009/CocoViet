@@ -84,6 +84,7 @@ const ProductItem = ({ products }) => {
                       onChange={(e) =>
                         handleChangeStatus(product.productId, e.target.value)
                       }
+                      //hidden detaileProducts
                       onClick={(e) => e.stopPropagation()}
                       className={`py-1 w-24 rounded-md shadow-md text-white text-center cursor-pointer ${
                         product.status === "ENABLE"
@@ -100,15 +101,7 @@ const ProductItem = ({ products }) => {
                           <option value="ENABLE" className="bg-green-500">
                             Được bán
                           </option>
-                          <option value="DISABLE" className="bg-yellow-500">
-                            Chờ duyệt
-                          </option>
-                          <option value="PAUSE" className="bg-gray-500">
-                            Tạm ngừng
-                          </option>
-                          <option value="BLOCK" className="bg-red-500">
-                            Vi phạm
-                          </option>
+                          
                         </>
                       )}
                       {product.status === "DISABLE" && (
@@ -129,15 +122,7 @@ const ProductItem = ({ products }) => {
                           <option value="PAUSE" className="bg-gray-500">
                             Tạm ngừng
                           </option>
-                          <option value="DISABLE" className="bg-yellow-500">
-                            Chờ duyệt
-                          </option>
-                          <option value="ENABLE" className="bg-green-500">
-                            Được bán
-                          </option>
-                          <option value="BLOCK" className="bg-red-500">
-                            Vi phạm
-                          </option>
+                          
                         </>
                       )}
                       {product.status === "BLOCK" && (
