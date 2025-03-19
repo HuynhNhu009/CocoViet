@@ -22,6 +22,7 @@ const initialState = {
   retailerSearch: [],
   retailerStore: [],
   retailerProduct: [],
+  retailerActive:null,
 
   activeSearch: null,
 
@@ -57,6 +58,10 @@ const adminSlice = createSlice({
 
     setLoadingAPI: (state, action) => {
       state.loadingAPI = action.payload;
+    },
+
+    setRetailerActive: (state, action) => {
+      state.retailerActive = action.payload;
     },
 
     setUpdate: (state, action) => {
@@ -137,6 +142,7 @@ const adminSlice = createSlice({
 });
 export const {
   setAdmin,
+  setRetailerActive,
   setUpdate,
   setLoadingAPI,
   setProductStatusActive,

@@ -20,7 +20,6 @@ export const removeDiacritics = (str) => {
         removeDiacritics(item[parameter1]).includes(searchNormalized) ||
         removeDiacritics(item[parameter2]).includes(searchNormalized)
     );
-    console.log("filter", filteredResults);
     
     if(filteredResults){
       setStateFunction(filteredResults);  

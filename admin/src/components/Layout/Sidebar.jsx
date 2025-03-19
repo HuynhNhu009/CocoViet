@@ -21,7 +21,9 @@ import {
   setPostFilter,
   setPostRetailerActive,
   setProduct,
+  setProductStatusActive,
   setRetailer,
+  setRetailerActive,
   setRetailerProduct,
   setRevenueList,
   setStatus,
@@ -187,6 +189,8 @@ const Sidebar = () => {
   const handleNavigate = (path) => {
     if (path === "/products" || path === "/posts") {
       dispatch(setCategoryActive("allProduct"));
+      dispatch(setProductStatusActive("allProduct"));
+      dispatch(setRetailerActive("allProduct"));
       dispatch(setPostRetailerActive("allPost"));
     }
     navigate(path);

@@ -30,10 +30,10 @@ const FilterProductByStatus = () => {
 
   useEffect(() => {
     if(productStatusActive){
-      const findByStatus = productStore.filter((item) => (
-        item.status === productStatusActive
-      ))   
-      dispatch(setProductStatus(findByStatus));
+      // const findByStatus = productStore.filter((item) => (
+      //   item.status === productStatusActive
+      // ))   
+      // dispatch(setProductStatus(findByStatus));
       
       if(productStatusActive === "allProduct"){
         dispatch(setProductStatusActive("allProduct"));
@@ -53,14 +53,6 @@ const FilterProductByStatus = () => {
   const handleClickStatus = async (status) => {    
     try {
       dispatch(setProductStatusActive(status));
-      if(status === "allProduct"){
-        dispatch(setProductStatus(productStore)); 
-      }else{
-        const findByStatus = await productStore.filter((item) => (
-          item.status === status
-        ))            
-        dispatch(setProductStatus(findByStatus));
-      }
     } catch (error) {
       console.error("Error fetching products by category:", error);
     }

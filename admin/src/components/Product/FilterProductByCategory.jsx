@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { productAPI } from "../../services/productService";
 import { useDispatch, useSelector } from "react-redux";
-import { setcategory, setCategoryActive, setPoductCategory } from "../../redux/adminSlice";
+import { setCategoryActive, setPoductCategory } from "../../redux/adminSlice";
+import { productAPI } from "../../services/productService";
 
 const FilterProductByCategory  = () => {
   const [categories, setCategories] = useState([]);
@@ -25,13 +25,6 @@ const FilterProductByCategory  = () => {
   const handleClickCategory = async (categoryId) => {    
     try {
       dispatch(setCategoryActive(categoryId));
-      if(categoryId === "allProduct"){
-        dispatch(setPoductCategory(productStore)); 
-      }else{
-        const findByCategoryId = await productAPI.getByCategoryId(categoryId);      
-        dispatch(setPoductCategory(findByCategoryId.data));
-      }
-      
     } catch (error) {
       console.error("Error fetching products by category:", error);
     }
@@ -44,9 +37,9 @@ const FilterProductByCategory  = () => {
         value={categoryActive || "allProduct"}
         onChange={(e) => handleClickCategory(e.target.value)}
       >
-        <option value="allProduct" default>Tất cả sản phẩm</option>
+        <option value="allProduct" default>Tất cả danh mục</option>
         {categories.map((item) => (
-          <option key={item.categoryId} value={item.categoryId}>
+          <option key={item.categoryId} value={item.categoryName}>
             {item.categoryName}
           </option>
         ))}
