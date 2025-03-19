@@ -19,10 +19,14 @@
     font-family: Oswald;
 }
 
-input[type="number"]::-webkit-inner-spin-button,
+/* input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {
   display: block;
-}
+} */
+
+
+/*  */
+  
 
 thead {
     position: sticky;

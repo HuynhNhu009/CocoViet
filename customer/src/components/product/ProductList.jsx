@@ -53,7 +53,7 @@ const ProductList = () => {
       dispatch(setProductDetail({}));
       dispatch(setProductDetail(findByProductId));
       setProducts(findByProductId);
-      navigate(`/product/${productId}`);
+      navigate(`/products/${productId}`);
 
       }else{
         console.log("Product not found!");

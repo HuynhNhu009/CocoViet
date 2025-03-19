@@ -160,70 +160,83 @@ const ProductDetail = () => {
         </div>
 
         <div className="box-content flex flex-col justify-between w-[52%]">
-          <h2 className="font-bold text-3xl mb-0">{product.productName}</h2>
-          <p className="font-light">Đã bán: {countSellingProduct}</p>
-          {/* <div className="flex justify-between items-center"> */}
+          <div className="">
+            <h2 className="font-bold text-3xl mb-3">{product.productName}</h2>
 
-          <div>
+            <div className=" mb-3">
+              <span>ĐÃ BÁN: </span>
+              <span className="font-light">{countSellingProduct}</span>
+            </div>
+
+            <div className=" mb-4">
+              <span className="">XUẤT XỨ: </span>
+              <span className="font-light">{product.productOrigin}</span>
+            </div>
             <hr className="mb-2 text-green-600"></hr>
           </div>
-          <div className=" font-light">
-            <span className="pr-3">Loại: </span>
-            {product.variants?.map((variant, vIndex) => (
-              <span
-                onClick={() => {
-                  setSelectVariant(variant);
-                  setQuantity(1);
-                }}
-                key={vIndex}
-                className={`cursor-pointer mr-2 px-2 py-1 rounded-sm border-green-600 border-1 
+
+          <div>
+            <p className="text-green-600 font-bold text-3xl mb-8">
+              ₫{new Intl.NumberFormat("vi-VN").format(selectVariant?.price)}{" "}
+            </p>
+            <div className=" mb-5">
+              <span className="pr-2 ">LOẠI: </span>
+
+              {product.variants?.map((variant, vIndex) => (
+                <span
+                  onClick={() => {
+                    setSelectVariant(variant);
+                    setQuantity(1);
+                  }}
+                  key={vIndex}
+                  className={`cursor-pointer mr-2 px-2 py-1 rounded-sm border-green-600 border-1 
                   ${
                     selectVariant === variant
                       ? "bg-green-500 text-white"
                       : "hover:bg-green-500 hover:text-white"
                   }`}
-              >
-                {variant.value}
-                {variant.unitName}
-              </span>
-            ))}
-          </div>
-          <p className="text-green-600 font-bold text-3xl ">
-            ₫{new Intl.NumberFormat("vi-VN").format(selectVariant?.price)}{" "}
-          </p>
-          <span className="font-extralight">Kho: {selectVariant?.stock}</span>
+                >
+                  {variant.value}
+                  {variant.unitName}
+                </span>
+              ))}
+            </div>
 
-          {selectVariant?.stock > 0 ? (
-            <>
-              <div className="font-light">
-                <span>Số lượng: </span>
-                <input
-                  type="number"
-                  className={` border-1 px-2 rounded-sm w-15 `}
-                  id="quantity"
-                  onChange={handleChangeQuantity}
-                  onBlur={() => quantity === "" && setQuantity(1)}
-                  value={selectVariant?.stock === 0 ? 0 : quantity}
-                />
-                {quantity === selectVariant.stock && (
-                  <span className="text-red-600 text-sm font-extralight">
-                    {" "}
-                    Số lượng tối đa!
-                  </span>
-                )}
-              </div>
+            <div className=" mb-5">
+              <span>KHO: </span>
+              <span className="font-light">{selectVariant?.stock}</span>
+            </div>
+            <div className=" mb-5">
+              <span className="pr-3">SỐ LƯỢNG: </span>
+              <input
+                type="number"
+                className={` border-1 px-2 rounded-sm w-15 ${selectVariant?.stock === 0 ? "border-none" : ""} `}
+                id="quantity"
+                onChange={handleChangeQuantity}
+                onBlur={() => quantity === "" && setQuantity(1)}
+                value={selectVariant?.stock === 0 ? 0 : quantity}
+
+              />
+              {quantity === selectVariant.stock && (
+                <span className="text-red-600 text-sm font-medium">
+                  {" "}
+                  Số lượng tối đa!
+                </span>
+              )}
+            </div>
+            {selectVariant?.stock > 0 ? (
               <button
                 onClick={buyProduct}
-                className=" cursor-pointer bg-green-600 shadow-sm shadow-gray-400 p-3 rounded-2xl text-white text-base"
+                className=" cursor-pointer w-full bg-green-600 shadow-sm shadow-gray-400 p-3 rounded-2xl text-white text-base"
               >
                 ĐẶT HÀNG
               </button>
-            </>
-          ) : (
-            <button className=" bg-red-600 shadow-sm shadow-gray-400 p-2  text-white text-base">
-              HIỆN TẠI HẾT HÀNG
-            </button>
-          )}
+            ) : (
+              <button className=" bg-red-600 w-full shadow-sm shadow-gray-400 p-2  text-white text-base">
+                HIỆN TẠI HẾT HÀNG
+              </button>
+            )}
+          </div>
         </div>
       </div>
 
@@ -234,15 +247,11 @@ const ProductDetail = () => {
             {product.retailerName}
           </p>
           <hr className="my-2"></hr>
-          <div className="mb-3">
-          <h2> XUẤT XỨ:</h2>
-            <p  className="font-light mx-auto ">{product.productOrigin}</p>
-          </div>
+          <div className="mb-3"></div>
         </div>
-        
 
         <div className="section-3  justify-center space-x-8 flex-wrap mb-3 ">
-        <h2 >MÔ TẢ:</h2>
+          <h2>MÔ TẢ:</h2>
 
           {/* <hr className="mr-0"></hr> */}
           <p className="font-light mx-auto ">{product.productDesc}</p>
