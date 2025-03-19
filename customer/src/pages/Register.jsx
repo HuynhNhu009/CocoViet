@@ -79,8 +79,8 @@ function RegisForm() {
 
       {/* Nội dung */}
       <div className="relative z-10">
-        <Navbar className="fixed top-0 left-0 w-full z-20" />
-        <div className="flex items-center justify-center min-h-screen px-4 sm:px-6 lg:px-8">
+        <Navbar className="fixed top-0 left-0 w-full z-20 bg-white" />
+        <div className="flex items-center justify-center h-[90vh] px-4 sm:px-6 lg:px-8">
           <div className="bg-white/95 backdrop-blur-md shadow-xl rounded-lg py-4 px-4 sm:px-6 w-full max-w-md lg:max-w-lg border border-gray-100 transition-all duration-300 max-h-[760px]">
             <h2 className="text-green-600 text-2xl font-bold text-center mb-6 tracking-wide">
               ĐĂNG KÝ
