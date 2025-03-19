@@ -20,6 +20,8 @@ import { postApi } from "./services/postService";
 import { productAPI } from "./services/productService";
 import { statusAPI } from "./services/statusService";
 
+import { ScrollToTop } from "./components/ScrollToTop";
+
 function App() {
   const dispatch = useDispatch();
   const customer = useSelector((state) => state.CustomerStore.customer);
@@ -145,6 +147,7 @@ function App() {
 
   return (
     <>
+    <ScrollToTop/>
       <AllRoute />
     </>
   );
