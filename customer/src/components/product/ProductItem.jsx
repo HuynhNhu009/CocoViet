@@ -24,17 +24,18 @@ const ProductItem = ({
       transition={{ duration: 0.5, ease: "easeOut" }}
       className="cursor-pointer"
     >
-      <ul className="shadow-md h-72 transition-opacity duration-700
-       bg-[#77C27F] hover:bg-green-600 text-white rounded-2xl flex flex-col">
+      {/* bg-[#77C27F]  */}
+      <ul className="h-72 transition-opacity duration-700
+        text-white flex flex-col ">
         <li className="h-48 w-full">
           <img
             src={productImage}
             alt={`Product ${productName}`}
-            className="w-full h-full object-cover rounded-t-2xl"
+            className="w-full h-full object-cover"
           />
         </li>
-        <div className="py-2 text-center mt-2">
-          <li className="text-lg font-semibold truncate max-w-full px-2 overflow-hidden whitespace-nowrap text-ellipsis">
+        <div className="py-2 h-10">
+          <li className="text-sm sm:text-base font-semibold max-w-full px-2 line-clamp-2">
             {productName}
           </li>
           <li className="font-light text-sm ">₫{(new Intl.NumberFormat("vi-VN").format(price))}</li>

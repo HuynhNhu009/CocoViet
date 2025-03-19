@@ -13,7 +13,7 @@ const Products = () => {
         <ProductCategory />
       </div>
 
-      <div className=" productItem flex  align-middle grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6 m-0">
+      <div className="productItem align-middle grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 m-0">
         <ProductList />
       </div>
     </div>
