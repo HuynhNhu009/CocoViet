@@ -46,9 +46,11 @@ const ProductDetail = () => {
       const count = sellingProduct.filter(
         (item) =>
           item.productVariant.variantId === productDetail?.variants[0].variantId
-      );
-      if (count) {
+      );      
+      if (count.length > 0) {
         setCountSellingProduct(count[0].totalSold);
+      }else{
+        setCountSellingProduct(0);
       }
     }
   }, [sellingProduct]);
