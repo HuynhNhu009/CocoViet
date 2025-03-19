@@ -93,6 +93,9 @@ const ProductDetail = () => {
         timer:1000 
       });
     }else{
+      //current path
+      const currentPath = window.location.pathname; 
+      localStorage.setItem("redirectAfterLogin", currentPath)
       navigate("/login")
     }
   }

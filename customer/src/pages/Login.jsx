@@ -28,12 +28,16 @@ function LoginForm() {
     if (Object.keys(newErrors).length > 0) return;
 
     try {
-      console.log(formData);
       const response = await dispatch(customerApi.loginUser(formData));
-      console.log(response);
       if (response.status === "OK") {
+        const redirectPath = localStorage.getItem("redirectAfterLogin"); 
+        if (redirectPath) {
+          localStorage.removeItem("redirectAfterLogin"); 
+          navigate(redirectPath); 
+        } else{
         navigate("/");
-      }
+        }
+      }   
     } catch (error) {
       console.error("Đăng nhập thất bại:", error);
     }
