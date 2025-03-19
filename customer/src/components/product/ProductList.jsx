@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
-import { productAPI } from "../../services/productService";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-import { setProductDetail, setIsNav } from "../../redux/productSlice";
+import { setIsNav, setProductDetail } from "../../redux/productSlice";
 import ProductItem from "./ProductItem";
 
 const ProductList = () => {

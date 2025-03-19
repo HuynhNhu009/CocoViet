@@ -47,7 +47,7 @@ const ProductDetail = () => {
       productDetail.variants?.length > 0
     ) {
       let variantId = selectVariant.variantId;
-      
+
       if (variantId) {
         const count = sellingProduct.filter(
           (item) => item.productVariant.variantId === variantId
@@ -163,17 +163,8 @@ const ProductDetail = () => {
           <h2 className="font-bold text-3xl mb-0">{product.productName}</h2>
           <p className="font-light">Đã bán: {countSellingProduct}</p>
           {/* <div className="flex justify-between items-center"> */}
-          <p className="text-xl flex font-bold">
-            <BuildingStorefrontIcon class="h-7 w-7 mr-2" />
-            {product.retailerName}
-          </p>
-          <p className="font-extralight">Xuất xứ: {product.productOrigin}</p>
 
-          {/* </div> */}
           <div>
-            <p className=" mb-1  text-green-600 font-bold uppercase">
-              Thông tin sản phẩm
-            </p>
             <hr className="mb-2 text-green-600"></hr>
           </div>
           <div className=" font-light">
@@ -235,20 +226,38 @@ const ProductDetail = () => {
           )}
         </div>
       </div>
-      <div className="section-3  justify-center space-x-8 flex-wrap mb-8 ">
-        <h2>GIỚI THIỆU</h2>
-        <hr className="mr-0"></hr>
-        <p className="font-light mx-auto ">{product.productDesc}</p>
-      </div>
-      <div className="section-4  justify-center space-x-8 flex-wrap mb-8 ">
-        <h2>LOẠI SẢN PHẨM</h2>
-        <hr className="m-0"></hr>
-        {Array.isArray(product.categoryName) &&
-          product.categoryName.map((item, index) => (
-            <p key={index} className="font-light mx-auto">
-              {item}
-            </p>
-          ))}
+
+      <div className="mx-auto my-10 w-[85%] ">
+        <div>
+          <p className="text-xl flex font-bold">
+            <BuildingStorefrontIcon class="h-7 w-7 mr-2" />
+            {product.retailerName}
+          </p>
+          <hr className="my-2"></hr>
+          <div className="mb-3">
+          <h2> XUẤT XỨ:</h2>
+            <p  className="font-light mx-auto ">{product.productOrigin}</p>
+          </div>
+        </div>
+        
+
+        <div className="section-3  justify-center space-x-8 flex-wrap mb-3 ">
+        <h2 >MÔ TẢ:</h2>
+
+          {/* <hr className="mr-0"></hr> */}
+          <p className="font-light mx-auto ">{product.productDesc}</p>
+        </div>
+
+        <div className="section-4  justify-center space-x-8 flex-wrap mb-3 ">
+          <h2>LOẠI SẢN PHẨM:</h2>
+          {/* <hr className="m-0"></hr> */}
+          {Array.isArray(product.categoryName) &&
+            product.categoryName.map((item, index) => (
+              <p key={index} className="font-light mx-auto">
+                {item}
+              </p>
+            ))}
+        </div>
       </div>
       <div className="section-5 ">
         <h2>XEM THÊM</h2>

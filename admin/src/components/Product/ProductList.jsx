@@ -20,7 +20,18 @@ const ProductList = () => {
 
   useEffect(() => {
     if (productStore.length > 0) {
-      setproducts(productStore);  
+
+      const disabledProducts = productStore.filter((item) => 
+        item.status === "DISABLE"
+      );
+      const otherProducts = productStore.filter((item) => 
+        item.status !== "DISABLE"
+      ); 
+      const productCop = [...disabledProducts, ...otherProducts];
+      setproducts(productCop);
+
+      console.log(productCop);
+      
     }
   }, [productStore]);
 
