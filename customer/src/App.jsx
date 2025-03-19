@@ -7,6 +7,7 @@ import {
   setCartCount,
   setCreateOrder,
   setPayment,
+  setSellingProduct,
   setStatus,
   setStatusActive
 } from "./redux/orderSlice";
@@ -74,16 +75,22 @@ function App() {
       if (productResponse && productResponse.data) {
         dispatch(setProductStore(productResponse.data));
       }
-
-      console.log("Fetch product")
     } catch (error) {
       console.log(error);
     }
   };
   
-
+  const getAllRevenue = async () => {
+    try {
+      const response = await orderAPI.getAllRevenue();
+      dispatch(setSellingProduct(response.data[0].bestSellingProduct));
+    } catch (error) {
+      console.log(error);
+    }
+  };
   useEffect(() => {
     products();
+    getAllRevenue();
   }, [dispatch, isNav]);
 
   useEffect(() => {
