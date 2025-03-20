@@ -39,7 +39,7 @@ const PostDetail = () => {
   }
 
   return (
-    <div className="flex flex-col items-center bg-gray-50 py-10 min-h-screen">
+    <div className="flex flex-col items-center bg-gray-50 py-6 min-h-screen">
       <div className="lg:w-[70%] w-[90%] bg-white p-6 shadow-lg rounded-lg">
         {isLoading ? (
           <div className="text-center text-gray-600 text-lg font-semibold">
@@ -48,7 +48,7 @@ const PostDetail = () => {
         ) : (
           <>
             <div>
-              <h2 className="text-3xl text-center font-extrabold text-gray-800 mb-4">
+              <h2 className="text-3xl text-center font-extrabold text-gray-800 mb-5">
                 {postDetail.postTitle}
               </h2>
 
