@@ -13,11 +13,17 @@ const productSlice = createSlice({
     retailerStore:[],
     retailer:[],
 
+    category: [],
+
   },
 
   reducers: {
     setProductStore: (state, action) => {
       state.productStore = action.payload;
+    },
+
+    setCategory: (state, action) => {
+      state.category = action.payload;
     },
 
     setRetailer: (state, action) => {
@@ -56,6 +62,7 @@ export const {
   setProductStore,
   setRetailerProfile,
   setProductCategory,
+  setCategory,
   setRetailer,
   setProductSearch,
   setProductDetail,

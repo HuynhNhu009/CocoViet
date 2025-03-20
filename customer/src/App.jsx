@@ -9,10 +9,14 @@ import {
   setPayment,
   setSellingProduct,
   setStatus,
-  setStatusActive
+  setStatusActive,
 } from "./redux/orderSlice";
 import { setPost } from "./redux/postSlice";
-import { setProductStore, setRetailer } from "./redux/productSlice";
+import {
+  setCategory,
+  setProductStore,
+  setRetailer,
+} from "./redux/productSlice";
 import { customerApi } from "./services/customerService";
 import { orderAPI } from "./services/orderService";
 import { retailerAPI } from "./services/retailerService";
@@ -22,6 +26,7 @@ import { productAPI } from "./services/productService";
 import { statusAPI } from "./services/statusService";
 
 import { ScrollToTop } from "./components/ScrollToTop";
+import { categoryAPI } from "./services/categoryService";
 
 function App() {
   const dispatch = useDispatch();
@@ -30,8 +35,6 @@ function App() {
   const isNav = useSelector((state) => state.ProductStore.isNav);
   const createOrder = useSelector((state) => state.OrderStore.createOrder);
   const location = useLocation();
-  // const posts = useSelector((state)=> state.PostStore.post)
-  
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -82,7 +85,7 @@ function App() {
       console.log(error);
     }
   };
-  
+
   const getAllRevenue = async () => {
     try {
       const response = await orderAPI.getAllRevenue();
@@ -99,36 +102,60 @@ function App() {
   const getAllRetailer = async () => {
     try {
       const response = await retailerAPI.getAllRetailer();
-      dispatch(setRetailer(response.data));      
+      dispatch(setRetailer(response.data));
     } catch (error) {
       console.log(error);
     }
   };
 
+  const getAllCategories = async () => {
+    try {
+      const categoriesResponse = await categoryAPI.getAllCategories();
+      if (categoriesResponse) {
+        dispatch(setCategory(categoriesResponse.data));
+      }
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    }
+  };
+  const post = async () => {
+    try {
+      const response = await postApi.getAllPosts();
+      if (response.data) {
+        dispatch(setPost(response.data));
+      }
+    } catch (error) {
+      console.error("Error fetching status:", error);
+    }
+  };
+
   useEffect(() => {
+    getAllCategories();
     getAllRetailer();
-  }, []);
+    post();
+  }, [dispatch]);
 
   useEffect(() => {
     const fetchOrders = async () => {
       if (isLogin && customer) {
         try {
           const response = await orderAPI.getOrderByCustomerId(
-            customer.customerId, "CART"
+            customer.customerId,
+            "CART"
           );
-          
+
           const filteredResults = response.data;
           let cartCount = 0;
 
-            if (filteredResults.length > 0) {
-              const lastCartOrder = filteredResults[filteredResults.length - 1];
+          if (filteredResults.length > 0) {
+            const lastCartOrder = filteredResults[filteredResults.length - 1];
 
-              if (lastCartOrder.receiptDetails) {
-                cartCount = lastCartOrder.receiptDetails.length;
-              }
+            if (lastCartOrder.receiptDetails) {
+              cartCount = lastCartOrder.receiptDetails.length;
             }
-            
-            dispatch(setCartCount(cartCount));  
+          }
+
+          dispatch(setCartCount(cartCount));
         } catch (error) {
           console.error("Error fetching orders:", error);
         }
@@ -139,20 +166,6 @@ function App() {
     dispatch(setCreateOrder(false));
   }, [isLogin, customer, dispatch, createOrder]);
 
-  useEffect(()=>{
-    const post = async () => {
-      try {
-        const response = await postApi.getAllPosts();
-        if (response.data) {
-         dispatch(setPost(response.data));
-        }
-      } catch (error) {
-        console.error("Error fetching status:", error);
-      }
-    };
-    post();
-  },[dispatch]);
-
   useEffect(() => {
     if (location.pathname != "/order") {
       dispatch(setStatusActive(null));
@@ -161,7 +174,7 @@ function App() {
 
   return (
     <>
-    <ScrollToTop/>
+      <ScrollToTop />
       <AllRoute />
     </>
   );

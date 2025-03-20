@@ -9,9 +9,6 @@ import { setActive, setCategoryActive, setPoductSearch, setProductStatusActive, 
 const ProductList = () => {
   const productStore = useSelector((state) => state.AdminStore.productStore);
   const productSearch = useSelector((state) => state.AdminStore.productSearch);
-  // const productStatus = useSelector((state) => state.AdminStore.productStatus);
-  // const productCategory = useSelector((state) => state.AdminStore.productCategory);
-
   const categoryActive = useSelector((state) => state.AdminStore.categoryActive);
   const retailerActive = useSelector((state) => state.AdminStore.retailerActive);
   const productStatusActive = useSelector((state) => state.AdminStore.productStatusActive);
@@ -30,9 +27,7 @@ const ProductList = () => {
       const productCop = [...disabledProducts, ...otherProducts];
       setproducts(productCop);      
     }
-  }, [productStore]);
-  console.log(products);
-  
+  }, [productStore]);  
 
   const applyFilters = (products) => {
     let filtered = [...products];
