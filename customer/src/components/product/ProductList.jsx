@@ -31,18 +31,17 @@ const ProductList = () => {
   }, [isNav]);
 
   useEffect(() => {
-    if (productCategory.length > 0) {
+    if (productCategory.length > 0 ) {
       setProducts(productCategory);
-    }else{
+    } else{
       setProducts([]);
     }
-
   }, [productCategory]);
 
   useEffect(() => {
     if (productSearch.length > 0) {
       setProducts(productSearch);
-    } else {
+    }else{
       setProducts([]);
     }
   }, [productSearch]);
@@ -61,7 +60,7 @@ const ProductList = () => {
       console.log("Product not found!");
       setProducts([]);
     }
-  };
+  };  
 
   return (
     <div className="productItem align-middle grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 m-0">

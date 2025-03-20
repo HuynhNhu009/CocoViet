@@ -256,7 +256,8 @@ const ProductDetail = () => {
         <div>
           <p 
           onClick={()=> handleRetailerProfile() }
-          className="text-xl flex font-bold">
+          title="Đến cửa hàng"
+          className="text-xl flex cursor-pointer font-bold">
             <BuildingStorefrontIcon class="h-7 w-7 mr-2" />
             {product.retailerName}
           </p>

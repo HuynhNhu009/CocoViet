@@ -25,10 +25,11 @@ export const Search = (
       removeDiacritics(item[parameter1]).includes(searchNormalized) ||
       removeDiacritics(item[parameter2]).includes(searchNormalized)
   );
+  
   if (filteredResults) {
     dispatchFunction(filteredResults);
   } else {
     console.log("not found");
-    dispatchFunction(filteredResults);
+
   }
 };

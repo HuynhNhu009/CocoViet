@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { setProductCategory, setActive } from "../../redux/productSlice";
 
 const ProductCategory = () => {
-    const [products, setProducts] = useState([]);
     const [categories, setCategories] = useState([]);
     const dispatch = useDispatch();
     const active = useSelector((state) => state.ProductStore.active);
@@ -25,14 +24,17 @@ const ProductCategory = () => {
 
     const handleClickCategory = async (categoryId) => {
         try {
-            dispatch(setActive(categoryId)); //activeactive
+            dispatch(setActive(categoryId)); //active
             const findByCategoryId = await productAPI.getByCategoryId(categoryId);
-            dispatch(setProductCategory([]));
-            dispatch(setProductCategory(findByCategoryId.data));
-            setProducts(findByCategoryId.data);
+            if(findByCategoryId){
+                dispatch(setProductCategory([]));
+                dispatch(setProductCategory(findByCategoryId.data));
+            }else{
+                dispatch(setProductCategory([]));
+            }
+            
         } catch (error) {
             console.error("Error fetching products by category:", error);
-            setProducts([]);
         }
     };
     
