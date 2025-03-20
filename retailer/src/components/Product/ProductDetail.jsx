@@ -22,17 +22,6 @@ const ProductDetail = ({
     onEdit();
   };
 
-  // const handleDelete = async () => {
-  //   try {
-  //     await productApi.deleteProductById(product?.id || product?.productId);
-  //     if (typeof fetchProducts === "function") fetchProducts();
-  //     if (typeof onBack === "function") onBack();
-  //   } catch (error) {
-  //     console.error("Lỗi khi xóa sản phẩm:", error);
-  //     alert("Xóa sản phẩm thất bại!");
-  //   }
-  // };
-
   const handleSave = async (updatedProduct) => {
     setIsEditing(false);
     try {
@@ -78,11 +67,21 @@ const ProductDetail = ({
         </button>
 
         {/* Status */}
-        <span
-          className={`${statusDisplay.color} px-2 py-1 rounded-md text-sm font-medium`}
-        >
-          {statusDisplay.text}
-        </span>
+
+        <div className="flex gap-2 justify-star">
+          <span
+            className={`${statusDisplay.color} px-2 py-1 rounded-md text-sm font-medium`}
+          >
+            {statusDisplay.text}
+          </span>
+          <button
+            onClick={handleEdit}
+            className="flex items-center gap-1 px-3 py-1 text-green-600 rounded cursor-pointer hover:text-green-800"
+          >
+            <PencilIcon className="size-5" />
+            Sửa
+          </button>
+        </div>
 
         {/* Close button - desktop only */}
         <button
@@ -115,7 +114,10 @@ const ProductDetail = ({
             <div className="space-y-3 text-sm md:text-base">
               <div>
                 <span className="font-medium">Mô tả: </span>
-                <span className="text-gray-700">
+                <span
+                  className="text-gray-700"
+                  style={{ whiteSpace: "pre-wrap" }}
+                >
                   {product.productDesc || "Chưa có"}
                 </span>
               </div>
@@ -170,15 +172,6 @@ const ProductDetail = ({
                   </div>
                 )}
               </div>
-            </div>
-            <div className="flex gap-2 mt-4 justify-end">
-              <button
-                onClick={handleEdit}
-                className="flex items-center gap-1 px-3 py-1 text-green-600 rounded cursor-pointer hover:text-green-800"
-              >
-                <PencilIcon className="size-5" />
-                Sửa
-              </button>
             </div>
           </div>
         </div>
