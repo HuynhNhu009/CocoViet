@@ -7,10 +7,9 @@ export const removeDiacritics = (str) => {
       .toLowerCase();
   };
   
-  export const Search = (searchKey, dataList,parameter1, parameter2, setStateFunction, dispatchFunction) => {
-    if (!searchKey.trim()) {
-      setStateFunction(dataList);  
-      return;
+  export const Search = (searchKey, dataList,parameter1, parameter2, dispatchFunction) => {
+    if (!searchKey.trim() || searchKey.trim() === "") {
+    dispatchFunction(dataList);
     }
   
     const searchNormalized = removeDiacritics(searchKey);
@@ -21,7 +20,6 @@ export const removeDiacritics = (str) => {
         removeDiacritics(item[parameter2]).includes(searchNormalized)
     );
     if(filteredResults){
-      setStateFunction(filteredResults);  
     dispatchFunction(filteredResults);
     }else{
       console.log("not found");

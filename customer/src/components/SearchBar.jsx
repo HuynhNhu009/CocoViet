@@ -1,20 +1,15 @@
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
-import { useState, useEffect } from "react";
-import { Search } from "../utils/SearchUtil"; // Import hàm tìm kiếm
-import { useNavigate, useLocation } from "react-router-dom";
+import { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { Search } from "../utils/SearchUtil";
 
 const SearchBar = ({ placeholder, dataList,parameter1, parameter2, dispatchFunction, setActive, navigateTo }) => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [filteredResults, setFilteredResults] = useState([]);
   const navigate = useNavigate();
   const location = useLocation();
 
-  useEffect(() => {
-    setFilteredResults(dataList);
-  }, [dataList]);
-
   const handleSubmit = () => {
-    Search(searchTerm, dataList,parameter1, parameter2, setFilteredResults, dispatchFunction);
+    Search(searchTerm, dataList,parameter1, parameter2, dispatchFunction);
     if (location.pathname !== navigateTo) navigate(navigateTo);
   };
 

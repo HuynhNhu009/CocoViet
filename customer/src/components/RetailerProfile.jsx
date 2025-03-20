@@ -9,11 +9,33 @@ const RetailerProfile = () => {
   const { retailerId } = useParams();
 
   const retailerProfile = useSelector((state) => state.ProductStore.retailer);
+  const retailerStore = useSelector((state) => state.ProductStore.retailerStore);
+  // const retailerStore = useSelector((state) => state.ProductStore.retailerStore);
   const productStore = useSelector((state) => state.ProductStore.productStore);
   const [retailer, setRetailer] = useState();
   const [product, setProduct] = useState([]);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  // useEffect(() => {
+  //   if (!retailerProfile || Object.keys(retailerProfile).length === 0) {
+  //     const fetchRetailer = async () => {
+  //       try {
+  //         const response = retailerStore?.find((item) => 
+  //           item.retailerName.toLowerCase().trim() === productDetail.retailerName.toLowerCase().trim()
+  //         );
+  //         setProducts(response.data);
+  //         dispatch(setretailerProfile(response.data));
+  //       } catch (error) {
+  //         console.error("Lỗi khi lấy thông tin sản phẩm:", error);
+  //       }
+  //     };
+  //     fetchRetailer();
+  //   } else {
+  //     setProducts(retailerProfile);
+  //     setSelectVariant(retailerProfile.variants[0]);
+  //   }
+  // }, [retailerProfile, dispatch, productId, retailerStore]);
 
   useEffect(() => {
     if (retailerProfile) {
@@ -24,7 +46,13 @@ const RetailerProfile = () => {
           const products = await productAPI.getProductByRetailerId(
             retailerProfile.retailerId
           );
-          setProduct(products.data);
+
+          if (products) {
+            const filters = products.data.filter(
+              (item) => item.status === "ENABLE"
+            );
+            setProduct(filters);
+          }
         } catch (error) {
           console.error("Error fetching products:", error);
         }
@@ -50,52 +78,51 @@ const RetailerProfile = () => {
 
   return (
     <div className="max-w-6xl mx-auto p-5 font-sans">
-      <section className="bg-gradient-to-br from-black/300 via-green-700/100 to-transparent backdrop-blur-lg p-6 shadow-md rounded-lg mb-8 flex items-start gap-6">
-  <div className="w-32 h-32 mt-2 flex-shrink-0 flex items-center justify-center">
-    <img
-      src="https://img.freepik.com/premium-vector/young-coconut-design-premium-logo_187482-677.jpg"
-      alt="Retailer"
-      className="w-full h-full object-cover rounded-sm shadow-sm"
-    /> 
-  </div>
+      <section className="bg-gray-100  p-6 shadow-md rounded-lg mb-8 flex items-start gap-6">
+        <div className="w-32 h-32 mt-2 flex-shrink-0 flex items-center justify-center">
+          <img
+            src="https://img.freepik.com/premium-vector/young-coconut-design-premium-logo_187482-677.jpg"
+            alt="Retailer"
+            className="w-full h-full object-cover rounded-sm shadow-sm"
+          />
+        </div>
 
-  <div className="flex-1 text-white">
-    <h1 className="text-2xl md:text-3xl font-bold mb-4">
-      {retailer?.retailerName || "Tên nhà bán lẻ"}
-    </h1>
-    <div className="flex  justify-between">
-      {/* Cột trái */}
-      <div>
-        <p className="text-sm md:text-base  mb-2">
-          <strong>Địa chỉ:</strong>{" "}
-          {retailer?.retailerAddress || "Chưa có thông tin"}
-        </p>
-        <p className="text-sm md:text-base  mb-2">
-          <strong>Số điện thoại:</strong>{" "}
-          {retailer?.phoneNumbers || "Chưa có thông tin"}
-        </p>
-        <p className="text-sm md:text-base mb-2">
-          <strong>Email:</strong>{" "}
-          {retailer?.retailerEmail || "Chưa có thông tin"}
-        </p>
-      </div>
+        <div className="flex-1 text-gray-800">
+          <h1 className="text-2xl md:text-3xl font-bold mb-4">
+            {retailer?.retailerName || "Tên nhà bán lẻ"}
+          </h1>
+          <div className="flex  justify-between">
+            <div>
+              <p className="text-sm md:text-base  mb-2">
+                <strong>Địa chỉ:</strong>{" "}
+                {retailer?.retailerAddress || "Chưa có thông tin"}
+              </p>
+              <p className="text-sm md:text-base  mb-2">
+                <strong>Số điện thoại:</strong>{" "}
+                {retailer?.phoneNumbers || "Chưa có thông tin"}
+              </p>
+              <p className="text-sm md:text-base mb-2">
+                <strong>Email:</strong>{" "}
+                {retailer?.retailerEmail || "Chưa có thông tin"}
+              </p>
+            </div>
 
-      <div>
-        <p className="text-sm md:text-base mb-2">
-          <strong>Tham gia:</strong>{" "}
-          {retailer?.createdAt
-            ?.split("T")[0]
-            .split("-")
-            .reverse()
-            .join("/") || "N/A"}
-        </p>
-        <p className="text-sm md:text-base  mb-2">
-          <strong>Tổng sản phẩm:</strong> {product?.length || 0}
-        </p>
-      </div>
-    </div>
-  </div>
-</section>
+            <div>
+              <p className="text-sm md:text-base mb-2">
+                <strong>Tham gia:</strong>{" "}
+                {retailer?.createdAt
+                  ?.split("T")[0]
+                  .split("-")
+                  .reverse()
+                  .join("/") || "N/A"}
+              </p>
+              <p className="text-sm md:text-base  mb-2">
+                <strong>Tổng sản phẩm:</strong> {product?.length || 0}
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
 
       <div>
         <h2 className="text text-green-700 uppercase ">Sản phẩm</h2>
