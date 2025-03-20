@@ -5,24 +5,24 @@ const ProductHomeItem = ({ product }) => {
   const navigator = useNavigate();
   return (
     <div
-      className="p-4 mb-5 sm:w-[350px] h-[450px] cursor-pointer overflow-hidden flex flex-col"
+      className="mb-5 sm:w-[350px] h-[450px] cursor-pointer overflow-hidden shadow flex flex-col group box-border hover:outline-1 hover:outline-green-200"
       onClick={() => navigator(`/products/${product.productId}`)}
     >
-      <div className="bg-amber-300  sm:w-[350px]">
+      <div className="bg-amber-300 w-full h-[250px] sm:w-[350px] overflow-hidden">
         <img
           src={product.productImage}
           alt={product.productName || "Hình ảnh sản phẩm"}
-          className="w-full h-[250px] object-cover "
+          className="w-full h-[250px] object-cover group-hover:scale-110 duration-300 transition-all"
         />
       </div>
-      <div className="flex-1">
-        <div className="h-20">
-          <p className="text-xl text-black line-clamp-2 capitalize font-medium">
+      <div className="flex-1 px-2">
+        <div className="py-2">
+          <p className="text-xl text-black line-clamp-2 capitalize font-medium group-hover:text-green-600">
             {product.productName}
           </p>
         </div>
         <div className="h-16 sm:h-20">
-          <p className="text-gray-600 line-clamp-4 text-justify text-xs sm:text-sm">
+          <p className="text-gray-600 line-clamp-4 text-xs sm:text-sm">
             {product.productDesc || "Chưa có"}
           </p>
         </div>

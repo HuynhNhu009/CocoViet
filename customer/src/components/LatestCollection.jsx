@@ -38,7 +38,7 @@ const LatestCollection = () => {
           color1={"text-green-600"}
           className="text-2xl sm:text-3xl md:text-4xl lg:text-6xl"
         />
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 md:gap-10 pt-10 sm:pt-20 w-full">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 pt-10 w-full px-15">
           {productStore.slice(0, 3).map((product) => (
             <ProductHomeItem
               key={product.productId}

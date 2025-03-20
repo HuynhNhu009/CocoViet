@@ -210,12 +210,13 @@ const ProductDetail = () => {
               <span className="pr-3">SỐ LƯỢNG: </span>
               <input
                 type="number"
-                className={` border-1 px-2 rounded-sm w-15 ${selectVariant?.stock === 0 ? "border-none" : ""} `}
+                className={` border-1 px-2 rounded-sm w-15 ${
+                  selectVariant?.stock === 0 ? "border-none" : ""
+                } `}
                 id="quantity"
                 onChange={handleChangeQuantity}
                 onBlur={() => quantity === "" && setQuantity(1)}
                 value={selectVariant?.stock === 0 ? 0 : quantity}
-
               />
               {quantity === selectVariant.stock && (
                 <span className="text-red-600 text-sm font-medium">
@@ -254,7 +255,9 @@ const ProductDetail = () => {
           <h2>MÔ TẢ:</h2>
 
           {/* <hr className="mr-0"></hr> */}
-          <p className="font-light mx-auto ">{product.productDesc}</p>
+          <p className="font-light mx-auto" style={{ whiteSpace: "pre-wrap" }}>
+            {product.productDesc}
+          </p>
         </div>
 
         <div className="section-4  justify-center space-x-8 flex-wrap mb-3 ">
@@ -269,10 +272,10 @@ const ProductDetail = () => {
         </div>
       </div>
       <div className="section-5 ">
-        <h2>XEM THÊM</h2>
-        <hr className="mb-5"></hr>
-        <div className="productItem align-middle grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6 m-0">
-          {productStore.slice(0, 4).map((item) => (
+        <h2 className="text-xl text-green-600">XEM THÊM</h2>
+        <hr className="mb-5 text-green-600"></hr>
+        <div className="productItem align-middle grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6 m-0">
+          {productStore.slice(0, 5).map((item) => (
             <div
               key={item.productId}
               onClick={() => handleNavigate(item.productId)}

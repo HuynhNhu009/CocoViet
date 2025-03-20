@@ -25,8 +25,10 @@ const ProductItem = ({
       className="cursor-pointer"
     >
       {/* bg-[#77C27F]  */}
-      <ul className="h-72 transition-opacity duration-700
-        text-white flex flex-col ">
+      <ul
+        className="h-72 transition-opacity duration-700
+        text-black flex flex-col bg-gray-50 hover:border-green-500 hover:border-1 group"
+      >
         <li className="h-48 w-full">
           <img
             src={productImage}
@@ -34,12 +36,16 @@ const ProductItem = ({
             className="w-full h-full object-cover"
           />
         </li>
-        <div className="py-2 h-10">
-          <li className="text-sm sm:text-base font-semibold max-w-full px-2 line-clamp-2">
+        <div className="p-2">
+          <p className="sm:text-base/5 text-base font-semibold max-w-full line-clamp-2 group-hover:text-green-600 ">
             {productName}
-          </li>
-          <li className="font-light text-sm ">₫{(new Intl.NumberFormat("vi-VN").format(price))}</li>
-          <li className="font-extralight text-xs mt-2 text-right pr-5">{retailerName}</li>
+          </p>
+          <p className="font-light text-sm pt-2">
+            ₫{new Intl.NumberFormat("vi-VN").format(price)}
+          </p>
+          <p className="font-extralight text-xs mt-2 text-right pr-2">
+            {retailerName}
+          </p>
         </div>
       </ul>
     </motion.div>
