@@ -43,6 +43,8 @@ const ProductList = () => {
   useEffect(() => {
     if (productSearch.length > 0) {
       setProducts(productSearch);
+    }else{
+      setProducts([]);
     }
   }, [productSearch]);
 
@@ -62,7 +64,7 @@ const ProductList = () => {
   };
 
   return (
-    <>
+    <div className="productItem align-middle grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 m-0">
       {products.length > 0 ? (
         products.map((item, index) => (
           <div key={index} onClick={() => handleNavigate(item.productId)}>
@@ -76,11 +78,11 @@ const ProductList = () => {
           </div>
         ))
       ) : (
-        <p className="text-center text-gray-500">
-          Không có sản phẩm nào trong danh mục này.
+        <p className="text-center col-12 text-gray-500">
+          Không có sản phẩm .
         </p>
       )}
-    </>
+    </div>
   );
 };
 
