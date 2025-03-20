@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { retailerApi } from "../services/RetailerService"; // Thay bằng đường dẫn thực tế
+import { useDispatch, useSelector } from "react-redux";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -13,6 +14,7 @@ const Register = () => {
   });
   const [errors, setErrors] = useState({});
   const [step, setStep] = useState("form"); // "form", "preparing", "success"
+  const retailers = useSelector((state) => state.RetailerStore.allRetailer);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -31,6 +33,14 @@ const Register = () => {
     if (!formData.retailerName.trim()) {
       newErrors.retailerName = "Họ và tên không được để trống!";
     }
+    const existName = retailers.some((item) => 
+      item.retailerName.toLowerCase().trim() === formData.retailerName.toLowerCase().trim()
+    );    
+   
+    if (existName) {
+      newErrors.retailerName = "Tên đã tồn tại, vui lòng nhập tên khác!";
+    }
+    
     if (!formData.retailerPassword) {
       newErrors.retailerPassword = "Mật khẩu không được để trống!";
     } else if (formData.retailerPassword.length < 8) {
@@ -65,7 +75,6 @@ const Register = () => {
 
     try {
       setStep("preparing");
-      console.log(formData);
       const responseData = await retailerApi.register(formData);
       console.log("API response:", responseData);
       setStep("success");
@@ -94,7 +103,7 @@ const Register = () => {
   const renderForm = () => (
     <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md ">
       <h2 className="text-2xl uppercase font-bold text-center text-gray-800 mb-6 oswald-font ">
-        Đăng ký làm nhà bán lẻ
+        Đăng ký cửa hàng
       </h2>
       {errors.general && (
         <p className="text-red-500 text-sm text-center mb-4">
@@ -107,7 +116,7 @@ const Register = () => {
             htmlFor="retailerName"
             className="block text-sm font-medium text-gray-700"
           >
-            Họ và tên
+            Tên của hàng
           </label>
           <input
             type="text"
@@ -123,55 +132,6 @@ const Register = () => {
             <p className="text-red-500 text-xs mt-1">{errors.retailerName}</p>
           )}
         </div>
-
-        <div>
-          <label
-            htmlFor="retailerPassword"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Mật khẩu
-          </label>
-          <input
-            type="password"
-            id="retailerPassword"
-            name="retailerPassword"
-            value={formData.retailerPassword}
-            onChange={handleChange}
-            className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
-            placeholder="Nhập mật khẩu"
-            required
-          />
-          {errors.retailerPassword && (
-            <p className="text-red-500 text-xs mt-1">
-              {errors.retailerPassword}
-            </p>
-          )}
-        </div>
-
-        <div>
-          <label
-            htmlFor="confirmPassword"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Nhập lại mật khẩu
-          </label>
-          <input
-            type="password"
-            id="confirmPassword"
-            name="confirmPassword"
-            value={formData.confirmPassword}
-            onChange={handleChange}
-            className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
-            placeholder="Nhập lại mật khẩu"
-            required
-          />
-          {errors.confirmPassword && (
-            <p className="text-red-500 text-xs mt-1">
-              {errors.confirmPassword}
-            </p>
-          )}
-        </div>
-
         <div>
           <label
             htmlFor="retailerEmail"
@@ -236,6 +196,53 @@ const Register = () => {
           {errors.retailerAddress && (
             <p className="text-red-500 text-xs mt-1">
               {errors.retailerAddress}
+            </p>
+          )}
+        </div>
+        <div>
+          <label
+            htmlFor="retailerPassword"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Mật khẩu
+          </label>
+          <input
+            type="password"
+            id="retailerPassword"
+            name="retailerPassword"
+            value={formData.retailerPassword}
+            onChange={handleChange}
+            className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+            placeholder="Nhập mật khẩu"
+            required
+          />
+          {errors.retailerPassword && (
+            <p className="text-red-500 text-xs mt-1">
+              {errors.retailerPassword}
+            </p>
+          )}
+        </div>
+
+        <div>
+          <label
+            htmlFor="confirmPassword"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Nhập lại mật khẩu
+          </label>
+          <input
+            type="password"
+            id="confirmPassword"
+            name="confirmPassword"
+            value={formData.confirmPassword}
+            onChange={handleChange}
+            className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+            placeholder="Nhập lại mật khẩu"
+            required
+          />
+          {errors.confirmPassword && (
+            <p className="text-red-500 text-xs mt-1">
+              {errors.confirmPassword}
             </p>
           )}
         </div>

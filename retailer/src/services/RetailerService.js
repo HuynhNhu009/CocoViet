@@ -22,4 +22,9 @@ export const retailerApi = {
     });
     return response.data;
   },
+
+  getAllRetailer: async () => {
+    const response = await api.get("/retailers/get-all");
+    return response.data;
+  },
 };

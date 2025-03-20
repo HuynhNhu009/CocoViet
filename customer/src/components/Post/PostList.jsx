@@ -13,33 +13,30 @@ const PostList = () => {
 
     if (findByPostId) {
       dispatch(setPostDetail({}));
-      dispatch(setPostDetail(findByPostId));
-      navigate(`/blog/${postId}`);
+      // dispatch(setPostDetail(findByPostId));
+      navigate(`/posts/${postId}`);
     } else {
       console.log("Post not found!");
     }
   };
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 lg:w-[80%] w-[90%] mx-auto md:my-[20px]">
-      {posts.length > 0 ? (
-        posts.map((item) => (
+    posts.length > 0 ? (
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 lg:w-[80%] w-[90%] mx-auto md:my-[20px]">
+        {posts.map((item) => (
           <div key={item.postId} onClick={() => handleClick(item.postId)}>
             <PostCard post={item} />
           </div>
-        ))
-      ) : (
-        <p className="lg:w-[80%] w-full mx-auto ">
-          {/* <img
-            src="https://img.freepik.com/premium-vector/error-404-page-found-banner-linear-style-vector-icon_399089-17761.jpg"
-            alt="Không tìm thấy bất kỳ bài viết nào"
-            className="w-full aspect-video"
-          /> */}
+        ))}
+      </div>
+    ) : (
+      <div className="w-full flex items-center justify-center min-h-[200px]">
+        <p className="text-center px-4 py-2 rounded-md">
           Chưa có bài viết nào.
         </p>
-      )}
-    </div>
+      </div>
+    )
   );
-};
+}  
 
 export default PostList;

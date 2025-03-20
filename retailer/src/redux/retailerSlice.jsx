@@ -4,17 +4,24 @@ import { act } from "react";
 const initialState = {
   retailer: null,
   isRetailerLogin: false,
+  allRetailer:[],
+
   products: [],
+
   category: [],
-  orderStore: [],
-  revenueStore: {},
-  statusStore: [],
-  orderStatus: [],
+
   units: [],
+
+  statusStore: [],
   statusActive: null,
   statusName: null,
-  countOrder:0,
+
+  countOrder: 0,
   loadOrder: false,
+  orderStatus: [],
+  orderStore: [],
+  revenueStore: {},
+
   loading: false,
   posts: [],
 };
@@ -30,6 +37,10 @@ const retailerSlice = createSlice({
 
     setCountOrder: (state, action) => {
       state.countOrder = action.payload;
+    },
+
+    setAllRetailer: (state, action) => {
+      state.allRetailer = action.payload;
     },
 
     setRevenue: (state, action) => {
@@ -76,13 +87,13 @@ const retailerSlice = createSlice({
       state.category = action.payload;
     },
 
-    setUnits: (state, action) =>{
+    setUnits: (state, action) => {
       state.units = action.payload;
     },
 
-    setPosts: (state, action)=>{
+    setPosts: (state, action) => {
       state.posts = action.payload;
-    }
+    },
   },
 });
 
@@ -95,6 +106,7 @@ export const {
   setStatus,
   setOrder,
   setCategory,
+  setAllRetailer,
   setCountOrder,
   logout,
   setProducts,

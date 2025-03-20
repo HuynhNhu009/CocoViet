@@ -60,6 +60,10 @@ public class RetailerServiceImpl implements IRetailerService {
         if(iRetailerRepository.existsByRetailerEmail(retailerRequest.getRetailerEmail())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Retailer already exists");
         };
+
+        if(iRetailerRepository.existsByRetailerName(retailerRequest.getRetailerName())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Retailer name already exists");
+        };
         RetailerEntity retailer = RetailerEntity.builder()
                 .retailerEmail(retailerRequest.getRetailerEmail())
                 .phoneNumbers(retailerRequest.getPhoneNumbers())

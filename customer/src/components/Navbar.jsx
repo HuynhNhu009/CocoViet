@@ -117,7 +117,7 @@ const Navbar = ({className}) => {
                 Giới thiệu
               </p>
             </NavLink>
-            <NavLink to={"/blog"} className="flex flex-col items-center gap-1">
+            <NavLink to={"/posts"} className="flex flex-col items-center gap-1">
               <p className={`uppercase ${text_Color} ${text_hover}`}>
                 Bài viết
               </p>
@@ -226,7 +226,7 @@ const Navbar = ({className}) => {
               <NavLink
                 className="py-3 pl-6 border-y uppercase"
                 onClick={() => setVisible(false)}
-                to="/blog"
+                to="/posts"
               >
                 Bài viết
               </NavLink>

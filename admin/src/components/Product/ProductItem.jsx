@@ -84,16 +84,19 @@ const ProductItem = ({ products }) => {
                       onChange={(e) =>
                         handleChangeStatus(product.productId, e.target.value)
                       }
+                      disabled={product.status === "ENABLE" || product.status === "BLOCK" ||  product.status === "PAUSE"}
                       //hidden detaileProducts
                       onClick={(e) => e.stopPropagation()}
                       className={`py-1 w-24 rounded-md shadow-md text-white text-center cursor-pointer ${
                         product.status === "ENABLE"
-                          ? "bg-green-500"
+                          ? "bg-green-500 appearance-none"
                           : product.status === "DISABLE"
                           ? "bg-yellow-500"
                           : product.status === "PAUSE"
-                          ? "bg-gray-500"
-                          : "bg-red-500"
+                          ? "bg-gray-500 appearance-none"
+                          : product.status === "BLOCK"
+                           ?"bg-red-500 appearance-none"
+                           :""
                       }`}
                     >
                       {product.status === "ENABLE" && (

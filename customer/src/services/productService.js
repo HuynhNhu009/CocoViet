@@ -26,4 +26,9 @@ export const productAPI = {
     return response.data;
   },
 
+  getProductByRetailerId: async (retialerID) => {
+    const response = await api.get(`/products/retailer/${retialerID}`);
+    return response.data;
+  },
+
 };

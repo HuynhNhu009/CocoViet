@@ -21,7 +21,7 @@ const LatestPost = () => {
       if (findByPostId) {
         dispatch(setPostDetail({}));
         dispatch(setPostDetail(findByPostId));
-        navigate(`/blog/${postId}`);
+        navigate(`/posts/${postId}`);
       } else {
         console.log("Post not found!");
       }
@@ -57,17 +57,6 @@ const LatestPost = () => {
       </div>
     </div>
   );
-};
-
-LatestPost.propTypes = {
-  posts: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      date: PropTypes.string.isRequired,
-      imageUrl: PropTypes.string.isRequired,
-      title: PropTypes.string.isRequired,
-    })
-  ).isRequired,
 };
 
 export default LatestPost;

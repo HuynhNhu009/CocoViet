@@ -122,7 +122,6 @@ const OrderItem = ({ orderStatus }) => {
     }
   };
 
-  console.log(orders);
   
 
   return (

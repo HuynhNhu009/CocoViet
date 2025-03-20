@@ -6,4 +6,12 @@ export const postApi = {
     return response.data;
   },
 
+  getByPostId: async (postId) => {
+    const response = await api.get(`/posts/${postId}`, {
+      withCredentials: true,
+    });
+    return response.data;
+  },
+
+
 };

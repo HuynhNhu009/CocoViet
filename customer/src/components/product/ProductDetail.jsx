@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import { setCreateOrder } from "../../redux/orderSlice";
-import { setProductDetail } from "../../redux/productSlice";
+import { setProductDetail, setRetailerProfile } from "../../redux/productSlice";
 import { orderAPI } from "../../services/orderService";
 import { productAPI } from "../../services/productService";
 import ProductItem from "./ProductItem";
@@ -18,15 +18,13 @@ const ProductDetail = () => {
     (state) => state.OrderStore.sellingProduct
   );
   const dispatch = useDispatch();
-  const productDetail = useSelector(
-    (state) => state.ProductStore.productDetail
-  );
-  const productStore = useSelector(
-    (state) => state.ProductStore.productStore || []
-  );
-  const customer = useSelector((state) => state.CustomerStore.customer || []);
+  const productDetail = useSelector((state) => state.ProductStore.productDetail);
+  const productStore = useSelector((state) => state.ProductStore.productStore || []);
+  const retailerStore = useSelector((state) => state.ProductStore.retailerStore);
+  const customer = useSelector((state) => state.CustomerStore.customer);
 
   const [selectVariant, setSelectVariant] = useState([]);
+  const [retailerProp, setRetailerProp] = useState();
   const [countSellingProduct, setCountSellingProduct] = useState(0);
 
   const [product, setProducts] = useState([]);
@@ -38,7 +36,8 @@ const ProductDetail = () => {
         quantity: "",
       },
     ],
-  };
+  };  
+
 
   useEffect(() => {
     if (
@@ -46,8 +45,8 @@ const ProductDetail = () => {
       productDetail &&
       productDetail.variants?.length > 0
     ) {
-      let variantId = selectVariant.variantId;
-
+      let variantId = selectVariant.variantId;      
+      
       if (variantId) {
         const count = sellingProduct.filter(
           (item) => item.productVariant.variantId === variantId
@@ -77,7 +76,7 @@ const ProductDetail = () => {
       setProducts(productDetail);
       setSelectVariant(productDetail.variants[0]);
     }
-  }, [productDetail]);
+  }, [productDetail, dispatch, productId, retailerStore]);
 
   //quantity
   const [quantity, setQuantity] = useState(1);
@@ -136,11 +135,23 @@ const ProductDetail = () => {
       dispatch(setProductDetail(findByProductId));
       setProducts(findByProductId);
       window.scrollTo({ top: 0, behavior: "smooth" });
+      navigate(`/products/${productId}`);
     } else {
       console.log("Product not found!");
       setProducts([]);
     }
   };
+
+  const handleRetailerProfile = async() => {
+    const getRetailer = retailerStore?.find((item) => 
+      item.retailerName.toLowerCase().trim() === productDetail.retailerName.toLowerCase().trim()
+    );
+    if(getRetailer){
+      await dispatch(setRetailerProfile(getRetailer));
+      setRetailerProp(getRetailer);
+    }    
+    navigate(`/retailer/${getRetailer.retailerId}`)
+  }
 
   return (
     <div className="  flex flex-col justify-center align-middle font-medium px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw] my-8">
@@ -243,7 +254,9 @@ const ProductDetail = () => {
 
       <div className="mx-auto my-10 w-[85%] ">
         <div>
-          <p className="text-xl flex font-bold">
+          <p 
+          onClick={()=> handleRetailerProfile() }
+          className="text-xl flex font-bold">
             <BuildingStorefrontIcon class="h-7 w-7 mr-2" />
             {product.retailerName}
           </p>

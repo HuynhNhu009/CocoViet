@@ -28,12 +28,11 @@ const ProductList = () => {
         item.status !== "DISABLE"
       ); 
       const productCop = [...disabledProducts, ...otherProducts];
-      setproducts(productCop);
-
-      console.log(productCop);
-      
+      setproducts(productCop);      
     }
   }, [productStore]);
+  console.log(products);
+  
 
   const applyFilters = (products) => {
     let filtered = [...products];
@@ -59,7 +58,7 @@ const ProductList = () => {
       const filteredProducts = applyFilters(productStore);      
       setproducts(filteredProducts);
     }
-  }, [productStore, categoryActive, retailerActive, productStatusActive]);
+  }, [ categoryActive, retailerActive, productStatusActive]);
 
   useEffect(() => {
     if (productSearch) {

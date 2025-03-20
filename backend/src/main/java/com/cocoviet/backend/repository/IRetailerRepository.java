@@ -16,4 +16,6 @@ public interface IRetailerRepository extends JpaRepository<RetailerEntity, Strin
 
     @Query("SELECT r.retailerName FROM RetailerEntity r JOIN r.products p WHERE p.productId = :productId")
     String findRetailerNameByProductId(@Param("productId") String productId);
+
+    boolean existsByRetailerName(String retailerName);
 }

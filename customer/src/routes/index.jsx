@@ -5,7 +5,8 @@ import { Navigate } from "react-router-dom";
 import LoginForm from "../pages/Login";
 import Register from "../pages/Register";
 import ProductDetail from "../pages/Product/ProductDetail";
-import Profile from "../pages/Profile";
+import CustomerProfile from "../pages/CustomerProfile";
+import RetailerProfile from "../pages/RetailerProfile";
 import About from "../pages/About";
 import Order from "../pages/Order";
 import Posts from "../pages/Posts";
@@ -36,19 +37,23 @@ export const routes = [
       },
       {
         path: "profile/:profileId",
-        element: <Profile />,
+        element: <CustomerProfile />,
       },
       {
         path: "about",
         element: <About />,
       },
       {
-        path: "blog",
+        path: "posts",
         element: <Posts />,
       },
       {
-        path: "blog/:blogId",
+        path: "posts/:postId",
         element: <PostDetail />,
+      },
+      {
+        path: "retailer/:retailerId",
+        element: <RetailerProfile />,
       },
     ],
   },
