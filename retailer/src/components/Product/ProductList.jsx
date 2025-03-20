@@ -29,9 +29,9 @@ const ProductList = ({ products, categories, fetchProducts }) => {
     },
   ];
 
-  useEffect(() => {
-    setFilteredProducts(products);
-  }, [products]);
+  // useEffect(() => {
+  //   setFilteredProducts(products);
+  // }, [products]);
 
   if (products == null) {
     return (
