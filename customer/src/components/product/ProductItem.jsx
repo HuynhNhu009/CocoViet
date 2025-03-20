@@ -36,14 +36,14 @@ const ProductItem = ({
             className="w-full h-full object-cover"
           />
         </li>
-        <div className="p-2">
-          <p className="sm:text-base/5 text-base font-semibold max-w-full line-clamp-2 group-hover:text-green-600 ">
+        <div className="p-2 h-25">
+          <p className="h-10 sm:text-sm text-base font-semibold max-w-full line-clamp-2 group-hover:text-green-600">
             {productName}
           </p>
-          <p className="font-light text-sm pt-2">
+          <p className="font-light h-5 text-sm mt-2">
             ₫{new Intl.NumberFormat("vi-VN").format(price)}
           </p>
-          <p className="font-extralight text-xs mt-2 text-right pr-2">
+          <p className="font-extralight text-xs h-4 text-right pr-2">
             {retailerName}
           </p>
         </div>
