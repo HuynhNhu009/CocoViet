@@ -4,38 +4,55 @@ import { useNavigate, useParams } from "react-router-dom";
 import { setProductDetail } from "../redux/productSlice";
 import { productAPI } from "../services/productService";
 import ProductItem from "./Product/ProductItem";
+import { retailerAPI } from "../services/retailerService";
 
 const RetailerProfile = () => {
   const { retailerId } = useParams();
 
   const retailerProfile = useSelector((state) => state.ProductStore.retailer);
   const retailerStore = useSelector((state) => state.ProductStore.retailerStore);
-  // const retailerStore = useSelector((state) => state.ProductStore.retailerStore);
   const productStore = useSelector((state) => state.ProductStore.productStore);
   const [retailer, setRetailer] = useState();
   const [product, setProduct] = useState([]);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   if (!retailerProfile || Object.keys(retailerProfile).length === 0) {
-  //     const fetchRetailer = async () => {
-  //       try {
-  //         const response = retailerStore?.find((item) => 
-  //           item.retailerName.toLowerCase().trim() === productDetail.retailerName.toLowerCase().trim()
-  //         );
-  //         setProducts(response.data);
-  //         dispatch(setretailerProfile(response.data));
-  //       } catch (error) {
-  //         console.error("Lỗi khi lấy thông tin sản phẩm:", error);
-  //       }
-  //     };
-  //     fetchRetailer();
-  //   } else {
-  //     setProducts(retailerProfile);
-  //     setSelectVariant(retailerProfile.variants[0]);
-  //   }
-  // }, [retailerProfile, dispatch, productId, retailerStore]);
+  useEffect(() => {
+    if (!retailerProfile || Object.keys(retailerProfile).length === 0) {
+      const fetchRetailer = async () => {
+        try {
+          const response = await retailerAPI.getByRetailerId(retailerId);
+          if(response){            
+            setRetailer(response.data);
+            const fetchProducts = async () => {
+              try {
+                const products = await productAPI.getProductByRetailerId(
+                  retailerId
+                );
+      
+                if (products) {
+                  const filters = products.data.filter(
+                    (item) => item.status === "ENABLE"
+                  );
+                  setProduct(filters);
+                }
+              } catch (error) {
+                console.error("Error fetching products:", error);
+              }
+            };
+      
+            fetchProducts();
+          }
+          
+        } catch (error) {
+          console.error("Lỗi khi lấy thông tin sản phẩm:", error);
+        }
+      };
+      fetchRetailer();
+    } else {
+      setRetailer(retailerProfile);
+    }
+  }, [retailerProfile, productStore, dispatch, retailerId, retailerStore]);
 
   useEffect(() => {
     if (retailerProfile) {

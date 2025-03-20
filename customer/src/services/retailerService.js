@@ -5,4 +5,9 @@ export const retailerAPI = {
     const response = await api.get("/retailers/get-all");
     return response.data;
   },
+
+  getByRetailerId: async (retailerId) => {
+    const response = await api.get(`/retailers/${retailerId}`);
+    return response.data;
+  },
 };
