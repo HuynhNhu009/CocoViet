@@ -12,9 +12,10 @@ import {
   setStatusActive
 } from "./redux/orderSlice";
 import { setPost } from "./redux/postSlice";
-import { setProductStore } from "./redux/productSlice";
+import { setProductStore, setRetailer } from "./redux/productSlice";
 import { customerApi } from "./services/customerService";
 import { orderAPI } from "./services/orderService";
+import { retailerAPI } from "./services/retailerService";
 import { paymentAPI } from "./services/paymentService";
 import { postApi } from "./services/postService";
 import { productAPI } from "./services/productService";
@@ -94,6 +95,19 @@ function App() {
     products();
     getAllRevenue();
   }, [dispatch, isNav]);
+
+  const getAllRetailer = async () => {
+    try {
+      const response = await retailerAPI.getAllRetailer();
+      dispatch(setRetailer(response.data));      
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getAllRetailer();
+  }, []);
 
   useEffect(() => {
     const fetchOrders = async () => {

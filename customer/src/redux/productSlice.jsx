@@ -9,11 +9,22 @@ const productSlice = createSlice({
     productSearch: [],
     active: null,
     isNav: null, 
+
+    retailerStore:[],
+    retailer:[],
+
   },
 
   reducers: {
     setProductStore: (state, action) => {
       state.productStore = action.payload;
+    },
+
+    setRetailer: (state, action) => {
+      state.retailerStore = action.payload;
+    },
+    setRetailerProfile: (state, action) => {
+      state.retailer = action.payload;
     },
     setActive: (state, action) => {
       state.active = action.payload;
@@ -43,7 +54,9 @@ const productSlice = createSlice({
 export const {
   setActive,
   setProductStore,
+  setRetailerProfile,
   setProductCategory,
+  setRetailer,
   setProductSearch,
   setProductDetail,
   setISClickProductNav,
