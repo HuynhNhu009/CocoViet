@@ -37,7 +37,7 @@ const ProductItem = ({
           />
         </li>
         <div className="p-2 h-25">
-          <p className="h-10 sm:text-sm text-base font-semibold max-w-full line-clamp-2 group-hover:text-green-600">
+          <p className="h-10 sm:text-sm text-sm font-semibold max-w-full line-clamp-2 group-hover:text-green-600">
             {productName}
           </p>
           <p className="font-light h-5 text-sm mt-2">

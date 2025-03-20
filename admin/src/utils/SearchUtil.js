@@ -26,7 +26,6 @@ export const removeDiacritics = (str) => {
     dispatchFunction(filteredResults);
     }else{
       console.log("not found");
-      
     }
   };
   
