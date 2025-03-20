@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from "react";
 import Title from "../ui/Title";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { setPostDetail } from "../../redux/postSlice";
 
 const HomeBlog = () => {
   const posts = useSelector((state) => state.PostStore.post);
   const postAbout = posts.slice(0, 3);
   const [isPortrait, setIsPortrait] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   // Kiểm tra hướng của ảnh chính
   useEffect(() => {
@@ -19,6 +21,18 @@ const HomeBlog = () => {
       };
     }
   }, [postAbout]);
+
+  const handleClick = (postId) => {
+    const findByPostId = posts.find((item) => item.postId === postId);
+
+    if (findByPostId) {
+      dispatch(setPostDetail({}));
+      dispatch(setPostDetail(findByPostId));
+      navigate(`/posts/${postId}`);
+    } else {
+      console.log("Post not found!");
+    }
+  };
 
   return (
     <div className="relative flex flex-col lg:flex-row items-center gap-6 pt-5 pb-5 sm:pt-20 px-4 sm:px-[5vw] lg:px-[7vw] min-h-[500px] sm:min-h-[830px]">
@@ -62,7 +76,7 @@ const HomeBlog = () => {
             {postAbout[0] && (
               <div
                 className="w-full lg:w-1/2 h-[150px] sm:h-[300px] lg:h-full flex flex-col relative overflow-hidden group cursor-pointer"
-                onClick={() => navigate(`/blog/${postAbout[0].postId}`)}
+                onClick={() => handleClick(postAbout[0].postId)}
               >
                 <img
                   src={postAbout[0].postImageUrl}
@@ -85,7 +99,7 @@ const HomeBlog = () => {
             <div className="w-full lg:w-1/2 flex flex-col gap-4">
               {postAbout[1] && (
                 <div 
-                onClick={() => navigate(`/blog/${postAbout[1].postId}`)}
+                onClick={() => handleClick(postAbout[1].postId)}
                 className="w-full h-[150px] sm:h-[200px] lg:h-1/2 relative overflow-hidden group cursor-pointer">
                   <img
                     src={postAbout[1].postImageUrl}
@@ -105,7 +119,7 @@ const HomeBlog = () => {
               )}
               {postAbout[2] && (
                 <div 
-                onClick={() => navigate(`/blog/${postAbout[2].postId}`)}
+                onClick={() => handleClick(postAbout[2].postId)}
                 className="w-full h-[150px] sm:h-[200px] lg:h-1/2 relative overflow-hidden group cursor-pointer">
                   <img
                     src={postAbout[2].postImageUrl}

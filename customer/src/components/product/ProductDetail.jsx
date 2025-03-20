@@ -136,6 +136,7 @@ const ProductDetail = () => {
       dispatch(setProductDetail(findByProductId));
       setProducts(findByProductId);
       window.scrollTo({ top: 0, behavior: "smooth" });
+      navigate(`/products/${productId}`);
     } else {
       console.log("Product not found!");
       setProducts([]);

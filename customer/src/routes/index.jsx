@@ -43,11 +43,11 @@ export const routes = [
         element: <About />,
       },
       {
-        path: "blog",
+        path: "posts",
         element: <Posts />,
       },
       {
-        path: "blog/:blogId",
+        path: "posts/:postId",
         element: <PostDetail />,
       },
     ],
