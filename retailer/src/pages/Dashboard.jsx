@@ -268,7 +268,7 @@ const Dashboard = () => {
   return (
     <div className="relative flex flex-col min-h-screen">
       <Navbar />
-      <div className="bg-white min-h-[90vh] flex flex-col sm:px-4 lg:flex-row sm:gap-6">
+      <div className="bg-white min-h-[85vh] flex flex-col sm:px-4 lg:flex-row sm:gap-6">
         <Sidebar
           activeTab={activeTab}
           setActiveTab={setActiveTab}
