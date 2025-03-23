@@ -8,6 +8,8 @@ const initialState = {
 
   products: [],
 
+  productAdd:{},
+
   category: [],
 
   units: [],
