@@ -11,7 +11,7 @@ const ProductList = () => {
   const productStore = useSelector((state) => state.AdminStore.productStore);
   const productSearch = useSelector((state) => state.AdminStore.productSearch);
   const categoryActive = useSelector((state) => state.AdminStore.categoryActive);
-  conretailerActive = useSelector((state) => state.AdminStore.retailerActive);
+  const retailerActive = useSelector((state) => state.AdminStore.retailerActive);
   const productStatusActive = useSelector((state) => state.AdminStore.productStatusActive);
   const [products, setProducts] = useState([]);
   const dispatch = useDispatch();
