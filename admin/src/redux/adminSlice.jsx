@@ -1,7 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  admin: "",
+  admin:{},
+  isLogin: false,
+
   categoryStore: [],
   categoryActive: null,
 
@@ -51,6 +53,9 @@ const adminSlice = createSlice({
 
     setRevenueRetailerActive: (state, action) => {
       state.revenueRetailerActive = action.payload;
+    },
+    setLogin: (state, action) => {
+      state.isLogin = action.payload;
     },
     setProductStatusActive: (state, action) => {
       state.productStatusActive = action.payload;
@@ -147,6 +152,7 @@ export const {
   setLoadingAPI,
   setProductStatusActive,
   setOrderChart,
+  setLogin,
   setOrderByRetailer,
   setRevenueRetailerActive,
   setRevenueListRetailer,

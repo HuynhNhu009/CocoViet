@@ -41,6 +41,8 @@ const Sidebar = () => {
   const navigate = useNavigate();
   const [sideBarActive, setsideBarActive] = useState();
   const dispatch = useDispatch();
+  const isLogin = useSelector((state) => state.AdminStore.isLogin);
+
   const productStore = useSelector((state) => state.AdminStore.productStore);
   const retailerStore = useSelector((state) => state.AdminStore.retailerStore);
   const orderStore = useSelector((state) => state.AdminStore.orderStore);
@@ -179,12 +181,12 @@ const Sidebar = () => {
     customers();
     retailers();
     dispatch(setLoadingAPI(false));
-  }, [dispatch, sideBarActive, loadingAPI ]);
+  }, [dispatch, sideBarActive, isLogin,loadingAPI ]);
 
   useEffect(() => {
     getAllCategories();    
     dispatch(setUpdate(true));
-  }, [dispatch, sideBarActive,update ]);
+  }, [dispatch, sideBarActive,update, isLogin ]);
 
   const handleNavigate = (path) => {
     if (path === "/products" || path === "/posts") {
