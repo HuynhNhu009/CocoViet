@@ -27,36 +27,41 @@ const LatestPost = () => {
       }
     };
 
-  return (
-    <div className="lg:w-[78%] w-[80%] mx-auto mb-8">
-      <div
-        onClick={() => handleClick(latestPost.postId)}
-        className="relative w-full h-[320px] lg:h-[320px] rounded-lg overflow-hidden shadow-lg"
-      >
-        <div className=" align-middle justify-center  w-full h-full">
-          <img
-            src={latestPost.postImageUrl}
-            alt={latestPost.postTitle}
-            className="w-full aspect-video object-cover brightness-75"
-          />
-          <div className="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-b from-transparent to-black transition-transform duration-100 hover:to-gray-600 cursor-pointer"></div>
-          <div className="absolute bottom-5 left-5 text-white">
-            <h1 className="text-3xl text-white font-bold z-100">
-              {latestPost.postTitle}
-            </h1>
-            <p className="text-lg text-white">
-              {latestPost.authorPost} -{" "}
-              {latestPost.publishTime
-                ?.split("T")[0]
-                .split("-")
-                .reverse()
-                .join("/") || "N/A"}
-            </p>
+    return (
+      latestPost ? (
+        <div className="lg:w-[78%] w-[80%] mx-auto mb-8">
+          <div
+            onClick={() => handleClick(latestPost?.postId)}
+            className="relative w-full h-[320px] lg:h-[320px] rounded-lg overflow-hidden shadow-lg"
+          >
+            <div className="align-middle justify-center w-full h-full">
+              <img
+                src={latestPost?.postImageUrl}
+                alt={latestPost?.postTitle}
+                className="w-full aspect-video object-cover brightness-75"
+              />
+              <div className="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-b from-transparent to-black transition-transform duration-100 hover:to-gray-600 cursor-pointer"></div>
+              <div className="absolute bottom-5 left-5 text-white">
+                <h1 className="text-3xl text-white font-bold z-100">
+                  {latestPost?.postTitle}
+                </h1>
+                <p className="text-lg text-white">
+                  {latestPost?.authorPost} -{" "}
+                  {latestPost?.publishTime
+                    ?.split("T")[0]
+                    .split("-")
+                    .reverse()
+                    .join("/") || "N/A"}
+                </p>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
-  );
+      ) : (
+        <p></p>
+      )
+    );
+    
 };
 
 export default LatestPost;
