@@ -20,7 +20,7 @@ const ProductList = () => {
     if (productStore.length > 0) {
       const disabledProducts = productStore.filter((item) => item.status === "DISABLE");
       const otherProducts = productStore.filter((item) => item.status !== "DISABLE");
-      const productCop = [...otherProducts, ...disabledProducts]; // Reversed order for UX
+      const productCop = [...disabledProducts, ...otherProducts];      
       setProducts(productCop);
     }
   }, [productStore]);
@@ -45,22 +45,24 @@ const ProductList = () => {
   useEffect(() => {
     if (productStore.length > 0) {
       const filteredProducts = applyFilters(productStore);
-      setProducts(filteredProducts);
+      const disabledProducts = filteredProducts.filter((item) => item.status === "DISABLE");
+      const otherProducts = filteredProducts.filter((item) => item.status !== "DISABLE");
+      const productCop = [...disabledProducts, ...otherProducts];
+      setProducts(productCop);
     }
   }, [categoryActive, retailerActive, productStatusActive]);
 
   useEffect(() => {
-    if (productSearch) {
+    if (productSearch.length >0) {
       setProducts(productSearch);
       dispatch(setCategoryActive("allProduct"));
       dispatch(setProductStatusActive("allProduct"));
       dispatch(setRetailerActive("allProduct"));
     }
-  }, [productSearch]);
+  }, [productSearch]);  
 
   return (
     <div className="container mx-auto px-4 py-6">
-      {/* Filter Section */}
       <div className="flex flex-col md:flex-row items-center justify-between gap-4">
         <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
           <FilterProductByRetailer />

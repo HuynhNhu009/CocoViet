@@ -10,5 +10,9 @@ export const adminAPI = {
     const response = await api.get("/admin/");
     return response.data;
   },
+  logout: async () => {
+    const response = await api.post("/admin/logout");
+    return response.data;
+  },
 
 };

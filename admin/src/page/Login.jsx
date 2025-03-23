@@ -4,6 +4,7 @@ import { adminAPI } from "../services/adminService";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setAdmin, setLogin } from "../redux/adminSlice";
+import Swal from "sweetalert2";
 
 const Login = () => {
   const [formData, setFormData] = useState({ adminName: "", password: "" });
@@ -24,8 +25,25 @@ const Login = () => {
         const response = await adminAPI.introspect();
         if (response.status === "OK") {
           dispatch(setAdmin(response.data));
-          
-          navigate("/products");
+          let timerInterval;
+          Swal.fire({
+            title: "Đăng nhập thành công!",
+            html: "Đang vào trang quản trị",
+            timer: 2000,
+            timerProgressBar: true,
+            didOpen: () => {
+              Swal.showLoading();
+              const timer = Swal.getPopup().querySelector("b");
+              timerInterval = setInterval(() => {
+                timer.textContent = `${Swal.getTimerLeft()}`;
+              }, 100);
+            },
+            willClose: () => {
+              clearInterval(timerInterval);
+            },
+          }).then((result) => {
+            navigate("/products");
+          });
         } else {
           setError("Hết hạn đăng nhập");
         }
@@ -48,7 +66,7 @@ const Login = () => {
       >
         <div className="flex justify-center items-center min-h-screen bg-gray-100">
           <div className="bg-white p-8 shadow-md rounded-lg w-96">
-            <h2 className="text-2xl font-bold text-center mb-6">Admin Login</h2>
+            <h2 className="text-xl font-bold text-center mb-6">ĐĂNG NHẬP</h2>
 
             {error && (
               <p className="text-red-500 text-sm text-center">{error}</p>
@@ -57,7 +75,7 @@ const Login = () => {
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label className="block text-gray-700 text-sm font-medium">
-                  Admin Name
+                  Tên đăng nhập
                 </label>
                 <input
                   type="text"
@@ -71,7 +89,7 @@ const Login = () => {
 
               <div>
                 <label className="block text-gray-700 text-sm font-medium">
-                  Password
+                  Mật khẩu
                 </label>
                 <input
                   type="password"
@@ -85,7 +103,7 @@ const Login = () => {
 
               <button
                 type="submit"
-                className="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 rounded-md"
+                className="w-full bg-green-600 hover:bg-green-700 cursor-pointer text-white font-medium py-2 rounded-md"
               >
                 Login
               </button>

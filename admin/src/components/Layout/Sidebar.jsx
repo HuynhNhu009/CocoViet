@@ -14,6 +14,7 @@ import {
   setCategoryActive,
   setCustomer,
   setLoadingAPI,
+  setLogin,
   setOrder,
   setOrderByRetailer,
   setOrderChart,
@@ -36,6 +37,7 @@ import { postApi } from "../../services/postService";
 import { orderAPI } from "../../services/orderService";
 import { statusAPI } from "../../services/statusService";
 import { categoryAPI } from "../../services/categoryService";
+import { adminAPI } from "../../services/adminService";
 
 const Sidebar = () => {
   const navigate = useNavigate();
@@ -181,12 +183,12 @@ const Sidebar = () => {
     customers();
     retailers();
     dispatch(setLoadingAPI(false));
-  }, [dispatch, sideBarActive, isLogin,loadingAPI ]);
+  }, [dispatch, sideBarActive,loadingAPI ]);
 
   useEffect(() => {
     getAllCategories();    
     dispatch(setUpdate(true));
-  }, [dispatch, sideBarActive,update, isLogin ]);
+  }, [dispatch, sideBarActive,update ]);
 
   const handleNavigate = (path) => {
     if (path === "/products" || path === "/posts") {
@@ -294,6 +296,21 @@ const Sidebar = () => {
   
     dispatch(setOrderChart(ordersChart));
   }, [orderStore, statusStore]);
+
+  const logout = async() => {
+    try {
+          const logout = await adminAPI.logout();
+          if (logout.status === "OK") {
+            dispatch(setLogin(false));
+            navigate("/login");
+          }
+        } catch (error) {
+          console.error(
+            "Đăng xuất thất bại:",
+            error.response?.data || error.message
+          );
+        }
+  }
   
 
   return (
@@ -332,7 +349,14 @@ const Sidebar = () => {
             </div>
           ))}
         </nav>
-        <div className="text-gray-500 text-xs text-center py-2 border-t mt-60">
+        <div 
+        onClick={() => logout()}
+        className="text-gray-300 rounded-md font-bold text-xs text-center py-2 bg-gray-900 cursor-pointer mt-60 hover:text-white">
+          <p>
+            ĐĂNG XUẤT
+          </p>
+        </div>
+        <div className="text-gray-500 text-xs text-center py-2  ">
           Phiên bản: <span className="font-semibold">1.0.3</span>
         </div>
       </div>
