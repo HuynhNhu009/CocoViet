@@ -1,15 +1,17 @@
 package com.cocoviet.backend.controller;
 
 
+import com.cocoviet.backend.models.dto.AuthenticationDTO;
 import com.cocoviet.backend.models.reponse.ResponseData;
+import com.cocoviet.backend.models.request.AdminRequest;
 import com.cocoviet.backend.service.IAdminService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/admin")
@@ -18,36 +20,34 @@ public class AdminController {
     @Autowired
     IAdminService iAdminService;
 
-    @GetMapping("/all-customers")
-    ResponseEntity<ResponseData> getAllCustomers() {
+    @PostMapping("/")
+    ResponseEntity<ResponseData> login(@RequestBody AdminRequest adminRequest, HttpServletResponse httpServletResponse) {
+
+        AuthenticationDTO data = iAdminService.loginAdmin(adminRequest);
+        Cookie jwtCookie = new Cookie("jwt", data.getToken());
+        jwtCookie.setHttpOnly(true);
+        jwtCookie.setSecure(false);
+        jwtCookie.setPath("/");
+        jwtCookie.setMaxAge(24 * 60 * 60);
+        httpServletResponse.addCookie(jwtCookie);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ResponseData.builder()
-                        .data(iAdminService.getAllCustomers())
-                        .msg("Get all customers successfully")
+                        .data(data.getInfo())
+                        .msg("Login success")
                         .status("OK")
                         .build());
     }
 
-    @GetMapping("/all-retailer")
-    ResponseEntity<ResponseData> getAllRetailers() {
+    @GetMapping("/")
+    ResponseEntity<?> introspectAdmin( HttpServletRequest httpServletRequest) {
 
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(ResponseData.builder()
-                        .data(iAdminService.getAllRetailers())
-                        .msg("Get all retailers successfully")
-                        .status("OK")
-                        .build());
+        return  iAdminService.introspectAdmin(httpServletRequest);
     }
 
-    @GetMapping("/all-products")
-    ResponseEntity<ResponseData> getAllProducts() {
 
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(ResponseData.builder()
-                        .data(iAdminService.getAllProducts())
-                        .msg("Get all products successfully")
-                        .status("OK")
-                        .build());
-    }
+
+
+
+
 }

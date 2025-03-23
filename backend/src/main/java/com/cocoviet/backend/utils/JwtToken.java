@@ -56,28 +56,6 @@ public class JwtToken {
         }
     }
 
-//    public String generateToken(String customerEmail) {
-//        JWSHeader header = new JWSHeader(JWSAlgorithm.HS512); // thuat toan ma hoa
-//
-//        JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
-//                .subject(customerEmail)
-//                .issuer("cocoviet.com")
-//                .expirationTime(new Date(Instant.now().plus(1, ChronoUnit.HOURS).toEpochMilli()))
-//                .claim("customClaim", "customClaimValue")
-//                .build();
-//
-//        Payload payload = new Payload(jwtClaimsSet.toJSONObject());
-//
-//        JWSObject jwsObject = new JWSObject(header, payload);
-//
-//        try {
-//            jwsObject.sign(new MACSigner(SIGNER_KEY));
-//            return jwsObject.serialize();
-//        }catch (JOSEException e) {
-//            log.error("Can not create JWT object", e);
-//            throw new RuntimeException(e);
-//        }
-//    }
 
 
 

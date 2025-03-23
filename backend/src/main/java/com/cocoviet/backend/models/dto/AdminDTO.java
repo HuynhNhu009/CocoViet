@@ -12,6 +12,5 @@ import lombok.Setter;
 public class AdminDTO {
 
     String adminId;
-
     String adminName;
 }

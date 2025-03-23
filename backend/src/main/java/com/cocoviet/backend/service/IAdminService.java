@@ -1,14 +1,14 @@
 package com.cocoviet.backend.service;
 
-import com.cocoviet.backend.models.dto.CustomerDTO;
-import com.cocoviet.backend.models.dto.ProductDTO;
-import com.cocoviet.backend.models.dto.RetailerDTO;
-
-import java.util.List;
+import com.cocoviet.backend.models.dto.AuthenticationDTO;
+import com.cocoviet.backend.models.reponse.ResponseData;
+import com.cocoviet.backend.models.request.AdminRequest;
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.http.ResponseEntity;
 
 public interface IAdminService {
 
-    List<CustomerDTO> getAllCustomers();
-    List<ProductDTO> getAllProducts ();
-    List<RetailerDTO> getAllRetailers ();
+    AuthenticationDTO loginAdmin(AdminRequest adminRequest);
+    ResponseEntity<?> introspectAdmin(HttpServletRequest httpServletRequest);
+
 }

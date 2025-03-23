@@ -49,7 +49,7 @@ public class ApplicationInitConfig {
                 PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
                 AdminEntity adminEntity = AdminEntity.builder()
                         .adminName(ADMIN_NAME)
-                        .adminPassword(passwordEncoder.encode(ADMIN_PASSWORD))
+                        .password(passwordEncoder.encode(ADMIN_PASSWORD))
                         .build();
                 adminRepository.save(adminEntity);
             }

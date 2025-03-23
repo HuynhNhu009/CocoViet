@@ -18,7 +18,7 @@ public class AdminEntity {
     String adminId;
 
     @Column
-    String adminPassword;
+    String password;
 
     @Column
     String adminName;
