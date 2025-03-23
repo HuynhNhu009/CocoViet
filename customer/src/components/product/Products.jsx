@@ -9,7 +9,7 @@ const Products = () => {
         <ProductSearch />
       </div>
 
-      <div className="category flex justify-center space-x-8 flex-wrap mb-10">
+      <div className="category flex justify-center gap-6 flex-wrap mb-10">
         <ProductCategory />
       </div>
 

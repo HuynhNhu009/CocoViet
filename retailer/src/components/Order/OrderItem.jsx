@@ -35,7 +35,7 @@ const OrderItem = ({ orderStatus }) => {
         order?.receiptDetails?.forEach((item) => {
           orderTotal += item.productVariants.price * item.totalQuantity;
         });
-        prices[order.orderId] = orderTotal + 30;
+        prices[order.orderId] = orderTotal + 30000;
       });
 
       setTotalPrice(prices);
@@ -257,14 +257,17 @@ const OrderItem = ({ orderStatus }) => {
                               <th className="border px-2 py-2 w-1/4 font-medium">
                                 Sản phẩm
                               </th>
-                              <th className="border px-2 py-2 w-1/4 font-medium">
+                              <th className="border px-2 py-2 w-1/5 font-medium">
                                 Đơn vị
                               </th>
-                              <th className="border px-2 py-2 w-1/4 font-medium">
+                              <th className="border px-2 py-2 w-1/5 font-medium">
                                 Số lượng
                               </th>
-                              <th className="border px-2 py-2 w-1/4 font-medium">
+                              <th className="border px-2 py-2 w-1/5 font-medium">
                                 Đơn giá
+                              </th>
+                              <th className="border px-2 py-2 w-1/5 font-medium">
+                              Tổng cộng
                               </th>
                             </tr>
                           </thead>
@@ -272,18 +275,21 @@ const OrderItem = ({ orderStatus }) => {
                           <tbody>
                             {item.receiptDetails.map((item, idx) => (
                               <tr key={idx} className="border-b text-center">
-                                <td className="border px-2 py-2 w-1/4">
+                                <td className="border px-2 py-2 w-1/5">
                                   {item.productName}
                                 </td>
-                                <td className="border px-2 py-2 w-1/4 ">
+                                <td className="border px-2 py-2 w-1/5 ">
                                   {item.productVariants.value}
                                   {item.productVariants.unitName}
                                 </td>
-                                <td className="border px-2 py-2 w-1/4">
+                                <td className="border px-2 py-2 w-1/5">
                                   x{item.totalQuantity}
                                 </td>
-                                <td className="border px-2 py-2 w-1/4 ">
+                                <td className="border px-2 py-2 w-1/5 ">
                                 ₫{(new Intl.NumberFormat("vi-VN").format(item.productVariants.price))}
+                                </td>
+                                <td className="border px-2 py-2 w-1/5 ">
+                                ₫{(new Intl.NumberFormat("vi-VN").format(item.productVariants.price * item.totalQuantity))}
                                 </td>
                               </tr>
                             ))}

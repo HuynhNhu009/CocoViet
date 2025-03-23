@@ -3,7 +3,7 @@ import React from "react";
 
 const PostItem = ({ post, isEdit, setPost, deletePost }) => {
   return (
-    <div className="min-h-50 w-290 p-5 mt-2 mb-5 flex flex-row gap-2 border border-gray-200 rounded-sm shadow-md hover:shadow-lg transition-all ">
+    <div className="min-h-50 max-w-290 p-5 mt-2 mb-5 flex flex-row gap-2 border border-gray-200 rounded-sm shadow-md hover:shadow-lg transition-all ">
       <img
         className="w-60 h-fit mt-4 rounded-sm object-cover"
         src={post.postImageUrl}

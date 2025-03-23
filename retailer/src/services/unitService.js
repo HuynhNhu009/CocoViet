@@ -19,7 +19,7 @@ export const unitApi = {
   },
 
   deleteUnit: async (unitId) => {
-    const response = await api.delete(`/units/delete/${unitId}`);
+    const response = await api.delete(`/units/${unitId}`);
     return response.data;
   },
 };

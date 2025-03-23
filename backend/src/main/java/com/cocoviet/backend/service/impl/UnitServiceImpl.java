@@ -94,13 +94,35 @@ public class UnitServiceImpl implements IUnitService {
         return iUnitMapper.toSetUnitDTO(iUnitRepository.findAll());
     }
 
+//    @Override
+//    public String deleteUnitById(String unitId) {
+//        UnitDTO unitDTO = iUnitMapper.toUnitDTO(iUnitRepository.findById(unitId).orElseThrow(()->
+//                new EntityNotFoundException("Units ID " + unitId + " not found")));
+//
+//
+//        iUnitRepository.deleteById(unitId);
+//        return "Deleted :" + unitId + " " + unitDTO.getUnitName();
+//    }
+
     @Override
     public String deleteUnitById(String unitId) {
-        UnitDTO unitDTO = iUnitMapper.toUnitDTO(iUnitRepository.findById(unitId).orElseThrow(()->
-                new EntityNotFoundException("Units ID " + unitId + " not found")));
+        UnitEntity unitEntity = iUnitRepository.findById(unitId)
+                .orElseThrow(() -> new EntityNotFoundException("Units ID " + unitId + " not found"));
 
+        // Xóa tất cả các mối quan hệ trong retailer_unit liên quan đến unitId
+        Set<RetailerEntity> retailers = unitEntity.getRetailers();
+        for (RetailerEntity retailer : retailers) {
+            retailer.getUnits().remove(unitEntity); // Xóa unit khỏi retailer
+        }
+        unitEntity.getRetailers().clear(); // Xóa tất cả retailer khỏi unit
+
+        // Lưu thay đổi để đồng bộ hóa retailer
+        iRetailerRepository.saveAll(retailers);
+
+        // Xóa unit
         iUnitRepository.deleteById(unitId);
-        return "Deleted :" + unitId + " " + unitDTO.getUnitName();
+
+        return "Deleted: " + unitId + " " + unitEntity.getUnitName();
     }
 
     @Override
