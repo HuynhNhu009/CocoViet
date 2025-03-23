@@ -41,10 +41,13 @@ public class AdminController {
 
     @GetMapping("/")
     ResponseEntity<?> introspectAdmin( HttpServletRequest httpServletRequest) {
-
         return  iAdminService.introspectAdmin(httpServletRequest);
     }
 
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
+        return  iAdminService.logout(httpServletRequest, httpServletResponse);
+    }
 
 
 

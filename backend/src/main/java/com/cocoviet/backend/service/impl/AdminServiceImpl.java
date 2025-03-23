@@ -17,6 +17,7 @@ import com.cocoviet.backend.utils.PasswordEncoderUtil;
 import com.nimbusds.jwt.JWTClaimsSet;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -118,6 +119,42 @@ public class AdminServiceImpl implements IAdminService {
                                 .build());
             }
         }
+    }
+
+    @Override
+    public  ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) {
+        String jwt = null;
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("jwt".equals(cookie.getName())) {
+                    jwt = cookie.getValue();
+                    break;
+                }
+            }
+        }
+
+        Cookie jwtCookie = new Cookie("jwt", null);
+        jwtCookie.setHttpOnly(true);
+        jwtCookie.setPath("/");
+        jwtCookie.setMaxAge(0);
+        response.addCookie(jwtCookie);
+
+        if (jwt == null || jwt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(ResponseData.builder()
+                            .data(null)
+                            .msg("No active session to logout")
+                            .status("NO_SESSION")
+                            .build());
+        }
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ResponseData.builder()
+                        .data(null)
+                        .msg("Logout success")
+                        .status("OK")
+                        .build());
     }
 
 }
