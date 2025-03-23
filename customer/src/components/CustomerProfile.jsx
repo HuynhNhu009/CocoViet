@@ -51,7 +51,6 @@ const CustomerProfile = () => {
 
   return (
     <div className="max-w-6xl mx-auto p-5 font-sans">
-      {/* Section Thông tin */}
       <section className="bg-gray-100  p-6 shadow-md rounded-lg mb-8 flex items-start gap-6">
         <div className="w-32 h-32 mt-2 flex-shrink-0 flex items-center justify-center">
           <img
@@ -105,7 +104,6 @@ const CustomerProfile = () => {
         </div>
       </section>
 
-      {/* Section Editing với Form */}
       {isEditing && (
         <section className=" p-6 shadow-md rounded-lg mb-8">
           <h2 className="text-xl md:text-xl text-black uppercase mb-4 text-center">

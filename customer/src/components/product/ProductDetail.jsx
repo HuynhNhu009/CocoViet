@@ -142,7 +142,7 @@ const ProductDetail = () => {
     }
   };
 
-  const handleRetailerProfile = async() => {
+  const handleRetailerProfile = async() => {    
     const getRetailer = retailerStore?.find((item) => 
       item.retailerName.toLowerCase().trim() === productDetail.retailerName.toLowerCase().trim()
     );
