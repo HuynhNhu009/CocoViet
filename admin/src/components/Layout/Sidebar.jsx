@@ -331,7 +331,7 @@ const Sidebar = () => {
       </div> */}
 
       {/* Sidebar cho desktop */}
-      <div className="sticky ml-3 h-[680px] hidden lg:block lg:w-64 flex-shrink-0 bg-white p-5 rounded-lg shadow-md">
+      <div className="fixed ml-3 h-[680px] hidden lg:block lg:w-64 flex-shrink-0 bg-white p-5 rounded-lg shadow-md">
         <nav className="flex flex-col gap-3 flex-grow">
           {navItems.map((item, index) => (
             <div

@@ -2,7 +2,7 @@ import { BuildingStorefrontIcon } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import Swal from "sweetalert2";
+import {  toast } from 'react-toastify';
 import { setCreateOrder } from "../../redux/orderSlice";
 import { setProductDetail, setRetailerProfile } from "../../redux/productSlice";
 import { orderAPI } from "../../services/orderService";
@@ -114,26 +114,19 @@ const ProductDetail = () => {
 
       await orderAPI.addOrder(orderRequest);
       dispatch(setCreateOrder(true));
-      Swal.fire({
-        title: "Thêm sản phẩm vào giỏ thành công!",
-        position: "top",
-        showConfirmButton: false,
-        timer: 1500,
-        willOpen: (popup) => {
-          popup.style.transform = "translateY(-50px)";
-          popup.style.opacity = "0";
-          setTimeout(() => {
-            popup.style.transition = "all 0.5s ease-out";
-            popup.style.transform = "translateY(0)";
-            popup.style.opacity = "1";
-          }, 10);
-        },
-        willClose: (popup) => {
-          popup.style.transition = "all 0.5s ease-out";
-          popup.style.transform = "translateY(-50px)";
-          popup.style.opacity = "0";
-        },
+  
+      toast.success("Thêm sản phẩm vào giỏ thành công!", {
+        position: "top-center",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: false,
+        draggable: false,
+        progress: undefined,
+        closeButton: false, 
+        theme: "light",
       });
+      
     } else {
       //current path
       const currentPath = window.location.pathname;

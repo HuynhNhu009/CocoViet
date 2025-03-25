@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import Swal from "sweetalert2";
 import { setCreateOrder } from "../../redux/orderSlice";
 import { orderAPI } from "../../services/orderService";
+import { toast } from "react-toastify";
 
 function OrderItem(orderStore) {
   const [order, setOrder] = useState([]);
@@ -100,9 +101,8 @@ function OrderItem(orderStore) {
 
     try {
       const deleteReceipt = order.receiptDetails.filter(
-        (item) => (item.productStatus === "PAUSE" ||
-          item.productVariants.stock === 0
-        )
+        (item) =>
+          item.productStatus === "PAUSE" || item.productVariants.stock === 0
       );
 
       console.log("dele", deleteReceipt);
@@ -127,16 +127,19 @@ function OrderItem(orderStore) {
           receiptDetailRequests: receiptDetailRequests,
         };
 
-        console.log("order", orderRequest);
         await orderAPI.updateOrder(order.orderId, orderRequest);
         await dispatch(setCreateOrder(true));
 
-        Swal.fire({
-          title: "Đặt hàng thành công!",
-          text: "Vui lòng xem chi tiết tại trạng thái Đang xử lý",
-          icon: "success",
-          showConfirmButton: false,
-          timer: 1000,
+        toast.success("Đặt hàng thành công!", {
+          position: "top-center",
+          autoClose: 1000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: false,
+          draggable: false,
+          progress: undefined,
+          closeButton: false,
+          theme: "light",
         });
       }
     } catch (error) {
@@ -170,7 +173,10 @@ function OrderItem(orderStore) {
                   <tr
                     key={index}
                     className={`text-center border-b-1 border-gray-400 ${
-                      (item.productStatus == "PAUSE") || (item.productVariants.stock === 0) ? "bg-gray-200" : ""
+                      item.productStatus == "PAUSE" ||
+                      item.productVariants.stock === 0
+                        ? "bg-gray-200"
+                        : ""
                     }`}
                   >
                     <td className="px-4 py-2">{index + 1}</td>
@@ -196,7 +202,8 @@ function OrderItem(orderStore) {
                     </td>
 
                     <td className={`px-4 py-2`}>
-                      {((item.productStatus !== "PAUSE") && (item.productVariants.stock != 0)) ? (
+                      {item.productStatus !== "PAUSE" &&
+                      item.productVariants.stock != 0 ? (
                         <input
                           type="number"
                           onChange={(e) =>
@@ -223,7 +230,8 @@ function OrderItem(orderStore) {
                       )}
                     </td>
 
-                    {((item.productStatus !== "PAUSE") && (item.productVariants.stock != 0)) ? (
+                    {item.productStatus !== "PAUSE" &&
+                    item.productVariants.stock != 0 ? (
                       <td className="px-4 py-2">
                         ₫
                         {new Intl.NumberFormat("vi-VN").format(

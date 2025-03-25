@@ -24,11 +24,15 @@ import { paymentAPI } from "./services/paymentService";
 import { postApi } from "./services/postService";
 import { productAPI } from "./services/productService";
 import { statusAPI } from "./services/statusService";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
+
+import "react-toastify/dist/ReactToastify.css";
 import { ScrollToTop } from "./components/ScrollToTop";
 import { categoryAPI } from "./services/categoryService";
-
 function App() {
+
   const dispatch = useDispatch();
   const customer = useSelector((state) => state.CustomerStore.customer);
   const isLogin = useSelector((state) => state.CustomerStore.isLogin);
@@ -176,6 +180,7 @@ function App() {
     <>
       <ScrollToTop />
       <AllRoute />
+      <ToastContainer />
     </>
   );
 }
