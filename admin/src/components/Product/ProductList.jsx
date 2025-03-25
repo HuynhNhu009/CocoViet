@@ -75,7 +75,7 @@ const ProductList = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-6">
+    <div className="container mx-auto px-4 ">
       {/* Mobile Filter Toggle Button */}
       <div className="lg:hidden mb-4">
         <button 

@@ -4,17 +4,18 @@ import { setPostFilter, setPostRetailerActive } from "../../redux/adminSlice";
 import { postApi } from "../../services/postService";
 
 const FilterPostByRetailer = () => {
-  const [retailer, setretailer] = useState([]);
+  const [retailer, setRetailer] = useState([]);
   const dispatch = useDispatch();
 
   const retailerStore = useSelector((state) => state.AdminStore.retailerStore);
   const postStore = useSelector((state) => state.AdminStore.postStore);
-  const retailerActive = useSelector((state) => state.AdminStore.postRetailerActive
-  );  
+  const retailerActive = useSelector(
+    (state) => state.AdminStore.postRetailerActive
+  );
 
   useEffect(() => {
     if (retailerStore) {
-      setretailer(retailerStore);
+      setRetailer(retailerStore);
     }
     if (!retailerActive) {
       dispatch(setPostRetailerActive("allPost"));
@@ -27,28 +28,24 @@ const FilterPostByRetailer = () => {
       if (retailerId === "allPost") {
         dispatch(setPostFilter(postStore));
       } else {
-        const findByRetailerId = postStore.filter(
-          (item) => (item.authorId).includes(retailerId)
-        );        
-        dispatch(setPostFilter(findByRetailerId.data));
+        const findByRetailerId = postStore.filter((item) =>
+          item.authorId.includes(retailerId)
+        );
+        dispatch(setPostFilter(findByRetailerId)); // Fixed: Removed .data as it’s not present in the filtered array
       }
     } catch (error) {
       console.error("Error fetching products by retailer:", error);
     }
   };
 
-  
-
   return (
-    <div className="ml-3 flex items-center gap-4">
+    <div className="flex items-center gap-4">
       <select
-        className="bg-white border-2  rounded-sm px-1 py-1.5 shadow-md text-gray-700"
+        className="w-full sm:w-48 bg-white border-2 rounded-md px-2 py-2 text-sm sm:text-base text-gray-700 shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         value={retailerActive || "allPost"}
         onChange={(e) => handleClickCategory(e.target.value)}
       >
-        <option value="allPost" default>
-          Tất cả cửa hàng
-        </option>
+        <option value="allPost">Tất cả cửa hàng</option>
         {retailer.map((item) => (
           <option key={item.retailerId} value={item.retailerId}>
             {item.retailerName}
