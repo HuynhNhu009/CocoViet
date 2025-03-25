@@ -61,12 +61,14 @@ const HomeBlog = () => {
       ) : (
         <>
           {/* Nội dung tổng quan */}
-          <div className="w-full lg:w-1/3 text-center px-4 sm:text-left">
-            <Title text1={"BLOG"} color1={"lg:mb-20 lg:pl-5 text-black"} />
-            <p className="mt-4 lg:pr-10 sm:mb-10 text-gray-700 text-sm sm:text-base md:text-lg lg:text-2xl leading-relaxed text-center sm:text-left">
-              Lorem ipsum dolor sit amet consectetur adipiscing elit Ut et massa
-              mi. Aliquam in hendrerit urna. Pellentesque sit amet sapien
-              fringilla, mattis ligula consectetur, ultrices mauris.
+          <div className="w-full lg:w-2/5 px-4 sm:text-left">
+            <Title text1={"Bài viết"} color1={"lg:mb-5 lg:pl-5 text-left text-xl text-black"} />
+            <p className="mt-2  lg:pr-10 sm:mb-10 text-gray-700 text-sm sm:text-base md:text-lg lg:text-xl text-justify leading-relaxed  sm:text-left">
+              Đây là nơi bạn có thể khám phá vô số mẹo hay, công thức nấu ăn, bí
+              quyết làm đẹp và những ứng dụng thú vị của dừa trong cuộc sống. Từ
+              những món ăn thơm ngon đến cách tận dụng dừa trong chăm sóc sức
+              khỏe và làm đồ thủ công, chúng tôi mang đến cho bạn những chia sẻ
+              hữu ích và dễ áp dụng. Hãy cùng khám phá và biến dừa thành người bạn đồng hành trong cuộc sống hàng ngày! 
             </p>
           </div>
 
@@ -98,9 +100,10 @@ const HomeBlog = () => {
             {/* Hai hình nhỏ */}
             <div className="w-full lg:w-1/2 flex flex-col gap-4">
               {postAbout[1] && (
-                <div 
-                onClick={() => handleClick(postAbout[1].postId)}
-                className="w-full h-[150px] sm:h-[200px] lg:h-1/2 relative overflow-hidden group cursor-pointer">
+                <div
+                  onClick={() => handleClick(postAbout[1].postId)}
+                  className="w-full h-[150px] sm:h-[200px] lg:h-1/2 relative overflow-hidden group cursor-pointer"
+                >
                   <img
                     src={postAbout[1].postImageUrl}
                     className="w-full h-full object-cover transition-transform duration-400 group-hover:scale-110"
@@ -118,9 +121,10 @@ const HomeBlog = () => {
                 </div>
               )}
               {postAbout[2] && (
-                <div 
-                onClick={() => handleClick(postAbout[2].postId)}
-                className="w-full h-[150px] sm:h-[200px] lg:h-1/2 relative overflow-hidden group cursor-pointer">
+                <div
+                  onClick={() => handleClick(postAbout[2].postId)}
+                  className="w-full h-[150px] sm:h-[200px] lg:h-1/2 relative overflow-hidden group cursor-pointer"
+                >
                   <img
                     src={postAbout[2].postImageUrl}
                     className="w-full h-full object-cover transition-transform duration-400 group-hover:scale-110"

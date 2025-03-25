@@ -75,7 +75,7 @@ const PostDetail = () => {
                 />
               </div>
 
-              <p className="text-lg text-gray-700 mt-6 leading-relaxed">
+              <p className="text-lg text-gray-700 mt-6 leading-relaxed" style={{ whiteSpace: "pre-wrap" }}>
                 {postDetail.postContent}
               </p>
             </div>

@@ -157,11 +157,11 @@ const Dashboard = () => {
 
   useEffect(() => {
     fetchOrder();
-    // const interval = setInterval(() => {
-    //   fetchOrder();
-    //   fetchProducts();
-    // }, 6000);
-    // return () => clearInterval(interval);
+    const interval = setInterval(() => {
+      fetchOrder();
+      fetchProducts();
+    }, 5000);
+    return () => clearInterval(interval);
   }, [loadOrder]);
 
   const fetchRevenue = async () => {

@@ -207,8 +207,9 @@ const ProductDetail = () => {
                       : "hover:bg-green-500 hover:text-white"
                   }`}
                 >
-                  {variant.value}
-                  {variant.unitName}
+                  {variant.value} {"("}
+                  {variant.unitName} 
+                  {")"}
                 </span>
               ))}
             </div>

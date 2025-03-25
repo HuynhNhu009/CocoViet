@@ -13,7 +13,7 @@ const PostItem = ({ post, isEdit, setPost, deletePost }) => {
       <div className="flex flex-col gap-2 ml-4 flex-1 p-2">
         <p className="text-xl uppercase font-bold">{post.postTitle}</p>
         <div className="overflow-hidden">
-          <p className="text-base text-justify ">{post.postContent}</p>{" "}
+          <p className="text-base text-justify " style={{ whiteSpace: "pre-wrap" }}>{post.postContent}</p>{" "}
           {/* Allows 5 lines, then ellipsis */}
         </div>
         <div className="flex justify-end mt-auto gap-4">
