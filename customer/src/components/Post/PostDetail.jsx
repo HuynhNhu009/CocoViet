@@ -16,6 +16,7 @@ const PostDetail = () => {
     }, 500);
     return () => clearTimeout(timer);
   }, []);
+  
   useEffect(() => {
     if (!postDetail || Object.keys(postDetail).length === 0) {
       const fetchPost = async () => {

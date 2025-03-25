@@ -1,3 +1,5 @@
+import { motion } from "framer-motion";
+
 const PostCard = ({ post }) => {
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -9,6 +11,13 @@ const PostCard = ({ post }) => {
   };
 
   return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+      className="cursor-pointer"
+    >
     <div className="shadow rounded-md cursor-pointer transition-transform duration-300 hover:scale-105">
       <ul
         className="h-72 transition-opacity duration-700
@@ -33,6 +42,7 @@ const PostCard = ({ post }) => {
         </div>
       </ul>
     </div>
+    </motion.div>
   );
 };
 
