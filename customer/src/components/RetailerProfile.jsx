@@ -4,46 +4,44 @@ import { useNavigate, useParams } from "react-router-dom";
 import { setProductDetail } from "../redux/productSlice";
 import { productAPI } from "../services/productService";
 import ProductItem from "./Product/ProductItem";
+import PostCard from "./Post/PostCard";
 import { retailerAPI } from "../services/retailerService";
+import { postApi } from "../services/postService";
+import { setPostDetail } from "../redux/postSlice";
 
 const RetailerProfile = () => {
   const { retailerId } = useParams();
 
   const retailerProfile = useSelector((state) => state.ProductStore.retailer);
-  const retailerStore = useSelector((state) => state.ProductStore.retailerStore);
+  const retailerStore = useSelector(
+    (state) => state.ProductStore.retailerStore
+  );
   const productStore = useSelector((state) => state.ProductStore.productStore);
   const [retailer, setRetailer] = useState();
+  const [active, setActive] = useState("products");
   const [product, setProduct] = useState([]);
+  const [posts, setPosts] = useState([]);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const filter = [
+    {
+      id: "products",
+      name: "Sản phẩm",
+    },
+    {
+      id: "posts",
+      name: "Bài viết",
+    },
+  ];
 
   useEffect(() => {
     if (!retailerProfile || Object.keys(retailerProfile).length === 0) {
       const fetchRetailer = async () => {
         try {
           const response = await retailerAPI.getByRetailerId(retailerId);
-          if(response){            
+          if (response) {
             setRetailer(response.data);
-            const fetchProducts = async () => {
-              try {
-                const products = await productAPI.getProductByRetailerId(
-                  retailerId
-                );
-      
-                if (products) {
-                  const filters = products.data.filter(
-                    (item) => item.status === "ENABLE"
-                  );
-                  setProduct(filters);
-                }
-              } catch (error) {
-                console.error("Error fetching products:", error);
-              }
-            };
-      
-            fetchProducts();
           }
-          
         } catch (error) {
           console.error("Lỗi khi lấy thông tin sản phẩm:", error);
         }
@@ -52,7 +50,36 @@ const RetailerProfile = () => {
     } else {
       setRetailer(retailerProfile);
     }
-  }, [retailerProfile, productStore, dispatch, retailerId, retailerStore]);
+  }, [retailerProfile, dispatch, retailerId, retailerStore]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!retailerId) return;
+      try {
+        if (active === "products") {
+          const products = await productAPI.getProductByRetailerId(retailerId);
+          if (products) {
+            const filters = products.data.filter(
+              (item) => item.status === "ENABLE"
+            );
+            setProduct(filters);
+            console.log("filte-pro", filters);
+          }
+        } else if (active === "posts") {
+          const posts = await postApi.getPostByRetailerId(retailerId);
+          if (posts) {
+            console.log("filte-post", posts.data);
+
+            setPosts(posts.data);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, [active, retailerId]);
 
   useEffect(() => {
     if (retailerProfile) {
@@ -92,6 +119,18 @@ const RetailerProfile = () => {
       console.log("Product not found!");
     }
   };
+
+   const navigatePostDetail = (postId) => {
+      const findByPostId = posts.find((item) => item.postId === postId);
+  
+      if (findByPostId) {
+        dispatch(setPostDetail({}));
+        navigate(`/posts/${postId}`);
+      } else {
+        console.log("Post not found!");
+      }
+    };
+  
 
   return (
     <div className="max-w-6xl mx-auto p-5 font-sans">
@@ -142,22 +181,53 @@ const RetailerProfile = () => {
       </section>
 
       <div>
-        <h2 className="text text-green-700 uppercase ">Sản phẩm</h2>
+        <div className="flex ">
+          {filter.map((item) => (
+            <h2
+              key={item.id}
+              onClick={() => setActive(item.id)}
+              className={`text cursor-pointer w-25 text-center text-green-700 uppercase  px-2
+            ${active === item.id ? "bg-green-700 text-white " : ""}
+          `}
+            >
+              {item.name}
+            </h2>
+          ))}
+        </div>
         <hr className="mb-8 border-green-700"></hr>
       </div>
-      <div className="productItem align-middle grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 m-0">
-        {product.length > 0 ? (
-          product.map((item, index) => (
-            <div key={index} onClick={() => handleNavigate(item.productId)}>
-              <ProductItem
-                productId={item.productId}
-                productName={item.productName}
-                retailerName={item.retailerName}
-                variants={item.variants || []}
-                productImage={item.productImage || []}
-              />
+      <div>
+        {active === "products" ? (
+          product.length > 0 ? (
+            <div className="productItem align-middle grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 m-0">
+              {product.map((item, index) => (
+                <div key={index} onClick={() => handleNavigate(item.productId)}>
+                  <ProductItem
+                    productId={item.productId}
+                    productName={item.productName}
+                    retailerName={item.retailerName}
+                    variants={item.variants || []}
+                    productImage={item.productImage || []}
+                  />
+                </div>
+              ))}
             </div>
-          ))
+          ) : (
+            <p className="text-center text-gray-500">
+              Không có sản phẩm nào trong danh mục này.
+            </p>
+          )
+        ) : posts.length > 0 ? (
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 m-0">
+            {posts.map((item) => (
+              <div
+                key={item.postId}
+                onClick={() => navigatePostDetail(item.postId)}
+              >
+                <PostCard post={item} />
+              </div>
+            ))}
+          </div>
         ) : (
           <p className="text-center text-gray-500">
             Không có sản phẩm nào trong danh mục này.

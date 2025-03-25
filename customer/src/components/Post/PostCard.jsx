@@ -1,3 +1,5 @@
+import { motion } from "framer-motion";
+
 const PostCard = ({ post }) => {
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -9,33 +11,38 @@ const PostCard = ({ post }) => {
   };
 
   return (
-    <div className="bg-gray-100 pb-[20px] px-[20px] mx-[10px] my-[10px] shadow rounded-md cursor-pointer transition-transform duration-300 hover:scale-105">
-      <div>
-        <img
-          src={
-            post.postImageUrl
-              ? post.postImageUrl
-              : `https://api.dicebear.com/9.x/thumbs/svg`
-          }
-          alt="Người bán"
-          className="w-full h-[200px] object-cover pt-5 rounded-tl-md rounded-tr-md"
-        />
-        <div className="mx-[10px]">
-          <h3 className="text-lg font-bold truncate-text line-clamp-2 ">
-            {post.postTitle}
-          </h3>
-          <div className="flex flex-col mt-[5px]">
-            <h4 className="text-base text-gray-600 text-left truncate-text w-50 line-clamp-1 opacity-70">
-              Tác giả: {post.authorPost}
-            </h4>
-            <h4 className="text-sm text-right w-full mt-[5px] mr-[2px] opacity-60">
-              {post.publishTime?.split("T")[0].split("-").reverse().join("/") ||
-                "N/A"}
-            </h4>
-          </div>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+      className="cursor-pointer"
+    >
+    <div className="shadow rounded-md cursor-pointer transition-transform duration-300 hover:scale-105">
+      <ul
+        className="h-72 transition-opacity duration-700
+        text-black flex flex-col bg-gray-50 hover:border-green-500 hover:border-1 group"
+      >
+        <li className="h-48 w-full">
+          <img
+            src={post?.postImageUrl}
+            alt={`Product ${55}`}
+            className="w-full h-full object-cover"
+          />
+        </li>
+        <div className="p-2 h-25">
+          <p className="h-10 sm:text-sm text-sm font-semibold max-w-full line-clamp-2 group-hover:text-green-600">
+            {post?.postTitle}
+          </p>
+          <p className="font-light h-5 text-sm mt-2">{post?.authorPost}</p>
+          <p className="font-extralight text-xs h-4 text-right pr-2">
+            {post?.publishTime?.split("T")[0].split("-").reverse().join("/") ||
+              "N/A"}
+          </p>
         </div>
-      </div>
+      </ul>
     </div>
+    </motion.div>
   );
 };
 

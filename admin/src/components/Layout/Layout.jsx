@@ -12,11 +12,11 @@ const Layout = () => {
       <Navbar />
       <div className="flex mt-3">
         <Sidebar />
-        <div className=" mx-3 shadow-2xl rounded-md flex-1 bg-gray-50">
+        <div className=" ml-70 shadow-2xl rounded-md flex-1 bg-gray-50">
         {isLogin ? (
           <Outlet />
         ) : (
-          <p>dang nhap</p>
+          <p>Login</p>
         )}
           
         </div>
