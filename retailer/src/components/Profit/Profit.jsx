@@ -26,17 +26,15 @@ const Profit = () => {
   const orderStore = useSelector((state) => state.RetailerStore.orderStore);
   const statusStore = useSelector((state) => state.RetailerStore.statusStore);
   const revenueStore = useSelector((state) => state.RetailerStore.revenueStore);
-  const [countProduct, setcountProduct] = useState();
+  const [countProduct, setCountProduct] = useState(0);
   const [productName, setProductName] = useState("");
   const [orderStats, setOrderStats] = useState([]);
-  const [orders, setOrders] = useState();
-  const [revenue, setRevenue] = useState();
-
-  const ordersChart = [{ orderDate: "", totalQuantity: null }];
+  const [orders, setOrders] = useState([]);
+  const [revenue, setRevenue] = useState(null);
 
   useEffect(() => {
-    if (products != []) {
-      setcountProduct(products.length);
+    if (products && products.length > 0) {
+      setCountProduct(products.length);
     }
   }, [products]);
 
@@ -60,21 +58,20 @@ const Profit = () => {
       }));
 
       if (matchingProducts.length > 1) {
-        const top1 = matchingProducts.slice(1);
+        const top1 = matchingProducts.slice(1, 2);
         if (top1 && top1.length > 0) {
           setProductName(top1[0].productName);
         }
-      } else {
+      } else if (matchingProducts.length === 1) {
         setProductName(matchingProducts[0].productName);
+      } else {
+        setProductName("");
       }
-      console.log("top3", top3);
-      console.log("matchingProducts", matchingProducts);
-      console.log("revenueStore.bestSellingProduct", revenueStore.bestSellingProduct);
-      
 
       setOrderStats(orderTop);
     } else {
-      console.log("Không có sản phẩm bán chạy.");
+      setProductName("");
+      setOrderStats([]);
     }
   }, [revenueStore, products]);
 
@@ -85,7 +82,7 @@ const Profit = () => {
       );
       const filteredResults = orderStore.filter((item) =>
         item.receiptDetails.some(
-          (detail) => detail.statusName === getStatus.statusName
+          (detail) => detail.statusName === getStatus?.statusName
         )
       );
 
@@ -131,51 +128,56 @@ const Profit = () => {
     }));
   };
 
-  console.log("ord", orderStats);
-  
   const orderData = processData(orders);
 
   return (
-    <div className="px-6 grid grid-cols-4 gap-4 ">
-      <div className="col-span-1 flex items-center items-center p-4 border-gray-400 rounded-lg shadow-md  ">
-        <ShoppingCartIcon className="text-blue-600 size-12" />
-        <div className="ml-8">
-          <p className="text-lg font-bold">Tổng đơn hàng</p>
-          <p className="text-xl font-semibold text-blue-600">
+    <div className="px-2 sm:px-4 md:px-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+      {/* Overview Cards - Responsive Layout */}
+      <div className="sm:col-span-1 md:col-span-1 flex items-center p-4 bg-white border border-gray-200 rounded-lg shadow-md">
+        <ShoppingCartIcon className="text-blue-600 w-10 sm:w-12 h-10 sm:h-12" />
+        <div className="ml-4 sm:ml-8">
+          <p className="text-base sm:text-lg font-bold">Tổng đơn hàng</p>
+          <p className="text-lg sm:text-xl font-semibold text-blue-600">
             {revenue ? revenue.countOrder : 0}
           </p>
         </div>
       </div>
-      <div className="col-span-1 flex items-center p-4 border-gray-400 rounded-lg shadow-md">
-        <CurrencyDollarIcon className="text-yellow-500 size-12" />
-        <div className="ml-8">
-          <p className="text-lg font-bold ">Tổng lợi nhuận</p>
-          <p className="text-xl font-semibold  text-yellow-500">
-          ₫{(new Intl.NumberFormat("vi-VN").format(revenue ? revenue.totalRevenue : 0))}
+
+      <div className="sm:col-span-1 md:col-span-1 flex items-center p-4 bg-white border border-gray-200 rounded-lg shadow-md">
+        <CurrencyDollarIcon className="text-yellow-500 w-10 sm:w-12 h-10 sm:h-12" />
+        <div className="ml-4 sm:ml-8">
+          <p className="text-base sm:text-lg font-bold">Tổng lợi nhuận</p>
+          <p className="text-lg sm:text-xl font-semibold text-yellow-500">
+            ₫{revenue && new Intl.NumberFormat("vi-VN").format(revenue.totalRevenue)}
           </p>
-        </div>
-      </div>
-      <div className="col-span-1 flex items-center p-4 border-gray-400 rounded-lg shadow-md">
-        <ChartBarIcon className=" text-red-500 size-12" />
-        <div className="ml-8">
-          <p className="text-lg font-bold ">Bán chạy nhất</p>
-          <p className="font-semibold text-xl text-red-500 font-bold">
-            {productName}
-          </p>
-        </div>
-      </div>
-      <div className="col-span-1 flex items-center p-4 border-gray-400 rounded-lg shadow-md">
-        <CubeIcon className="text-green-600 size-12" />
-        <div className="ml-8">
-          <p className="text-lg font-bold ">Tổng sản phẩm</p>
-          <p className="text-xl font-semibold text-green-600">{countProduct}</p>
         </div>
       </div>
 
-      <div className="col-span-2 p-4 border-gray-400 mb-5 rounded-lg shadow-md">
-        <p className="text-lg font-bold">Số lượng đơn hàng theo giờ</p>
-        {orders ? (
-          <ResponsiveContainer width="100%" height={300}>
+      <div className="sm:col-span-1 md:col-span-1 flex items-center p-4 bg-white border border-gray-200 rounded-lg shadow-md">
+        <ChartBarIcon className="text-red-500 w-10 sm:w-12 h-10 sm:h-12" />
+        <div className="ml-4 sm:ml-8">
+          <p className="text-base sm:text-lg font-bold">Bán chạy nhất</p>
+          <p className="font-semibold text-lg sm:text-xl text-red-500 min-h-10">
+            {productName || "Chưa có"}
+          </p>
+        </div>
+      </div>
+
+      <div className="sm:col-span-1 md:col-span-1 flex items-center p-4 bg-white border border-gray-200 rounded-lg shadow-md">
+        <CubeIcon className="text-green-600 w-10 sm:w-12 h-10 sm:h-12" />
+        <div className="ml-4 sm:ml-8">
+          <p className="text-base sm:text-lg font-bold">Tổng sản phẩm</p>
+          <p className="text-lg sm:text-xl font-semibold text-green-600">
+            {countProduct || 0}
+          </p>
+        </div>
+      </div>
+
+      {/* Charts - Responsive Layout */}
+      <div className="col-span-1 sm:col-span-2 md:col-span-2 p-4 bg-white border border-gray-200 rounded-lg shadow-md">
+        <p className="text-base sm:text-lg font-bold mb-2">Số lượng đơn hàng theo giờ</p>
+        {orders && orders.length > 0 ? (
+          <ResponsiveContainer width="100%" height={250}>
             <LineChart data={orderData}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="hour" />
@@ -197,54 +199,38 @@ const Profit = () => {
             </LineChart>
           </ResponsiveContainer>
         ) : (
-          <ResponsiveContainer width="100%" height={300}>
-            <LineChart>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="hour" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Line
-                type="monotone"
-                dataKey="todayOrders"
-                stroke="#2196F3"
-                name="Hôm nay"
-              />
-              <Line
-                type="monotone"
-                dataKey="yesterdayOrders"
-                stroke="#000"
-                name="Hôm qua"
-              />
-            </LineChart>
-          </ResponsiveContainer>
+          <div className="text-center mt-[25%]">Không có dữ liệu</div>
         )}
       </div>
 
-      <div className=" border-gray-400 rounded-lg shadow-md mb-5 col-span-2 p-4">
-        <p className="text-lg text-center font-bold uppercase">
+      <div className="col-span-1 sm:col-span-2 md:col-span-2 p-4 bg-white border border-gray-200 rounded-lg shadow-md">
+        <p className="text-base sm:text-lg text-center font-bold uppercase mb-2">
           Top 3 sản phẩm bán chạy
         </p>
-        <ResponsiveContainer width="100%" height={300}>
-          <PieChart>
-            <Pie
-              data={orderStats}
-              dataKey="totalSold"
-              nameKey="productName"
-              outerRadius={100}
-              label
-            >
-              {orderStats.map((entry, index) => (
-                <Cell
-                  key={`cell-${index}`}
-                  fill={["#E79833", "#4C300A", "#00A63E"][index]}
-                />
-              ))}
-            </Pie>
-            <Tooltip />
-            <Legend />
-          </PieChart>
-        </ResponsiveContainer>
+        {orderStats && orderStats.length > 0 ? (
+          <ResponsiveContainer width="100%" height={250}>
+            <PieChart>
+              <Pie
+                data={orderStats}
+                dataKey="totalSold"
+                nameKey="productName"
+                outerRadius={80}
+                label
+              >
+                {orderStats.map((entry, index) => (
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={["#E79833", "#4C300A", "#00A63E"][index]}
+                  />
+                ))}
+              </Pie>
+              <Tooltip />
+              <Legend />
+            </PieChart>
+          </ResponsiveContainer>
+        ) : (
+          <div className="text-center mt-[25%]">Không có dữ liệu</div>
+        )}
       </div>
     </div>
   );
