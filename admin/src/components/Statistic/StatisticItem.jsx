@@ -166,47 +166,51 @@ const StatisticItem = () => {
   const orderData = processData(orders);
 
   return (
-    <div className="px-6 grid grid-cols-4 gap-4">
-      <div className="col-span-1 flex items-center items-center p-4 border-gray-400 rounded-lg shadow-md  ">
-        <ShoppingCartIcon className="text-blue-600 size-12" />
-        <div className="ml-8">
-          <p className="text-lg font-bold">Tổng đơn hàng</p>
-          <p className="text-xl font-semibold text-blue-600">
+    <div className="px-2 sm:px-4 md:px-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+      {/* Overview Cards - Responsive Layout */}
+      <div className="sm:col-span-1 md:col-span-1 flex items-center p-4 bg-white border border-gray-200 rounded-lg shadow-md">
+        <ShoppingCartIcon className="text-blue-600 w-10 sm:w-12 h-10 sm:h-12" />
+        <div className="ml-4 sm:ml-8">
+          <p className="text-base sm:text-lg font-bold">Tổng đơn hàng</p>
+          <p className="text-lg sm:text-xl font-semibold text-blue-600">
             {revenue?.countOrder}
           </p>
         </div>
       </div>
-      <div className="col-span-1 flex items-center p-4 border-gray-400 rounded-lg shadow-md">
-        <CurrencyDollarIcon className="text-yellow-500 size-12" />
-        <div className="ml-8">
-          <p className="text-lg font-bold ">Tổng lợi nhuận</p>
-          <p className="text-xl font-semibold  text-yellow-500">
-          ₫{(revenue?.totalRevenue) && (new Intl.NumberFormat("vi-VN").format(revenue?.totalRevenue))} 
+
+      <div className="sm:col-span-1 md:col-span-1 flex items-center p-4 bg-white border border-gray-200 rounded-lg shadow-md">
+        <CurrencyDollarIcon className="text-yellow-500 w-10 sm:w-12 h-10 sm:h-12" />
+        <div className="ml-4 sm:ml-8">
+          <p className="text-base sm:text-lg font-bold">Tổng lợi nhuận</p>
+          <p className="text-lg sm:text-xl font-semibold text-yellow-500">
+            ₫{(revenue?.totalRevenue) && (new Intl.NumberFormat("vi-VN").format(revenue?.totalRevenue))} 
           </p>
         </div>
       </div>
 
-      <div className="col-span-1 flex items-center p-4 border-gray-400 rounded-lg shadow-md">
-        <CubeIcon className="text-green-600 size-12" />
-        <div className="ml-8">
-          <p className="text-lg font-bold ">Tổng sản phẩm</p>
-          <p className="text-xl font-semibold text-green-600">{totalProduct}</p>
+      <div className="sm:col-span-1 md:col-span-1 flex items-center p-4 bg-white border border-gray-200 rounded-lg shadow-md">
+        <CubeIcon className="text-green-600 w-10 sm:w-12 h-10 sm:h-12" />
+        <div className="ml-4 sm:ml-8">
+          <p className="text-base sm:text-lg font-bold">Tổng sản phẩm</p>
+          <p className="text-lg sm:text-xl font-semibold text-green-600">{totalProduct}</p>
         </div>
       </div>
-      <div className="col-span-1 flex items-center p-4 border-gray-400 rounded-lg shadow-md">
-        <ChartBarIcon className=" text-red-500 size-12" />
-        <div className="ml-8">
-          <p className="text-lg font-bold ">Bán chạy nhất</p>
-          <p className="font-semibold text-xl text-red-500 min-h-10">
+
+      <div className="sm:col-span-1 md:col-span-1 flex items-center p-4 bg-white border border-gray-200 rounded-lg shadow-md">
+        <ChartBarIcon className="text-red-500 w-10 sm:w-12 h-10 sm:h-12" />
+        <div className="ml-4 sm:ml-8">
+          <p className="text-base sm:text-lg font-bold">Bán chạy nhất</p>
+          <p className="font-semibold text-lg sm:text-xl text-red-500 min-h-10">
             {productName}
           </p>
         </div>
       </div>
 
-      <div className="col-span-2 p-4 h-100 border-gray-400 mb-5 rounded-lg shadow-md">
-        <p className="text-lg font-bold">Số lượng đơn hàng theo giờ</p>
+      {/* Charts - Responsive Layout */}
+      <div className="col-span-1 sm:col-span-2 md:col-span-2 p-4 bg-white border border-gray-200 rounded-lg shadow-md">
+        <p className="text-base sm:text-lg font-bold mb-2">Số lượng đơn hàng theo giờ</p>
         {orders && orders.length > 0 ? (
-          <ResponsiveContainer width="100%" height={300}>
+          <ResponsiveContainer width="100%" height={250}>
             <LineChart data={orderData}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="hour" />
@@ -232,18 +236,18 @@ const StatisticItem = () => {
         )}
       </div>
 
-      <div className=" border-gray-400 rounded-lg shadow-md mb-5 col-span-2 p-4">
-        <p className="text-lg text-center font-bold uppercase">
+      <div className="col-span-1 sm:col-span-2 md:col-span-2 p-4 bg-white border border-gray-200 rounded-lg shadow-md">
+        <p className="text-base sm:text-lg text-center font-bold uppercase mb-2">
           Top 3 sản phẩm bán chạy
         </p>
         {orderStats && orderStats.length > 0 ? (
-          <ResponsiveContainer width="100%" height={300}>
+          <ResponsiveContainer width="100%" height={250}>
             <PieChart>
               <Pie
                 data={orderStats}
                 dataKey="totalSold"
                 nameKey="productName"
-                outerRadius={100}
+                outerRadius={80}
                 label
               >
                 {orderStats.map((entry, index) => (

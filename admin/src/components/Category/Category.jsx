@@ -34,6 +34,7 @@ const Category = () => {
   const toggleAddCategory = () => {
     setAddCate(!addCate);
     setNewCategory("");
+    setError("");
   };
 
   const handleAddCategory = async () => {
@@ -82,10 +83,10 @@ const Category = () => {
   };
 
   return (
-    <>
-      <div
+    <div className="w-full overflow-x-auto">
+      <div 
         className="border-2 mb-2 py-1 text-center rounded-2xl shadow-gray-300 shadow-md
-      hover:bg-black hover:text-white cursor-pointer"
+        hover:bg-black hover:text-white cursor-pointer"
         onClick={toggleAddCategory}
       >
         <p>Thêm danh mục +</p>
@@ -96,11 +97,14 @@ const Category = () => {
           <input
             type="text"
             value={newCategory}
-            onChange={(e) => setNewCategory(e.target.value)}
+            onChange={(e) => {
+              setNewCategory(e.target.value);
+              setError("");
+            }}
             className="border p-1 rounded mb-3 w-full"
             placeholder="Nhập danh mục mới"
           />
-          {error && <p className="text-red-500">{error}</p>}
+          {error && <p className="text-red-500 mb-2">{error}</p>}
           <div className="flex justify-center">
             <button
               className="bg-green-500 text-white px-3 py-1 mx-1 rounded-md"
@@ -118,7 +122,48 @@ const Category = () => {
         </div>
       )}
 
-      <table className="w-full border-collapse">
+      {/* Mobile/Tablet View */}
+      <div className="block md:hidden">
+        {categories.length > 0 ? (
+          categories.map((item, index) => (
+            <div 
+              key={item.categoryId || index} 
+              className="bg-white shadow-md rounded-lg mb-4 p-4 border"
+            >
+              <div className="flex justify-between items-center mb-2">
+                <span className="font-bold text-sm">#{index + 1}</span>
+                <button 
+                  onClick={() => deleteCategory(item.categoryId, item.categoryName)}
+                  className="bg-red-500 text-white px-3 py-1 rounded-md text-xs"
+                >
+                  Xóa
+                </button>
+              </div>
+
+              <div className="space-y-2">
+                <div>
+                  <p className="text-xs text-gray-500">Tên danh mục</p>
+                  <p className="font-semibold">{item.categoryName}</p>
+                </div>
+
+                <div>
+                  <p className="text-xs text-gray-500">Số sản phẩm</p>
+                  <p>{categoryCount[item.categoryName] || 0}</p>
+                </div>
+              </div>
+            </div>
+          ))
+        ) : (
+          <div className="text-center text-gray-500 p-4">
+            Không có danh mục nào.
+          </div>
+        )}
+      </div>
+
+      {/* Desktop View */}
+      <table 
+        className="w-full border-collapse hidden md:table"
+      >
         <thead>
           <tr className="text-center bg-black text-white uppercase">
             <th className="p-3 text-sm">STT</th>
@@ -130,7 +175,10 @@ const Category = () => {
         <tbody>
           {categories.length > 0 ? (
             categories.map((item, index) => (
-              <tr key={index} className="text-center">
+              <tr 
+                key={item.categoryId || index} 
+                className="text-center hover:bg-gray-100"
+              >
                 <td className="p-1">{index + 1}</td>
                 <td className="p-1">{item.categoryName}</td>
                 <td className="p-1">{categoryCount[item.categoryName] || 0}</td>
@@ -148,14 +196,14 @@ const Category = () => {
             ))
           ) : (
             <tr>
-              <td colSpan={4} className="text-center">
-                Không có dữ liệu
+              <td colSpan={4} className="text-center text-gray-500 p-3">
+                Không có danh mục nào.
               </td>
             </tr>
           )}
         </tbody>
       </table>
-    </>
+    </div>
   );
 };
 

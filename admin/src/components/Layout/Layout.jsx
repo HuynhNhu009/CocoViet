@@ -12,13 +12,8 @@ const Layout = () => {
       <Navbar />
       <div className="flex mt-3">
         <Sidebar />
-        <div className=" ml-70 shadow-2xl rounded-md flex-1 bg-gray-50">
-        {isLogin ? (
+        <div className=" ml-3 shadow-2xl rounded-md flex-1 bg-gray-50">
           <Outlet />
-        ) : (
-          <p>Login</p>
-        )}
-          
         </div>
       </div>
     </div>

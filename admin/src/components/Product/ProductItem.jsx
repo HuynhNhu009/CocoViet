@@ -5,7 +5,7 @@ import { setLoadingAPI } from "../../redux/adminSlice";
 
 const ProductItem = ({ products }) => {
   const [selectedProduct, setSelectedProduct] = useState(null);
-  const [saveProduct,setSaveProduct] = useState([]);
+  const [saveProduct, setSaveProduct] = useState([]);
   const dispatch = useDispatch();
 
   const handleRowClick = (productId) => {
@@ -23,18 +23,163 @@ const ProductItem = ({ products }) => {
     if (products) {
       const timeout = setTimeout(() => {
         setSaveProduct(products);
-      }, 200); 
+      }, 200);
   
       return () => clearTimeout(timeout); 
     }
   }, [products]);
   
-  
   return (
-    <>
+    <div className="w-full overflow-x-auto">
+      {/* Mobile/Tablet View */}
+      <div className="block md:hidden">
+        {saveProduct?.length > 0 ? (
+          saveProduct?.map((product, index) => (
+            <div 
+              key={product.productId} 
+              className="bg-white shadow-md rounded-lg mb-4 p-4 border"
+            >
+              <div className="flex items-center mb-4">
+                <img
+                  src={product.productImage}
+                  alt={product.productName}
+                  className="w-20 h-20 object-cover rounded-xl mr-4"
+                />
+                <div>
+                  <h3 className="font-bold text-sm truncate max-w-[200px]">
+                    {product.productName}
+                  </h3>
+                  <p className="text-xs text-gray-600">
+                    {product.retailerName}
+                  </p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-2 mb-4">
+                <div>
+                  <p className="text-xs text-gray-500">Ngày đăng</p>
+                  <p className="text-sm">
+                    {product.createdAt
+                      ?.split("T")[0]
+                      .split("-")
+                      .reverse()
+                      .join("/") || "N/A"}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-xs text-gray-500">Trạng thái</p>
+                  <select
+                    value={product.status}
+                    onChange={(e) =>
+                      handleChangeStatus(product.productId, e.target.value)
+                    }
+                    disabled={product.status === "ENABLE" || product.status === "BLOCK" ||  product.status === "PAUSE"}
+                    className={`w-full py-1 rounded-md shadow-md text-white text-center cursor-pointer text-sm ${
+                      product.status === "ENABLE"
+                        ? "bg-green-500 appearance-none"
+                        : product.status === "DISABLE"
+                        ? "bg-yellow-500"
+                        : product.status === "PAUSE"
+                        ? "bg-gray-500 appearance-none"
+                        : product.status === "BLOCK"
+                         ? "bg-red-500 appearance-none"
+                         : ""
+                    }`}
+                  >
+                    {/* Status options remain the same as in the original code */}
+                    {product.status === "ENABLE" && (
+                      <option value="ENABLE" className="bg-green-500">
+                        Được bán
+                      </option>
+                    )}
+                    {product.status === "DISABLE" && (
+                      <>
+                        <option value="DISABLE" className="bg-yellow-500">
+                          Chờ duyệt
+                        </option>
+                        <option value="ENABLE" className="bg-green-500">
+                          Được bán
+                        </option>
+                        <option value="BLOCK" className="bg-red-500">
+                          Vi phạm
+                        </option>
+                      </>
+                    )}
+                    {product.status === "PAUSE" && (
+                      <option value="PAUSE" className="bg-gray-500">
+                        Tạm ngừng
+                      </option>
+                    )}
+                    {product.status === "BLOCK" && (
+                      <option value="BLOCK" className="bg-red-500">
+                        Vi phạm
+                      </option>
+                    )}
+                  </select>
+                </div>
+              </div>
+
+              <div 
+                onClick={() => handleRowClick(product.productId)}
+                className="text-center bg-blue-50 py-2 rounded-md cursor-pointer"
+              >
+                {selectedProduct === product.productId ? "Ẩn chi tiết" : "Xem chi tiết"}
+              </div>
+
+              {selectedProduct === product.productId && (
+                <div className="mt-4 bg-gray-100 p-3 rounded-md text-sm">
+                  <p className="font-bold text-center mb-2">Chi tiết sản phẩm:</p>
+                  
+                  <div className="mb-2">
+                    <span className="font-semibold">Nguồn gốc: </span>
+                    <span>{product.productOrigin}</span>
+                  </div>
+                  
+                  <div className="mb-2">
+                    <span className="font-semibold">Danh mục: </span>
+                    {Array.isArray(product.categoryName) &&
+                      product.categoryName.map((item, index) => (
+                        <p key={index} className="pl-2">
+                          - {item}
+                        </p>
+                      ))}
+                  </div>
+                  
+                  <div className="mb-2">
+                    <span className="font-semibold">Mô tả: </span>
+                    <span>{product.productDesc}</span>
+                  </div>
+                  
+                  <div>
+                    <p className="font-semibold">Loại: </p>
+                    {product.variants?.map((variant, vIndex) => (
+                      <p
+                        key={vIndex}
+                        className="pl-2"
+                      >
+                        - {variant.value}
+                        {variant.unitName}: ₫
+                        {new Intl.NumberFormat("vi-VN").format(
+                          variant.price
+                        )}
+                      </p>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          ))
+        ) : (
+          <div className="text-center text-gray-500 p-4">
+            Không có sản phẩm nào.
+          </div>
+        )}
+      </div>
+
+      {/* Desktop View */}
       <table
+        className="w-full border-collapse table-fixed min-w-full hidden md:table"
         title="Xem chi tiết"
-        className="w-full border-collapse table-fixed min-w-full"
       >
         <thead>
           <tr className="text-center bg-black text-white uppercase">
@@ -47,6 +192,7 @@ const ProductItem = ({ products }) => {
           </tr>
         </thead>
         <tbody>
+          {/* Existing desktop table body code remains the same as in the original component */}
           {saveProduct?.length > 0 ? (
             saveProduct?.map((product, index) => (
               <React.Fragment key={product.productId}>
@@ -56,6 +202,7 @@ const ProductItem = ({ products }) => {
                   }`}
                   onClick={() => handleRowClick(product.productId)}
                 >
+                  {/* Existing table row content remains unchanged */}
                   <td className="p-1 text-center">{index + 1}</td>
                   <td className="flex pl-5 items-center text-center gap-2">
                     <img
@@ -85,7 +232,6 @@ const ProductItem = ({ products }) => {
                         handleChangeStatus(product.productId, e.target.value)
                       }
                       disabled={product.status === "ENABLE" || product.status === "BLOCK" ||  product.status === "PAUSE"}
-                      //hidden detaileProducts
                       onClick={(e) => e.stopPropagation()}
                       className={`py-1 w-24 rounded-md shadow-md text-white text-center cursor-pointer ${
                         product.status === "ENABLE"
@@ -95,17 +241,15 @@ const ProductItem = ({ products }) => {
                           : product.status === "PAUSE"
                           ? "bg-gray-500 appearance-none"
                           : product.status === "BLOCK"
-                           ?"bg-red-500 appearance-none"
-                           :""
+                           ? "bg-red-500 appearance-none"
+                           : ""
                       }`}
                     >
+                      {/* Status options remain the same as in the original code */}
                       {product.status === "ENABLE" && (
-                        <>
-                          <option value="ENABLE" className="bg-green-500">
-                            Được bán
-                          </option>
-                          
-                        </>
+                        <option value="ENABLE" className="bg-green-500">
+                          Được bán
+                        </option>
                       )}
                       {product.status === "DISABLE" && (
                         <>
@@ -121,12 +265,9 @@ const ProductItem = ({ products }) => {
                         </>
                       )}
                       {product.status === "PAUSE" && (
-                        <>
-                          <option value="PAUSE" className="bg-gray-500">
-                            Tạm ngừng
-                          </option>
-                          
-                        </>
+                        <option value="PAUSE" className="bg-gray-500">
+                          Tạm ngừng
+                        </option>
                       )}
                       {product.status === "BLOCK" && (
                         <option value="BLOCK" className="bg-red-500">
@@ -192,7 +333,7 @@ const ProductItem = ({ products }) => {
           )}
         </tbody>
       </table>
-    </>
+    </div>
   );
 };
 

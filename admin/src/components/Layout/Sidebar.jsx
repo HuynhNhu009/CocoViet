@@ -5,6 +5,8 @@ import {
   DocumentTextIcon,
   TagIcon,
   UsersIcon,
+  Bars3Icon,
+  XMarkIcon
 } from "@heroicons/react/24/outline";
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -53,6 +55,7 @@ const Sidebar = () => {
   const update = useSelector((state) => state.AdminStore.update);
   const loadingAPI = useSelector((state) => state.AdminStore.loadingAPI);
 
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const navItems = [
     {
       label: "Sản phẩm",
@@ -198,6 +201,11 @@ const Sidebar = () => {
       dispatch(setPostRetailerActive("allPost"));
     }
     navigate(path);
+    setIsMobileSidebarOpen(false);
+  };
+
+  const toggleMobileSidebar = () => {
+    setIsMobileSidebarOpen(!isMobileSidebarOpen);
   };
 
   const location = useLocation();
@@ -312,26 +320,66 @@ const Sidebar = () => {
         }
   }
   
-
   return (
     <>
-      {/* Sidebar cho mobile */}
-      {/* <div className="fixed z-20 inset-y-0 left-0 w-64 bg-white p-5 shadow-lg lg:hidden">
-        <div className="flex justify-between items-center pt-20 mb-6">
-          <h3 className="text-xl font-semibold text-gray-800">Menu</h3>
-        </div>
-        <nav className="flex flex-col gap-3">
+      {/* Hamburger Menu for Mobile and Tablet */}
+      <div className="lg:hidden fixed top-18 left-4 z-50">
+        <button 
+          onClick={toggleMobileSidebar} 
+          className="p-2 bg-gray-100 rounded-md"
+        >
+          {isMobileSidebarOpen ? <XMarkIcon className="size-4" /> : <Bars3Icon className="size-6" />}
+        </button>
+      </div>
+
+      {/* Mobile Sidebar */}
+      <div 
+        className={`
+          fixed top-15 left-0 h-full w-64 bg-white shadow-lg z-40 transform transition-transform duration-300 ease-in-out
+          lg:hidden
+          ${isMobileSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
+        `}
+      >
+        <nav className="flex flex-col gap-3 p-5 pt-16">
           {navItems.map((item, index) => (
-            <div key={index} className="flex items-center gap-2 py-2 px-4 bg-gray-100 rounded-md">
+            <div
+              key={index}
+              onClick={() => {
+                handleNavigate(item.path);
+                setsideBarActive(item.label);
+              }}
+              className={`flex items-center gap-2 py-3 px-4 bg-gray-100 
+                rounded-md cursor-pointer ${
+                  sideBarActive === item.label ? "bg-gray-950 text-white" : ""
+                }`}
+            >
               {item.icon}
               <span>{item.label}</span>
             </div>
           ))}
+          
+          <div 
+            onClick={() => logout()}
+            className="text-gray-300 rounded-md font-bold text-xs text-center py-2 bg-gray-900 cursor-pointer mt-10 hover:text-white"
+          >
+            <p>ĐĂNG XUẤT</p>
+          </div>
+          <div className="text-gray-500 text-xs text-center py-2">
+            Phiên bản: <span className="font-semibold">1.0.3</span>
+          </div>
         </nav>
-      </div> */}
+      </div>
 
-      {/* Sidebar cho desktop */}
-      <div className="fixed ml-3 h-[680px] hidden lg:block lg:w-64 flex-shrink-0 bg-white p-5 rounded-lg shadow-md">
+      {/* Overlay for mobile sidebar */}
+      {isMobileSidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-black opacity-50 z-30 lg:hidden"
+          onClick={toggleMobileSidebar}
+        ></div>
+      )}
+
+      {/* Existing Desktop Sidebar */}
+      <div className="sticky top-22 ml-3 h-[690px] hidden lg:block lg:w-64 flex-shrink-0 bg-white p-5 rounded-lg shadow-md">
         <nav className="flex flex-col gap-3 flex-grow">
           {navItems.map((item, index) => (
             <div
@@ -350,13 +398,12 @@ const Sidebar = () => {
           ))}
         </nav>
         <div 
-        onClick={() => logout()}
-        className="text-gray-300 rounded-md font-bold text-xs text-center py-2 bg-gray-900 cursor-pointer mt-60 hover:text-white">
-          <p>
-            ĐĂNG XUẤT
-          </p>
+          onClick={() => logout()}
+          className="text-gray-300 rounded-md font-bold text-xs text-center py-2 bg-gray-900 cursor-pointer mt-60 hover:text-white"
+        >
+          <p>ĐĂNG XUẤT</p>
         </div>
-        <div className="text-gray-500 text-xs text-center py-2  ">
+        <div className="text-gray-500 text-xs text-center py-2">
           Phiên bản: <span className="font-semibold">1.0.3</span>
         </div>
       </div>
