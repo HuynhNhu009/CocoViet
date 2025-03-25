@@ -13,5 +13,10 @@ export const postApi = {
     return response.data;
   },
 
+  getPostByRetailerId: async (retailerId) => {
+    const response = await api.get(`/posts?retailerId=${retailerId}`);
+    return response.data;
+  },
+
 
 };

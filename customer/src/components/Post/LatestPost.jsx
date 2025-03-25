@@ -29,7 +29,7 @@ const LatestPost = () => {
 
     return (
       latestPost ? (
-        <div className="lg:w-[78%] w-[80%] mx-auto mb-8">
+        <div className="lg:w-[80%] w-[80%] mx-auto mb-8">
           <div
             onClick={() => handleClick(latestPost?.postId)}
             className="relative w-full h-[320px] lg:h-[320px] rounded-lg overflow-hidden shadow-lg"

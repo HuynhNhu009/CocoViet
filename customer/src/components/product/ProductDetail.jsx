@@ -18,13 +18,18 @@ const ProductDetail = () => {
     (state) => state.OrderStore.sellingProduct
   );
   const dispatch = useDispatch();
-  const productDetail = useSelector((state) => state.ProductStore.productDetail);
-  const productStore = useSelector((state) => state.ProductStore.productStore || []);
-  const retailerStore = useSelector((state) => state.ProductStore.retailerStore);
+  const productDetail = useSelector(
+    (state) => state.ProductStore.productDetail
+  );
+  const productStore = useSelector(
+    (state) => state.ProductStore.productStore || []
+  );
+  const retailerStore = useSelector(
+    (state) => state.ProductStore.retailerStore
+  );
   const customer = useSelector((state) => state.CustomerStore.customer);
 
   const [selectVariant, setSelectVariant] = useState([]);
-  const [retailerProp, setRetailerProp] = useState();
   const [countSellingProduct, setCountSellingProduct] = useState(0);
 
   const [product, setProducts] = useState([]);
@@ -36,8 +41,7 @@ const ProductDetail = () => {
         quantity: "",
       },
     ],
-  };  
-
+  };
 
   useEffect(() => {
     if (
@@ -45,8 +49,8 @@ const ProductDetail = () => {
       productDetail &&
       productDetail.variants?.length > 0
     ) {
-      let variantId = selectVariant.variantId;      
-      
+      let variantId = selectVariant.variantId;
+
       if (variantId) {
         const count = sellingProduct.filter(
           (item) => item.productVariant.variantId === variantId
@@ -112,9 +116,23 @@ const ProductDetail = () => {
       dispatch(setCreateOrder(true));
       Swal.fire({
         title: "Thêm sản phẩm vào giỏ thành công!",
-        icon: "success",
+        position: "top",
         showConfirmButton: false,
-        timer: 1000,
+        timer: 1500,
+        willOpen: (popup) => {
+          popup.style.transform = "translateY(-50px)";
+          popup.style.opacity = "0";
+          setTimeout(() => {
+            popup.style.transition = "all 0.5s ease-out";
+            popup.style.transform = "translateY(0)";
+            popup.style.opacity = "1";
+          }, 10);
+        },
+        willClose: (popup) => {
+          popup.style.transition = "all 0.5s ease-out";
+          popup.style.transform = "translateY(-50px)";
+          popup.style.opacity = "0";
+        },
       });
     } else {
       //current path
@@ -142,16 +160,17 @@ const ProductDetail = () => {
     }
   };
 
-  const handleRetailerProfile = async() => {    
-    const getRetailer = retailerStore?.find((item) => 
-      item.retailerName.toLowerCase().trim() === productDetail.retailerName.toLowerCase().trim()
+  const handleRetailerProfile = async () => {
+    const getRetailer = retailerStore?.find(
+      (item) =>
+        item.retailerName.toLowerCase().trim() ===
+        productDetail.retailerName.toLowerCase().trim()
     );
-    if(getRetailer){
+    if (getRetailer) {
       await dispatch(setRetailerProfile(getRetailer));
-      setRetailerProp(getRetailer);
-    }    
-    navigate(`/retailer/${getRetailer.retailerId}`)
-  }
+    }
+    navigate(`/retailer/${getRetailer.retailerId}`);
+  };
 
   return (
     <div className="  flex flex-col justify-center align-middle font-medium px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw] my-8">
@@ -166,7 +185,7 @@ const ProductDetail = () => {
         <div className="box-image shadow-md w-[40%] border-2 rounded-xl border-green-600">
           <img
             src={product.productImage}
-            className="w-full object-center p-2 rounded-2xl"
+            className="w-full object-cover aspect-square p-2 rounded-2xl"
           />
         </div>
 
@@ -253,11 +272,12 @@ const ProductDetail = () => {
       </div>
 
       <div className="mx-auto my-10 w-[85%] ">
-        <div>
-          <p 
-          onClick={()=> handleRetailerProfile() }
-          title="Đến cửa hàng"
-          className="text-xl flex cursor-pointer font-bold">
+        <div className="">
+          <p
+            onClick={() => handleRetailerProfile()}
+            title="Đến cửa hàng"
+            className="text-xl hover:text-green-600 transition-all duration-300 ease-out  flex cursor-pointer font-bold"
+          >
             <BuildingStorefrontIcon class="h-7 w-7 mr-2" />
             {product.retailerName}
           </p>
