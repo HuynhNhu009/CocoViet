@@ -11,5 +11,5 @@ public interface IAdminService {
 
     AuthenticationDTO loginAdmin(AdminRequest adminRequest);
     ResponseEntity<?> introspectAdmin(HttpServletRequest httpServletRequest);
-    ResponseEntity<?> logout(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse);
+    void logout(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse);
 }

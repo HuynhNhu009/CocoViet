@@ -1,5 +1,7 @@
 package com.cocoviet.backend.utils;
 
+import com.cocoviet.backend.Enum.ErrorCode;
+import com.cocoviet.backend.exception.AppException;
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.MACVerifier;
@@ -57,7 +59,7 @@ public class AdminAuthen {
         if (signedJWT.verify(verifier) && expirationTime.after(new Date())) {
             return claimsSet;
         } else {
-            throw new RuntimeException("Token is invalid or expired");
+            throw new AppException(ErrorCode.TOKEN_EXPIRED);
         }
     }
 

@@ -45,8 +45,13 @@ public class AdminController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<?> logout(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
-        return  iAdminService.logout(httpServletRequest, httpServletResponse);
+    public ResponseEntity<ResponseData> logout(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
+        iAdminService.logout(httpServletRequest, httpServletResponse);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ResponseData.builder()
+                        .msg("Logout success")
+                        .status("OK")
+                        .build());
     }
 
 

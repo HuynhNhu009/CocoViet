@@ -1,5 +1,8 @@
 package com.cocoviet.backend.service.impl;
 
+import com.cloudinary.api.exceptions.ApiException;
+import com.cocoviet.backend.Enum.ErrorCode;
+import com.cocoviet.backend.exception.AppException;
 import com.cocoviet.backend.mapper.IAdminMapper;
 import com.cocoviet.backend.mapper.ICustomerMapper;
 import com.cocoviet.backend.mapper.IProductMapper;
@@ -83,56 +86,27 @@ public class AdminServiceImpl implements IAdminService {
         }
 
         if (jwt == null || jwt.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body(ResponseData.builder()
-                            .data(null)
-                            .msg("User not authenticated: No JWT found in cookie")
-                            .status("UNAUTHORIZED")
-                            .build());
+            throw new AppException(ErrorCode.UNAUTHENTICATED);
         }
-
         try {
             JWTClaimsSet claims = adminAuthen.introspectToken(jwt);
             String adminName = claims.getSubject();
-            Object customerInfo = adminRepository.findByAdminName(adminName);
+            AdminEntity adminInfo = adminRepository.findByAdminName(adminName);
+            AuthenticationDTO authenticationDTO = new AuthenticationDTO();
+            authenticationDTO.setInfo(adminMapper.toAdminDTO(adminInfo));
             return ResponseEntity.status(HttpStatus.OK)
                     .body(ResponseData.builder()
-                            .data(customerInfo)
+                            .data(authenticationDTO)
                             .msg("Check success")
                             .status("OK")
                             .build());
         } catch (Exception e) {
-            String errorMsg = e.getMessage();
-            if ("Token is invalid or expired".equals(errorMsg)) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED) // 401
-                        .body(ResponseData.builder()
-                                .data(null)
-                                .msg("Token is invalid or expired")
-                                .status("401")
-                                .build());
-            } else {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST) // 400 cho lỗi khác
-                        .body(ResponseData.builder()
-                                .data(null)
-                                .msg("Invalid token")
-                                .status("400")
-                                .build());
-            }
+            throw new AppException(ErrorCode.UNAUTHENTICATED);
         }
     }
 
     @Override
-    public  ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) {
-        String jwt = null;
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if ("jwt".equals(cookie.getName())) {
-                    jwt = cookie.getValue();
-                    break;
-                }
-            }
-        }
+    public void logout(HttpServletRequest request, HttpServletResponse response) {
 
         Cookie jwtCookie = new Cookie("jwt", null);
         jwtCookie.setHttpOnly(true);
@@ -140,21 +114,6 @@ public class AdminServiceImpl implements IAdminService {
         jwtCookie.setMaxAge(0);
         response.addCookie(jwtCookie);
 
-        if (jwt == null || jwt.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body(ResponseData.builder()
-                            .data(null)
-                            .msg("No active session to logout")
-                            .status("NO_SESSION")
-                            .build());
-        }
-
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(ResponseData.builder()
-                        .data(null)
-                        .msg("Logout success")
-                        .status("OK")
-                        .build());
     }
 
 }
