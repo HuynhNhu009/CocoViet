@@ -252,9 +252,9 @@ const ProductDetail = () => {
             {selectVariant?.stock > 0 ? (
               <button
                 onClick={buyProduct}
-                className=" cursor-pointer w-full bg-green-600 shadow-sm shadow-gray-400 p-3 rounded-2xl text-white text-base"
+                className=" cursor-pointer uppercase w-full bg-green-600 shadow-sm shadow-gray-400 p-3 rounded-2xl text-white text-base"
               >
-                ĐẶT HÀNG
+                Thêm vào giỏ hàng
               </button>
             ) : (
               <button className=" bg-red-600 w-full shadow-sm shadow-gray-400 p-2  text-white text-base">

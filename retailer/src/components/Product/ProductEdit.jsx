@@ -480,7 +480,7 @@ const ProductEdit = ({ product, onSave, onCancel }) => {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700">
-                    Tồn kho
+                    Kho
                   </label>
                   <input
                     type="number"
@@ -488,7 +488,7 @@ const ProductEdit = ({ product, onSave, onCancel }) => {
                     value={newVariant.initStock}
                     onChange={handleNewVariantChange}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500"
-                    placeholder="Tồn kho"
+                    placeholder="Kho"
                   />
                 </div>
               </div>

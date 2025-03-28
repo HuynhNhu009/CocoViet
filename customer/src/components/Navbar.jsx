@@ -60,7 +60,7 @@ const Navbar = ({className}) => {
       // console.log(response); // { msg: "Logged out successfully", status: "OK" }
       if (response.status === "OK") {
         dispatch(logout()); // Cập nhật state Redux
-        navigate("/login");
+        navigate("/");
       }
     } catch (error) {
       console.error(
@@ -159,7 +159,7 @@ const Navbar = ({className}) => {
                     >
                       My Profile
                     </p>
-                    <p className="cursor-pointer hover:text-green-600">Order</p>
+                    {/* <p className="cursor-pointer hover:text-green-600">Order</p> */}
                     <p
                       onClick={() => handleLogout()}
                       className="cursor-pointer hover:text-green-600"

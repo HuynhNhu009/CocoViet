@@ -103,6 +103,9 @@ const Register = () => {
     }
   };
 
+
+  
+
   const renderForm = () => (
     <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md  ">
       <div className="text-center oswald-font mb-8">
