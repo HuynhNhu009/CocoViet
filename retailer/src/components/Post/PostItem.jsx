@@ -2,10 +2,10 @@ import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
 import React, { useState } from "react";
 
 const PostItem = ({ post, isEdit, setPost, deletePost }) => {
-  const [isExpanded, setIsExpanded] = useState(false); // Trạng thái mở rộng nội dung
+  const [isExpanded, setIsExpanded] = useState(false);
 
   const toggleExpand = () => {
-    setIsExpanded(!isExpanded); // Chuyển đổi giữa mở rộng và thu gọn
+    setIsExpanded(!isExpanded); 
   };
 
   return (
@@ -18,20 +18,24 @@ const PostItem = ({ post, isEdit, setPost, deletePost }) => {
       />
       <div className="flex flex-col gap-2 ml-4 flex-1 p-2">
         <p className="text-xl uppercase font-bold">{post.postTitle}</p>
-        <div className="overflow-hidden">
+        <p className="font-extralight text-sm h-4 pr-2">
+          <span className="font-semibold">Ngày đăng: </span>
+          {post?.publishTime?.split("T")[0].split("-").reverse().join("/") ||
+            "N/A"}
+        </p>
+        <div className="overflow-hidden pt-2">
           <p
             className="text-base text-justify"
             style={{
               whiteSpace: "pre-wrap",
               display: "-webkit-box",
               WebkitBoxOrient: "vertical",
-              WebkitLineClamp: isExpanded ? "unset" : 5, // Giới hạn 5 dòng khi chưa mở rộng
+              WebkitLineClamp: isExpanded ? "unset" : 5,
               overflow: "hidden",
             }}
           >
             {post.postContent}
           </p>
-          {/* Nút Xem thêm / Thu gọn */}
           <button
             onClick={toggleExpand}
             className="text-blue-600 hover:text-blue-800 text-sm mt-1"

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { retailerApi } from "../services/RetailerService"; // Thay bằng đường dẫn thực tế
 import { useDispatch, useSelector } from "react-redux";
+import { assets } from "../assets/assets";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -33,14 +34,16 @@ const Register = () => {
     if (!formData.retailerName.trim()) {
       newErrors.retailerName = "Họ và tên không được để trống!";
     }
-    const existName = retailers.some((item) => 
-      item.retailerName.toLowerCase().trim() === formData.retailerName.toLowerCase().trim()
-    );    
-   
+    const existName = retailers.some(
+      (item) =>
+        item.retailerName.toLowerCase().trim() ===
+        formData.retailerName.toLowerCase().trim()
+    );
+
     if (existName) {
       newErrors.retailerName = "Tên đã tồn tại, vui lòng nhập tên khác!";
     }
-    
+
     if (!formData.retailerPassword) {
       newErrors.retailerPassword = "Mật khẩu không được để trống!";
     } else if (formData.retailerPassword.length < 8) {
@@ -101,10 +104,11 @@ const Register = () => {
   };
 
   const renderForm = () => (
-    <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md ">
-      <h2 className="text-2xl uppercase font-bold text-center text-gray-800 mb-6 oswald-font ">
-        Đăng ký cửa hàng
-      </h2>
+    <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md  ">
+      <div className="text-center oswald-font mb-8">
+        <h2 className="text-3xl uppercase font-bold text-gray-800 ">Đăng ký</h2>
+        <p className="text-md font-medium text-green-500">Người bán hàng</p>
+      </div>
       {errors.general && (
         <p className="text-red-500 text-sm text-center mb-4">
           {errors.general}
@@ -294,7 +298,15 @@ const Register = () => {
   );
 
   return (
-    <div className="h-[90vh] mb-30 flex items-center justify-center bg-gray-100">
+    <div
+      className="h-[100vh] flex items-center justify-center bg-gray-100"
+      style={{
+        backgroundImage: `url('${assets.ImageLogin}')`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+      }}
+    >
       {step === "form" && renderForm()}
       {step === "preparing" && renderPreparing()}
       {step === "success" && renderSuccess()}

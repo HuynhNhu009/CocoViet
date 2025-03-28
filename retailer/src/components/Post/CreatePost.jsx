@@ -28,25 +28,25 @@ const CreatePost = ({ retailerId, onSave, onCancel }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    setModalMessage("Đang tạo bài viết..."); // Cập nhật thông điệp khi bắt đầu
-    setModalError(false); // Reset trạng thái lỗi
+    setModalMessage("Đang tạo bài viết...");
+    setModalError(false);
 
     try {
       console.log("New post:", newPost);
       const response = await postApi.createPosts(newPost, file);
       console.log("Create response", response.data);
-      setNewPost({ postTitle: "", postContent: "", retailerId: retailerId }); // Reset form
-      onSave(newPost.postTitle); // Gọi callback khi thành công
+      setNewPost({ postTitle: "", postContent: "", retailerId: retailerId });
+      onSave(newPost.postTitle);
     } catch (error) {
       console.error("Error creating post:", error);
-      setModalMessage("Lỗi khi tạo bài viết!"); // Cập nhật thông điệp lỗi
-      setModalError(true); // Đặt trạng thái lỗi
+      setModalMessage("Lỗi khi tạo bài viết!");
+      setModalError(true);
       setTimeout(() => {
-        setIsLoading(false); // Tự động đóng modal sau 2 giây nếu có lỗi
+        setIsLoading(false);
       }, 2000);
     } finally {
       if (!modalError) {
-        setIsLoading(false); // Chỉ đóng modal nếu không có lỗi
+        setIsLoading(false); 
       }
     }
   };

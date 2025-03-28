@@ -101,8 +101,14 @@ const PostList = ({ retailer, posts, fetchPosts }) => {
     </div>
   );
 
+  const sortedPosts = [...posts].sort((a, b) => {
+    const dateA = a.publishTime ? new Date(a.publishTime) : new Date(0);
+    const dateB = b.publishTime ? new Date(b.publishTime) : new Date(0);
+    return dateB - dateA; 
+  });
+
   return (
-    <div className="min-h-screen px-6 flex flex-col gap-2">
+    <div className="min-h-[85vh] flex flex-col gap-2">
       {viewState.mode === "list" && (
         <div>
           <div className="flex justify-end w-full">
@@ -116,8 +122,8 @@ const PostList = ({ retailer, posts, fetchPosts }) => {
           <div className="flex-col">
             {viewState.error && <ErrorMessage message={viewState.error} />}
             {viewState.success && <SuccessMessage message={viewState.success} />}
-            {posts.length > 0 ? (
-              posts.map((post) => (
+            {sortedPosts.length > 0 ? (
+              sortedPosts.map((post) => (
                 <PostItem
                   key={post.postId}
                   post={post}

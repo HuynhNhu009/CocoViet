@@ -94,7 +94,7 @@ const ProductList = ({ products, categories, fetchProducts }) => {
   };
 
   return (
-    <div className="flex flex-col gap-4 pb-2">
+    <div className="flex flex-col gap-4 pb-2 min-h-[75vh]">
       {!isEditing &&
       <SearchBar
         data={products}

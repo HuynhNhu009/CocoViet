@@ -62,7 +62,7 @@ const UnitManager = ({
       setModalMessage("Không thể thêm đơn vị. Vui lòng thử lại.");
       setModalError(true);
     } finally {
-      setTimeout(() => setIsLoading(false), 1500); // Tăng thời gian chờ lên 1.5s để người dùng đọc được thông báo
+      setTimeout(() => setIsLoading(false), 2000); 
     }
   };
 
@@ -131,7 +131,7 @@ const UnitManager = ({
   };
 
   return (
-    <div className="space-y-4 relative">
+    <div className="min-h-[75vh] space-y-4 relative">
       {/* Modal */}
       {isLoading && (
         <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-400/80">

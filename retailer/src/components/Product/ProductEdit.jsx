@@ -26,7 +26,7 @@ const ProductEdit = ({ product, onSave, onCancel }) => {
 
     return {
       ...product,
-      categoryId: initialCategoryIds, // Thay vì categoryName
+      categoryId: initialCategoryIds, 
     };
   });
 

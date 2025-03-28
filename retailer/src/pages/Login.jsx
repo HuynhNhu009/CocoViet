@@ -76,9 +76,11 @@ const Login = () => {
 
   const renderForm = () => (
     <div className=" h-vh bg-white opacity-90 p-6 rounded-lg shadow-sm shadow-gray-700 w-full max-w-md m-auto">
-      <h2 className="text-2xl uppercase font-bold text-center text-gray-800 mb-6 oswald-font">
-        Đăng nhập
-      </h2>
+      <div className="text-center  oswald-font mb-8">
+        <h2 className="text-2xl uppercase font-bold text-gray-800 mb-2">Đăng nhập</h2>
+        <p className="text-sm font-medium text-green-500">Người bán hàng</p>
+      </div>
+
       {errors.general && (
         <p className="text-red-500 text-sm text-center mb-4">
           {errors.general}
@@ -171,13 +173,15 @@ const Login = () => {
   };
 
   return (
-    <div className="h-[100vh] flex items-center justify-center bg-gray-100"
-    style={{
-      backgroundImage: `url('${assets.ImageLogin}')`, // Thay bằng URL hình ảnh của bạn
-      backgroundSize: "cover",
-      backgroundPosition: "center",
-      backgroundRepeat: "no-repeat",
-    }}>
+    <div
+      className="h-[100vh] flex items-center justify-center bg-gray-100"
+      style={{
+        backgroundImage: `url('${assets.ImageLogin}')`, // Thay bằng URL hình ảnh của bạn
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+      }}
+    >
       {step === "form" && renderForm()}
       {step === "preparing" && renderPreparing()}
       {step === "success" && renderSuccess()}
