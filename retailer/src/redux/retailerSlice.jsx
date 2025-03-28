@@ -4,11 +4,27 @@ import { act } from "react";
 const initialState = {
   retailer: null,
   isRetailerLogin: false,
-  allRetailer:[],
+  allRetailer: [],
 
   products: [],
 
-  productAdd:{},
+  productAdd: {
+    newProduct: {
+      productName: "",
+      productDesc: "",
+      retailerId: "",
+      productImage: "",
+      productOrigin: "",
+      variants: [],
+      categoryId: [],
+    },
+    newVariant: {
+      unitId: "",
+      value: "",
+      price: "",
+      initStock: "",
+    },
+  },
 
   category: [],
 
@@ -77,11 +93,41 @@ const retailerSlice = createSlice({
       state.isRetailerLogin = false;
       state.retailer = null;
       state.products = [];
+      state.productAdd = initialState.productAdd;
     },
     setProducts: (state, action) => {
       state.products = action.payload;
       state.loading = false;
     },
+
+    setNewProduct: (state, action) => {
+      state.productAdd.newProduct = {
+        ...state.productAdd.newProduct,
+        ...action.payload,
+      };
+    },
+
+    setNewVariant: (state, action) => {
+      state.productAdd.newVariant = {
+        ...state.productAdd.newVariant,
+        ...action.payload,
+      };
+    },
+
+    addVariant: (state, action) => {
+      state.productAdd.newProduct.variants.push(action.payload);
+      state.productAdd.newVariant = initialState.productAdd.newVariant; // Reset newVariant
+    },
+    deleteVariant: (state, action) => {
+      state.productAdd.newProduct.variants =
+        state.productAdd.newProduct.variants.filter(
+          (_, index) => index !== action.payload
+        );
+    },
+    resetProductAdd: (state) => {
+      state.productAdd = initialState.productAdd;
+    },
+
     setLoading: (state, action) => {
       state.loading = action.payload;
     },
@@ -116,5 +162,10 @@ export const {
   setLoading,
   setUnits,
   setPosts,
+  setNewProduct,
+  setNewVariant,
+  addVariant,
+  deleteVariant,
+  resetProductAdd,
 } = retailerSlice.actions;
 export default retailerSlice.reducer;
