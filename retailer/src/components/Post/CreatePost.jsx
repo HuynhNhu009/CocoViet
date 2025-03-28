@@ -9,7 +9,9 @@ const CreatePost = ({ retailerId, onSave, onCancel }) => {
     retailerId: retailerId,
   });
   const [file, setFile] = useState(null);
-  const [isLoading, setIsLoading] = useState(false); // Loading state for modal
+  const [isLoading, setIsLoading] = useState(false);
+  const [modalMessage, setModalMessage] = useState("Đang xử lý..."); // Thêm state cho thông điệp modal
+  const [modalError, setModalError] = useState(false); // Thêm state cho trạng thái lỗi
 
   const handleSetFile = (file) => {
     setFile(file);
@@ -25,17 +27,27 @@ const CreatePost = ({ retailerId, onSave, onCancel }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsLoading(true); // Show modal
+    setIsLoading(true);
+    setModalMessage("Đang tạo bài viết..."); // Cập nhật thông điệp khi bắt đầu
+    setModalError(false); // Reset trạng thái lỗi
+
     try {
       console.log("New post:", newPost);
       const response = await postApi.createPosts(newPost, file);
-      console.log("Update response", response.data);
+      console.log("Create response", response.data);
       setNewPost({ postTitle: "", postContent: "", retailerId: retailerId }); // Reset form
-      onSave(newPost.postTitle); // Close form on success
+      onSave(newPost.postTitle); // Gọi callback khi thành công
     } catch (error) {
       console.error("Error creating post:", error);
+      setModalMessage("Lỗi khi tạo bài viết!"); // Cập nhật thông điệp lỗi
+      setModalError(true); // Đặt trạng thái lỗi
+      setTimeout(() => {
+        setIsLoading(false); // Tự động đóng modal sau 2 giây nếu có lỗi
+      }, 2000);
     } finally {
-      setIsLoading(false); // Hide modal
+      if (!modalError) {
+        setIsLoading(false); // Chỉ đóng modal nếu không có lỗi
+      }
     }
   };
 
@@ -47,18 +59,18 @@ const CreatePost = ({ retailerId, onSave, onCancel }) => {
           name="postTitle"
           value={newPost.postTitle}
           onChange={handleInputChange}
-          placeholder="Tiêu đề bài đăng."
+          placeholder="Tiêu đề bài đăng"
           className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-0 focus:border-green-600"
-          disabled={isLoading} // Disable input during loading
+          disabled={isLoading}
         />
         <textarea
           name="postContent"
           value={newPost.postContent}
           onChange={handleInputChange}
-          placeholder="Nội dung."
+          placeholder="Nội dung"
           className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-0 focus:border-green-600"
           rows="10"
-          disabled={isLoading} // Disable textarea during loading
+          disabled={isLoading}
         />
 
         <UploadImage onImageChange={handleSetFile} />
@@ -68,14 +80,14 @@ const CreatePost = ({ retailerId, onSave, onCancel }) => {
             type="button"
             onClick={onCancel}
             className="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300 transition-colors disabled:opacity-50"
-            disabled={isLoading} // Disable cancel button during loading
+            disabled={isLoading}
           >
             Cancel
           </button>
           <button
             type="submit"
             className="px-4 py-2 bg-amber-300 rounded-md hover:bg-amber-400 transition-colors disabled:opacity-50"
-            disabled={isLoading} // Disable submit button during loading
+            disabled={isLoading}
           >
             {isLoading ? "Đang tạo..." : "Submit"}
           </button>
@@ -84,10 +96,42 @@ const CreatePost = ({ retailerId, onSave, onCancel }) => {
 
       {/* Loading Modal */}
       {isLoading && (
-        <div className="fixed inset-0 bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-md shadow-lg flex flex-col items-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-amber-500"></div>
-            <p className="mt-4 text-gray-700">Đang xử lý...</p>
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-100/80">
+          <div className="bg-white p-6 rounded-lg shadow-lg flex flex-col items-center gap-4">
+            <svg
+              className="animate-spin h-16 w-16 text-green-600"
+              viewBox="0 0 32 32"
+            >
+              <circle
+                cx="16"
+                cy="16"
+                r="14"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                fill="none"
+                className="opacity-25"
+              />
+              <circle
+                cx="16"
+                cy="16"
+                r="14"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeDasharray="44 88"
+                strokeDashoffset="0"
+                fill="none"
+                className="opacity-75"
+              />
+            </svg>
+            <p
+              className={`text-lg ${
+                modalError ? "text-red-600" : "text-gray-800"
+              }`}
+            >
+              {modalMessage}
+            </p>
           </div>
         </div>
       )}

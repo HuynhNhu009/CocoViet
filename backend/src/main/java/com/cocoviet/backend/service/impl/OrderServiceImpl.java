@@ -1,7 +1,6 @@
 package com.cocoviet.backend.service.impl;
 
 import com.cocoviet.backend.Enum.OrderStatus;
-import com.cocoviet.backend.Enum.ProductStatus;
 import com.cocoviet.backend.mapper.ProductVariantMapper;
 import com.cocoviet.backend.models.dto.*;
 import com.cocoviet.backend.models.entity.*;
@@ -23,7 +22,7 @@ import java.util.stream.Collectors;
 public class OrderServiceImpl implements IOrderService {
 
     @Autowired
-    private IProducVariantRepository iProducVariantRepository;
+    private IProductVariantRepository iProductVariantRepository;
 
     @Autowired
     private IStatusRepository iStatusRepository;
@@ -70,7 +69,7 @@ public class OrderServiceImpl implements IOrderService {
 
             for(ReceiptDetailRequest receiptDetailRequest : orderRequest.getReceiptDetailRequests()) {
 
-                ProductVariantEntity productVariantEntity =iProducVariantRepository.findByVariantsId(receiptDetailRequest.getProductVariantId());
+                ProductVariantEntity productVariantEntity = iProductVariantRepository.findByVariantsId(receiptDetailRequest.getProductVariantId());
                 if(productVariantEntity.getStock() == 0){
                     continue;
                 }
@@ -81,14 +80,14 @@ public class OrderServiceImpl implements IOrderService {
                         .quantity(receiptDetailRequest.getQuantity())
                         .build();
 
-                iProducVariantRepository.save(productVariantEntity);
+                iProductVariantRepository.save(productVariantEntity);
                 newReceiptDetailEntity.add(receiptDetailEntity);
             }
         }else{
 
             for(ReceiptDetailRequest receiptDetailRequest : orderRequest.getReceiptDetailRequests()) {
 
-                ProductVariantEntity productVariantEntity =iProducVariantRepository.findByVariantsId(receiptDetailRequest.getProductVariantId());
+                ProductVariantEntity productVariantEntity = iProductVariantRepository.findByVariantsId(receiptDetailRequest.getProductVariantId());
 
                 Optional<ReceiptDetailEntity> existRecieptDetailByVariants = iReceiptDetailRepository
                         .findByProductVariant_VariantsIdAndProductOrder_OrderId(receiptDetailRequest.getProductVariantId(),orderEntity.getOrderId());
@@ -99,7 +98,7 @@ public class OrderServiceImpl implements IOrderService {
                     //update quantity
                     existReceiptDetailEntity.setQuantity(receiptDetailRequest.getQuantity() + existReceiptDetailEntity.getQuantity());
                     newReceiptDetailEntity.add(existReceiptDetailEntity);
-                    iProducVariantRepository.save(productVariantEntity);
+                    iProductVariantRepository.save(productVariantEntity);
                 }
                 else{
                     ReceiptDetailEntity addRecieptDetail = ReceiptDetailEntity.builder()
@@ -110,7 +109,7 @@ public class OrderServiceImpl implements IOrderService {
                             .build();
 
                     productVariantEntity.setStock(productVariantEntity.getStock() - receiptDetailRequest.getQuantity());
-                    iProducVariantRepository.save(productVariantEntity);
+                    iProductVariantRepository.save(productVariantEntity);
 
                     newReceiptDetailEntity.add(addRecieptDetail);
                 }
@@ -166,7 +165,7 @@ public class OrderServiceImpl implements IOrderService {
 
             for(ReceiptDetailRequest receiptDetailRequest : orderRequest.getReceiptDetailRequests()) {
 
-                ProductVariantEntity productVariantEntity =iProducVariantRepository.findByVariantsId(receiptDetailRequest.getProductVariantId());
+                ProductVariantEntity productVariantEntity = iProductVariantRepository.findByVariantsId(receiptDetailRequest.getProductVariantId());
                 Optional<ReceiptDetailEntity> existRecieptDetailByVariants = iReceiptDetailRepository
                         .findByProductVariant_VariantsIdAndProductOrder_OrderId(receiptDetailRequest.getProductVariantId(),orderEntity.getOrderId());
 
@@ -193,7 +192,7 @@ public class OrderServiceImpl implements IOrderService {
                     }
 
                     newReceiptDetailEntity.add(existReceiptDetailEntity);
-                    iProducVariantRepository.save(productVariantEntity);
+                    iProductVariantRepository.save(productVariantEntity);
                     newReceiptDetailEntity.add(existReceiptDetailEntity);
                 }
             }

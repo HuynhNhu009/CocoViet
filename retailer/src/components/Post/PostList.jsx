@@ -7,13 +7,12 @@ import { postApi } from "../../services/PostService";
 
 const PostList = ({ retailer, posts, fetchPosts }) => {
   const [viewState, setViewState] = useState({
-    mode: "list", // "list" | "add" | "edit"
+    mode: "list",
     error: null,
     success: null,
   });
   const [selectedPost, setSelectedPost] = useState(null);
 
-  // Helper function to clear messages after 3 seconds
   const clearMessages = useCallback(() => {
     setTimeout(() => {
       setViewState((prev) => ({ ...prev, error: null, success: null }));

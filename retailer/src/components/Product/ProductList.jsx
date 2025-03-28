@@ -95,14 +95,15 @@ const ProductList = ({ products, categories, fetchProducts }) => {
 
   return (
     <div className="flex flex-col gap-4 pb-2">
+      {!isEditing &&
       <SearchBar
-        data={products} 
-        onFilterData={handleFilterData} // Callback 
-        isDisplayfilterStatus={true} 
-        isFilterCategory={true} 
+        data={products}
+        onFilterData={handleFilterData} // Callback
+        isDisplayfilterStatus={true}
+        isFilterCategory={true}
         filerCategory={categories}
         filerStatus={productStatus}
-      />
+      />}
       {isEditing ? (
         <div className="w-full">
           <ProductEdit

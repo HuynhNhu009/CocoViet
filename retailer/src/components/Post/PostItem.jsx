@@ -1,9 +1,15 @@
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
-import React from "react";
+import React, { useState } from "react";
 
 const PostItem = ({ post, isEdit, setPost, deletePost }) => {
+  const [isExpanded, setIsExpanded] = useState(false); // Trạng thái mở rộng nội dung
+
+  const toggleExpand = () => {
+    setIsExpanded(!isExpanded); // Chuyển đổi giữa mở rộng và thu gọn
+  };
+
   return (
-    <div className="min-h-50 max-w-290 p-5 mt-2 mb-5 flex flex-row gap-2 border border-gray-200 rounded-sm shadow-md hover:shadow-lg transition-all ">
+    <div className="min-h-50 max-w-290 p-5 mt-2 mb-5 flex flex-row gap-2 border border-gray-200 rounded-sm shadow-md hover:shadow-lg transition-all">
       <img
         className="w-60 h-fit mt-4 rounded-sm object-cover"
         src={post.postImageUrl}
@@ -13,8 +19,25 @@ const PostItem = ({ post, isEdit, setPost, deletePost }) => {
       <div className="flex flex-col gap-2 ml-4 flex-1 p-2">
         <p className="text-xl uppercase font-bold">{post.postTitle}</p>
         <div className="overflow-hidden">
-          <p className="text-base text-justify " style={{ whiteSpace: "pre-wrap" }}>{post.postContent}</p>{" "}
-          {/* Allows 5 lines, then ellipsis */}
+          <p
+            className="text-base text-justify"
+            style={{
+              whiteSpace: "pre-wrap",
+              display: "-webkit-box",
+              WebkitBoxOrient: "vertical",
+              WebkitLineClamp: isExpanded ? "unset" : 5, // Giới hạn 5 dòng khi chưa mở rộng
+              overflow: "hidden",
+            }}
+          >
+            {post.postContent}
+          </p>
+          {/* Nút Xem thêm / Thu gọn */}
+          <button
+            onClick={toggleExpand}
+            className="text-blue-600 hover:text-blue-800 text-sm mt-1"
+          >
+            {isExpanded ? "Thu gọn" : "Xem thêm"}
+          </button>
         </div>
         <div className="flex justify-end mt-auto gap-4">
           <button
