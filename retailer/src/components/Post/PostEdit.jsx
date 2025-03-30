@@ -11,7 +11,7 @@ const PostEdit = ({ post, onSave, onCancel }) => {
 
   const [postData, setPostData] = useState({});
   const [image, setImage] = useState();
-  const [isLoading, setIsLoading] = useState(false); // Added loading state
+  const [isLoading, setIsLoading] = useState(false); 
   const [preview, setPreview] = useState(null);
   const handleEditPost = (e) => {
     const { name, value } = e.target;
@@ -24,12 +24,12 @@ const PostEdit = ({ post, onSave, onCancel }) => {
   };
 
   const handleImageUpload = (selectedFile) => {
-    setImage(selectedFile); // Store the file for submission
+    setImage(selectedFile); 
   };
 
   const submitEditPost = async (e) => {
     e.preventDefault();
-    setIsLoading(true); // Start loading
+    setIsLoading(true); 
     try {
       console.log(postData);
       const response = await postApi.updatePostById(post.postId, postData, image);
@@ -37,9 +37,9 @@ const PostEdit = ({ post, onSave, onCancel }) => {
       console.log("Update Post----", response.data);
     } catch (error) {
       console.log(error);
-      onSave(post); // Revert to original post on error
+      onSave(post); 
     } finally {
-      setIsLoading(false); // Stop loading
+      setIsLoading(false); 
     }
   };
 

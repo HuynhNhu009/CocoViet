@@ -7,6 +7,8 @@ import com.cocoviet.backend.models.dto.UnitDTO;
 import com.cocoviet.backend.models.entity.RetailerEntity;
 import com.cocoviet.backend.models.entity.UnitEntity;
 import com.cocoviet.backend.models.request.UnitRequest;
+import com.cocoviet.backend.repository.IProductRepository;
+import com.cocoviet.backend.repository.IProductVariantRepository;
 import com.cocoviet.backend.repository.IRetailerRepository;
 import com.cocoviet.backend.repository.IUnitRepository;
 import com.cocoviet.backend.service.IUnitService;
@@ -25,6 +27,9 @@ public class UnitServiceImpl implements IUnitService {
 
     @Autowired
     private IRetailerRepository iRetailerRepository;
+
+    @Autowired
+    private IProductVariantRepository iProductVariantRepository;
 
     @Autowired
     private IUnitMapper iUnitMapper;
@@ -108,6 +113,13 @@ public class UnitServiceImpl implements IUnitService {
     public String deleteUnitById(String unitId) {
         UnitEntity unitEntity = iUnitRepository.findById(unitId)
                 .orElseThrow(() -> new EntityNotFoundException("Units ID " + unitId + " not found"));
+
+        // Kiểm tra xem có sản phẩm nào đang sử dụng unit này không
+        boolean hasProducts = iProductVariantRepository.existsByUnit(unitEntity); // Nếu dùng Cách 1
+        // Hoặc: boolean hasProducts = iProductRepository.existsProductsEntitiesByUnit(unitEntity); // Nếu dùng Cách 2
+        if (hasProducts) {
+            return "Product exist";
+        }
 
         // Xóa tất cả các mối quan hệ trong retailer_unit liên quan đến unitId
         Set<RetailerEntity> retailers = unitEntity.getRetailers();

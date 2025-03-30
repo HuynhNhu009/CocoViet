@@ -3,21 +3,21 @@
 const AboutTeam = () => {
     const teamMembers = [
         {
-            name: "Thành viên 1",
-            role: " Vai trò và đóng góp trong team",
-            avatar: "",
+            name: "Phạm Thị Huỳnh Anh ",
+            role: "Vai trò và đóng góp trong team",
+            avatar: "https://api.dicebear.com/9.x/micah/svg?seed=Jameson",
             description: "Giới thiệu sơ lược, chém gió các kiểu, bla bla...",
         },
         {
-            name: "Thành viên 2",
+            name: "Nguyễn Thanh Toàn",
             role: " Vai trò và đóng góp trong team",
-            avatar: "",
+            avatar: "https://api.dicebear.com/9.x/pixel-art/svg?seed=Kingston",
             description: "Giới thiệu sơ lược, chém gió các kiểu, bla bla...",
         }, 
         {
-            name: "Thành viên 3",
+            name: "Nguyễn Huỳnh Như",
             role: " Vai trò và đóng góp trong team",
-            avatar: "",
+            avatar: "https://api.dicebear.com/9.x/micah/svg?seed=Brian",
             description: "Giới thiệu sơ lược, chém gió các kiểu, bla bla...",
         }
     ];

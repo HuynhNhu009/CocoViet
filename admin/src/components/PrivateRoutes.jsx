@@ -2,13 +2,14 @@ import { useEffect, useState } from "react";
 import { adminAPI } from "../services/adminService";
 import { useDispatch, useSelector } from "react-redux";
 import { setAdmin, setLogin } from "../redux/adminSlice";
-import { Navigate, Outlet } from "react-router-dom";
+import { Navigate, Outlet, useLocation, useParams } from "react-router-dom";
+import { p } from "framer-motion/client";
 
 export const PrivateRoutes = () => {
   const dispatch = useDispatch();
   const isLogin = useSelector((state) => state.AdminStore.isLogin);
   const [isLoading, setIsLoading] = useState(true); 
-
+  const location = useLocation();
   useEffect(() => {
     const authenticate = async () => {
       try {
@@ -29,6 +30,10 @@ export const PrivateRoutes = () => {
 
     authenticate();
   }, [dispatch]);
+
+  useEffect (()=>{
+    if(location.path == '/') Navigate("/login")
+  }, [location])
 
   // While checking auth, show nothing or a loading spinner
   if (isLoading) {

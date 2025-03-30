@@ -12,7 +12,7 @@ const Status = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (statusStore !== []) {
+    if (statusStore != []) {
       setStatus(statusStore);
     }
   }, [statusStore]);

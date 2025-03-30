@@ -1,7 +1,16 @@
 import React, { useState } from "react";
 import { PlusIcon, XMarkIcon, TrashIcon } from "@heroicons/react/24/outline";
+import { useDispatch, useSelector } from "react-redux";
 import UploadImage from "../UpLoadImage";
 import { productApi } from "../../services/productService";
+import {  toast } from 'react-toastify';
+import {
+  setNewProduct,
+  setNewVariant,
+  addVariant,
+  deleteVariant,
+  resetProductAdd,
+} from "../../redux/retailerSlice";
 
 const AddProductForm = ({
   onAddProduct,
@@ -9,29 +18,19 @@ const AddProductForm = ({
   initialUnits = [],
   retailerId,
 }) => {
-  const [newProduct, setNewProduct] = useState({
-    productName: "",
-    productDesc: "",
-    retailerId: retailerId || "",
-    productImage: "",
-    productOrigin: "",
-    variants: [],
-    categoryId: [],
-  });
-
-  const categories = initialCategories.length > 0 ? initialCategories : [];
+  const dispatch = useDispatch();
+  const { newProduct, newVariant } = useSelector((state) => state.RetailerStore.productAdd); 
 
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(null);
   const [isAddingVariantInline, setIsAddingVariantInline] = useState(false);
-  const [newVariant, setNewVariant] = useState({
-    unitId: "",
-    value: "",
-    price: "",
-    initStock: "",
-  });
   const [file, setFile] = useState(null);
   const [variantErrors, setVariantErrors] = useState("");
+
+
+  React.useEffect(() => {
+    dispatch(setNewProduct({ retailerId: retailerId || "" }));
+  }, [retailerId, dispatch]);
 
   const handleImageUpload = (selectedFile) => {
     setFile(selectedFile);
@@ -39,24 +38,19 @@ const AddProductForm = ({
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setNewProduct((prev) => ({ ...prev, [name]: value }));
+    dispatch(setNewProduct({ [name]: value }));
   };
 
   const handleCategoryToggle = (categoryId) => {
-    setNewProduct((prev) => {
-      const updatedCategories = prev.categoryId.includes(categoryId)
-        ? prev.categoryId.filter((cat) => cat !== categoryId)
-        : [...prev.categoryId, categoryId];
-      return {
-        ...prev,
-        categoryId: updatedCategories,
-      };
-    });
+    const updatedCategories = newProduct.categoryId.includes(categoryId)
+      ? newProduct.categoryId.filter((cat) => cat !== categoryId)
+      : [...newProduct.categoryId, categoryId];
+    dispatch(setNewProduct({ categoryId: updatedCategories }));
   };
 
   const handleVariantChange = (e) => {
     const { name, value } = e.target;
-    setNewVariant((prev) => ({ ...prev, [name]: value }));
+    dispatch(setNewVariant({ [name]: value }));
   };
 
   const validateVariant = () => {
@@ -98,20 +92,13 @@ const AddProductForm = ({
       unit: unit ? unit.unitName : "",
     };
 
-    setNewProduct((prev) => ({
-      ...prev,
-      variants: [...prev.variants, variant],
-    }));
-    setNewVariant({ unitId: "", value: "", price: "", initStock: "" });
+    dispatch(addVariant(variant));
     setVariantErrors("");
     setIsAddingVariantInline(false);
   };
 
   const handleDeleteVariant = (index) => {
-    setNewProduct((prev) => ({
-      ...prev,
-      variants: prev.variants.filter((_, i) => i !== index),
-    }));
+    dispatch(deleteVariant(index));
   };
 
   const handleAddProduct = async (e) => {
@@ -124,9 +111,14 @@ const AddProductForm = ({
       setMessage("Vui lòng thêm ít nhất một loại sản phẩm.");
       return;
     }
+    if (!file) {
+      setMessage("Vui lòng chọn ảnh sản phẩm!");
+      return;
+    }
+
     setLoading(true);
     setMessage(null);
-  
+
     const productToAdd = {
       productName: newProduct.productName,
       productDesc: newProduct.productDesc,
@@ -140,21 +132,25 @@ const AddProductForm = ({
         initStock: v.initStock,
       })),
     };
-  
+
     try {
       const response = await productApi.addProduct(productToAdd, file);
-      
+
       await onAddProduct();
-  
-      setNewProduct({
-        productName: "",
-        productDesc: "",
-        retailerId: retailerId || "",
-        productImage: "",
-        productOrigin: "",
-        variants: [],
-        categoryId: [],
+      toast.success("Thêm sản phẩm vào giỏ thành công!", {
+        position: "top-center",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: false,
+        draggable: false,
+        progress: undefined,
+        closeButton: false, 
+        theme: "light",
       });
+
+
+      dispatch(resetProductAdd());
       setFile(null);
       setMessage("Thêm sản phẩm thành công!");
     } catch (error) {
@@ -162,7 +158,7 @@ const AddProductForm = ({
         const httpStatus = error.response.status;
         const responseStatus = error.response.data.status;
         const errorMsg = error.response.data.msg || "Lỗi không xác định";
-  
+
         if (httpStatus === 400 && responseStatus === "PRODUCT_ALREADY_EXISTS") {
           setMessage("Tên sản phẩm đã tồn tại, vui lòng chọn tên khác!");
         } else if (httpStatus === 400 && responseStatus === "INVALID_INPUT") {
@@ -184,10 +180,10 @@ const AddProductForm = ({
   };
 
   return (
-    <div>
+    <div className="min-h-[75vh]">
       {message && (
         <div
-          className={`p-2 mb-4 text-center rounded-md ${
+          className={`p-2 mb-4 text-center rounded-md  ${
             message.includes("thành công")
               ? "bg-green-100 text-green-700"
               : "bg-red-100 text-red-700"
@@ -200,7 +196,6 @@ const AddProductForm = ({
         onSubmit={handleAddProduct}
         className="space-y-6 lg:grid lg:grid-cols-2 lg:gap-6 lg:space-y-0"
       >
-        {/* Cột 1: Thông tin sản phẩm */}
         <div className="space-y-6">
           <div className="relative">
             <label className="block text-sm font-medium text-gray-700">
@@ -247,7 +242,6 @@ const AddProductForm = ({
           </div>
         </div>
 
-        {/* Cột 2: Danh mục và Loại */}
         <div className="space-y-6">
           {/* Chọn danh mục */}
           <div className="space-y-2">
@@ -255,10 +249,10 @@ const AddProductForm = ({
               Danh mục sản phẩm
             </label>
             <div className="min-h-40 overflow-y-auto border border-gray-300 rounded-md p-2">
-              {categories.length === 0 ? (
+              {initialCategories.length === 0 ? (
                 <p className="text-gray-500 text-sm">Chưa có danh mục nào.</p>
               ) : (
-                categories.map((cat) => (
+                initialCategories.map((cat) => (
                   <div
                     key={cat.categoryId}
                     className="flex items-center gap-2 py-1 "
@@ -286,7 +280,7 @@ const AddProductForm = ({
               <button
                 type="button"
                 onClick={() => setIsAddingVariantInline(true)}
-                className={`${isAddingVariantInline ? "hidden" :""} p-2 bg-gray-100 rounded-md hover:bg-gray-200`}
+                className={`${isAddingVariantInline ? "hidden" : ""} p-2 bg-gray-100 rounded-md hover:bg-gray-200`}
                 disabled={loading}
                 aria-label="Thêm loại mới"
               >
@@ -328,7 +322,6 @@ const AddProductForm = ({
                     </option>
                   ))}
                 </select>
-                
                 <input
                   type="number"
                   name="initStock"

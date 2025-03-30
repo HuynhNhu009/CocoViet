@@ -41,7 +41,7 @@ public class ProductServiceImpl implements IProductService {
     IUnitRepository iUnitRepository;
 
     @Autowired
-    IProducVariantRepository iProducVariantRepository;
+    IProductVariantRepository iProductVariantRepository;
 
     @Autowired
     IProductCategoryRepository iproductCategoryRepository;
@@ -114,7 +114,7 @@ public class ProductServiceImpl implements IProductService {
 
         newProductVariantEntities.add(productVariantEntity);
     }
-    iProducVariantRepository.saveAll(newProductVariantEntities);
+    iProductVariantRepository.saveAll(newProductVariantEntities);
     productEntity.setVariants(newProductVariantEntities);
 
     // Map productVariantEntity to productVariantDTO
@@ -155,7 +155,7 @@ public class ProductServiceImpl implements IProductService {
 
         //get all existingProductCategories and existingProductVariant of product
         Set<ProductCategoryEntity> existingProductCategories = iproductCategoryRepository.findByProduct(productEntity);
-        Set<ProductVariantEntity> exsistProductVariants = iProducVariantRepository.findProductVariantEntityByProduct(productEntity);
+        Set<ProductVariantEntity> exsistProductVariants = iProductVariantRepository.findProductVariantEntityByProduct(productEntity);
 
         //update newCategory
         Set<ProductCategoryEntity> newProductCategoryEntities = new HashSet<>();
@@ -224,7 +224,7 @@ public class ProductServiceImpl implements IProductService {
                 newProductVariantEntities.add(productVariantEntity);
             }
 
-            iProducVariantRepository.saveAll(newProductVariantEntities);
+            iProductVariantRepository.saveAll(newProductVariantEntities);
 
             productEntity.setVariants(newProductVariantEntities);
             iProductRepository.save(productEntity);
@@ -269,9 +269,9 @@ public class ProductServiceImpl implements IProductService {
     @Override
     public ProductDTO deleteVariants(String productId, String variantId) {
         ProductEntity productEntity = iProductRepository.findById(productId).orElseThrow(() -> new RuntimeException("Product not found"));
-        ProductVariantEntity productVariantEntity = iProducVariantRepository.findById(variantId).orElseThrow(() -> new RuntimeException("Variant not found"));
+        ProductVariantEntity productVariantEntity = iProductVariantRepository.findById(variantId).orElseThrow(() -> new RuntimeException("Variant not found"));
 
-        iProducVariantRepository.deleteById(productVariantEntity.getVariantsId());
+        iProductVariantRepository.deleteById(productVariantEntity.getVariantsId());
         //relationship category
         Set<ProductCategoryEntity> productCategoryEntities = iproductCategoryRepository.findByProduct(productEntity);
         Set<String> categoryName = productCategoryEntities.stream() //tra ve set<string>

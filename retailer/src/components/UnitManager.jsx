@@ -7,7 +7,12 @@ import {
 } from "@heroicons/react/24/outline";
 import { unitApi } from "../services/unitService";
 
-const UnitManager = ({ retailer, units = [], onUpdateUnits, disabled = false }) => {
+const UnitManager = ({
+  retailer,
+  units = [],
+  onUpdateUnits,
+  disabled = false,
+}) => {
   const [isAdding, setIsAdding] = useState(false);
   const [newUnitName, setNewUnitName] = useState("");
   const [editingUnit, setEditingUnit] = useState(null);
@@ -27,11 +32,11 @@ const UnitManager = ({ retailer, units = [], onUpdateUnits, disabled = false }) 
     }
     const isDuplicate = units.some(
       (u) =>
-        u.unitName === trimmedValue &&
+        u.unitName.toLowerCase() === trimmedValue.toLowerCase() &&
         (!currentUnit || u.unitId !== currentUnit.unitId)
     );
     if (isDuplicate) {
-      setError("Đơn vị đã tồn tại.");
+      setError("Đơn vị đã tồn tại (không phân biệt chữ hoa/thường).");
       return false;
     }
     return true;
@@ -42,10 +47,10 @@ const UnitManager = ({ retailer, units = [], onUpdateUnits, disabled = false }) 
 
     setIsLoading(true);
     setModalMessage("Đang thêm đơn vị...");
+    setModalError(false); // Reset trạng thái lỗi
     const trimmedUnitName = newUnitName.trim();
     try {
-      await unitApi.addUnit(retailer.retailerId ,{ unitName: trimmedUnitName });
-      console.log("Unit added successfully via API");
+      await unitApi.addUnit(retailer.retailerId, { unitName: trimmedUnitName });
       setModalMessage("Thêm đơn vị thành công!");
       setModalError(false);
       onUpdateUnits();
@@ -57,7 +62,7 @@ const UnitManager = ({ retailer, units = [], onUpdateUnits, disabled = false }) 
       setModalMessage("Không thể thêm đơn vị. Vui lòng thử lại.");
       setModalError(true);
     } finally {
-      setTimeout(() => setIsLoading(false), 1000);
+      setTimeout(() => setIsLoading(false), 2000); 
     }
   };
 
@@ -72,12 +77,12 @@ const UnitManager = ({ retailer, units = [], onUpdateUnits, disabled = false }) 
 
     setIsLoading(true);
     setModalMessage("Đang cập nhật đơn vị...");
+    setModalError(false);
     const trimmedUnitName = editValue.trim();
     try {
       await unitApi.updateUnit(editingUnit.unitId, {
         unitName: trimmedUnitName,
       });
-      console.log("Unit updated successfully via API");
       setModalMessage("Cập nhật đơn vị thành công!");
       setModalError(false);
       onUpdateUnits();
@@ -89,25 +94,33 @@ const UnitManager = ({ retailer, units = [], onUpdateUnits, disabled = false }) 
       setModalMessage("Không thể cập nhật đơn vị. Vui lòng thử lại.");
       setModalError(true);
     } finally {
-      setTimeout(() => setIsLoading(false), 1000);
+      setTimeout(() => setIsLoading(false), 1500);
     }
   };
 
   const handleDeleteUnit = async (unit) => {
     setIsLoading(true);
     setModalMessage("Đang xóa đơn vị...");
+    setModalError(false);
     try {
-      await unitApi.deleteUnit(unit.unitId);
-      console.log("Unit deleted successfully via API");
+      const response = await unitApi.deleteUnit(unit.unitId);
+      console.log("unit dele", response.data)
+      if (response.data === "Product exist") {
+        throw new Error("Product exist");
+      }
       setModalMessage("Xóa đơn vị thành công!");
       setModalError(false);
       onUpdateUnits();
     } catch (error) {
-      console.error("Lỗi khi xóa đơn vị qua API:", error);
-      setModalMessage("Không thể xóa đơn vị. Vui lòng thử lại.");
+      // console.error("Lỗi khi xóa đơn vị qua API:", error);
+      setModalMessage(
+        error.message === "Product exist"
+          ? "Không thể xóa đơn vị vì đang được sử dụng trong sản phẩm."
+          : "Không thể xóa đơn vị. Vui lòng thử lại."
+      );
       setModalError(true);
     } finally {
-      setTimeout(() => setIsLoading(false), 1000);
+      setTimeout(() => setIsLoading(false), 1500);
     }
   };
 
@@ -118,13 +131,13 @@ const UnitManager = ({ retailer, units = [], onUpdateUnits, disabled = false }) 
   };
 
   return (
-    <div className="space-y-4">
+    <div className="min-h-[75vh] space-y-4 relative">
       {/* Modal */}
       {isLoading && (
-        <div className="fixed inset-0 flex items-center justify-center z-10">
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-400/80">
           <div className="bg-white p-6 rounded-lg shadow-lg flex flex-col items-center gap-4">
             <svg
-              className="animate-spin h-16 w-16 text-green-600"
+              className="animate-spin h-12 w-12 text-green-600"
               viewBox="0 0 32 32"
             >
               <circle
@@ -144,7 +157,7 @@ const UnitManager = ({ retailer, units = [], onUpdateUnits, disabled = false }) 
                 stroke="currentColor"
                 strokeWidth="2"
                 strokeLinecap="round"
-                strokeDasharray="44 88" // Tạo hiệu ứng viền đứt đoạn
+                strokeDasharray="44 88"
                 strokeDashoffset="0"
                 fill="none"
                 className="opacity-75"
@@ -157,13 +170,21 @@ const UnitManager = ({ retailer, units = [], onUpdateUnits, disabled = false }) 
             >
               {modalMessage}
             </p>
+            {modalError && (
+              <button
+                onClick={() => setIsLoading(false)}
+                className="mt-2 px-4 py-1 bg-red-600 text-white rounded-md hover:bg-red-700"
+              >
+                Đóng
+              </button>
+            )}
           </div>
         </div>
       )}
 
-      {/* Tiêu đề */}
-      <div className="flex items-center justify-end">
-       
+      {/* Tiêu đề và nút Thêm */}
+      <div className="flex items-center justify-between">
+        <h3 className="text-lg font-semibold text-gray-800">Quản lý đơn vị</h3>
         {!isAdding && (
           <button
             type="button"
@@ -207,7 +228,7 @@ const UnitManager = ({ retailer, units = [], onUpdateUnits, disabled = false }) 
                 setNewUnitName("");
                 setError("");
               }}
-              className="p-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
+              className="p-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
               disabled={disabled || isLoading}
             >
               <XMarkIcon className="h-5 w-5" />
@@ -218,8 +239,8 @@ const UnitManager = ({ retailer, units = [], onUpdateUnits, disabled = false }) 
       )}
 
       {/* Danh sách đơn vị */}
-      <div className="bg-white border border-gray-200 rounded-md shadow-sm p-4 max-h-60 overflow-y-auto">
-        {!units || units.length === 0 ? (
+      <div className="bg-white border border-gray-200 rounded-md shadow-sm p-4 min-h-10 max-h-64 overflow-y-auto">
+        {!units.length ? (
           <p className="text-gray-500 text-sm text-center py-2">
             Chưa có đơn vị nào.
           </p>
@@ -255,7 +276,7 @@ const UnitManager = ({ retailer, units = [], onUpdateUnits, disabled = false }) 
                         setEditingUnit(null);
                         setError("");
                       }}
-                      className="p-1 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
+                      className="p-1 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
                       disabled={disabled || isLoading}
                     >
                       <XMarkIcon className="h-4 w-4" />

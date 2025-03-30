@@ -191,7 +191,7 @@ const Dashboard = () => {
         return;
       }
 
-      try {
+      try {    
         const categories = await fetchCategory();
         await fetchUnits();
         await fetchStatus();
