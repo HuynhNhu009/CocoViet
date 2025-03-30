@@ -57,9 +57,6 @@ public class ProductServiceImpl implements IProductService {
 
     @Override
     public ProductDTO addProduct(ProductRequest productRequest, MultipartFile imageFile) throws IOException {
-    if (iProductRepository.existsByProductName(productRequest.getProductName())) {
-        throw new RuntimeException("Product name already exists");
-    }
 
     RetailerEntity retailerEntity = iretailerRepository.findById(productRequest.getRetailerId())
             .orElseThrow(() -> new RuntimeException("Retailer not found"));
