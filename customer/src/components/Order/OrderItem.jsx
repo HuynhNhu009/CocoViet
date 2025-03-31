@@ -45,20 +45,32 @@ function OrderItem(orderStore) {
     return <p className="text-center text-gray-500">Đang tải đơn hàng...</p>;
   }
 
-  const handleChangeQuantity = async (e, productVariantId) => {
+  const handleChangeQuantity = async (e, item) => {
     let value = e.target.value.trim();
 
     if (value === "") {
-      setQuantity((prev) => ({ ...prev, [productVariantId]: 1 }));
+      setQuantity((prev) => ({ ...prev, [ item.productVariants.variantId]: 1 }));
       return;
     }
 
     let num = parseInt(value, 10);
-    if (!isNaN(num) && num >= 1) {
-      setQuantity((prev) => ({ ...prev, [productVariantId]: num }));
+    if(num > item.productVariants.stock){
+      toast.error('Số lượng sản phẩm đã đạt giới hạn!', {
+        position: "top-center",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        });
+
+    }else if(!isNaN(num) && num >= 1) {
+      setQuantity((prev) => ({ ...prev, [ item.productVariants.variantId]: num }));
       orderRequest.receiptDetailRequests = [
         {
-          productVariantId: productVariantId,
+          productVariantId:  item.productVariants.variantId,
           quantity: num,
         },
       ];
@@ -209,7 +221,7 @@ function OrderItem(orderStore) {
                           onChange={(e) =>
                             handleChangeQuantity(
                               e,
-                              item.productVariants.variantId
+                              item
                             )
                           }
                           onBlur={() => {
