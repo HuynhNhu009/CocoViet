@@ -9,11 +9,11 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface IOrderMapper {
-    @Mapping( source = "retailer.retailerName", target = "retailerName" )
-    @Mapping(target = "categoryName", ignore = true)
-    ProductDTO toProductDTO(ProductEntity productEntity);
-
-    List<ProductDTO> toProductDTOList(List<ProductEntity> productEntity);
+//    @Mapping( source = "retailer.retailerName", target = "retailerName" )
+//    @Mapping(target = "categoryName", ignore = true)
+//    ProductDTO toProductDTO(ProductEntity productEntity);
+//
+//    List<ProductDTO> toProductDTOList(List<ProductEntity> productEntity);
 //    CoconutProductEntity toEntity(ProductRequest productRequest);
 
 }

@@ -56,7 +56,7 @@ public class OrderServiceImpl implements IOrderService {
 
         OrderEntity orderEntity = iOrderRepository.findByCustomerIdStatusCode(customerEntity.getCustomerId(), "CART");
 
-        //gio hag da ton tai
+
         if(orderEntity == null){
             orderEntity = OrderEntity.builder()
                     .customer(customerEntity)
@@ -108,7 +108,6 @@ public class OrderServiceImpl implements IOrderService {
                             .status(statusEntity)
                             .build();
 
-                    productVariantEntity.setStock(productVariantEntity.getStock() - receiptDetailRequest.getQuantity());
                     iProductVariantRepository.save(productVariantEntity);
 
                     newReceiptDetailEntity.add(addRecieptDetail);

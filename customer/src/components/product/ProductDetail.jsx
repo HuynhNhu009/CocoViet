@@ -78,7 +78,10 @@ const ProductDetail = () => {
       fetchProduct();
     } else {
       setProducts(productDetail);
-      setSelectVariant(productDetail.variants[0]);
+      if (productDetail?.variants?.length > 0) {
+        const availableVariant = productDetail.variants.find(variant => variant.stock > 0);
+        setSelectVariant(availableVariant || productDetail.variants[0]); // Chọn variant có stock hoặc mặc định
+      }
     }
   }, [productDetail, dispatch, productId, retailerStore]);
 
@@ -96,7 +99,7 @@ const ProductDetail = () => {
     if (selectVariant.stock === 0) {
       setQuantity(0);
     }
-    if (!isNaN(num) && num >= 1 && num <= selectVariant.stock) {
+    if (!isNaN(num) && num >= 1 && num <= 999) {
       setQuantity(num);
     }
   };
@@ -112,20 +115,34 @@ const ProductDetail = () => {
         },
       ];
 
-      await orderAPI.addOrder(orderRequest);
-      dispatch(setCreateOrder(true));
-  
-      toast.success("Thêm sản phẩm vào giỏ thành công!", {
-        position: "top-center",
-        autoClose: 1500,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: false,
-        draggable: false,
-        progress: undefined,
-        closeButton: false, 
-        theme: "light",
-      });
+      if(quantity > selectVariant?.stock ){
+
+        toast.error('Không đủ số lượng thêm vào giỏ hàng!', {
+          position: "top-center",
+          autoClose: 1500,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          });
+      }else{
+        await orderAPI.addOrder(orderRequest);
+        dispatch(setCreateOrder(true));
+    
+        toast.success("Thêm sản phẩm vào giỏ thành công!", {
+          position: "top-center",
+          autoClose: 1500,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: false,
+          draggable: false,
+          progress: undefined,
+          closeButton: false, 
+          theme: "light",
+        });
+      }
       
     } else {
       //current path
@@ -227,7 +244,7 @@ const ProductDetail = () => {
             </div>
 
             <div className=" mb-5">
-              <span>KHO: </span>
+              <span>CÒN LẠI: </span>
               <span className="font-light">{selectVariant?.stock}</span>
             </div>
             <div className=" mb-5">
@@ -242,12 +259,12 @@ const ProductDetail = () => {
                 onBlur={() => quantity === "" && setQuantity(1)}
                 value={selectVariant?.stock === 0 ? 0 : quantity}
               />
-              {quantity === selectVariant.stock && (
-                <span className="text-red-600 text-sm font-medium">
+              {/* {quantity >= selectVariant.stock && (
+                <span className="text-red-400 text-sm font-medium">
                   {" "}
-                  Số lượng tối đa!
+                  Vượt mức số lượng tối đa
                 </span>
-              )}
+              )} */}
             </div>
             {selectVariant?.stock > 0 ? (
               <button
