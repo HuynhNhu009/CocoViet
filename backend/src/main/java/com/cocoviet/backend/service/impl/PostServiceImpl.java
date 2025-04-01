@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
 
 @Slf4j
@@ -40,67 +41,78 @@ public class PostServiceImpl implements IPostService {
 
     @Override
     public PostDTO createPost(PostRequest postRequest, MultipartFile imageFile) throws IOException {
-
         RetailerEntity retailerEntity = iretailerrepository.findById(postRequest.getRetailerId())
-                .orElseThrow(()-> new RuntimeException("Retailer not found."));
+                .orElseThrow(() -> new RuntimeException("Retailer not found."));
+
         PostEntity postEntity = PostEntity.builder()
                 .postTitle(postRequest.getPostTitle())
                 .postContent(postRequest.getPostContent())
                 .postImageUrl(iFileUpload.uploadFile(imageFile, "post"))
                 .retailer(retailerEntity)
                 .publishTime(LocalDateTime.now())
+                .productIds(postRequest.getProducts() != null ? postRequest.getProducts() : new HashSet<>())
                 .build();
 
         postEntity = iPostRepository.save(postEntity);
-
         return iPostMapper.toPostDTO(postEntity);
     }
+
+
 
     @Override
     public PostDTO updatePost(String postId, PostRequest postRequest, MultipartFile imageFile) throws IOException {
-        PostEntity postEntity  = iPostRepository.findById(postId).orElseThrow(()-> new RuntimeException("Post not found."));
+        PostEntity postEntity = iPostRepository.findById(postId)
+                .orElseThrow(() -> new RuntimeException("Post not found."));
 
-        if(postRequest.getPostTitle() != null) {
+        if (postRequest.getPostTitle() != null && !postRequest.getPostTitle().isEmpty()) {
             postEntity.setPostTitle(postRequest.getPostTitle());
         }
 
-        if(postRequest.getPostContent() != null) {
+        if (postRequest.getPostContent() != null && !postRequest.getPostContent().isEmpty()) {
             postEntity.setPostContent(postRequest.getPostContent());
         }
 
-        if(imageFile != null && !imageFile.isEmpty()){
-            postEntity.setPostImageUrl(iFileUpload.uploadFile(imageFile, "post"));
+        if (imageFile != null && !imageFile.isEmpty()) {
+            String newImageUrl = iFileUpload.uploadFile(imageFile, "post");
+            postEntity.setPostImageUrl(newImageUrl);
         }
 
-        iPostRepository.save(postEntity);
+        if (postRequest.getProducts() != null) {
+            postEntity.setProductIds(postRequest.getProducts());
+        }
+
+        postEntity = iPostRepository.save(postEntity);
         return iPostMapper.toPostDTO(postEntity);
     }
 
     @Override
-    public PostDTO getPostById(String postId){
+    public PostDTO getPostById(String postId) {
         PostEntity post = iPostRepository.findById(postId)
-                .orElseThrow(()-> new RuntimeException("Post not found."));
+                .orElseThrow(() -> new RuntimeException("Post not found."));
         return iPostMapper.toPostDTO(post);
     }
 
     @Override
-    public List<PostDTO> getPostByRetailerId(String retailerId){
-        List<PostEntity> post = iPostRepository.findByRetailerId(retailerId);
-        return iPostMapper.toPostDTOList(post);
+    public List<PostDTO> getPostByRetailerId(String retailerId) {
+        List<PostEntity> posts = iPostRepository.findByRetailerId(retailerId);
+        return iPostMapper.toPostDTOList(posts);
+    }
+    @Override
+    public List<PostDTO> getPostByProductId(String productId) {
+        List<PostEntity> posts = iPostRepository.findByProductId(productId);
+        return iPostMapper.toPostDTOList(posts);
     }
 
     @Override
-    public List<PostDTO> getAllPosts(){
+    public List<PostDTO> getAllPosts() {
         return iPostMapper.toPostDTOList(iPostRepository.findAll());
     }
-
 
     @Override
     public String deletePostById(String postId) {
         PostEntity postEntity = iPostRepository.findById(postId)
-                .orElseThrow(()-> new RuntimeException("Post not found."));
-        if(postEntity == null) throw new RuntimeException("Post not found");
-        iPostRepository.deleteById(postId);
+                .orElseThrow(() -> new RuntimeException("Post not found."));
+        iPostRepository.delete(postEntity);
         return "Delete post successfully";
     }
 }

@@ -5,6 +5,8 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "post")
@@ -32,7 +34,15 @@ public class PostEntity {
     @Column
     String postImageUrl;
 
+    @ElementCollection
+    @CollectionTable(name = "post_product_ids", joinColumns = @JoinColumn(name = "post_id"))
+    @Column(name = "product_id")
+    Set<String> productIds = new HashSet<>();
+
     @ManyToOne
     @JoinColumn(name = "retailer_id", nullable = false)
     RetailerEntity retailer;
+
+
+
 }

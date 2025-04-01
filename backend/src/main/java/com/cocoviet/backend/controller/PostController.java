@@ -1,14 +1,10 @@
 package com.cocoviet.backend.controller;
 
 import com.cocoviet.backend.models.dto.PostDTO;
-import com.cocoviet.backend.models.dto.ProductDTO;
 import com.cocoviet.backend.models.reponse.ResponseData;
 import com.cocoviet.backend.models.request.PostRequest;
-import com.cocoviet.backend.models.request.ProductRequest;
 import com.cocoviet.backend.service.IPostService;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.validation.Valid;
 import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -68,6 +64,16 @@ public class PostController {
                 .body(ResponseData.builder()
                         .data(iPostService.getPostById(postId))
                         .msg("Get post Id: " + postId + "successfully")
+                        .status("OK")
+                        .build());
+    }
+
+    @GetMapping("/productId")
+    ResponseEntity<ResponseData> getPostByProductId(@RequestParam("productId") String productId){
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ResponseData.builder()
+                        .data(iPostService.getPostByProductId(productId))
+                        .msg("Get post by product Id: " + productId + " successfully")
                         .status("OK")
                         .build());
     }

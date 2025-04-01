@@ -30,7 +30,6 @@ public class ProductEntity {
     @Column
     String productImage;
 
-
     @Column
     String status;
 
@@ -49,5 +48,5 @@ public class ProductEntity {
 
     //anh
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    Set<ProductCategoryEntity> productCategories ;
+    Set<ProductCategoryEntity> productCategories;
 }

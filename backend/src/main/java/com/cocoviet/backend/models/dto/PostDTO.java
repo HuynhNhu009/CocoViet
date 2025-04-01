@@ -2,6 +2,8 @@ package com.cocoviet.backend.models.dto;
 
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -32,4 +34,6 @@ public class PostDTO {
     LocalDateTime publishTime;
 
     String authorId;
+
+    Set<String> productIds = new HashSet<>();
 }

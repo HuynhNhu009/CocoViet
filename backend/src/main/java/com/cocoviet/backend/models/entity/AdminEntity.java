@@ -22,6 +22,4 @@ public class AdminEntity {
 
     @Column
     String adminName;
-
-
 }

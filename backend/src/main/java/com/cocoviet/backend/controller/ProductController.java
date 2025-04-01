@@ -137,6 +137,16 @@ public class ProductController {
                         .status("OK").build());
     }
 
+    @GetMapping("/posts/{postId}")
+    ResponseEntity<ResponseData> getAllProductByPostId(@PathVariable String postId){
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ResponseData.builder()
+                        .data(productService.getProductListByPostId(postId))
+                        .msg("Get all product by post successfully!")
+                        .status("OK")
+                        .build());
+    }
+
     @DeleteMapping()
     ResponseEntity<ResponseData> deleteProductById(@PathParam("productId") String productId){
         return ResponseEntity.status(HttpStatus.OK)

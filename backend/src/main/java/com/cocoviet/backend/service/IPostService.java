@@ -13,5 +13,6 @@ public interface IPostService {
     PostDTO getPostById(String  postId);
     List<PostDTO> getAllPosts();
     List<PostDTO> getPostByRetailerId(String retailerId);
+    List<PostDTO> getPostByProductId(String productId);
     String deletePostById(String postId);
 }

@@ -3,6 +3,7 @@ package com.cocoviet.backend.service.impl;
 import com.cocoviet.backend.Enum.ProductStatus;
 import com.cocoviet.backend.mapper.IProductMapper;
 import com.cocoviet.backend.mapper.ProductVariantMapper;
+import com.cocoviet.backend.models.dto.PostDTO;
 import com.cocoviet.backend.models.dto.ProductDTO;
 import com.cocoviet.backend.models.dto.ProductVariantDTO;
 import com.cocoviet.backend.models.entity.*;
@@ -48,6 +49,9 @@ public class ProductServiceImpl implements IProductService {
 
     @Autowired
     IRetailerRepository iretailerRepository;
+
+    @Autowired
+    IPostRepository iPostRepository;
 
     @Autowired
     ProductVariantMapper productVariantMapper;
@@ -405,6 +409,22 @@ public class ProductServiceImpl implements IProductService {
 
         // 4. Trả về danh sách ProductDTO
         return productDTOS;
+    }
+
+    @Override
+    public List<ProductDTO> getProductListByPostId(String postId) {
+        PostEntity post = iPostRepository.findById(postId)
+                .orElseThrow(()-> new RuntimeException("Post not found."));
+
+        Set<String> productIds = post.getProductIds();
+
+        if (productIds == null || productIds.isEmpty()) {
+            throw new RuntimeException("Product of post not found.");
+        }
+
+        List<ProductEntity> productEntities = iProductRepository.findAllById(productIds);
+
+        return iProductMapper.toProductDTOList(productEntities);
     }
 
     @Override

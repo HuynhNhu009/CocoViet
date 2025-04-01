@@ -21,5 +21,4 @@ public class CategoryEntity implements Serializable {
 
     @Column
     String categoryName;
-
 }

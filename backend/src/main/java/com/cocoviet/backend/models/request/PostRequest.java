@@ -1,6 +1,7 @@
 package com.cocoviet.backend.models.request;
 
 import java.util.Date;
+import java.util.Set;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -32,4 +33,5 @@ public class PostRequest {
 
     String retailerId; //
 
+    Set<String> products;
 }
