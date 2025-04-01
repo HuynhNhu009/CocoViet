@@ -5,7 +5,7 @@ import { PlusIcon } from "@heroicons/react/24/outline";
 import PostEdit from "./PostEdit";
 import { postApi } from "../../services/PostService";
 
-const PostList = ({ retailer, posts, fetchPosts }) => {
+const PostList = ({ retailer, posts, fetchPosts, products = [], fetchProducts }) => {
   const [viewState, setViewState] = useState({
     mode: "list",
     error: null,
@@ -20,9 +20,11 @@ const PostList = ({ retailer, posts, fetchPosts }) => {
   }, []);
 
   const handleAddPosts = useCallback(() => {
+    console.log("handleAddPosts called!");
+    fetchProducts(); // Gọi fetchProducts để cập nhật danh sách sản phẩm
     setViewState({ mode: "add", error: null, success: null });
     setSelectedPost(null);
-  }, []);
+  }, [fetchProducts]);
 
   const handleCancel = useCallback(() => {
     setViewState({ mode: "list", error: null, success: null });
@@ -42,7 +44,7 @@ const PostList = ({ retailer, posts, fetchPosts }) => {
         success: `Đã thêm bài đăng ${postTitle}!`,
       });
       fetchPosts();
-      clearMessages(); // Clear message after 3 seconds
+      clearMessages();
     },
     [fetchPosts, clearMessages]
   );
@@ -57,7 +59,7 @@ const PostList = ({ retailer, posts, fetchPosts }) => {
           error: null,
           success: `Đã sửa bài đăng ${updatedPost.postTitle}!`,
         });
-        clearMessages(); // Clear message after 3 seconds
+        clearMessages();
       } else {
         setViewState({ mode: "list", error: null, success: null });
       }
@@ -68,14 +70,14 @@ const PostList = ({ retailer, posts, fetchPosts }) => {
   const handleDeletePost = useCallback(
     async (postId, postTitle) => {
       try {
-        const response = await postApi.deletePostById(postId);
+        await postApi.deletePostById(postId);
         fetchPosts();
         setViewState({
           mode: "list",
           error: null,
           success: `Bài viết ${postTitle} đã xóa thành công!!`,
         });
-        clearMessages(); // Clear message after 3 seconds
+        clearMessages();
       } catch (error) {
         console.error("Delete error:", error);
         setViewState({
@@ -83,7 +85,7 @@ const PostList = ({ retailer, posts, fetchPosts }) => {
           error: "Failed to delete post: " + error.message,
           success: null,
         });
-        clearMessages(); // Clear error message after 3 seconds
+        clearMessages();
       }
     },
     [fetchPosts, clearMessages]
@@ -104,8 +106,14 @@ const PostList = ({ retailer, posts, fetchPosts }) => {
   const sortedPosts = [...posts].sort((a, b) => {
     const dateA = a.publishTime ? new Date(a.publishTime) : new Date(0);
     const dateB = b.publishTime ? new Date(b.publishTime) : new Date(0);
-    return dateB - dateA; 
+    return dateB - dateA;
   });
+
+  // Hàm lọc sản phẩm liên quan đến bài viết
+  const getRelatedProducts = (productIds) => {
+    if (!productIds || !products || products.length === 0) return [];
+    return products.filter((product) => productIds.includes(product.id));
+  };
 
   return (
     <div className="min-h-[85vh] flex flex-col gap-2">
@@ -129,12 +137,14 @@ const PostList = ({ retailer, posts, fetchPosts }) => {
                   post={post}
                   isEdit={handleEditPost}
                   setPost={setSelectedPost}
-                  deletePost={(postId) => handleDeletePost(postId, post.postTitle)} // Pass postTitle
+                  deletePost={(postId) => handleDeletePost(postId, post.postTitle)}
+                  products={getRelatedProducts(post.productIds)} // Truyền sản phẩm liên quan
                 />
               ))
             ) : (
               <p className="text-gray-500 text-center py-4">
-                Bạn chưa có bài viết nào!!</p>
+                Bạn chưa có bài viết nào!!
+              </p>
             )}
           </div>
         </div>
@@ -148,6 +158,7 @@ const PostList = ({ retailer, posts, fetchPosts }) => {
             retailerId={retailer?.retailerId}
             onCancel={handleCancel}
             onSave={handleSaveAdd}
+            products={products}
           />
         </>
       )}
@@ -160,6 +171,7 @@ const PostList = ({ retailer, posts, fetchPosts }) => {
             post={selectedPost}
             onSave={handleSaveUpdate}
             onCancel={handleCancel}
+            products={products}
           />
         </>
       )}

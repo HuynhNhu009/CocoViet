@@ -180,7 +180,7 @@ const AddProductForm = ({
   };
 
   return (
-    <div className="min-h-[75vh]">
+    <div className="min-h-[80vh]">
       {message && (
         <div
           className={`p-2 mb-4 text-center rounded-md  ${
@@ -194,11 +194,25 @@ const AddProductForm = ({
       )}
       <form
         onSubmit={handleAddProduct}
-        className="space-y-6 lg:grid lg:grid-cols-2 lg:gap-6 lg:space-y-0"
+        className="space-y-6 lg:grid lg:grid-cols-2 lg:gap-4 lg:space-y-0"
       >
+        {/* Nút submit */}
+        <div className="lg:col-span-2 flex justify-end">
+          <button
+            type="submit"
+            className={`w-40 py-2 px-4 rounded-md text-white ${
+              loading
+                ? "bg-green-400 cursor-not-allowed"
+                : "bg-green-600 hover:bg-green-700"
+            } transition-colors`}
+            disabled={loading}
+          >
+            {loading ? "Đang thêm..." : "Thêm sản phẩm"}
+          </button>
+        </div>
         <div className="space-y-6">
           <div className="relative">
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-md font-medium text-gray-700">
               Tên sản phẩm
             </label>
             <input
@@ -212,7 +226,7 @@ const AddProductForm = ({
             />
           </div>
           <div className="relative">
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-md font-medium text-gray-700">
               Mô tả sản phẩm
             </label>
             <textarea
@@ -225,7 +239,7 @@ const AddProductForm = ({
             />
           </div>
           <div className="relative">
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-md font-medium text-gray-700">
               Nguồn gốc
             </label>
             <input
@@ -245,7 +259,7 @@ const AddProductForm = ({
         <div className="space-y-6">
           {/* Chọn danh mục */}
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-md font-medium text-gray-700">
               Danh mục sản phẩm
             </label>
             <div className="min-h-40 overflow-y-auto border border-gray-300 rounded-md p-2">
@@ -264,7 +278,7 @@ const AddProductForm = ({
                       disabled={loading}
                       className=" w-4 text-green-600 border-gray-300 rounded focus:ring-green-500"
                     />
-                    <span className="text-gray-700">{cat.categoryName}</span>
+                    <span className="text-gray-700 text-md">{cat.categoryName}</span>
                   </div>
                 ))
               )}
@@ -274,7 +288,7 @@ const AddProductForm = ({
           {/* Quản lý loại */}
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <label className="block text-sm font-medium text-gray-700">
+              <label className="block text-md font-medium text-gray-700">
                 Loại sản phẩm
               </label>
               <button
@@ -385,20 +399,7 @@ const AddProductForm = ({
           </div>
         </div>
 
-        {/* Nút submit */}
-        <div className="lg:col-span-2">
-          <button
-            type="submit"
-            className={`w-full py-2 px-4 rounded-md text-white ${
-              loading
-                ? "bg-green-400 cursor-not-allowed"
-                : "bg-green-600 hover:bg-green-700"
-            } transition-colors`}
-            disabled={loading}
-          >
-            {loading ? "Đang thêm..." : "Thêm sản phẩm"}
-          </button>
-        </div>
+        
       </form>
     </div>
   );

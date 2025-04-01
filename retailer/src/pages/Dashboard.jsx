@@ -157,11 +157,11 @@ const Dashboard = () => {
 
   useEffect(() => {
     fetchOrder();
-    const interval = setInterval(() => {
-      fetchOrder();
-      fetchProducts();
-    }, 5000);
-    return () => clearInterval(interval);
+    // const interval = setInterval(() => {
+    //   fetchOrder();
+    //   fetchProducts();
+    // }, 5000);
+    // return () => clearInterval(interval);
   }, [loadOrder]);
 
   const fetchRevenue = async () => {
@@ -261,7 +261,13 @@ const Dashboard = () => {
     ),
     profit: <Profit />,
     post: (
-      <PostList retailer={retailer} posts={posts} fetchPosts={fetchPosts} />
+      <PostList
+        retailer={retailer}
+        posts={posts}
+        fetchPosts={fetchPosts}
+        products={products}
+        fetchProducts={fetchProducts}
+      />
     ),
   };
 
@@ -278,7 +284,7 @@ const Dashboard = () => {
           setIsOpen={setIsSidebarOpen}
         />
         <div className="flex-1 sm:mt-8">
-          <div className="bg-white px-4 pb-10 mb-10 sm:px-6 sm:rounded-lg sm:shadow-md">
+          <div className="bg-white px-4  sm:px-6 sm:rounded-lg sm:shadow-md">
             <div className="flex items-center pt-4 pb-2">
               <button
                 onClick={() => setIsSidebarOpen(true)}
