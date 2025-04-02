@@ -160,7 +160,7 @@ public class RetailerController {
                         .build());
     }
 
-    @PatchMapping("/update-profile/{id}")
+    @PatchMapping("/{id}")
     ResponseEntity<ResponseData> updateRetailerProfile(@PathVariable String id,
                                                        @RequestBody @Valid UserProfileRequest retailerRequest) {
 

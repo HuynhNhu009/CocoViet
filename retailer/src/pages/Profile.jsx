@@ -1,76 +1,185 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useLocation, Navigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
+import { retailerApi } from "../services/RetailerService";
 
 const useQuery = () => {
   return new URLSearchParams(useLocation().search);
 };
-
 const Profile = () => {
+  
+  
   const query = useQuery();
-  const id = query.get("id"); // Lấy giá trị của query param "id"
+  const id = query.get("id"); 
 
   const retailer = useSelector((state) => state.RetailerStore.retailer);
 
-  if (retailer.retailerId != id) {
-    return <Navigate to="/dashboard" replace />;
-  }
+  const [isEditing, setIsEditing] = useState(false);
 
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("vi-VN", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
+  const [editedretailer, setEditedretailer] = useState({
+    userName: "",
+    userAddress: "",
+    phoneNumbers: "",
+  });
+
+  useEffect(() => {
+    if (retailer) {
+      setEditedretailer({
+        userName: retailer.retailerName || "",
+        userAddress: retailer.retailerAddress || "",
+        phoneNumbers: retailer.phoneNumbers || "",
+      });
+    }
+  }, [retailer]);
+
+  const handleChange = (e) => {
+    setEditedretailer({ ...editedretailer, [e.target.name]: e.target.value });
+  };
+
+  const handleSave = async () => {
+    const updatedFields = Object.keys(editedretailer).reduce((acc, key) => {
+      if (editedretailer[key] !== (retailer[key] || "")) {
+        acc[key] = editedretailer[key];
+      }
+      return acc;
+    }, {});
+
+    if (Object.keys(updatedFields).length === 0) {
+      setIsEditing(false);
+      return;
+    }
+    console.log("fieal", updatedFields);
+    
+    try {
+      await retailerApi.updateProfile(retailer.retailerId, updatedFields);
+      window.location.reload();
+      setIsEditing(false);
+    } catch (error) {
+      console.error("Lỗi khi cập nhật thông tin:", error);
+      alert("Cập nhật thất bại!");
+    }
   };
 
   return (
     <div>
       <Navbar />
-      <div className="max-w-2xl mx-auto my-5 p-5 bg-white rounded-lg shadow-md">
-        <div className="flex items-center gap-5 mb-5">
+
+      <div className="max-w-6xl mx-auto p-5 font-sans">
+      <section className="bg-gray-100  p-6 shadow-md rounded-lg mb-8 flex items-start gap-6">
+        <div className="w-32 h-32 mt-2 flex-shrink-0 flex items-center justify-center">
           <img
-            src={
-              !retailer.avatar
-                ? "https://api.dicebear.com/9.x/thumbs/svg"
-                : retailer.avatar
-            }
-            alt="Avatar"
-            className="w-36 h-36 rounded-full object-cover"
+            src="https://img.freepik.com/premium-vector/young-coconut-design-premium-logo_187482-677.jpg"
+            alt="retailer"
+            className="w-full h-full object-cover rounded-sm shadow-sm"
           />
-          <div className="flex-1">
-            <h1 className="text-2xl font-bold text-gray-800">
-              {retailer.retailerName}
-            </h1>
-            <p className="text-gray-600">{retailer.retailerEmail}</p>
-          </div>
         </div>
 
-        <div className="mb-5">
-          <div className="mt-3 space-y-1">
-            <p className="text-gray-600">
-              <span className="font-medium">Địa chỉ:</span>{" "}
-              {retailer.retailerAddress}
-            </p>
-            <p className="text-gray-600">
-              <span className="font-medium">Số điện thoại:</span>{" "}
-              {retailer.phoneNumbers}
-            </p>
-            <p className="text-gray-600">
-              <span className="font-medium">Tham gia:</span>{" "}
-              {formatDate(retailer.createdAt)}
-            </p>
+        <div className="flex-1 text-gray-600">
+          <h1 className="text-2xl md:text-3xl font-bold mb-4">
+            {retailer?.retailerName || "Tên nhà bán lẻ"}
+          </h1>
+          <div className="flex justify-between">
+            <div>
+              <p className="text-sm md:text-base mb-2">
+                <strong>Địa chỉ:</strong>{" "}
+                {retailer?.retailerAddress || "Chưa có thông tin"}
+              </p>
+              <p className="text-sm md:text-base mb-2">
+                <strong>Số điện thoại:</strong>{" "}
+                {retailer?.phoneNumbers || "Chưa có thông tin"}
+              </p>
+              <p className="text-sm md:text-base mb-2">
+                <strong>Email:</strong>{" "}
+                {retailer?.retailerEmail || "Chưa có thông tin"}
+              </p>
+            </div>
+
+            <div>
+              <p className="text-sm md:text-base mb-2">
+                <strong>Tham gia:</strong>{" "}
+                {retailer?.createdAt
+                  ?.split("T")[0]
+                  .split("-")
+                  .reverse()
+                  .join("/") || "N/A"}
+              </p>
+              {!isEditing && (
+                <p className="text-sm md:text-base mb-2">
+                  <button
+                    onClick={() => setIsEditing(true)}
+                    className="bg-blue-600 hover:bg-blue-700 cursor-pointer text-white p-2 rounded-sm text-sm w-full"
+                  >
+                    Cập nhật thông tin
+                  </button>
+                </p>
+              )}
+            </div>
           </div>
         </div>
+      </section>
 
-        <div>
-          <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">
-            Chỉnh sửa hồ sơ
-          </button>
-        </div>
-      </div>
+      {isEditing && (
+        <section className=" p-6 shadow-md rounded-lg mb-8">
+          <h2 className="text-xl md:text-xl text-black uppercase mb-4 text-center">
+            Chỉnh sửa thông tin
+          </h2>
+          <div className="grid grid-cols-1 gap-4">
+            <div>
+              <label className="text-sm md:text-base text-black  block mb-1">
+                <strong>Tên cửa hàng</strong>
+              </label>
+              <input
+                type="text"
+                name="userName"
+                value={editedretailer.userName}
+                onChange={handleChange}
+                className="w-full p-2 rounded-sm text-black  border  focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            <div>
+              <label className="text-sm md:text-base text-black  block mb-1">
+                <strong>Địa chỉ</strong>
+              </label>
+              <input
+                type="text"
+                name="userAddress"
+                value={editedretailer.userAddress}
+                onChange={handleChange}
+                className="w-full p-2 rounded-sm text-black  border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            <div>
+              <label className="text-sm md:text-base text-black  block mb-1">
+                <strong>Số điện thoại</strong>
+              </label>
+              <input
+                type="text"
+                name="phoneNumbers"
+                value={editedretailer.phoneNumbers}
+                onChange={handleChange}
+                className="w-full p-2 rounded-sm text-black  border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+          </div>
+          <div className="flex justify-center gap-4 mt-6">
+            <button
+              onClick={handleSave}
+              className="bg-green-600 hover:bg-green-700 cursor-pointer text-white p-2 rounded-sm text-sm px-4"
+            >
+              Lưu thay đổi
+            </button>
+            <button
+              onClick={() => setIsEditing(false)}
+              className="bg-gray-500 hover:bg-gray-600 cursor-pointer text-white p-2 rounded-sm text-sm px-4"
+            >
+              Hủy
+            </button>
+          </div>
+        </section>
+      )}
+    </div>
+  {/* ); */}
     </div>
   );
 };

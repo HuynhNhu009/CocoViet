@@ -27,4 +27,9 @@ export const retailerApi = {
     const response = await api.get("/retailers/get-all");
     return response.data;
   },
+  
+  updateProfile: async (retailerId, data) => {
+    const response = await api.patch(`/retailers/${retailerId}`, data);
+    return response.data;
+  },
 };
