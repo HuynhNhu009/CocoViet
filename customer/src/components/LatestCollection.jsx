@@ -7,11 +7,6 @@ const LatestCollection = () => {
    const productStore = useSelector(
       (state) => state.ProductStore.productStore || []
     );
-<<<<<<< HEAD
-    console.log("collection")
-    navigate(`/product/${productId}`);
-=======
->>>>>>> 6231f2e6d26b0c5a11f07ef28f34bbcfed88ae57
 
 
   return (
@@ -28,11 +23,6 @@ const LatestCollection = () => {
             <ProductHomeItem
               key={product.productId}
               product={product}
-<<<<<<< HEAD
-              productId={product.productId}
-              // onClick={() => handleNavigate(product.productId)}
-=======
->>>>>>> 6231f2e6d26b0c5a11f07ef28f34bbcfed88ae57
             />
           ))}
         </div>

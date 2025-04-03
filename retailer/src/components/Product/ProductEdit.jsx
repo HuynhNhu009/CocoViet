@@ -234,7 +234,7 @@ const ProductEdit = ({ product, onSave, onCancel }) => {
       }
 
       if (Object.keys(updatedData).length > 0) {
-        // updatedData["status"] = "DISABLE" //
+        updatedData["status"] = "DISABLE" //
         console.log("Dataupdate================", updatedData);
         await productApi.updateProduct(productId, updatedData);
       }
