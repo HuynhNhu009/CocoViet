@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { setPostDetail } from "../../redux/postSlice";
 import { postApi } from "../../services/postService";
 
@@ -9,14 +9,15 @@ const PostDetail = () => {
   const postDetail = useSelector((state) => state.PostStore.postDetail);
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(true);
-
+  const navigator = useNavigate();
+  console.log(postDetail);
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
     }, 500);
     return () => clearTimeout(timer);
   }, []);
-  
+
   useEffect(() => {
     if (!postDetail || Object.keys(postDetail).length === 0) {
       const fetchPost = async () => {
@@ -54,9 +55,12 @@ const PostDetail = () => {
               </h2>
 
               <div className=" justify-between text-gray-600 text-sm mb-5">
-                <span className="font-semibold">
+                <p
+                  className="font-semibold cursor-pointer"
+                  onClick={() => navigator(`/retailer/${postDetail.authorId}`)}
+                >
                   Tác giả: {postDetail.authorPost}
-                </span>
+                </p>
                 <p>
                   {" "}
                   Ngày đăng:{" "}
@@ -76,7 +80,10 @@ const PostDetail = () => {
                 />
               </div>
 
-              <p className="text-lg text-gray-700 mt-6 leading-relaxed" style={{ whiteSpace: "pre-wrap" }}>
+              <p
+                className="text-lg text-gray-700 mt-6 leading-relaxed"
+                style={{ whiteSpace: "pre-wrap" }}
+              >
                 {postDetail.postContent}
               </p>
             </div>

@@ -1,12 +1,18 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-const ProductHomeItem = ({ product }) => {
+const ProductHomeItem = ({ product , productId}) => {
   const navigator = useNavigate();
+  
+  const handleNavigate = (productId) => {
+    navigator(`/products/${productId}`)
+    // window.location.href = `/product/${productId}`;
+  }
+  console.log("ProductHomeItem", productId)
   return (
     <div
-      className="mb-5 gap-4 sm:max-w-[350px] h-[450px] cursor-pointer overflow-hidden shadow flex flex-col group box-border hover:outline-1 hover:outline-green-200"
-      onClick={() => navigator(`/products/${product.productId}`)}
+    className="mb-5 gap-4 sm:max-w-[350px] h-[450px] cursor-pointer overflow-hidden shadow flex flex-col group box-border hover:outline-1 hover:outline-green-200"
+    onClick={() => handleNavigate(productId)}
     >
       <div className="bg-amber-300 w-full max-h-[250px] sm:w-[350px] overflow-hidden">
         <img

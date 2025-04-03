@@ -18,6 +18,7 @@ const LatestCollection = () => {
     const findByProductId = productStore.find(
       (item) => item.productId === productId
     );
+    console.log("collection")
     navigate(`/product/${productId}`);
 
     if (findByProductId) {
@@ -43,7 +44,8 @@ const LatestCollection = () => {
             <ProductHomeItem
               key={product.productId}
               product={product}
-              onClick={() => handleNavigate(product.productId)}
+              productId={product.productId}
+              // onClick={() => handleNavigate(product.productId)}
             />
           ))}
         </div>
