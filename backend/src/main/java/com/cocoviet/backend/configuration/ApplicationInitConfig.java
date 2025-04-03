@@ -2,6 +2,11 @@ package com.cocoviet.backend.configuration;
 
 import com.cocoviet.backend.models.entity.AdminEntity;
 import com.cocoviet.backend.repository.IAdminRepository;
+import com.cocoviet.backend.repository.ICategoryRepository;
+import com.cocoviet.backend.repository.IPaymentRepository;
+import com.cocoviet.backend.repository.IStatusRepository;
+import com.cocoviet.backend.service.IPaymentService;
+import com.cocoviet.backend.service.IStatusService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -20,7 +25,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ApplicationInitConfig {
     IAdminRepository adminRepository;
-
+    IPaymentRepository paymentRepository;
+    IStatusRepository statusRepository;
+    IStatusService statusService;
+    IPaymentService paymentService;
     @NonFinal
     @Value("${ADMIN_NAME}")
     protected String ADMIN_NAME;
@@ -52,6 +60,12 @@ public class ApplicationInitConfig {
                         .password(passwordEncoder.encode(ADMIN_PASSWORD))
                         .build();
                 adminRepository.save(adminEntity);
+            }
+            if(statusRepository.findAll().isEmpty()) {
+                statusService.addStatus();
+            }
+            if(paymentRepository.findAll().isEmpty()) {
+                paymentService.addPaymentMethod();
             }
         };
     }
