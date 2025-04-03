@@ -42,4 +42,6 @@ public class ProductRequest {
     Set<String> categoryId;
 
     LocalDateTime createdAt;
+
+    String status;
 }

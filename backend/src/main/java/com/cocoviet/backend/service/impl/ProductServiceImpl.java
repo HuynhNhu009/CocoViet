@@ -154,6 +154,10 @@ public class ProductServiceImpl implements IProductService {
         if(productRequest.getProductOrigin() != null) {
             productEntity.setProductOrigin(productRequest.getProductOrigin());
         }
+
+        if(productRequest.getStatus() != null) {
+            productEntity.setStatus(productRequest.getStatus());
+        }
         productEntity = iProductRepository.save(productEntity);
 
 

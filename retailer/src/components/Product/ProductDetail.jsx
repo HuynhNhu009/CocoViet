@@ -41,7 +41,7 @@ const ProductDetail = ({
       case "ENABLE":
         return { text: "Đang bán", color: "text-green-600 bg-green-100" };
       case "DISABLE":
-        return { text: "Tạm khóa", color: "text-gray-600 bg-gray-100" };
+        return { text: "Chờ duyệt", color: "text-gray-600 bg-gray-100" };
       case "PAUSE":
         return { text: "Tạm ngừng", color: "text-yellow-600 bg-yellow-100" };
       case "BLOCK":

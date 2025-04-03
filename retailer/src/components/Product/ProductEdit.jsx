@@ -15,6 +15,8 @@ const ProductEdit = ({ product, onSave, onCancel }) => {
   const categories = useSelector((state) => state.RetailerStore.category);
   const units = useSelector((state) => state.RetailerStore.units);
 
+  console.log("p   ",product)
+
   // Khởi tạo dataEdited với categoryId ánh xạ từ product.categoryName
   const [dataEdited, setDataEdited] = useState(() => {
     const initialCategoryIds = (product.categoryName || [])
@@ -234,7 +236,7 @@ const ProductEdit = ({ product, onSave, onCancel }) => {
       }
 
       if (Object.keys(updatedData).length > 0) {
-        updatedData["status"] = "DISABLE" //
+        updatedData.status = "DISABLE";   
         console.log("Dataupdate================", updatedData);
         await productApi.updateProduct(productId, updatedData);
       }
