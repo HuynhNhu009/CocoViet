@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import { setCreateOrder } from "../../redux/orderSlice";
 import { orderAPI } from "../../services/orderService";
@@ -10,8 +10,11 @@ function OrderItem(orderStore) {
   const [totalPrice, setTotalPrice] = useState(0);
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState({});
+  const [selectedPayment, setSelectedPayment] = useState("");
 
   const dispatch = useDispatch();
+  const paymentStore = useSelector((state) => state.OrderStore.payment || []);
+
   const orderRequest = {
     receiptDetailRequests: [
       {
@@ -23,7 +26,7 @@ function OrderItem(orderStore) {
   };
 
   useEffect(() => {
-    if (orderStore) {
+    if (orderStore?.orderStore) {
       setOrder(orderStore.orderStore);
 
       const initialQuantities = {};
@@ -37,9 +40,30 @@ function OrderItem(orderStore) {
         });
       setTotalPrice(price);
       setQuantity(initialQuantities);
+      setSelectedPayment(orderStore.orderStore.paymentMethod || "");
       setLoading(false);
     }
   }, [orderStore]);
+
+  const handlePaymentChange = async (e) => {
+    const paymentMethod = e.target.value;
+    const paymentCode = e.target.selectedOptions[0].dataset.key;
+
+    setSelectedPayment(paymentMethod);
+    const paymentRequest = { paymentCode };
+
+    try {
+      await orderAPI.updateOrder(order.orderId, paymentRequest);
+      await dispatch(setCreateOrder(true));
+      toast.success("Cập nhật phương thức thanh toán thành công!", {
+        position: "top-center",
+        autoClose: 1000,
+      });
+    } catch (error) {
+      console.error("Error updating payment:", error);
+      toast.error("Lỗi khi cập nhật phương thức thanh toán!");
+    }
+  };
 
   if (loading) {
     return <p className="text-center text-gray-500">Đang tải đơn hàng...</p>;
@@ -49,28 +73,24 @@ function OrderItem(orderStore) {
     let value = e.target.value.trim();
 
     if (value === "") {
-      setQuantity((prev) => ({ ...prev, [ item.productVariants.variantId]: 1 }));
+      setQuantity((prev) => ({ ...prev, [item.productVariants.variantId]: 1 }));
       return;
     }
 
     let num = parseInt(value, 10);
-    if(num > item.productVariants.stock){
-      toast.error('Số lượng sản phẩm đã đạt giới hạn!', {
+    if (num > item.productVariants.stock) {
+      toast.error("Số lượng sản phẩm đã đạt giới hạn!", {
         position: "top-center",
         autoClose: 1500,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-        });
-
-    }else if(!isNaN(num) && num >= 1) {
-      setQuantity((prev) => ({ ...prev, [ item.productVariants.variantId]: num }));
+      });
+    } else if (!isNaN(num) && num >= 1) {
+      setQuantity((prev) => ({
+        ...prev,
+        [item.productVariants.variantId]: num,
+      }));
       orderRequest.receiptDetailRequests = [
         {
-          productVariantId:  item.productVariants.variantId,
+          productVariantId: item.productVariants.variantId,
           quantity: num,
         },
       ];
@@ -79,7 +99,6 @@ function OrderItem(orderStore) {
     }
   };
 
-  //delete product
   const handleDeleteProduct = async (receiptDetailId) => {
     Swal.fire({
       title: "Xóa sản phẩm",
@@ -104,10 +123,14 @@ function OrderItem(orderStore) {
     });
   };
 
-  //buyProduct
   const handleNextProcess = async () => {
     if (!order || !order.orderId || !order.receiptDetails?.length) {
       Swal.fire("Vui lòng thêm sản phẩm vào giỏ hàng!");
+      return;
+    }
+
+    if (!selectedPayment) {
+      Swal.fire("Vui lòng chọn phương thức thanh toán!");
       return;
     }
 
@@ -117,14 +140,11 @@ function OrderItem(orderStore) {
           item.productStatus === "PAUSE" || item.productVariants.stock === 0
       );
 
-      console.log("dele", deleteReceipt);
-
       if (deleteReceipt.length > 0) {
         Swal.fire({
           title: "Chưa thể đặt hàng!",
           text: "Vui lòng xóa các sản phẩm đã hết hàng trước khi đặt hàng!",
           icon: "error",
-          showConfirmButton: false,
           timer: 1500,
         });
       } else {
@@ -137,6 +157,9 @@ function OrderItem(orderStore) {
 
         const orderRequest = {
           receiptDetailRequests: receiptDetailRequests,
+          paymentCode: paymentStore.find(
+            (method) => method.paymentMethod === selectedPayment
+          )?.paymentCode,
         };
 
         await orderAPI.updateOrder(order.orderId, orderRequest);
@@ -145,13 +168,6 @@ function OrderItem(orderStore) {
         toast.success("Đặt hàng thành công!", {
           position: "top-center",
           autoClose: 1000,
-          hideProgressBar: false,
-          closeOnClick: false,
-          pauseOnHover: false,
-          draggable: false,
-          progress: undefined,
-          closeButton: false,
-          theme: "light",
         });
       }
     } catch (error) {
@@ -185,7 +201,7 @@ function OrderItem(orderStore) {
                   <tr
                     key={index}
                     className={`text-center border-b-1 border-gray-400 ${
-                      item.productStatus == "PAUSE" ||
+                      item.productStatus === "PAUSE" ||
                       item.productVariants.stock === 0
                         ? "bg-gray-200"
                         : ""
@@ -199,7 +215,7 @@ function OrderItem(orderStore) {
                           className="h-28 w-28 object-cover mr-2"
                         />
                         <span className="ml-2 w-38">
-                          <span className="">
+                          <span>
                             {item.productName} - ({item.productVariants.value}
                             {item.productVariants.unitName})
                           </span>
@@ -212,18 +228,12 @@ function OrderItem(orderStore) {
                         item.productVariants.price
                       )}
                     </td>
-
-                    <td className={`px-4 py-2`}>
+                    <td className="px-4 py-2">
                       {item.productStatus !== "PAUSE" &&
-                      item.productVariants.stock != 0 ? (
+                      item.productVariants.stock !== 0 ? (
                         <input
                           type="number"
-                          onChange={(e) =>
-                            handleChangeQuantity(
-                              e,
-                              item
-                            )
-                          }
+                          onChange={(e) => handleChangeQuantity(e, item)}
                           onBlur={() => {
                             if (!quantity[item.productVariants.variantId]) {
                               setQuantity((prev) => ({
@@ -237,13 +247,12 @@ function OrderItem(orderStore) {
                         />
                       ) : (
                         <p className="text-red-500 m-0 text-sm">
-                          Sản phẩm đã hết hàng !
+                          Sản phẩm đã hết hàng!
                         </p>
                       )}
                     </td>
-
                     {item.productStatus !== "PAUSE" &&
-                    item.productVariants.stock != 0 ? (
+                    item.productVariants.stock !== 0 ? (
                       <td className="px-4 py-2">
                         ₫
                         {new Intl.NumberFormat("vi-VN").format(
@@ -251,9 +260,8 @@ function OrderItem(orderStore) {
                         )}
                       </td>
                     ) : (
-                      <p></p>
+                      <td></td>
                     )}
-
                     <td className="px-4 py-2">
                       <button
                         onClick={() =>
@@ -278,21 +286,42 @@ function OrderItem(orderStore) {
         </div>
 
         {order?.receiptDetails?.length > 0 && (
-          <div className=" bg-[#77C27F] text-white rounded-tl-lg rounded-tr-lg pb-3 flex justify-between font-bold text-lg pt-2 pr-8 text-right ">
-            <div className="px-5 font-medium text-sm">
-              {order?.receiptDetails?.length} sản phẩm
-            </div>
-            <div>
-              <p className="mb-2">
-                Tổng tiền hàng : ₫
-                {new Intl.NumberFormat("vi-VN").format(totalPrice)}
-              </p>
-              <button
-                onClick={() => handleNextProcess()}
-                className="bg-green-600 cursor-pointer text-white py-1 px-3 rounded-tl-2xl rounded-br-2xl shadow-md transition-transform hover:scale-105 duration-400 ease-in-out"
-              >
-                Đặt Hàng
-              </button>
+          <div className=" ">
+            <div className="bg-[#77C27F] px-5 rounded-tl-lg rounded-tr-lg text-white pb-3 flex justify-between font-bold text-lg pt-2 ">
+              <div className=" font-medium text-sm">
+                <div>{order?.receiptDetails?.length} sản phẩm</div>
+                <div className="">
+                  <select
+                    name="payment"
+                    className="px-3 py-2 mt-2 border outline-green-600 bg-white text-green-600 rounded-md"
+                    value={selectedPayment}
+                    onChange={handlePaymentChange}
+                  >
+                    <option value="">Chọn phương thức thanh toán</option>
+                    {paymentStore.map((method) => (
+                      <option
+                        key={method.paymentCode}
+                        data-key={method.paymentCode}
+                        value={method.paymentMethod}
+                      >
+                        {method.paymentMethod}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+              <div className="text-right">
+                <p className="mb-2">
+                  Tổng tiền hàng: ₫
+                  {new Intl.NumberFormat("vi-VN").format(totalPrice)}
+                </p>
+                <button
+                  onClick={() => handleNextProcess()}
+                  className="bg-green-600 cursor-pointer text-white py-1 px-3 rounded-tl-2xl rounded-br-2xl shadow-md transition-transform hover:scale-105 duration-400 ease-in-out"
+                >
+                  Đặt Hàng
+                </button>
+              </div>
             </div>
           </div>
         )}
