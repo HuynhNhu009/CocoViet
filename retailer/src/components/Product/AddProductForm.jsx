@@ -19,15 +19,15 @@ const AddProductForm = ({
   retailerId,
 }) => {
   const dispatch = useDispatch();
-  const { newProduct, newVariant } = useSelector((state) => state.RetailerStore.productAdd); 
+  const {newProduct, newVariant } = useSelector((state) => state.RetailerStore.productAdd); 
 
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(null);
   const [isAddingVariantInline, setIsAddingVariantInline] = useState(false);
   const [file, setFile] = useState(null);
   const [variantErrors, setVariantErrors] = useState("");
-
-
+  const productStore = useSelector((state) => state.RetailerStore.products)
+  console.log("product retailer", productStore);
   React.useEffect(() => {
     dispatch(setNewProduct({ retailerId: retailerId || "" }));
   }, [retailerId, dispatch]);
@@ -134,6 +134,15 @@ const AddProductForm = ({
     };
 
     try {
+
+      const isProductNameExist = productStore.some(
+        (product) =>
+          product.productName.toLowerCase().trim() ===
+          productToAdd.productName.toLowerCase().trim()
+      );
+      if (isProductNameExist) {
+        throw new Error("PRODUCT_ALREADY_EXISTS");
+      }
       const response = await productApi.addProduct(productToAdd, file);
 
       await onAddProduct();
@@ -154,12 +163,15 @@ const AddProductForm = ({
       setFile(null);
       setMessage("Thêm sản phẩm thành công!");
     } catch (error) {
-      if (error.response) {
+      if (error.message === "PRODUCT_ALREADY_EXISTS") {
+        setMessage("Tên sản phẩm đã tồn tại, vui lòng chọn tên khác!");
+      }
+      else if (error.response) {
         const httpStatus = error.response.status;
         const responseStatus = error.response.data.status;
         const errorMsg = error.response.data.msg || "Lỗi không xác định";
 
-        if (httpStatus === 400 && responseStatus === "PRODUCT_ALREADY_EXISTS") {
+        if (httpStatus === 400 && responseStatus === "PRODUCT_ALREADY_EXISTS" || error == "PRODUCT_ALREADY_EXISTS") {
           setMessage("Tên sản phẩm đã tồn tại, vui lòng chọn tên khác!");
         } else if (httpStatus === 400 && responseStatus === "INVALID_INPUT") {
           setMessage(`Dữ liệu không hợp lệ: ${errorMsg}`);

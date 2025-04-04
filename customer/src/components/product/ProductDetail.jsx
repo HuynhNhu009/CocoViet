@@ -2,12 +2,15 @@ import { BuildingStorefrontIcon } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import {  toast } from 'react-toastify';
+import { toast } from "react-toastify";
 import { setCreateOrder } from "../../redux/orderSlice";
 import { setProductDetail, setRetailerProfile } from "../../redux/productSlice";
 import { orderAPI } from "../../services/orderService";
 import { productAPI } from "../../services/productService";
 import ProductItem from "./ProductItem";
+import { useSelect } from "@chakra-ui/react";
+import { use } from "react";
+import { div } from "framer-motion/client";
 
 const ProductDetail = () => {
   //api
@@ -28,6 +31,18 @@ const ProductDetail = () => {
     (state) => state.ProductStore.retailerStore
   );
   const customer = useSelector((state) => state.CustomerStore.customer);
+
+  const posts = useSelector((state) => state.PostStore.post);
+
+  // Lọc các bài đăng liên quan đến productId hiện tại
+  const relatedPosts = posts.filter(
+    (post) =>
+      post.productIds &&
+      Array.isArray(post.productIds) &&
+      post.productIds.includes(productId)
+  );
+
+  console.log("Related Posts:", relatedPosts);
 
   const [selectVariant, setSelectVariant] = useState([]);
   const [countSellingProduct, setCountSellingProduct] = useState(0);
@@ -79,7 +94,9 @@ const ProductDetail = () => {
     } else {
       setProducts(productDetail);
       if (productDetail?.variants?.length > 0) {
-        const availableVariant = productDetail.variants.find(variant => variant.stock > 0);
+        const availableVariant = productDetail.variants.find(
+          (variant) => variant.stock > 0
+        );
         setSelectVariant(availableVariant || productDetail.variants[0]); // Chọn variant có stock hoặc mặc định
       }
     }
@@ -115,9 +132,8 @@ const ProductDetail = () => {
         },
       ];
 
-      if(quantity > selectVariant?.stock ){
-
-        toast.error('Không đủ số lượng thêm vào giỏ hàng!', {
+      if (quantity > selectVariant?.stock) {
+        toast.error("Không đủ số lượng thêm vào giỏ hàng!", {
           position: "top-center",
           autoClose: 1500,
           hideProgressBar: false,
@@ -126,11 +142,11 @@ const ProductDetail = () => {
           draggable: true,
           progress: undefined,
           theme: "light",
-          });
-      }else{
+        });
+      } else {
         await orderAPI.addOrder(orderRequest);
         dispatch(setCreateOrder(true));
-    
+
         toast.success("Thêm sản phẩm vào giỏ thành công!", {
           position: "top-center",
           autoClose: 1500,
@@ -139,11 +155,10 @@ const ProductDetail = () => {
           pauseOnHover: false,
           draggable: false,
           progress: undefined,
-          closeButton: false, 
+          closeButton: false,
           theme: "light",
         });
       }
-      
     } else {
       //current path
       const currentPath = window.location.pathname;
@@ -237,7 +252,7 @@ const ProductDetail = () => {
                   }`}
                 >
                   {variant.value} {"("}
-                  {variant.unitName} 
+                  {variant.unitName}
                   {")"}
                 </span>
               ))}
@@ -297,13 +312,40 @@ const ProductDetail = () => {
         </div>
 
         <div className="section-3  justify-center space-x-8 flex-wrap mb-3 ">
-          <h2>MÔ TẢ:</h2>
+          <h2 >MÔ TẢ:</h2>
 
           {/* <hr className="mr-0"></hr> */}
           <p className="font-light mx-auto" style={{ whiteSpace: "pre-wrap" }}>
             {product.productDesc}
           </p>
         </div>
+
+        {relatedPosts.length > 0 && (
+          <div className="my-5">
+          <h2 className="uppercase pt-10">Bài viết liên quan:</h2>
+            
+            {relatedPosts.map((post) => (
+              <div
+                className="flex items-center max-w-100 gap-4 cursor-pointer p-3 rounded-lg shadow hover:border hover:border-green-300"
+                key={post.postId}
+                onClick={() => navigate(`/posts/${post.postId}`)}
+              >
+                <img
+                  src={post.postImageUrl}
+                  alt={post.postTitle}
+                  className="w-20 h-20 object-cover rounded-sm"
+                  onError={(e) => (e.target.src = "/fallback-image.jpg")}
+                />
+                <div>
+
+                <p className="text-gray-800 font-semibold">{post.postTitle}</p>
+                <p className="text-gray-600 text-sm line-clamp-3">{post.postContent}</p>
+                </div>
+
+              </div>
+            ))}
+          </div>
+        )}
 
         <div className="section-4  justify-center space-x-8 flex-wrap mb-3 ">
           <h2>LOẠI SẢN PHẨM:</h2>

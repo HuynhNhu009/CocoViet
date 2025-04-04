@@ -239,7 +239,7 @@ const UnitManager = ({
       )}
 
       {/* Danh sách đơn vị */}
-      <div className="bg-white border border-gray-200 rounded-md shadow-sm p-4 min-h-10 max-h-64 overflow-y-auto">
+      <div className="bg-white border border-gray-200 rounded-md shadow-sm p-4 min-h-10  overflow-y-auto">
         {!units.length ? (
           <p className="text-gray-500 text-sm text-center py-2">
             Chưa có đơn vị nào.

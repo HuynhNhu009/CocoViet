@@ -24,7 +24,7 @@ const ProductItem = ({
       transition={{ duration: 0.5, ease: "easeOut" }}
       className="cursor-pointer"
     >
-      <div className="shadow rounded-md cursor-pointer transition-transform duration-300 hover:scale-105">
+      <div className="shadow mb-5 rounded-md cursor-pointer transition-transform duration-300 hover:scale-105">
         <ul
           className="h-72 transition-opacity duration-700
         text-black flex flex-col bg-gray-50 hover:border-green-500 hover:border-1 group"
@@ -43,7 +43,7 @@ const ProductItem = ({
             <p className="font-light h-5 text-sm mt-2">
               ₫{new Intl.NumberFormat("vi-VN").format(price)}
             </p>
-            <p className="font-extralight text-xs h-4 text-right pr-2">
+            <p className="font-medium text-green-600 text-xs h-4 text-right pr-2">
               {retailerName}
             </p>
           </div>

@@ -52,7 +52,7 @@ const PostItem = ({ post, isEdit, deletePost, products }) => {
               whiteSpace: "pre-wrap",
               display: "-webkit-box",
               WebkitBoxOrient: "vertical",
-              WebkitLineClamp: isExpanded ? "unset" : 2, // Giới hạn 2 dòng khi chưa mở rộng
+              WebkitLineClamp: isExpanded ? "unset" : 2, 
               overflow: "hidden",
             }}
           >

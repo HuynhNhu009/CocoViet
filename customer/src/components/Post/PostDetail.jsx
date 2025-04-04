@@ -89,7 +89,7 @@ const PostDetail = () => {
         </div>
         
         {/* Cột sản phẩm */}
-        <div className="bg-white p-6 shadow-lg rounded-lg">
+        <div className="bg-white h-fit p-6 shadow-lg rounded-lg">
           <h3 className="text-2xl font-semibold text-gray-800 mb-4">Sản phẩm liên quan</h3>
           <div className="space-y-4">
             {filteredProducts.length > 0 ? (
