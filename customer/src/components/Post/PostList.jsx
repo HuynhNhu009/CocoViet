@@ -1,19 +1,16 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import PostCard from "./PostCard";
-import { setPostDetail } from "../../redux/postSlice";
 
 const PostList = () => {
   const posts = useSelector((state) => state.PostStore.post);
-  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleClick = (postId) => {
     const findByPostId = posts.find((item) => item.postId === postId);
 
     if (findByPostId) {
-      dispatch(setPostDetail({}));
-      // dispatch(setPostDetail(findByPostId));
+
       navigate(`/posts/${postId}`);
     } else {
       console.log("Post not found!");

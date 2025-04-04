@@ -23,15 +23,9 @@ const HomeBlog = () => {
   }, [postAbout]);
 
   const handleClick = (postId) => {
-    const findByPostId = posts.find((item) => item.postId === postId);
 
-    if (findByPostId) {
-      dispatch(setPostDetail({}));
-      dispatch(setPostDetail(findByPostId));
       navigate(`/posts/${postId}`);
-    } else {
-      console.log("Post not found!");
-    }
+
   };
 
   return (

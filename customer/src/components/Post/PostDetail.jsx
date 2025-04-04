@@ -6,10 +6,11 @@ import { postApi } from "../../services/postService";
 
 const PostDetail = () => {
   const { postId } = useParams();
-  const postDetail = useSelector((state) => state.PostStore.postDetail);
+  // const postDetail = useSelector((state) => state.PostStore.postDetail);
   const products = useSelector((state) => state.ProductStore.productStore);
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(true);
+  const [postDetail, setPostDetail] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -20,19 +21,17 @@ const PostDetail = () => {
   }, []);
 
   useEffect(() => {
-    if (!postDetail || Object.keys(postDetail).length === 0) {
       const fetchPost = async () => {
         try {
           const response = await postApi.getByPostId(postId);
-          console.log(response.data)
-          dispatch(setPostDetail(response.data));
+         setPostDetail(response.data);
         } catch (error) {
           console.error("Lỗi khi lấy thông tin bài viết:", error);
         }
       };
       fetchPost();
-    }
-  }, [postDetail, postId, dispatch]);
+    
+  }, [ postId, dispatch]);
 
   const filteredProducts = products.filter(product => 
     postDetail?.productIds?.includes(product.productId)

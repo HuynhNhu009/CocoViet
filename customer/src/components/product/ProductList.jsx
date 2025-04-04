@@ -52,9 +52,9 @@ const ProductList = () => {
     );
 
     if (findByProductId) {
-      dispatch(setProductDetail({}));
-      dispatch(setProductDetail(findByProductId));
-      setProducts(findByProductId);
+      // dispatch(setProductDetail({}));
+      // dispatch(setProductDetail(findByProductId));
+      // setProducts(findByProductId);
       navigate(`/products/${productId}`);
     } else {
       console.log("Product not found!");

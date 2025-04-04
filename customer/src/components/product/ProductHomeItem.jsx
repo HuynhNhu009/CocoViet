@@ -11,17 +11,7 @@ const ProductHomeItem = ({ product }) => {
   );
 
   const handleNavigate = (productId) => {    
-    const findByProductId = productStore.find(
-      (item) => item.productId === productId
-    );
-
-    if (findByProductId) {
-      dispatch(setProductDetail({}));
-      dispatch(setProductDetail(findByProductId));
       navigate(`/products/${productId}`);
-    } else {
-      console.log("Product not found!");
-    }
   };
 
   return (
