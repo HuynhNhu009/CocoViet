@@ -107,28 +107,11 @@ const RetailerProfile = () => {
   }, [retailerProfile]);
 
   const handleNavigate = (productId) => {
-    const findByProductId = productStore.find(
-      (item) => item.productId === productId
-    );
-
-    if (findByProductId) {
-      dispatch(setProductDetail({}));
-      dispatch(setProductDetail(findByProductId));
       navigate(`/products/${productId}`);
-    } else {
-      console.log("Product not found!");
-    }
   };
 
    const navigatePostDetail = (postId) => {
-      const findByPostId = posts.find((item) => item.postId === postId);
-  
-      if (findByPostId) {
-        dispatch(setPostDetail({}));
         navigate(`/posts/${postId}`);
-      } else {
-        console.log("Post not found!");
-      }
     };
   
 
