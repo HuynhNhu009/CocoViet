@@ -19,7 +19,7 @@ const Layout = () => {
 
         {/* Outlet (main content) */}
         <div className="flex-1 md:ml-3 mt-4 md:mt-0 shadow-2xl rounded-md bg-gray-50 p-4">
-          <Outlet />
+          {isLogin && <Outlet />}
         </div>
       </div>
     </div>

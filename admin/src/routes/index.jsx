@@ -51,6 +51,6 @@ export const routes = [
   },
   {
     path: "*",
-    element: <Navigate to="/login" replace />, // Chuyển hướng về login thay vì "/"
+    element: <Navigate to="/login" replace />,
   },
 ];

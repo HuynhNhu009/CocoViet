@@ -2,21 +2,22 @@ import { useEffect, useState } from "react";
 import { adminAPI } from "../services/adminService";
 import { useDispatch, useSelector } from "react-redux";
 import { setAdmin, setLogin } from "../redux/adminSlice";
-import { Navigate, Outlet, useLocation, useParams } from "react-router-dom";
-import { p } from "framer-motion/client";
+import { Navigate, Outlet, useLocation, useNavigate } from "react-router-dom"; // Thêm useNavigate
 
 export const PrivateRoutes = () => {
   const dispatch = useDispatch();
   const isLogin = useSelector((state) => state.AdminStore.isLogin);
-  const [isLoading, setIsLoading] = useState(true); 
+  const [isLoading, setIsLoading] = useState(true);
   const location = useLocation();
+  const navigate = useNavigate(); // Khởi tạo useNavigate
+
   useEffect(() => {
     const authenticate = async () => {
       try {
         const response = await adminAPI.introspect();
         if (response.status === "OK") {
           dispatch(setAdmin(response.data));
-          dispatch(setLogin(true));          
+          dispatch(setLogin(true));
         } else {
           dispatch(setLogin(false));
         }
@@ -24,22 +25,23 @@ export const PrivateRoutes = () => {
         console.error("Error verifying auth in ProtectedRoute:", error);
         dispatch(setLogin(false));
       } finally {
-        setIsLoading(false); 
+        setIsLoading(false);
       }
     };
 
     authenticate();
   }, [dispatch]);
 
-  useEffect (()=>{
-    if(location.path == '/') Navigate("/login")
-  }, [location])
+  useEffect(() => {
+    if (isLoading) return; 
+    if (isLogin && location.pathname === "/") {
+      navigate("/products"); 
+    }
+  }, [isLoading, isLogin, location, navigate]);
 
-  // While checking auth, show nothing or a loading spinner
   if (isLoading) {
     return <div>Loading...</div>;
   }
 
-  // After auth check, redirect to login if not authenticated, otherwise render Outlet
   return isLogin ? <Outlet /> : <Navigate to="/login" replace />;
 };
